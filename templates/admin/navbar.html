@@ -8,14 +8,14 @@
 
     <div class="collapse navbar-collapse" id="navbarsExample03">
       <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
-        <li class='nav-item'><a class='nav-link' href='{% url "contact" %}' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Contact"><i class="bi bi-envelope-fill"></i></a></li>
+        <li class='nav-item'><a class='nav-link' href='{% url "contact" %}'>Contact</a></li>
         <li class="nav-item">
-          <a class="nav-link" href='{% url "goals" %}' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Goals"><i class="bi bi-rocket-takeoff-fill"></i></a>
+          <a class="nav-link" href='{% url "goals" %}'>Goals</a>
         </li>
        
         {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href='{% url "dashboard" %}'  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Dashboard"><i class="bi bi-robot"></i></a>
+          <a class="nav-link" href='{% url "dashboard" %}'>Dashboard</a>
         </li>
         
         <li class="nav-item dropdown">
