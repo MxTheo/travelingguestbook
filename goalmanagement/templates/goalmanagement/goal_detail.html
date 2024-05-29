@@ -1,0 +1,24 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block stylesheet %}
+<link href='{% static "goalmanagement/styles/goal_detail.css" %}' rel="stylesheet" >
+{% endblock stylesheet %}
+{% block title %}
+Goal Detail
+{% endblock %}
+{% block content %}
+
+<jumbotron class="h-100 container my-5">
+  <div class="p-5 text-center border rounded-4">
+    <h1>{{goal.title}}</h1>
+    <p class="lead">
+        Created at {{goal.date_created}} by {{goal.creator}}.
+    </p>
+    {% if request.user == goal.creator%}
+    <p>
+      <a class='btn btn-danger' href='{% url "delete-goal" goal.id %}'>Delete</a>
+    </p>
+    {% endif %}
+  </div>
+</jumbotron>
+{% endblock %}

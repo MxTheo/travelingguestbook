@@ -1,0 +1,21 @@
+{% extends "admin/main.html" %}
+{% block title %}Traveling Guestbook{% endblock title %}
+{% block content %}
+    
+      <main class="px-3">
+        <div class='container'>
+        <h1>You received a sociable. Sociables travel from person to person. Help the owner achieve it's goal. Leave a message, then pass it on!</h1>
+        {% load crispy_forms_tags %}
+        <form class='form-control-lg' method="GET" action={% url "search-sociable" %}>
+            <div>
+                <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Search sociable:</b></label>
+                <input class="form-control form-control-lg w-50 ms-auto me-auto" type="text" placeholder="Enter received code..." id="inputLarge" name='search-code' aria-label="SearchCode">
+              </div>
+        </label>
+        </form>
+            </div>
+      </main>
+
+</div>
+{% endblock content %}
+

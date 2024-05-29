@@ -1,0 +1,42 @@
+<header class='mb-auto'>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}">Traveling Guestbook</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample03">
+      <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
+        <li class='nav-item'><a class='nav-link' href='{% url "contact" %}' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Contact"><i class="bi bi-envelope-fill"></i></a></li>
+        <li class="nav-item">
+          <a class="nav-link" href='{% url "goals" %}' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Goals"><i class="bi bi-rocket-takeoff-fill"></i></a>
+        </li>
+       
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href='{% url "dashboard" %}'  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Dashboard"><i class="bi bi-robot"></i></a>
+        </li>
+        
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i> {{user.username}}</a>
+          <ul class="dropdown-menu" aria-labelledby="dropdown03">
+            <li><a class="dropdown-item" href='{% url "password_change" %}'>Change password</a></li>
+            <li><form method='post' action='{% url "logout" %}'>{% csrf_token %}
+              <button class='dropdown-item' type='submit'>Logout</button>
+            </form></li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item"><a class="nav-link" href='{% url "login" %}'>Login</a></li>
+        <li class="nav-item"><a class="nav-link" href='{% url "register" %}'>Register</a></li>
+        {% endif %}
+        
+      </ul>
+      <ul>
+      </ul>
+    </div>
+  </div>
+</nav>
+</header>
+

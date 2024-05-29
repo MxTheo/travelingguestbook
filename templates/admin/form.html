@@ -1,0 +1,11 @@
+{% load static %}
+{% block stylesheet %}<link href='{% static "styles/form.css" %}' rel="stylesheet" >{% endblock stylesheet %}
+<div class='container'>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% load crispy_forms_tags %}
+        {{form|crispy}}
+        <input class='btn btn-success' type="submit" value="Save" />
+        <a class="btn btn-secondary ms-4" href="{{ object.get_absolute_url }}">Cancel</a>
+    </form>
+</div>
