@@ -1,0 +1,39 @@
+.nav-link {
+  font-weight: bold;
+  font-size: large;
+}
+
+.navbar-brand {
+  font-weight: bold;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.bd-mode-toggle .dropdown-menu .active .bi {
+  display: block !important;
+}
+
+
+.bd-mode-toggle {
+  z-index: 1500;
+}
+
+.nav-scroller {
+  position: relative;
+  z-index: 2;
+  height: 2.75rem;
+  overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-bottom: 1rem;
+  margin-top: -1px;
+  overflow-x: auto;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
