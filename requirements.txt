@@ -19,6 +19,7 @@ pylint==3.2.3
 pylint-django==2.5.5
 pylint-plugin-utils==0.8.2
 pytest==8.2.1
+pytest-django==4.8.0
 pytest-factoryboy==2.7.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
