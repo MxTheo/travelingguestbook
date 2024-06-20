@@ -2,11 +2,14 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.views.generic import TemplateView, FormView
+from django.contrib.auth.models import User
 
 from .forms import ContactForm
 
 def get_mailto_url():
-    return
+    admin = User.objects.get(username='admin')
+    mailto_url = f'mailto:{admin.email}'
+    return mailto_url
 
 class SuccessView(TemplateView):
     template_name = 'contact/success.html'
