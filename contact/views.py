@@ -5,6 +5,9 @@ from django.views.generic import TemplateView, FormView
 
 from .forms import ContactForm
 
+def get_mailto_url():
+    return
+
 class SuccessView(TemplateView):
     template_name = 'contact/success.html'
 
