@@ -1,5 +1,5 @@
-import pytest
 import uuid
+import pytest
 from pytest_factoryboy import register
 from travelingguestbook import factories
 
@@ -14,24 +14,23 @@ def enable_db_access_for_all_tests(db):
     pass
 
 @pytest.fixture
-def test_password():
-   return 'strong-test-pass'
-
-  
-@pytest.fixture
-def create_user(db, django_user_model, test_password):
-   def make_user(**kwargs):
-       kwargs['password'] = test_password
-       if 'username' not in kwargs:
-           kwargs['username'] = str(uuid.uuid4())
-       return django_user_model.objects.create_user(**kwargs)
-   return make_user
+def create_user(django_user_model):
+    '''Custom user fixture according to https://djangostars.com/blog/django-pytest-testing/,
+    to create a test user'''
+    def make_user(**kwargs):
+        kwargs['password'] = 'strong-test-pass'
+        if 'username' not in kwargs:
+            kwargs['username'] = str(uuid.uuid4())
+        return django_user_model.objects.create_user(**kwargs)
+    return make_user
 
 @pytest.fixture
-def auto_login_user(db, client, create_user, test_password):
-   def make_auto_login(user=None):
-       if user is None:
-           user = create_user()
-       client.login(username=user.username, password=test_password)
-       return client, user
-   return make_auto_login
+def auto_login_user(client, create_user):
+    '''Custom login fixtur according to https://djangostars.com/blog/django-pytest-testing/,
+    to log in for test'''
+    def make_auto_login(user=None):
+        if user is None:
+            user = create_user()
+        client.login(username=user.username, password='strong-test-pass')
+        return client, user
+    return make_auto_login
