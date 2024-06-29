@@ -3,8 +3,8 @@ from travelingguestbook.factories import GoalFactory, SociableFactory
 from goalmanagement.models import Goal
 
 def test_orders_goal_list_by_count_sociables (client):
-    goal_with_2 = GoalFactory(name='2')
-    goal_with_1 = GoalFactory(name='1')
+    goal_with_2 = GoalFactory(title='2')
+    goal_with_1 = GoalFactory(title='1')
     SociableFactory(goal=goal_with_1)
     SociableFactory(goal=goal_with_2)
     SociableFactory(goal=goal_with_2)
@@ -12,7 +12,7 @@ def test_orders_goal_list_by_count_sociables (client):
     url = reverse('goals')
     client = client.get(url)
     goal_list = list(client.context['goal_list'])
-    assert goal_list[0].name == '2'
+    assert goal_list[0].title == '2'
 
 class TestDeleteGoal:
     def test_delete_goal_by_different_user(self, create_user, auto_login_user):
@@ -42,3 +42,4 @@ class TestDeleteGoal:
     def delete_goal(self, client, goal):
         delete_goal_url = reverse('delete-goal', args=[goal.id])
         client.delete(delete_goal_url)
+        
