@@ -6,21 +6,25 @@ from django.contrib.auth.models import User
 
 from .forms import ContactForm
 
-def get_mailto_url():
+def create_mailto_url():
+    '''Given the admin,
+    creates a mailto url'''
     admin = User.objects.get(username='admin')
     mailto_url = f'mailto:{admin.email}'
     return mailto_url
 
 class SuccessView(TemplateView):
+    '''When smtp is implemented, user will be redirected to a success page after entering the contact form'''
     template_name = 'contact/success.html'
 
 class ContactView(FormView):
+    
     form_class = ContactForm
     template_name = 'contact/contact.html'
 
     def get_success_url(self) -> str:
         return reverse('success')
-    
+
     def form_valid(self, form):
         email = form.cleaned_data.get('email')
         subject = form.cleaned_data.get('subject')

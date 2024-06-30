@@ -11,9 +11,8 @@ register(factories.LogMessageFactory)
 @pytest.fixture(autouse=True)
 def enable_db_access_for_all_tests(db):
     '''This function saves us from typing @pytest.mark.django_db before every test function'''
-    pass
 
-@pytest.fixture
+@pytest.fixture(name='create_user')
 def create_user(django_user_model):
     '''Custom user fixture according to https://djangostars.com/blog/django-pytest-testing/,
     to create a test user'''
