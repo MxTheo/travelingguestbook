@@ -10,7 +10,7 @@ class GoalCreate(LoginRequiredMixin, generic.edit.CreateView):
     '''Generic editing view to create Goal:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/'''
     model       = Goal
-    fields      = ['name']
+    fields      = ['title']
     success_url = reverse_lazy('goals')
 
     def form_valid(self, form):
