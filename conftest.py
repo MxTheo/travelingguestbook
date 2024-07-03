@@ -8,9 +8,11 @@ register(factories.UserFactory)
 register(factories.SociableFactory)
 register(factories.LogMessageFactory)
 
+
 @pytest.fixture(autouse=True)
 def enable_db_access_for_all_tests(db):
     '''This function saves us from typing @pytest.mark.django_db before every test function'''
+
 
 @pytest.fixture(name='create_user')
 def create_user(django_user_model):
@@ -22,6 +24,7 @@ def create_user(django_user_model):
             kwargs['username'] = str(uuid.uuid4())
         return django_user_model.objects.create_user(**kwargs)
     return make_user
+
 
 @pytest.fixture
 def auto_login_user(client, create_user):
