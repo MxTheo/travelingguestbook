@@ -28,7 +28,7 @@ class LogMessage(models.Model):
     '''The message the receiver of the sociable leaves on the sociable page'''
     sociable      = models.ForeignKey(Sociable, on_delete=models.CASCADE)
     name          = models.CharField(max_length=70, default='Anonymous', verbose_name='Your name')
-    body          = models.TextField(max_length=300, verbose_name='Message')
+    body          = models.TextField(max_length=30000, verbose_name='Message')
     date_created  = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
