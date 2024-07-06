@@ -37,11 +37,11 @@ Sociable Detail
     {% for sociable in sociable.owner.sociable_set.all %}
       <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{sociable.date_created|date:'dmyHis'}}" aria-expanded="false" aria-controls="{{sociable.date_created|date:'dmyHis'}}">
             <b>{{sociable.goal}}</b>
           </button>
         </h2>
-        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+        <div id="{{sociable.date_created|date:'dmyHis'}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
           <div class="accordion-body">
             <small>Created at {{sociable.date_created|date:'d-M-y'}}</small>
             <p>
