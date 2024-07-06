@@ -11,7 +11,7 @@ Confirm delete
     </fieldset>
     <fieldset class="form-group">
         <button class="btn btn-danger" type="submit">Confirm</button>
-        <a class="btn btn-secondary ms-4" href="{{ object.get_absolute_url }}">Cancel</a>
+        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Cancel</button>
     </fieldset>
 </form>
 {% endblock %}

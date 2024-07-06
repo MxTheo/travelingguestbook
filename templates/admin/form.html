@@ -6,6 +6,6 @@
         {% load crispy_forms_tags %}
         {{form|crispy}}
         <input class='btn btn-success' type="submit" value="Save" />
-        <a class="btn btn-secondary ms-4" href="{{ object.get_absolute_url }}">Cancel</a>
+        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Cancel</button>
     </form>
 </div>
