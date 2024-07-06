@@ -59,8 +59,9 @@ Sociable Detail
   <div class='row'>
     <div class='col-md-6'>
     <h1>{{sociable.goal}}</h1>
+    <h5>{{sociable.slug}}</h5>
     <div class='justify-content-between d-flex align-items-center'>
-    <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#offcanvasExample" aria-controls="offcanvasExample"><h4 class='mt-1'><i class="bi bi-arrow-bar-right"></i> {{sociable.owner}}</h4></button>
+    <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#offcanvasExample" aria-controls="offcanvasExample"><h6 class='mt-1'><b><i class="bi bi-arrow-bar-right"></i> {{sociable.owner}}</h6></b></button>
       
     <small>Created at {{sociable.date_created|date:'d-M-y'}}</small>
     </div>
