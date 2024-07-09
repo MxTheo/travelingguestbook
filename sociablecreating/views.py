@@ -16,11 +16,12 @@ def home(request):
 def search_sociable(request):
     '''Given a slug entered by the user,
     redirects the user to the sociable associated'''
-    if request.GET.get('search-code'):
-        search_code = request.GET.get('search-code') 
-        return redirect('sociable', slug=search_code)
-    else:
-        return HttpResponse('Nothing found')
+    search_code = request.GET.get('search-code')
+    if search_code:
+        search_code = search_code.lower()
+        if Sociable.objects.filter(slug=search_code):
+            return redirect('sociable', slug=search_code)
+    return HttpResponse('Nothing found')
 
 def get_logmessage_list_from_sociable_list(sociable_list):
     '''Given a sociable list,
