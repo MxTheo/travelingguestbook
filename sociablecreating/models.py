@@ -9,8 +9,8 @@ class Sociable(models.Model):
     owner         = models.ForeignKey(User, verbose_name=("User of the sociable"), on_delete=models.CASCADE)
     goal          = models.ForeignKey(Goal, verbose_name=("What do you want to achieve?"), on_delete=models.CASCADE)
     description   = models.TextField(max_length=3000)
-    date_modified = models.DateTimeField(auto_now=True)
     date_created  = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-date_created']
