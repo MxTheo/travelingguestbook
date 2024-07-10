@@ -15,7 +15,6 @@ class GoalCreate(LoginRequiredMixin, generic.edit.CreateView):
 
     def form_valid(self, form):
         form.instance.creator   = self.request.user
-        form.instance.nr_chosen = 0
         messages.success(self.request, 'The goal was created successfully.')
         return super(GoalCreate,self).form_valid(form)
 
@@ -41,8 +40,8 @@ class GoalListView(generic.ListView):
     def get_queryset(self):
         '''Goals are ordered py popularity, thus by how many times it is chosen for a sociable'''
         return Goal.objects.all() \
-                .annotate(num_sociables=Count('sociable')) \
-                .order_by('-num_sociables')
+                .annotate(nr_sociables=Count('sociable')) \
+                .order_by('-nr_sociables')
 
 
 class GoalDetailView(generic.DetailView):
