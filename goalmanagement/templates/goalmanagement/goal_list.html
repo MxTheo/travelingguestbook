@@ -12,14 +12,15 @@ Goals
         <div class="col-11"> <div class='card-header'>
           <h1>Goals</h1>
         </div></div>
+        {% if user.is_authenticated %}
         <div class="col-1">
           <div
             class="row justify-content-center align-items-center g-2"
           >
             <div class="col-12"><a href='{% url "create-goal" %}' class="btn btn-outline-primary">+</a></div>
           </div>
-          
         </div>
+        {% endif %}
       </div>
       
      
@@ -41,7 +42,10 @@ Goals
         {% endfor %}
       </ul>
       {% else %}
-        <p>There are no goals. <a href='{% url "create-goal" %}'>Create goal</a></p>
+        <p>There are no goals.
+          {% if user.is_authenticated %}
+          <a href='{% url "create-goal" %}'>Create goal</a></p>
+          {% endif %}
       {% endif %}
       </div>
     </div>
