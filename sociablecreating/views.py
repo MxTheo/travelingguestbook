@@ -21,7 +21,7 @@ def search_sociable(request):
         search_code = search_code.lower()
         if Sociable.objects.filter(slug=search_code):
             return redirect('sociable', slug=search_code)
-    return HttpResponse('Nothing found')
+    return render(request, 'sociablecreating/sociable_not_found.html', {'search_code': search_code})
 
 def get_logmessage_list_from_sociable_list(sociable_list):
     '''Given a sociable list,
