@@ -131,6 +131,26 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/MxTheo
 include Setup of env, IDE and typical getting started instructions?
 
 -->
+1. For this repository
+2. Clone the project from your fork:
+   > git clone https://github.com/*\[yourusername\]*/travelingguestbook.git
+3. Install requirements using pip
+   >pip install -r requirements.txt
+4. Change to the repository directory on your computer
+   > cd travelingguestbook
+5. Create a branch, where you can choose your own branch-name, instead of branche-name
+   > git switch -c branch-name
+6. Add your changes
+7. Commit changes
+   > git commit -m "Your descriptive commit message"
+8. Push your changes using the command *git push*
+   > git push -u origin branche-name
+9.  Submit your changes for review, by creating a pull request. In the repository you can find the button compare & pull request
+10.  Star this repository
+11.  Wait for pull request to merge
+12.  Celebrate your first step into the open source world and contribute more
+
+Used https://github.com/firstcontributions/first-contributions#first-contributions as guidelines to write these guidelines. You can also go there for more elaborate general instructions
 
 ### Improving The Documentation
 <!-- TODO
@@ -179,6 +199,8 @@ Please provide descriptive commit messages, including the issue you worked on
 
 ## Join The Project Team
 <!-- TODO -->
+- MxTheo
+- NPinna
 
 <!-- omit in toc -->
 ## Attribution
