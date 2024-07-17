@@ -2,7 +2,11 @@ from django.urls import reverse
 from contact.views import create_mailto_url
 from travelingguestbook.factories import UserFactory
 
-
+def test_about(client):
+    '''Test if about page is rendered'''
+    url = reverse('about')
+    response = client.get(url)
+    assert response.status_code == 200
 
 class TestMailToUrl:
     '''Tests for the function create_mailto_url'''

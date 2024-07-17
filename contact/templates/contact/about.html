@@ -1,0 +1,37 @@
+{% extends "admin/main.html" %}
+{% block title %}
+About
+{% endblock %}
+{% load static %}
+{% block stylesheet %}
+<link href='{% static "contact/styles/about.css" %}' rel="stylesheet"/>
+{% endblock stylesheet %}
+{% block content %}
+
+<!-- Jumbotron -->
+<div class="jumbotron p-5 text-center bg-image mb-4">
+  <div class="mask rounded-4">
+    <div class="d-flex justify-content-center align-items-center h-100">
+      <div class="text-white">
+        <h1 class="mt-3 mb-3">You can start that conversation!</h1>
+        <h4 class="mb-3">Empowers people to start conversations</h4>
+      </div>
+    </div>
+  </div>
+</div>
+<div class='container'>
+<p>Ga dat kletspraatje aan, met de hulp van Traveling Guestbook. Traveling Guestbook is een spel die jouw aanknopingspunten biedt. </p>
+<p>Zo kun je met iemand in de trein een kletspraatje houden. Je hoeft alleen de sociable door te geven.</br>Of misschien ben jij wel degene die aangesproken is voor een kletspraatje. Dan heb jij nu de sociable met de code in handen. Via Traveling Guestbook kun je dan een bericht achterlaten op de pagina van de sociable.</p>
+<p>Sociables zijn de gespreksstarters. Het zijn fysieke dingen die van persoon tot persoon worden doorgegeven. Deze dingen kan van alles zijn, zoals een kaartje of een klein notitieboekje.</p>
+<p>Op de sociable staat een code. Daarmee kun je de sociable terugvinden op de website. Elke keer dat het wordt doorgegeven, kan degene die de sociable heeft gekregen een berichtje plaatsen op de pagina van de sociable.</p>
+<p>Sociables hebben verzoeken. Dit kan bijvoorbeeld een vraag zijn om iets over jezelf te delen. Of het kan de vraag zijn om iets in een boekje te tekenen. Voel je vrij en creatief om nieuwe verzoeken voor jou en andere gebruikers te bedenken.</p>
+<h3>Bijdragen:</h3>
+<p>Zie <a href="https://github.com/MxTheo/travelingguestbook" target="_blank">github</a> voor de broncode en de issues.</p>
+<p>De applicatie is nog volop in ontwikkeling. Mijn naam is Theo. Ik heb dit opgezet. Aangezien ik nog de enige ben die hier aan werkt, zal de ontwikkeling van de applicatie ook langzaam gaan. ik werk er zo 1 ochtend in de week aan. Ik doe hiernaast nog een hoop vrijwilligerswerk.</p>
+<p>Je kunt contact opnemen via onderstaande button.</p>
+<div class='container'>
+  <p><a href=' {{mailto_url}} 'class='btn btn-dark'>Mail</a></p>
+</div>
+</div>
+<!-- Jumbotron -->
+{% endblock %}

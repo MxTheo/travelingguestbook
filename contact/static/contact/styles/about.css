@@ -1,0 +1,11 @@
+.jumbotron {
+    background-image: url('../../../static/images/groupofchildrenbw.jpg');
+    height: 400px;
+    background-size: cover;
+    margin-left: -5%;
+    margin-right:-5%;
+}
+
+.mask {
+    background-color: rgba(0, 0, 0, 0.6);
+}
