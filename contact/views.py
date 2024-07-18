@@ -14,14 +14,14 @@ def contact(request):
     '''
     mailto_url = create_mailto_url()
     context = {'mailto_url':mailto_url}
-    return render(request, 'contact/about.html', context)
+    return render(request, 'contact/contact.html', context)
 
 def about(request):
     '''
     Opens the about page'''
     mailto_url = create_mailto_url()
     context = {'mailto_url':mailto_url}
-    return render(request, 'contact/contact.html', context)
+    return render(request, 'contact/about.html', context)
 
 def create_mailto_url():
     '''Given the admin,

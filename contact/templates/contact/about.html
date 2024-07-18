@@ -4,10 +4,36 @@ About
 {% endblock %}
 {% load static %}
 {% block stylesheet %}
-<link href='{% static "contact/styles/about.css" %}' rel="stylesheet"/>
+{% comment %} <link href='{% static "contact/styles/about.css" %}' rel="stylesheet"/> {% endcomment %}
 {% endblock stylesheet %}
 {% block content %}
+<style>
+  .jumbotron {
+    background-image: url('../../../static/images/groupofchildrenbw.jpg');
+    background-size: contain;
+}
 
+.mask {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.img-thumbnail {
+    width: 36%;
+    max-width: 175px;
+}
+
+.maintext {
+    width: 70%;
+    min-width: 280px;
+    text-align: justify;
+    text-justify: auto;
+}
+
+.maintext h3 {
+    text-align: center;
+    margin-top: 6%;
+}
+</style>
 <!-- Jumbotron -->
 <div class="jumbotron p-5 text-center bg-image mb-4">
   <div class="mask rounded-4">
