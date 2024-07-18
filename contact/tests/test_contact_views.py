@@ -4,6 +4,7 @@ from travelingguestbook.factories import UserFactory
 
 def test_about(client):
     '''Test if about page is rendered'''
+    UserFactory(username='admin')
     url = reverse('about')
     response = client.get(url)
     assert response.status_code == 200
