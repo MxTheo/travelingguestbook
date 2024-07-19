@@ -1,21 +1,36 @@
 {% extends "admin/main.html" %}
-{% load static %}
+
 {% block title %}
 Goal Detail
 {% endblock %}
-{% block content %}
 
-<jumbotron class="h-100 container my-5">
-  <div class="p-5 text-center border rounded-4">
-    <h1>{{goal.title}}</h1>
-    <p class="lead">
-        Created at {{goal.date_created}} by {{goal.creator}}.
-    </p>
-    {% if request.user == goal.creator%}
-    <p>
-      <a class='btn btn-danger' href='{% url "delete-goal" goal.id %}'>Delete</a>
-    </p>
-    {% endif %}
+{% block content %}
+<style>
+  .jumbotron {
+      background-image: url('../../../static/images/goaldetail.jpg');
+      background-size: cover;
+  }
+
+  .mask {
+      background-color: rgba(0, 0, 0, 0.6);
+}
+</style>
+<!-- Jumbotron -->
+<div class="jumbotron p-5 text-center bg-image mb-4 rounded-4">
+  <div class="mask rounded-4">
+    <div class="d-flex justify-content-center align-items-center h-100">
+      <div class="text-white">
+        <h1 class="mt-3 mb-3">{{goal.title}}</h1>
+        <h4 class="mb-3">Created at {{goal.date_created}} by {{goal.creator}}.</h4>
+        {% if request.user == goal.creator%}
+        <p>
+          <a class='btn btn-danger' href='{% url "delete-goal" goal.id %}'>Delete</a>
+        </p>
+        {% endif %}
+      </div>
+    </div>
   </div>
-</jumbotron>
+</div>
+<!-- Jumbotron -->
+
 {% endblock %}

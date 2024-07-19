@@ -1,0 +1,25 @@
+.jumbotron {
+    background-image: url('../../../static/images/groupofchildrenbw.jpg');
+    background-size: contain;
+}
+
+.mask {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.img-thumbnail {
+    width: 36%;
+    max-width: 175px;
+}
+
+.maintext {
+    width: 70%;
+    min-width: 280px;
+    text-align: justify;
+    text-justify: auto;
+}
+
+.maintext h3 {
+    text-align: center;
+    margin-top: 6%;
+}

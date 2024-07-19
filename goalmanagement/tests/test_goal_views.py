@@ -52,4 +52,10 @@ class TestDeleteGoal:
         '''Given the client and the goal, delete the goal'''
         delete_goal_url = reverse('delete-goal', args=[goal.id])
         client.delete(delete_goal_url)
-        
+
+def test_goal_detail(client):
+    '''Test if about page is rendered'''
+    goal = GoalFactory()
+    url = reverse('goal', args=[goal.id])
+    response = client.get(url)
+    assert response.status_code == 200
