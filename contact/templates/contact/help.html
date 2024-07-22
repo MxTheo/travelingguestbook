@@ -1,0 +1,71 @@
+{% extends "admin/main.html" %}
+{% block title %}
+Help
+{% endblock %}
+{% block content %}
+<style>
+    .jumbotron {
+        background-image: url('../../../static/images/groupofchildrenbw.jpg');
+        background-size: contain;
+    }
+
+    .mask {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+
+    .icon-square {
+    width: 3rem;
+    height: 3rem;
+    border-radius: .75rem;
+    }
+</style>
+<div class='container'>
+    <!-- Jumbotron -->
+    <div class="jumbotron p-5 text-center bg-image mb-4 rounded-4">
+        <div class="mask rounded-4">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="text-white">
+            <h1 class="mt-3 mb-3">Help</h1>
+            <h4 class="mb-3">Op deze pagina vind je instructies hoe je Traveling Guestbook gebruikt.</h4>
+            </div>
+        </div>
+        </div>
+    </div>
+  <!-- Jumbotron -->
+
+  <div class="container px-4 py-5" id="hanging-icons">
+    <h2 class="pb-2 border-bottom">Sociables, Goals and Messages</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+      <div class="col d-flex align-items-start">
+        <div class="icon-square text-black-50 bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div>
+          <h3 class="fs-2">Sociable</h3>
+          <p>Het fysieke item dat wordt doorgegeven van persoon tot persoon. Dit kan van alles zijn, zoals een kaartje. Op dit fysieke item staat een code, waarmee je de pagina van de sociable kan bereiken.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <div class="icon-square text-black-50 bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <i class="bi bi-rocket-takeoff-fill"></i>
+        </div>
+        <div>
+          <h3 class="fs-2">Goal</h3>
+          <p>De titel van het verzoek aan de persoon die de sociable heeft ontvangen. Gebruikers kunnen er eentje kiezen die iemand anders al heeft bedacht. Ze kunnen er zelf ook een maken. Een verzoek kan zijn: Schrijf iets over je dromen of ambities</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <div class="icon-square text-black-50 bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <i class="bi bi-chat-left-text-fill"></i>
+        </div>
+        <div>
+          <h3 class="fs-2">Message</h3>
+          <p>Het bericht dat de ontvanger van de sociable achterlaat op de pagina van de sociable. Met de code op de sociable kom je op de pagina waar je een berichtje kan achterlaten.</p>
+        </div>
+      </div>
+    </div>  
+  </div>
+
+</div>
+{% endblock %}

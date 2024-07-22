@@ -6,10 +6,17 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarsExample03">
+    <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
-        <li class='nav-item'><a class='nav-link' href='{% url "about" %}'>About</a></li>
-        <li class='nav-item'><a class='nav-link' href='{% url "contact" %}'>Contact</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Info</a>
+          <ul class="dropdown-menu" aria-labelledby="dropdown03">
+            <li><a class="dropdown-item" href='{% url "help" %}'>Help</a></li>
+            <li><a class="dropdown-item" href='{% url "about" %}'>About</a></li>
+            <li><a class="dropdown-item" href='{% url "contact" %}'>Contact</a></li>
+          </ul>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link" href='{% url "goals" %}'>Goals</a>
         </li>

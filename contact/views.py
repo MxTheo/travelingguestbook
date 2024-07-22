@@ -23,6 +23,10 @@ def about(request):
     context = {'mailto_url':mailto_url}
     return render(request, 'contact/about.html', context)
 
+def help(request):
+    '''Opens the help page'''
+    return render(request, 'contact/help.html')
+
 def create_mailto_url():
     '''Given the admin,
     creates a mailto url'''

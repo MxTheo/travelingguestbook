@@ -9,6 +9,12 @@ def test_about(client):
     response = client.get(url)
     assert response.status_code == 200
 
+def test_help(client):
+    '''Test if help page is opened'''
+    url = reverse('help')
+    response = client.get(url)
+    assert response.status_code == 200
+
 class TestMailToUrl:
     '''Tests for the function create_mailto_url'''
 
