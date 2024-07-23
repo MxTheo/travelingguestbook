@@ -3,18 +3,9 @@
 {% block title %}
 Goal Detail
 {% endblock %}
-
+{% load static %}
+{% block stylesheet %}<link href={% static "goalmanagement/styles/goal_detail.css" %} ref='stylesheet'/>{% endblock stylesheet %}
 {% block content %}
-<style>
-  .jumbotron {
-      background-image: url('../../../static/images/goaldetail.jpg');
-      background-size: cover;
-  }
-
-  .mask {
-      background-color: rgba(0, 0, 0, 0.6);
-}
-</style>
 <!-- Jumbotron -->
 <div class="jumbotron p-5 text-center bg-image mb-4 rounded-4">
   <div class="mask rounded-4">

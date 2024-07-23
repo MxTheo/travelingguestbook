@@ -146,12 +146,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'info@travelingguestbook.com'
 NOTIFY_EMAIL = 'info@travelingguestbook.com'
-
-# Static file serving.
-# https://whitenoise.readthedocs.io/en/stable/django.html#add-compression-and-caching-support
-STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
