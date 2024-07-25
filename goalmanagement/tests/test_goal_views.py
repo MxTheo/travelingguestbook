@@ -1,6 +1,7 @@
 from django.urls import reverse
 from travelingguestbook.factories import GoalFactory, SociableFactory
 from goalmanagement.models import Goal
+from travelingguestbook.helpers_test import helper_test_page_rendering
 
 def test_orders_goal_list_by_count_sociables (client):
     '''Given a goal with 2 sociables and a goal with 1 sociables,
@@ -54,8 +55,6 @@ class TestDeleteGoal:
         client.delete(delete_goal_url)
 
 def test_goal_detail(client):
-    '''Test if about page is rendered'''
+    '''Test if goal detail page is rendered'''
     goal = GoalFactory()
-    url = reverse('goal', args=[goal.id])
-    response = client.get(url)
-    assert response.status_code == 200
+    helper_test_page_rendering(client, 'goal', [goal.id])
