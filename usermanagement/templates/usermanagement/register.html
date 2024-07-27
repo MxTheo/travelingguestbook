@@ -2,12 +2,12 @@
 {% block title %}Register{% endblock title %}
 {% block content %}
 {% load crispy_forms_tags %}
-    <div>
+    <div class='container'>
         <form method="POST" action="">
             {% csrf_token %}
             {{form|crispy}}
             <input type='submit' value="Register" />
         </form>
-        <p>Already have an account? <a href='{% url "login" %}'>Login</a></p>
+        <p class='mt-2'>Already have an account? <a href='{% url "login" %}'>Login</a></p>
     </div>
 {% endblock content %}

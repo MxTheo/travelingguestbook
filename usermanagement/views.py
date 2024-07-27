@@ -1,22 +1,22 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 from sociablecreating.views import get_logmessage_list_from_sociable_list
 from .forms import RegisterForm
+from django.views.generic import CreateView
 
-# Create your views here.
-def register(request):
-    '''Either renders the registerform for the user to fill in,
-     Or given the posted registerform, creates a user and logs that user in'''
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(True)
-            login(request, user)
-            return redirect('home')
-    else:
-        form = RegisterForm()
-    return render(request, 'usermanagement/register.html', {'form': form})
+class RegisterView(CreateView):
+    '''The sign up functionality'''
+    form_class = RegisterForm
+    template_name = 'usermanagement/register.html'
+    success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        '''After the user input is valid, it logs in and redirects towards its dashboard'''
+        user = form.save()
+        login(self.request, user)
+        return redirect(self.success_url)
 
 @login_required(login_url='login')
 def dashboard(request):
