@@ -15,6 +15,7 @@ def test_if_profile_is_created():
     profile = Profile.objects.get(user=user)
     assert profile.__str__() == user.username
 
+
 class TestUpdateUser():
     def test_opens_edit_account(self, auto_login_user):
         '''Tests if the edit account page is opened'''

@@ -3,11 +3,22 @@
 Profile
 {% endblock %}
 {% block content %}
-<div class='container'>
-    <h2>{{ user.get_full_name }}</h2>
-    <ul class='list-group'>
-    <li>Username: {{ user.username }}</li>
-    <li>Location: {{ user.profile.location }}</li>
-    </ul>
+<div class='container w-50'>
+    <div class="card rounded-4">
+        <div class="d-flex gap-2 mb-3">
+        <div class="card-body mt-3 mb-2">
+          <h4 class="card-title">{{ user.get_full_name }}</h4>
+          <h6 class="card-subtitle mb-3 text-muted">{{ user.username }}</h6>
+          <p class="card-text">
+            {{user.profile.location}}
+          </p>
+          <div class="d-flex justify-content-center text-center mt-3 mb-2">
+            <div>
+              <p class="mb-2 h5">{{user.sociable_set.count}}</p>
+              <p class="text-muted mb-0">Aantal dankers</p>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 {% endblock %}
