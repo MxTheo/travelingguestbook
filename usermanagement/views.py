@@ -1,12 +1,14 @@
 from django.shortcuts import redirect, render
+from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from sociablecreating.views import get_logmessage_list_from_sociable_list
-from .forms import RegisterForm
-from django.views.generic import CreateView
+from .forms import RegisterForm, UserForm, ProfileForm
+from django.views.generic import CreateView, DetailView
 
-class RegisterView(CreateView):
+class Register(CreateView):
     '''The sign up functionality'''
     form_class = RegisterForm
     template_name = 'usermanagement/register.html'
@@ -30,3 +32,28 @@ def dashboard(request):
         'logmessage_list': logmessage_list
         }
     return render(request, 'usermanagement/dashboard.html', context)
+
+class UserDetail(DetailView):
+    '''Generic display view to get to the profile of the user:
+    https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/'''
+    model = User
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, ('Your profile was successfully updated!'))
+            return redirect('dashboard')
+        else:
+            messages.error(request, ('Please correct the error below.'))
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    return render(request, 'auth/user_form.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })

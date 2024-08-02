@@ -1,0 +1,19 @@
+{% extends "admin/main.html" %}
+{% block title %}
+Account edit
+{% endblock %}
+{% block content %}
+<div class='container'>
+    <h3>Edit your account details</h3>
+
+    <form method="post">
+        {% csrf_token %}
+        {% load crispy_forms_tags %}
+        {{user_form|crispy}}
+        {{ profile_form|crispy}}
+        <p><a class="btn btn-primary" href='{% url "password_change" %}'>Change password</a></p>
+        <input class='btn btn-success' type="submit" value="Save" />
+        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Cancel</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,11 +1,43 @@
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory
 from django.urls import reverse
 from django.contrib import auth
+from conftest import auto_login_user
 from travelingguestbook.factories import UserFactory
 from usermanagement.views import dashboard
 from travelingguestbook.helpers_test import helper_test_page_rendering
 from usermanagement.forms import RegisterForm
+from usermanagement.models import Profile
+import sys
+
+def test_if_profile_is_created():
+    user    = UserFactory()
+    profile = Profile.objects.get(user=user)
+    assert profile.__str__() == user.username
+
+class TestUpdateUser():
+    def test_opens_edit_account(self, auto_login_user):
+        '''Tests if the edit account page is opened'''
+        client, _ = auto_login_user()
+        helper_test_page_rendering(client, 'editaccount')
+
+    def test_change_first_name(self, auto_login_user):
+        '''Tests if the first name of the user model can be changed'''
+        client, user = auto_login_user()
+        update_user_url = reverse('editaccount')
+        data = {'first_name': 'Adam'}
+        client.post(update_user_url, data)
+        user = User.objects.get(pk=user.id)
+        assert user.first_name == data['first_name']
+
+    def test_change_location(self, auto_login_user):
+        '''Tests if the location of the profile model can be changed'''
+        client, user = auto_login_user()
+        update_user_url = reverse('editaccount')
+        data = {'location': 'Testcity'}
+        client.post(update_user_url, data)
+        profile = Profile.objects.get(user = user)
+        assert profile.location == data['location']
 
 class TestRegister():
     register_url = reverse('register')

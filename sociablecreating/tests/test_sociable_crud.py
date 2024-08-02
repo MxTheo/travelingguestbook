@@ -1,14 +1,14 @@
 from django.urls import reverse
-from travelingguestbook.factories import LogMessageFactory, SociableFactory
+from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
 from sociablecreating.models import LogMessage, Sociable
 
 class TestUpdateSociable:
     '''Test user permissions for updating the sociable'''
-    def test_update_sociable_by_different_user(self, create_user, auto_login_user):
+    def test_update_sociable_by_different_user(self, auto_login_user):
         '''Logged in as a different user then the owner,
         tests if that user cannot change the description'''
         client, _ = auto_login_user()
-        owner = create_user()
+        owner = UserFactory()
         sociable = SociableFactory(owner=owner)
 
         sociable_changed = self.update_sociable(client, sociable, 'Hello')
@@ -35,11 +35,11 @@ class TestUpdateSociable:
 
 class TestDeleteSociable:
     '''Test user permissions for deleting a sociable'''
-    def test_delete_sociable_by_different_user(self, create_user, auto_login_user):
+    def test_delete_sociable_by_different_user(self, auto_login_user):
         '''Logged in as a different user then the owner,
         tests if the user is not able to delete the sociable'''
         client, _ = auto_login_user()
-        owner     = create_user()
+        owner     = UserFactory()
         sociable  = SociableFactory(owner=owner)
 
         self.delete_sociable(client, sociable)
@@ -72,11 +72,11 @@ class TestDeleteSociable:
 
 class TestDeleteLogMessage:
     '''Test user permissions to delete log message'''
-    def test_delete_logmessage_by_different_user(self, create_user, auto_login_user):
+    def test_delete_logmessage_by_different_user(self, auto_login_user):
         '''Logged in as a different user then the owner of the sociable,
         tests if the user is not able to delete the logmessage'''
         client, _ = auto_login_user()
-        owner     = create_user()
+        owner     = UserFactory()
         sociable  = SociableFactory(owner=owner)
         logmessage  = LogMessageFactory(sociable=sociable)
 
@@ -109,3 +109,11 @@ class TestDeleteLogMessage:
         '''Given the client and the logmessage, delete the logmessage'''
         delete_logmessage_url = reverse('delete-logmessage', args=[logmessage.id])
         client.delete(delete_logmessage_url)
+
+def test_logmessage_str():
+    logmessage = LogMessageFactory(body='Hello, I am testing this body if it is truncated to 50 characters.')
+    assert logmessage.__str__() == 'Hello, I am testing this body if it is truncated t . . .'
+
+def test_sociable_str():
+    sociable = SociableFactory(slug='test123')
+    assert sociable.__str__() == 'test123'

@@ -31,7 +31,7 @@ class GoalDelete(UserPassesTestMixin, generic.edit.DeleteView):
         return self.request.user == goal.creator
 
 
-class GoalListView(generic.ListView):
+class GoalList(generic.ListView):
     '''Generic display view to show an overview of Goal:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/'''
     model       = Goal
@@ -44,7 +44,7 @@ class GoalListView(generic.ListView):
                 .order_by('-nr_sociables')
 
 
-class GoalDetailView(generic.DetailView):
+class GoalDetail(generic.DetailView):
     '''Generic display view to get the detailpage of Goal:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/'''
     model = Goal

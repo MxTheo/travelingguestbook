@@ -1,5 +1,5 @@
 from django.urls import reverse
-from travelingguestbook.factories import GoalFactory, SociableFactory
+from travelingguestbook.factories import GoalFactory, SociableFactory, UserFactory
 from goalmanagement.models import Goal
 from travelingguestbook.helpers_test import helper_test_page_rendering
 
@@ -19,11 +19,11 @@ def test_orders_goal_list_by_count_sociables (client):
 
 class TestDeleteGoal:
     '''Tests user permissions for deleting a goal'''
-    def test_delete_goal_by_different_user(self, create_user, auto_login_user):
+    def test_delete_goal_by_different_user(self, auto_login_user):
         '''Logged in as a user different then the goal creator,
         tests that the user is not able to delete the goal'''
         client, _ = auto_login_user()
-        creator = create_user()
+        creator = UserFactory()
         goal = GoalFactory(creator=creator)
 
         self.delete_goal(client, goal)
