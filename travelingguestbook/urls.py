@@ -22,6 +22,5 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('', include('usermanagement.urls')),
     path('', include('sociablecreating.urls')),
-    path('', include('goalmanagement.urls')),
     path('', include('contact.urls')),
 ]

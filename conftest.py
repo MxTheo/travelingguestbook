@@ -3,7 +3,6 @@ import pytest
 from pytest_factoryboy import register
 from travelingguestbook import factories
 
-register(factories.GoalFactory)
 register(factories.UserFactory)
 register(factories.SociableFactory)
 register(factories.LogMessageFactory)

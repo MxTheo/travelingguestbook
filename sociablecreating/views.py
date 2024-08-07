@@ -78,8 +78,7 @@ class SociableCreate(LoginRequiredMixin, generic.edit.CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        form.instance.slug  = get_random_string(8,
-        allowed_chars=string.ascii_lowercase + string.digits)
+        form.instance.slug  = get_random_string(8, allowed_chars=string.ascii_lowercase + string.digits)
         return super(SociableCreate, self).form_valid(form)
 
 

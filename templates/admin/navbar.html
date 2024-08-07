@@ -16,10 +16,6 @@
             <li><a class="dropdown-item" href='{% url "contact" %}'>Contact</a></li>
           </ul>
         </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href='{% url "goals" %}'>Goals</a>
-        </li>
        
         {% if user.is_authenticated %}
         <li class="nav-item">

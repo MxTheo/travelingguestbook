@@ -11,8 +11,7 @@
         <a href='{% url "sociable" sociable.slug %}' class='a-sociable'>
             <div class="card sociable-card">
                 <div class="card-body">
-                  <h4 class="card-title">{{sociable.goal}}</h4>
-                  <h6 class='text-muted'>{{sociable.slug}}</h6>
+                  <h4 class="card-title">{{sociable.slug}}</h4>
                   <p class="card-text">{{sociable.description|truncatewords:23 }}</p>
                   <small class="card-subtitle mb-2 text-muted">Created at {{sociable.date_created|date:'d-M-y'}}</small>
                 </div>

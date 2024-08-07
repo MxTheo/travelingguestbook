@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'sociablecreating',
     'crispy_forms',
     'crispy_bootstrap5',
-    'goalmanagement',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

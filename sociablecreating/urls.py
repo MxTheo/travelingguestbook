@@ -12,6 +12,6 @@ urlpatterns = [
 
     path('create-logmessage/<slug:slug>', views.LogMessageCreate.as_view(), name='create-logmessage'),
     path('delete-logmessage/<str:pk>', views.LogMessageDelete.as_view(), name='delete-logmessage'),
-    
+
     path('search-sociable/', views.search_sociable, name='search-sociable'),
 ]

@@ -8,7 +8,7 @@ class LogMessageForm(ModelForm):
         model   = LogMessage
         fields  = ['name', 'body']
         widgets = {
-            'body': Textarea(attrs={'rows':3})
+            'body': Textarea(attrs={'rows': 3})
         }
 
 
@@ -16,7 +16,7 @@ class SociableForm(ModelForm):
     '''The form for sociable'''
     class Meta:
         model   = Sociable
-        fields  = ['goal', 'description']
+        fields  = ['description']
         widgets = {
-            'description': Textarea(attrs={'rows':5})
+            'description': Textarea(attrs={'rows': 5})
         }

@@ -5,7 +5,6 @@ import factory
 from faker import Faker
 from django.contrib.auth.models import User
 from sociablecreating.models import Sociable, LogMessage
-from goalmanagement.models import Goal
 
 fake = Faker()
 
@@ -19,20 +18,11 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = factory.LazyFunction(fake.unique.password)
 
 
-class GoalFactory(factory.django.DjangoModelFactory):
-    '''Mock for goalmanagement Goal'''
-    class Meta:
-        model = Goal
-    title    = factory.LazyFunction(fake.sentence)
-    creator = factory.SubFactory(UserFactory)
-
-
 class SociableFactory(factory.django.DjangoModelFactory):
     '''Mock for sociablecreating Sociable'''
     class Meta:
         model = Sociable
     slug  = factory.LazyFunction(fake.unique.postcode)
-    goal  = factory.SubFactory(GoalFactory)
     owner = factory.SubFactory(UserFactory)
     description = factory.LazyFunction(fake.text)
 
