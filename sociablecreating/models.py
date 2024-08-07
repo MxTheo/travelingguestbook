@@ -3,9 +3,10 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from goalmanagement.models import Goal
 
+
 class Sociable(models.Model):
     '''The object that is passed from person to person'''
-    slug          = models.SlugField(verbose_name='Code used to find the sociable',max_length=8,unique=True, editable=False)
+    slug          = models.SlugField(verbose_name='Code used to find the sociable', max_length=8, unique=True, editable=False)
     owner         = models.ForeignKey(User, verbose_name=("User of the sociable"), on_delete=models.CASCADE)
     goal          = models.ForeignKey(Goal, verbose_name=("What do you want to achieve?"), on_delete=models.CASCADE)
     description   = models.TextField(max_length=3000)
@@ -23,6 +24,7 @@ class Sociable(models.Model):
 
     def __str__(self):
         return str(self.slug)
+
 
 class LogMessage(models.Model):
     '''The message the receiver of the sociable leaves on the sociable page'''
@@ -42,4 +44,3 @@ class LogMessage(models.Model):
         '''After entering a message,
         the visitor is redirected towards the sociable page'''
         return reverse("sociable", kwargs={"slug": self.sociable.slug})
-    

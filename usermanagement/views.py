@@ -33,13 +33,17 @@ def dashboard(request):
         }
     return render(request, 'usermanagement/dashboard.html', context)
 
+
 class UserDetail(DetailView):
     '''Generic display view to get to the profile of the user:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/'''
     model = User
 
+
 @login_required
 def update_profile(request):
+    '''When the user navigates to his profile,
+    it either gets the forms to update his profile or it post his changed settings'''
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, instance=request.user.profile)

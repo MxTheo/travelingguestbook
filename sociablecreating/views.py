@@ -2,16 +2,16 @@ import string
 from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import generic
-from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
-from django.http import HttpResponse
 from sociablecreating.forms import LogMessageForm, SociableForm
 from .models import LogMessage, Sociable
+
 
 def home(request):
     '''Renders the homepage'''
     return render(request, 'sociablecreating/index.html')
+
 
 def search_sociable(request):
     '''Given a slug entered by the user,
@@ -21,7 +21,9 @@ def search_sociable(request):
         search_code = search_code.lower()
         if Sociable.objects.filter(slug=search_code):
             return redirect('sociable', slug=search_code)
-    return render(request, 'sociablecreating/sociable_not_found.html', {'search_code': search_code})
+    context = {'search_code': search_code}
+    return render(request, 'sociablecreating/sociable_not_found.html', context)
+
 
 def get_logmessage_list_from_sociable_list(sociable_list):
     '''Given a sociable list,
@@ -30,6 +32,7 @@ def get_logmessage_list_from_sociable_list(sociable_list):
     for sociable in sociable_list:
         logmessage_list.extend(sociable.logmessage_set.all())
     return logmessage_list
+
 
 class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
     '''Generic editing view to create LogMessage:
@@ -45,10 +48,9 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
         '''Given the log message and the sociable slug from the context,
         sets the sociable relationship for the created log message'''
         slug                   = super().get_context_data()['view'].kwargs['slug']
-        print('slug = ')
-        print(slug)
         sociable               = Sociable.objects.get(slug=slug)
         form.instance.sociable = sociable
+
 
 class LogMessageDelete(UserPassesTestMixin, generic.edit.DeleteView):
     '''Generic editing view to delete LogMessage:
@@ -57,12 +59,12 @@ class LogMessageDelete(UserPassesTestMixin, generic.edit.DeleteView):
     template_name = "admin/confirm_delete.html"
 
     def test_func(self):
-        logmessage = LogMessage.objects.get(id = self.kwargs['pk'])
+        logmessage = LogMessage.objects.get(id=self.kwargs['pk'])
         sociable   = logmessage.sociable
         return self.request.user == sociable.owner
 
     def get_success_url(self):
-        logmessage = LogMessage.objects.get(id = self.kwargs['pk'])
+        logmessage = LogMessage.objects.get(id=self.kwargs['pk'])
         sociable   = logmessage.sociable
         return reverse("sociable", kwargs={"slug": sociable.slug})
 
@@ -77,9 +79,9 @@ class SociableCreate(LoginRequiredMixin, generic.edit.CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         form.instance.slug  = get_random_string(8,
-        allowed_chars = string.ascii_lowercase + string.digits)
-        messages.success(self.request, 'Sociable has been created successfully.')
+        allowed_chars=string.ascii_lowercase + string.digits)
         return super(SociableCreate, self).form_valid(form)
+
 
 class SociableUpdate(UserPassesTestMixin, generic.edit.UpdateView):
     '''Generic editing view to update Sociable:
@@ -88,8 +90,9 @@ class SociableUpdate(UserPassesTestMixin, generic.edit.UpdateView):
     fields = ['description']
 
     def test_func(self):
-        sociable = Sociable.objects.get(slug = self.kwargs['slug'])
+        sociable = Sociable.objects.get(slug=self.kwargs['slug'])
         return self.request.user == sociable.owner
+
 
 class SociableDelete(UserPassesTestMixin, generic.edit.DeleteView):
     '''Generic editing view to delete Sociable:
@@ -99,7 +102,7 @@ class SociableDelete(UserPassesTestMixin, generic.edit.DeleteView):
     template_name = "admin/confirm_delete.html"
 
     def test_func(self):
-        sociable = Sociable.objects.get(slug = self.kwargs['slug'])
+        sociable = Sociable.objects.get(slug=self.kwargs['slug'])
         return self.request.user == sociable.owner
 
 
@@ -107,6 +110,7 @@ class SociableDetail(generic.DetailView):
     '''Generic display view to show detailpage of Sociable:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/'''
     model = Sociable
+
 
 class SociableList(generic.ListView):
     '''Generic display view to show an overview of Sociable:

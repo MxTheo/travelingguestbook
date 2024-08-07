@@ -1,9 +1,9 @@
-from django.test import RequestFactory
 from django.urls import reverse
 import pytest
 from travelingguestbook.factories import LogMessageFactory, SociableFactory
 from sociablecreating.models import LogMessage, Sociable
-from sociablecreating.views import get_logmessage_list_from_sociable_list, search_sociable
+from sociablecreating.views import get_logmessage_list_from_sociable_list
+
 
 def test_message_sociable_relationship_set(client):
     '''Test if creating a log message results in a log message with a sociable relationship set'''
@@ -15,9 +15,11 @@ def test_message_sociable_relationship_set(client):
     logmessage_list = LogMessage.objects.all()
     assert logmessage_list[0].sociable == sociable
 
+
 class TestSearchSociable:
     '''Test the behaviour of search_sociable'''
     url = reverse('search-sociable')
+
     def setup_method(self):
         '''For every test, a sociable with slug test123 is used
         and url is search-sociable'''
@@ -47,6 +49,7 @@ class TestSearchSociable:
         response = client.get(self.url)
         assert b'Sociable not found' in response.content
 
+
 class TestGetLogmessageListFromSociableList:
     '''Test the behavour of get_log_message_from_one_sociable'''
     def create_logmessage(self, number_of_messages: int, sociable: Sociable):
@@ -55,13 +58,13 @@ class TestGetLogmessageListFromSociableList:
         for _ in range(number_of_messages):
             LogMessageFactory(sociable=sociable)
 
-    @pytest.mark.parametrize('number_of_messages', list(range(0,3)))
+    @pytest.mark.parametrize('number_of_messages', list(range(0, 3)))
     def test_get_log_messages_from_one_sociable(self, number_of_messages):
         '''Using the function create_logmessage and one sociable,
         tests if all the messages are retrieved from the sociable for 0 till 3 log messages'''
         sociable_list_one = [SociableFactory()]
 
-        self.create_logmessage( number_of_messages, sociable_list_one[0])
+        self.create_logmessage(number_of_messages, sociable_list_one[0])
 
         assert len(get_logmessage_list_from_sociable_list(sociable_list_one)) == number_of_messages
 

@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import generic
-from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Count
 from .models import Goal
@@ -14,9 +13,8 @@ class GoalCreate(LoginRequiredMixin, generic.edit.CreateView):
     success_url = reverse_lazy('goals')
 
     def form_valid(self, form):
-        form.instance.creator   = self.request.user
-        messages.success(self.request, 'The goal was created successfully.')
-        return super(GoalCreate,self).form_valid(form)
+        form.instance.creator = self.request.user
+        return super(GoalCreate, self).form_valid(form)
 
 
 class GoalDelete(UserPassesTestMixin, generic.edit.DeleteView):
@@ -27,7 +25,7 @@ class GoalDelete(UserPassesTestMixin, generic.edit.DeleteView):
     template_name = "admin/confirm_delete.html"
 
     def test_func(self):
-        goal = Goal.objects.get(pk = self.kwargs['pk'])
+        goal = Goal.objects.get(pk=self.kwargs['pk'])
         return self.request.user == goal.creator
 
 

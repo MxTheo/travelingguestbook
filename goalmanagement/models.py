@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+
 class Goal(models.Model):
     '''A goal is given to a sociable,
     so that the receiver knows what to do with it'''
@@ -16,5 +17,5 @@ class Goal(models.Model):
         '''Directs towards the detail page'''
         return reverse("goal", kwargs={"pk": self.pk})
 
-    def __str__(self) -> str:
-        return str(self.title)
+    def __str__(self):
+        return self.title

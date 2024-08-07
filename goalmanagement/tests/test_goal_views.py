@@ -1,9 +1,10 @@
 from django.urls import reverse
 from travelingguestbook.factories import GoalFactory, SociableFactory, UserFactory
+from travelingguestbook.helpers_test import helper_test_page_rendering, create_goal
 from goalmanagement.models import Goal
-from travelingguestbook.helpers_test import helper_test_page_rendering
 
-def test_orders_goal_list_by_count_sociables (client):
+
+def test_orders_goal_list_by_count_sociables(client):
     '''Given a goal with 2 sociables and a goal with 1 sociables,
     test if it returns a list where the goal with 2 sociables is on top'''
     goal_with_2 = GoalFactory(title='2')
@@ -16,6 +17,7 @@ def test_orders_goal_list_by_count_sociables (client):
     client = client.get(url)
     goal_list = list(client.context['goal_list'])
     assert goal_list[0].title == '2'
+
 
 class TestDeleteGoal:
     '''Tests user permissions for deleting a goal'''
@@ -53,6 +55,15 @@ class TestDeleteGoal:
         '''Given the client and the goal, delete the goal'''
         delete_goal_url = reverse('delete-goal', args=[goal.id])
         client.delete(delete_goal_url)
+
+
+def test_goal_create(auto_login_user):
+    '''Test if a goal is created with the current user set as the creator'''
+    client, user = auto_login_user()
+    goal = create_goal(client, data={'title': 'test'})
+    assert goal.title   == 'test'
+    assert goal.creator == user
+
 
 def test_goal_detail(client):
     '''Test if goal detail page is rendered'''

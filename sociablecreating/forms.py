@@ -1,6 +1,7 @@
 from django.forms import ModelForm, Textarea
 from .models import LogMessage, Sociable
 
+
 class LogMessageForm(ModelForm):
     '''The form the sociable reciever uses to leave a message on the sociable page'''
     class Meta:
@@ -9,6 +10,7 @@ class LogMessageForm(ModelForm):
         widgets = {
             'body': Textarea(attrs={'rows':3})
         }
+
 
 class SociableForm(ModelForm):
     '''The form for sociable'''
