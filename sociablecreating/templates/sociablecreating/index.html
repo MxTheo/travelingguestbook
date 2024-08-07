@@ -4,12 +4,13 @@
     
       <main class="px-3">
         <div class='container'>
-        <h1>You received a sociable with a code. Sociables travel from person to person. Leave a message, then pass it on!</h1>
+        <h1>Bedankt voor het gesprek!</h1>
+        <h2>Vul de code in en laat een berichtje achter. Ga het gesprek aan met een ander en bedank diegene met datzelfde!</h2>
         {% load crispy_forms_tags %}
         <form class='form-control-lg' method="GET" action={% url "search-sociable" %}>
             <div>
-                <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Search sociable:</b></label>
-                <input class="form-control form-control-lg w-50 ms-auto me-auto" type="text" placeholder="Enter received code..." id="inputLarge" name='search-code' aria-label="SearchCode">
+                <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Zoek op:</b></label>
+                <input class="form-control form-control-lg w-50 ms-auto me-auto" type="text" placeholder="Vul ontvangen code in..." id="inputLarge" name='search-code' aria-label="SearchCode">
               </div>
         </label>
         </form>

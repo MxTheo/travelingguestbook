@@ -7,51 +7,29 @@ Sociable Detail
 <link href='{% static "sociablecreating/styles/sociable_detail.css" %}' rel="stylesheet" >
 {% endblock stylesheet %}
 {% block content %}
+{% if request.user == sociable.owner %}
 <nav class="navbar navbar-expand bg-light crudbar" data-bs-theme="light">
   <div class="container-fluid">
     <div class="collapse navbar-collapse" id="navbarColor03">
-      {% if request.user == sociable.owner %}
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" href={% url "update-sociable" sociable.slug %}>Edit</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href={% url "delete-sociable" sociable.slug %}>Delete</a>
+          <a class="nav-link" href={% url "delete-sociable" sociable.slug %}>Verwijder</a>
         </li>
       </ul>
-      {% endif %}
-      <div class="nav-item">
-        <button type='button' class='btn btn-dark'>modified at: {{ sociable.date_modified|date:'d-m' }}</button>
-      </div>
     </div>
   </div>
 </nav>
+{% endif %}
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">More sociables of {{sociable.owner}}</h5>
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
-    <div class="accordion" id="accordionExample">
-    {% for sociable in sociable.owner.sociable_set.all %}
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{sociable.date_created|date:'dmyHis'}}" aria-expanded="false" aria-controls="{{sociable.date_created|date:'dmyHis'}}">
-            <b>Created at {{sociable.date_created|date:'d-M-y'}}</b>
-          </button>
-        </h2>
-        <div id="{{sociable.date_created|date:'dmyHis'}}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-            <small>Created at {{sociable.date_created|date:'d-M-y'}}</small>
-            <p>
-            {{sociable.description|linebreaks}}
-            </p>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
+    <div>    {% include 'usermanagement/profile.html' with user=sociable.owner %}</div>
   </div>
 </div>
 
@@ -63,7 +41,7 @@ Sociable Detail
     <div class='justify-content-between d-flex align-items-center'>
     <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#offcanvasExample" aria-controls="offcanvasExample"><h6 class='mt-1'><b><i class="bi bi-arrow-bar-right"></i> {{sociable.owner}}</h6></b></button>
       
-    <small>Created at {{sociable.date_created|date:'d-M-y'}}</small>
+    <small>Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
     </div>
     <p>{{sociable.description|linebreaks}}</p>
     </div>
