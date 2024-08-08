@@ -5,11 +5,11 @@ from django.urls import reverse
 
 class Sociable(models.Model):
     '''The object that is passed from person to person'''
-    slug          = models.SlugField(verbose_name='Code used to find the sociable', max_length=8, unique=True, editable=False)
-    owner         = models.ForeignKey(User, verbose_name=("User of the sociable"), on_delete=models.CASCADE)
-    description   = models.TextField(max_length=3000)
-    date_created  = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
+    slug          = models.SlugField(verbose_name='Code om de sociable te kunnen vinden', max_length=8, unique=True, editable=False)
+    owner         = models.ForeignKey(User, on_delete=models.CASCADE)
+    description   = models.TextField(max_length=3000, blank=True, help_text='Vrije ruimte en optioneel: Misschien heb je wel iets wat je wilt weten van anderen. Hier is de ruimte om verzoeken te doen aan degene die hier een berichtje achter laten', verbose_name='Omschrijving', default='Laat een bericht achter. Vertel iets over je ervaringen van je gesprek')
+    date_created  = models.DateTimeField(auto_now_add=True, verbose_name='Datum aangemaakt')
+    date_modified = models.DateTimeField(auto_now=True, verbose_name='Datum aangepast')
 
     class Meta:
         ordering = ['-date_created']
@@ -27,8 +27,8 @@ class Sociable(models.Model):
 class LogMessage(models.Model):
     '''The message the receiver of the sociable leaves on the sociable page'''
     sociable      = models.ForeignKey(Sociable, on_delete=models.CASCADE)
-    name          = models.CharField(max_length=70, default='Anonymous', verbose_name='Your name')
-    body          = models.TextField(max_length=30000, verbose_name='Message')
+    name          = models.CharField(max_length=70, default='Anoniem', verbose_name='Je naam', help_text='Een naam geeft al context aan een bericht. Voel je ook vrij om je naam op anoniem te houden')
+    body          = models.TextField(max_length=30000, verbose_name='Bericht', help_text='Vertel iets over je ervaringen van het gesprek. Voel je vrij te delen wat je wilt delen en niet te delen wat je niet wilt delen.')
     date_created  = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 

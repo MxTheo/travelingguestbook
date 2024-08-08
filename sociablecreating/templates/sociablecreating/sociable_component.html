@@ -2,7 +2,7 @@
 {% block stylesheet %}<link href='{% static "sociablecreating/styles/sociablecomponent.css" %}' rel="stylesheet" >{% endblock stylesheet %}
 <div class="card border-info text-white bg-secondary mb-3">
     <div class="card-header d-flex justify-content-around">
-        <h4 class='mt-auto'>Your Sociables</h4> <a class='btn btn-primary' href='{% url "create-sociable" %}'><b>+</b></a>
+        <h4 class='mt-auto'>Jouw Sociables</h4> <a class='btn btn-primary' href='{% url "create-sociable" %}'><b>+</b></a>
     </div>
     <div class="card-body">
         {% if sociable_list %}
@@ -13,7 +13,7 @@
                 <div class="card-body">
                   <h4 class="card-title">{{sociable.slug}}</h4>
                   <p class="card-text">{{sociable.description|truncatewords:23 }}</p>
-                  <small class="card-subtitle mb-2 text-muted">Created at {{sociable.date_created|date:'d-M-y'}}</small>
+                  <small class="card-subtitle mb-2 text-muted">Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
                 </div>
             </div>  
         </a>       
@@ -21,8 +21,8 @@
         {% else %}
         <div class='card'>
             <div class="card-body">
-                You have no sociables yet. Create your first one.
-                <p><a href='{% url "create-sociable" %}'><button href='{% url "create-sociable" %}' button type="button" class="btn btn-primary mt-3">Create</button></a></p>
+                Je hebt nog geen sociables. Maak je eerste aan.
+                <p><a href='{% url "create-sociable" %}'><button href='{% url "create-sociable" %}' button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
             </div>
         </div>
         {% endif %}

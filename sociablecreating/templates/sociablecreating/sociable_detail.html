@@ -43,17 +43,27 @@ Sociable Detail
       
     <small>Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
     </div>
-    <p>{{sociable.description|linebreaks}}</p>
+    <div class='container mt-4'>
+    {% with description=sociable.description %}
+    <p>
+    {% if description %}
+    {{description|linebreaks}}
+    {% else %}
+    Laat een bericht achter. Vertel iets over je ervaringen van het gesprek
+    {% endif %}
+    </p>
+    {% endwith %}
+    </div>
     </div>
 
 
     <div class='col-md-5'>
       <div class='flex-container d-flex justify-content-end'>
-        <a class='btn btn-info btn-lg' href={% url "create-logmessage" sociable %}><b>Leave a message <i class="bi bi-chat-right-text-fill ms-2"></i></b></a>
+        <a class='btn btn-info btn-lg' href={% url "create-logmessage" sociable %}><b>Laat een bericht achter <i class="bi bi-chat-right-text-fill ms-2"></i></b></a>
       </div>
       {% for message in sociable.logmessage_set.all %}
       <div class="card bg-secondary border-info mb-3">
-          <div class="card-header justify-content-between d-flex fs-6">{{message.name}} <small class="text-muted">{{message.date_created|timesince}} ago 
+          <div class="card-header justify-content-between d-flex fs-6">{{message.name}} <small class="text-muted">{{message.date_created|timesince}} geleden 
           {% if request.user == sociable.owner %}
           <a href='{% url "delete-logmessage" message.id %}' class='btn btn-outline-danger ms-2'><i class="bi bi-trash3"></i></a></small>
           {% endif %}

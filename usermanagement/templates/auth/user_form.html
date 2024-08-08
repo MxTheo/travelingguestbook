@@ -4,16 +4,16 @@ Account edit
 {% endblock %}
 {% block content %}
 <div class='container'>
-    <h3>Edit your account details</h3>
+    <h3>Edit je account</h3>
 
     <form method="post">
         {% csrf_token %}
         {% load crispy_forms_tags %}
         {{user_form|crispy}}
         {{ profile_form|crispy}}
-        <p><a class="btn btn-primary" href='{% url "password_change" %}'>Change password</a></p>
+        <p><a class="btn btn-primary" href='{% url "password_change" %}'>Verander wachtwoord</a></p>
         <input class='btn btn-success' type="submit" value="Save" />
-        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Cancel</button>
+        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
     </form>
 </div>
 {% endblock %}

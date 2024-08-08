@@ -2,6 +2,8 @@
 {% block title %}
 Help
 {% endblock %}
+{% load static %}
+{% block stylesheet %}<link href={% static "contact/styles/help.css" %} />{% endblock stylesheet %}
 {% block content %}
 <div class='container'>
     <!-- Jumbotron -->
@@ -26,7 +28,7 @@ Help
         </div>
         <div>
           <h3 class="fs-2">Sociable</h3>
-          <p>Het fysieke item dat wordt doorgegeven van persoon tot persoon. Dit kan van alles zijn, zoals een kaartje. Op dit fysieke item staat een code, waarmee je de pagina van de sociable kan bereiken.</p>
+          <p>Het fysieke item waarmee je de ander bedankt voor het gesprek. Dit kan van alles zijn, zoals een kaartje. Op dit fysieke item staat een code, waarmee je de pagina van de sociable kan bereiken.</p>
         </div>
       </div>
       <div class="col d-flex align-items-start">

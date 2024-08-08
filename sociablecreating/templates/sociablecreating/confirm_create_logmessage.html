@@ -1,18 +1,18 @@
 {% extends "admin/main.html" %}
 {% block title %}
-Confirm
+Bevestig
 {% endblock %}
 {% block content %}
 <form method='post'>
     {% csrf_token %}
     <fieldset class="form-group mb-3">
-        <legend class="border-bottom mb-4">Post {{ object }}</legend>
-        <h2>Are you sure you want to post '{{object}}'?</h2>
-        <p>Once you post this message, you are not able to edit or delete your message. Only the owner of the sociable can delete the messages</p>
+        <legend class="border-bottom mb-4">Plaats bericht {{ object }}</legend>
+        <h2>Ben je zeker dat je '{{object}}' wilt plaatsen?</h2>
+        <p>Zodra je dit bericht plaatst, kun je het niet meer veranderen of verwijderen. Alleen de eigenaar van de sociable kan het bericht verwijderen.</p>
     </fieldset>
     <fieldset class="form-group">
-        <button class="btn btn-danger" type="submit">Confirm</button>
-        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Cancel</button>
+        <button class="btn btn-danger" type="submit">Bevestig</button>
+        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
     </fieldset>
 </form>
 {% endblock %}

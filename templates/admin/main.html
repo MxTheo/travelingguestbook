@@ -9,7 +9,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>{% block title %}{% endblock %}</title>
-        <meta name="description" content="You are six handshakes away from anyone in the world.">
+        <meta name="description" content="Ga het gesprek aan en bedank diegene via deze website.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link href='{% static "styles/bootstrap/bootstrap.css" %}' rel="stylesheet" type="text/css">
@@ -32,13 +32,13 @@
             <div class="pagination">
                 <span class="page-links">
                     {% if page_obj.has_previous %}
-                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">vorige</a>
                     {% endif %}
                     <span class="page-current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        Pagina {{ page_obj.number }} van de {{ page_obj.paginator.num_pages }}.
                     </span>
                     {% if page_obj.has_next %}
-                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">volgende</a>
                     {% endif %}
                 </span>
             </div>
