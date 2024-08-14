@@ -1,0 +1,8 @@
+.jumbotron {
+    background-image: url('../../../static/images/telephoneline.jpg');
+    background-size: contain;
+}
+
+.mask {
+    background-color: rgba(0, 0, 0, 0.6);
+}
