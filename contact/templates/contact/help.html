@@ -3,7 +3,9 @@
 Help
 {% endblock %}
 {% load static %}
-{% block stylesheet %}<link href={% static "contact/styles/help.css" %} />{% endblock stylesheet %}
+{% block stylesheet %}
+<link href={% static "contact/styles/help.css" %} rel='stylesheet' type='text/css'/>
+{% endblock stylesheet %}
 {% block content %}
 <div class='container'>
     <!-- Jumbotron -->
@@ -12,36 +14,35 @@ Help
         <div class="d-flex justify-content-center align-items-center h-100">
             <div class="text-white">
             <h1 class="mt-3 mb-3">Help</h1>
-            <h4 class="mb-3">Op deze pagina vind je instructies hoe je Traveling Guestbook gebruikt.</h4>
             </div>
         </div>
         </div>
     </div>
   <!-- Jumbotron -->
 
-  <div class="container px-4 py-5" id="hanging-icons">
-    <h2 class="pb-2 border-bottom">Sociables, and Messages</h2>
-    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-      <div class="col d-flex align-items-start">
-        <div class="icon-square text-black-50 bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <i class="bi bi-people-fill"></i>
-        </div>
-        <div>
-          <h3 class="fs-2">Sociable</h3>
-          <p>Het fysieke item waarmee je de ander bedankt voor het gesprek. Dit kan van alles zijn, zoals een kaartje. Op dit fysieke item staat een code, waarmee je de pagina van de sociable kan bereiken.</p>
-        </div>
-      </div>
-      <div class="col d-flex align-items-start">
-        <div class="icon-square text-black-50 bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-            <i class="bi bi-chat-left-text-fill"></i>
-        </div>
-        <div>
-          <h3 class="fs-2">Message</h3>
-          <p>Het bericht dat de ontvanger van de sociable achterlaat op de pagina van de sociable. Met de code op de sociable kom je op de pagina waar je een berichtje kan achterlaten.</p>
-        </div>
-      </div>
-    </div>  
+<div class="px-4 my-3 py-3 text-center">
+  <i class="bi bi-chat-quote display-3"></i>
+  <h1 class="mt-2">Gesprekseindiger</h1>
+  <div class="col-lg-6 mx-auto">
+    <p class="lead fw-medium mb-4">Deze applicatie is bedoeld als gesprekseindiger. Dankers zijn voorwerpen met een code erop. Met danker kun je iemand bedanken voor het gesprek. Er zijn vele manieren om gesprekken te openen. Uiteindelijk kun je alleen zelf het gesprek openen. Geen gespreksstarter op de wereld kan dat voor je doen. Met bedankt kun je wel iemand bedanken voor het gesprek.</p>
   </div>
+</div>
+
+<div class="px-4 my-4 py-3 text-center">
+  <i class="bi bi-fast-forward display-3"></i>
+  <h1 class="mt-2">Pay it forward</h1>
+  <div class="col-lg-6 mx-auto">
+    <p class="lead fw-medium mb-4">Deze applicatie is Dit is belangrijk. Dat de danker wordt doorgegeven. Als ieder die bedankt wordt, anderen ook bedankt met dezelfde danker, dan kun je zo de reis volgen van de danker. De danker reist van persoon tot persoon, elke keer via een nieuw, uniek gesprek. Bedankt voor het doorgeven!</p>
+  </div>
+</div>
+
+<div class="px-4 my-4 py-3 text-center">
+  <i class="bi bi-people display-3"></i>
+  <h1 class="mt-2">Deel je ervaringen!</h1>
+  <div class="col-lg-6 mx-auto">
+    <p class="lead fw-medium mb-4">Op de danker staat een code. Met die code kom je bij de pagina waar je een berichtje achter kunt laten. Deel je ervaringen van het gesprek. Zo kunnen anderen zien dat de danker, die zij nu hebben, ook bij jou is langsgeweest. Zo ontmoeten we elkaar, omdat anderen werkelijk de moeite hebben gedaan om een gesprek aan te knopen. Lees de ervaringen van alle andere mensen die ook de moeite hebben gedaan om het kletspraatje aan te gaan. Via dankers zijn we met elkaar verbonden.</p>
+  </div>
+</div>
 
 </div>
 {% endblock %}
