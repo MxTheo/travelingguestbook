@@ -1,4 +1,4 @@
-# Contributing to Traveling Guestbook
+# Contributing to Traveling Guestbook (Bedankt voor het gesprek on the website)
 Thank you for taking the time to contribute! I started this project, while knowing nothing of django and little experience with programming. The main things I wrote in the Definition of Done, I learned more from books, then from experience.There is still much I can learn. I welcome any feedback and would take it into consideration.
 
 All types of contributions are encouraged and valued. See the [Table of Contents](#table-of-contents) for different ways to help and details about how this project handles them. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved. The community looks forward to your contributions.
@@ -11,7 +11,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 
 ## Table of Contents
 
-- [Contributing to Traveling Guestbook](#contributing-to-traveling-guestbook)
+- [Contributing to Traveling Guestbook (Bedankt voor het gesprek on the website)](#contributing-to-traveling-guestbook-bedankt-voor-het-gesprek-on-the-website)
   - [Table of Contents](#table-of-contents)
   - [I Have a Question](#i-have-a-question)
   - [I Want To Contribute](#i-want-to-contribute)
@@ -169,7 +169,7 @@ Please provide descriptive commit messages, including the issue you worked on
 - Write descriptive commit messages
 - Write your unit tests before you start coding the logic (TDD principle)
     - Number of UnitTests: Number of if statements + 1
-    - 80% Code-Base Coverage
+    - 100% Code-Base Coverage
     - Red, Green, Refactor (Test Driven Development)
 - Refactor your programs after they work to be more ***readable***. This is when and how program design is learned (Steuben, 2018)<sup>[1](#f1)</sup>
     1. The goal of refactoring is to minimize the time necessary for *others* to understand your code (Steuben, 2018)<sup>[1](#f1)</sup>
