@@ -41,13 +41,13 @@ class TestSearchSociable:
         '''Given incorrect slug,
         tests if it returns Not Found'''
         response = client.get(self.url, {'search-code': 'test456'})
-        assert b'Sociable not found' in response.content
+        assert b'niet gevonden' in response.content
 
     def test_search_with_no_slug(self, client):
         '''Given None,
         tests if it returns Not Found'''
         response = client.get(self.url)
-        assert b'Sociable not found' in response.content
+        assert b'niet gevonden' in response.content
 
 
 class TestGetLogmessageListFromSociableList:
