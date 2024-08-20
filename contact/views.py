@@ -27,6 +27,6 @@ def helppage(request):
 def create_mailto_url():
     '''Given the admin,
     creates a mailto url'''
-    admin = User.objects.get(username='admin')
+    admin = User.objects.get(is_superuser=True)
     mailto_url = f'mailto:{admin.email}'
     return mailto_url
