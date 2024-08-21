@@ -3,10 +3,10 @@ from faker import Faker
 from sociablecreating.models import Sociable
 
 
-def helper_test_page_rendering(client, name_of_page, arguments=None):
-    '''Given, the client, a name of the page and optional arguments,
+def helper_test_page_rendering(client, name_of_page, keyword_arguments=None):
+    '''Given, the client, a name of the page and optional keyword_arguments,
     tests if the client responds with OK, success'''
-    url = reverse(name_of_page, args=arguments)
+    url = reverse(name_of_page, kwargs=keyword_arguments)
     response = client.get(url)
     assert response.status_code == 200
 

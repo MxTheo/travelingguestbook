@@ -38,6 +38,8 @@ class UserDetail(DetailView):
     '''Generic display view to get to the profile of the user:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/'''
     model = User
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
 
 
 @login_required

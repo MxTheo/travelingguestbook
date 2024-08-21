@@ -21,7 +21,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i> {{user.username}}</a>
           <ul class="dropdown-menu" aria-labelledby="dropdown03">
-            <li><a class="dropdown-item" href='{% url "profile" user.id %}'>Mijn Profiel</a></li>
+            <li><a class="dropdown-item" href='{% url "profile" user.username %}'>Mijn Profiel</a></li>
             <li><a class="dropdown-item" href='{% url "editaccount" %}'>Edit Account</a></li>
             <li><form method='post' action='{% url "logout" %}'>{% csrf_token %}
               <button class='dropdown-item' type='submit'>Logout</button>
