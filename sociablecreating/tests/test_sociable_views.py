@@ -3,6 +3,7 @@ import pytest
 from travelingguestbook.factories import LogMessageFactory, SociableFactory
 from sociablecreating.models import LogMessage, Sociable
 from sociablecreating.views import get_logmessage_list_from_sociable_list
+from travelingguestbook.helpers_test import helper_test_page_rendering
 
 
 def test_message_sociable_relationship_set(client):
@@ -30,24 +31,28 @@ class TestSearchSociable:
         tests if it returns the page with the sociable'''
         response = client.get(self.url, {'search-code': 'test123'})
         assert 'test123' in response.url
+        assert response.status_code == 200
 
     def test_search_with_slug_with_capital(self, client):
         '''Given a slug with a capital,
         tests if it returns the page with the sociable'''
         response = client.get(self.url, {'search-code': 'Test123'})
         assert 'test123' in response.url
+        assert response.status_code == 200
 
     def test_search_with_incorrect_slug(self, client):
         '''Given incorrect slug,
         tests if it returns Not Found'''
         response = client.get(self.url, {'search-code': 'test456'})
         assert b'niet gevonden' in response.content
+        assert response.status_code == 200
 
     def test_search_with_no_slug(self, client):
         '''Given None,
         tests if it returns Not Found'''
         response = client.get(self.url)
         assert b'niet gevonden' in response.content
+        assert response.status_code == 200
 
 
 class TestGetLogmessageListFromSociableList:
