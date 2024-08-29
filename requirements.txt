@@ -1,4 +1,4 @@
-asgiref==3.8.1
+asgiref==3.7.2
 astroid==3.2.2
 coverage==7.5.4
 crispy-bootstrap5==2024.2
