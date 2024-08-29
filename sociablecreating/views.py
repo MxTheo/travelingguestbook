@@ -40,11 +40,28 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
     form_class = LogMessageForm
     model      = LogMessage
 
+    def get_initial(self):
+        '''If logged in, the username is entered as initial value of name'''
+        initial = super().get_initial()
+        user    = self.request.user
+        if not user.is_anonymous:
+            initial['name'] = user.username
+        return initial
+
     def form_valid(self, form):
-        self.set_sociable_relationship(form)
+        '''After the form is valid, set the relationships'''
+        self.set_sociable(form)
+        self.set_author(form)
         return super(LogMessageCreate, self).form_valid(form)
 
-    def set_sociable_relationship(self, form):
+    def set_author(self, form):
+        '''Given the logmessage and the user,
+        sets the user as the author, if user is logged in'''
+        user = self.request.user
+        if not user.is_anonymous:
+            form.instance.author = user
+
+    def set_sociable(self, form):
         '''Given the log message and the sociable slug from the context,
         sets the sociable relationship for the created log message'''
         slug                   = super().get_context_data()['view'].kwargs['slug']

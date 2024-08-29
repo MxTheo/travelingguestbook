@@ -35,4 +35,3 @@ class LogMessageFactory(factory.django.DjangoModelFactory):
     name     = factory.LazyFunction(fake.name)
     sociable = factory.SubFactory(SociableFactory)
     date_created = factory.LazyFunction(fake.date)
-    date_modified = factory.LazyFunction(fake.date)

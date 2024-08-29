@@ -1,20 +1,8 @@
 from django.urls import reverse
 import pytest
 from travelingguestbook.factories import LogMessageFactory, SociableFactory
-from sociablecreating.models import LogMessage, Sociable
+from sociablecreating.models import Sociable
 from sociablecreating.views import get_logmessage_list_from_sociable_list
-from travelingguestbook.helpers_test import helper_test_page_rendering
-
-
-def test_message_sociable_relationship_set(client):
-    '''Test if creating a log message results in a log message with a sociable relationship set'''
-    sociable = SociableFactory()
-    create_log_message_url = reverse('create-logmessage', args=[sociable.slug])
-
-    client.post(create_log_message_url, data={'name': 'Tester', 'body': 'Hello'})
-
-    logmessage_list = LogMessage.objects.all()
-    assert logmessage_list[0].sociable == sociable
 
 
 class TestSearchSociable:
@@ -31,14 +19,14 @@ class TestSearchSociable:
         tests if it returns the page with the sociable'''
         response = client.get(self.url, {'search-code': 'test123'})
         assert 'test123' in response.url
-        assert response.status_code == 200
+        assert response.status_code == 302
 
     def test_search_with_slug_with_capital(self, client):
         '''Given a slug with a capital,
         tests if it returns the page with the sociable'''
         response = client.get(self.url, {'search-code': 'Test123'})
         assert 'test123' in response.url
-        assert response.status_code == 200
+        assert response.status_code == 302
 
     def test_search_with_incorrect_slug(self, client):
         '''Given incorrect slug,
@@ -87,3 +75,15 @@ class TestGetLogmessageListFromSociableList:
         '''Given no sociables,
         tests if it returns no logmessages'''
         assert len(get_logmessage_list_from_sociable_list([])) == 0
+
+
+def test_logmessage_str():
+    '''Test the __str__ function of logmessage'''
+    logmessage = LogMessageFactory(body='Hello, I am testing this body if it is truncated to 50.')
+    assert str(logmessage) == 'Hello, I am testing this body if it is truncated t . . .'
+
+
+def test_sociable_str():
+    '''Test the __str__ function of sociable'''
+    sociable = SociableFactory(slug='test123')
+    assert str(sociable) == 'test123'

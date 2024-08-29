@@ -27,13 +27,14 @@ class Sociable(models.Model):
 class LogMessage(models.Model):
     '''The message the receiver of the sociable leaves on the sociable page'''
     sociable      = models.ForeignKey(Sociable, on_delete=models.CASCADE)
+    author        = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name          = models.CharField(max_length=70, default='Anoniem', verbose_name='Je naam', help_text='Een naam geeft al context aan een bericht. Voel je ook vrij om je naam op anoniem te houden')
     body          = models.TextField(max_length=30000, verbose_name='Bericht', help_text='Vertel iets over je ervaringen van het gesprek. Voel je vrij te delen wat je wilt delen en niet te delen wat je niet wilt delen.')
     date_created  = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-date_modified', '-date_created']
+        '''Put the messages that are most recently modified, then put the messages that are most recently created'''
+        ordering = ['-date_created']
 
     def __str__(self):
         return str(self.body[0:50]+' . . .')

@@ -1,6 +1,7 @@
 from django.urls import reverse
 from faker import Faker
-from sociablecreating.models import Sociable
+from sociablecreating.models import LogMessage, Sociable
+from travelingguestbook.factories import SociableFactory
 
 
 def helper_test_page_rendering(client, name_of_page, keyword_arguments=None):
@@ -11,15 +12,24 @@ def helper_test_page_rendering(client, name_of_page, keyword_arguments=None):
     assert response.status_code == 200
 
 
-fake = Faker()
-
-
 def create_sociable(client, data=None):
     '''Given the client and optional data for the sociable,
-    creates sociables using the CreateView for unittesting purposes'''
+    creates sociable using the CreateView for unittesting purposes'''
     if data is None:
         data = {
-            'description': fake.text()
+            'description': 'create_sociable'
         }
     client.post('/create-sociable/', data=data)
     return Sociable.objects.get(description=data['description'])
+
+
+def create_logmessage(client, sociable=None, data=None):
+    '''Given the client and optional data for the sociable,
+    creates a logmessage using the CreateView for unittesting purposes'''
+    if sociable is None:
+        sociable = SociableFactory()
+    if data is None:
+        data = {'name': 'create_logmessage', 'body': 'create_logmessage'}
+    url_create = reverse('create-logmessage', args=[sociable.slug])
+    client.post(url_create, data=data)
+    return LogMessage.objects.get(sociable=sociable)

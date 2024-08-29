@@ -1,6 +1,7 @@
 from django.urls import reverse
+from conftest import auto_login_user
 from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
-from travelingguestbook.helpers_test import helper_test_page_rendering, create_sociable
+from travelingguestbook.helpers_test import create_logmessage, helper_test_page_rendering, create_sociable
 from sociablecreating.models import LogMessage, Sociable
 
 
@@ -134,13 +135,43 @@ class TestDeleteLogMessage:
         client.delete(delete_logmessage_url)
 
 
-def test_logmessage_str():
-    '''Test the __str__ function of logmessage'''
-    logmessage = LogMessageFactory(body='Hello, I am testing this body if it is truncated to 50.')
-    assert str(logmessage) == 'Hello, I am testing this body if it is truncated t . . .'
+class TestCreateLogMessage:
+    '''Tests for creating logmessage'''
+    def test_message_sociable_relationship_set(self, client):
+        '''Given a sociable and creating a logmessage,
+        tests if the sociable relationship is set'''
+        sociable = SociableFactory()
+        logmessage = create_logmessage(client, sociable)
+        assert logmessage.sociable == sociable
 
+    def test_if_logged_in_user_is_set_as_user(self, auto_login_user):
+        '''Logged in, tests if the user is set for the logmessage'''
+        client, user = auto_login_user()
+        logmessage = create_logmessage(client)
+        assert logmessage.author == user
 
-def test_sociable_str():
-    '''Test the __str__ function of sociable'''
-    sociable = SociableFactory(slug='test123')
-    assert str(sociable) == 'test123'
+    def test_if_name_is_not_changed_with_anonymous_user(self, client):
+        '''Not logged in, tests if the name is not altered'''
+        logmessage = create_logmessage(client, data={'name': 'test-name', 'body': 'test-body'})
+        assert logmessage.name == 'test-name'
+
+    def test_if_user_is_blank_with_anonymous_user(self, client):
+        '''Not logged in, tests if the name is not altered'''
+        logmessage = create_logmessage(client)
+        assert logmessage.author is None
+
+    def test_if_username_is_filled_in_on_form(self, auto_login_user):
+        '''Logged in, tests if the username is shown in the name field of the form'''
+        client, user = auto_login_user()
+        sociable = SociableFactory()
+        url_logmessage_form = reverse('create-logmessage', args=[sociable.slug])
+        response = client.get(url_logmessage_form)
+        username = 'value="'+user.username
+        assert username in response.rendered_content
+
+    def test_if_anoniem_is_entered_with_anonymous_user(self, client):
+        '''Not logged in, tests if "Anoniem" is shown in the name field of the form'''
+        sociable = SociableFactory()      
+        url_logmessage_form = reverse('create-logmessage', args=[sociable.slug])
+        response = client.get(url_logmessage_form)
+        assert 'value="Anoniem' in response.rendered_content
