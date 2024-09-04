@@ -1,4 +1,4 @@
-# Bedankt voor het gesprek (before Traveling Guestbook)
+# Bedank voor het gesprek (before Traveling Guestbook)
 ## Empowers people to start conversations
 
 ### Description

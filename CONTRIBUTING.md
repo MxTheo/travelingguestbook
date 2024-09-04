@@ -1,4 +1,4 @@
-# Contributing to Traveling Guestbook (Bedankt voor het gesprek on the website)
+# Contributing to Traveling Guestbook (Bedank voor het gesprek on the website)
 Thank you for taking the time to contribute! I started this project, while knowing nothing of django and little experience with programming. The main things I wrote in the Definition of Done, I learned more from books, then from experience.There is still much I can learn. I welcome any feedback and would take it into consideration.
 
 All types of contributions are encouraged and valued. See the [Table of Contents](#table-of-contents) for different ways to help and details about how this project handles them. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved. The community looks forward to your contributions.
@@ -11,7 +11,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 
 ## Table of Contents
 
-- [Contributing to Traveling Guestbook (Bedankt voor het gesprek on the website)](#contributing-to-traveling-guestbook-bedankt-voor-het-gesprek-on-the-website)
+- [Contributing to Traveling Guestbook (Bedank voor het gesprek on the website)](#contributing-to-traveling-guestbook-bedankt-voor-het-gesprek-on-the-website)
   - [Table of Contents](#table-of-contents)
   - [I Have a Question](#i-have-a-question)
   - [I Want To Contribute](#i-want-to-contribute)
