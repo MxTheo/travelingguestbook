@@ -2,7 +2,7 @@
 {% block stylesheet %}<link href='{% static "sociablecreating/styles/sociablecomponent.css" %}' rel="stylesheet" >{% endblock stylesheet %}
 <div class="card border-info text-white bg-secondary mb-3">
     <div class="card-header d-flex justify-content-around">
-        <h4 class='mt-auto'>Jouw Sociables</h4> <a class='btn btn-primary' href='{% url "create-sociable" %}'><b>+</b></a>
+        <h4 class='mt-auto'>Jouw Codes</h4> <a class='btn btn-primary' href='{% url "create-sociable" %}'><b>+</b></a>
     </div>
     <div class="card-body">
         {% if sociable_list %}
@@ -21,7 +21,7 @@
         {% else %}
         <div class='card'>
             <div class="card-body">
-                Je hebt nog geen sociables. Maak je eerste aan.
+                Je hebt nog geen codes. Maak je eerste aan.
                 <p><a href='{% url "create-sociable" %}'><button href='{% url "create-sociable" %}' button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
             </div>
         </div>
