@@ -1,13 +1,15 @@
 # Bedank voor het gesprek (before Traveling Guestbook)
-## Empowers people to start conversations
+## Social media for real-life interactions
 
 ### Description
-The aim of this web-application is to facilitate conversation enders with people you do not know, for example people in the train. You can end the conversation by handing out a thank you, the sociable.
+The aim of this web-application is to facilitate conversation enders with people you do not know, for example people in the train. You can end the conversation by handing out a thank you.
 
-It is a web-application where people that received a code on a sociable, can leave a message.
+It is a web-application where people that received a code, can leave a message.
 
-Sociables are the conversation enders. You can end a conversation by thanking the other person with a sociable. The hope is that others will also thank others with the same sociable. In that way, the physical item is passed on from person to person.
-The physical sociable has a code. This code is used to find the page of the sociable. Every time it is passed on, the person who received it leaves a message on the sociable page.
+There are the conversation enders. You can end a conversation by thanking the other person with a code. The hope is that others will also thank others with the same code. In that way, the physical item is passed on from person to person.
+The code is used to find the page where all the messages are left. Every time it is passed on, the person who received it leaves a message.
+
+For more Dutch information about how the application works, see [help](https://bedankt.pythonanywhere.com/help).
 
 ### Language
 The Web-Application is in Dutch. The code and back-end is in English.
@@ -16,10 +18,10 @@ The Web-Application is in Dutch. The code and back-end is in English.
 ![Entity Relationship Diagram](architecture/domainModel.jpg)
 
 #### Glossary
-- **Sociable:** The physical item that is to thank the other for the conversation, in the hope that the other will also thank others with the same sociable for the conversation.
-- **LogMessage:** With the code on the sociable, the receiver leaves a message on the sociable detail page. He can write about his experiences of the conversation.
--  **User:** Users can create sociables and start spreading them around. Messages can be left by anyone with the proper sociable code. You do not need an account for that.
+-  **User:** Users can create codes and start spreading them around. Messages can be left by anyone who have a code. You do not need an account for that.
+- **Code (Sociable):** The code can be written on some physical thing. This physical item is used to thank the other for the conversation. Hopefully that other will also thank others with the same code for the conversation. (Have not renamed it yet in the backend)
+- **LogMessage:** With the code, the giver leaves a message on the specific page for the receiver of the code to read. He can write about his experiences of the conversation.
 
 ### Contributing
 You can fine the contribution guidelines here:
-[Contribution guidelines for this project](CONTRIBUTING.md)
+[Contribution guidelines for this project](CONTRIBUTING.md)Empowers people to start conversations
