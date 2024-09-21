@@ -6,6 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
 from sociablecreating.forms import LogMessageForm, SociableForm
 from .models import LogMessage, Sociable
+from usermanagement.models import Profile
 
 
 def home(request):
@@ -94,9 +95,38 @@ class SociableCreate(LoginRequiredMixin, generic.edit.CreateView):
     success_url = reverse_lazy('dashboard')
 
     def form_valid(self, form):
+        self.set_autocalculated_attributes(form)
+        self.save_description_as_default(form)
+        return super(SociableCreate, self).form_valid(form)
+
+    def set_autocalculated_attributes(self, form):
+        '''Sets the attributes that are automatically determined, which are
+         - Owner
+         - Slug'''
         form.instance.owner = self.request.user
         form.instance.slug  = get_random_string(8, allowed_chars=string.ascii_lowercase + string.digits)
-        return super(SociableCreate, self).form_valid(form)
+
+    def get_initial(self):
+        '''When creating a sociable, sets the initial values for descrition'''
+        initial = super().get_initial()
+        self.set_description(initial)
+        return initial
+
+    def set_description(self, initial):
+        '''Given the profile of the user, sets the description the user entered in their profile'''
+        profile    = Profile.objects.get(user=self.request.user)
+        cust_descr = profile.custom_description_for_code.strip()
+        if cust_descr != '':
+            initial['description'] = cust_descr
+
+    def save_description_as_default(self, form):
+        '''Given that the user checked to save description as their default description,
+        saves the description in their profile'''
+        is_default_description = form.cleaned_data.get('is_default_description')
+        if is_default_description:
+            profile = Profile.objects.get(user=self.request.user)
+            profile.custom_description_for_code = form.cleaned_data.get('description')
+            profile.save()
 
 
 class SociableUpdate(UserPassesTestMixin, generic.edit.UpdateView):

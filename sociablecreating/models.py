@@ -7,7 +7,7 @@ class Sociable(models.Model):
     '''The object that is passed from person to person'''
     slug          = models.SlugField(verbose_name='Code om de sociable te kunnen vinden', max_length=8, unique=True, editable=False)
     owner         = models.ForeignKey(User, on_delete=models.CASCADE)
-    description   = models.TextField(max_length=3000, blank=True, help_text='Vrije ruimte en optioneel: Misschien heb je wel iets wat je wilt weten van anderen. Hier is de ruimte om verzoeken te doen aan degene die hier een berichtje achter laten', verbose_name='Omschrijving', default='Laat een bericht achter. Vertel iets over je ervaringen van je gesprek')
+    description   = models.TextField(max_length=3000, blank=True, help_text='Vrije ruimte en optioneel: Misschien heb je wel iets wat je wilt weten van anderen. Hier is de ruimte om verzoeken te doen aan degene die hier een berichtje achter laten', verbose_name='Omschrijving', default='Ik heb een bericht voor je achter gelaten. Leuk als je reageert, hoeft niet. Vertel iets over jouw ervaringen van ons gesprek. Nu is het aan jou om deze gespreksketen voor te zetten.')
     date_created  = models.DateTimeField(auto_now_add=True, verbose_name='Datum aangemaakt')
     date_modified = models.DateTimeField(auto_now=True, verbose_name='Datum aangepast')
 
@@ -29,7 +29,7 @@ class LogMessage(models.Model):
     sociable      = models.ForeignKey(Sociable, on_delete=models.CASCADE)
     author        = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name          = models.CharField(max_length=70, default='Anoniem', verbose_name='Je naam', help_text='Een naam geeft al context aan een bericht. Voel je ook vrij om je naam op anoniem te houden')
-    body          = models.TextField(max_length=30000, verbose_name='Bericht', help_text='Ik heb een bericht voor je achter gelaten. Leuk als je reageert, hoeft niet. Vertel iets over jouw ervaringen van ons gesprek. Nu is het aan jou om deze gespreksketen voor te zetten.')
+    body          = models.TextField(max_length=30000, verbose_name='Bericht', help_text='Vertel iets over je ervaringen van het gesprek. Voel je vrij te delen wat je wilt delen en niet te delen wat je niet wilt delen.')
     date_created  = models.DateTimeField(auto_now_add=True)
 
     class Meta:

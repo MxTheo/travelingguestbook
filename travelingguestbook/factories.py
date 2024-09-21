@@ -5,6 +5,7 @@ import factory
 from faker import Faker
 from django.contrib.auth.models import User
 from sociablecreating.models import Sociable, LogMessage
+from usermanagement.models import Profile
 
 fake = Faker()
 
@@ -22,8 +23,8 @@ class SociableFactory(factory.django.DjangoModelFactory):
     '''Mock for sociablecreating Sociable'''
     class Meta:
         model = Sociable
-    slug  = factory.LazyFunction(fake.unique.postcode)
-    owner = factory.SubFactory(UserFactory)
+    slug        = factory.LazyFunction(fake.unique.postcode)
+    owner       = factory.SubFactory(UserFactory)
     description = factory.LazyFunction(fake.text)
 
 
@@ -31,7 +32,16 @@ class LogMessageFactory(factory.django.DjangoModelFactory):
     '''Mock for sociablecreation LogMessage'''
     class Meta:
         model = LogMessage
-    body     = factory.LazyFunction(fake.text)
-    name     = factory.LazyFunction(fake.name)
-    sociable = factory.SubFactory(SociableFactory)
+    body         = factory.LazyFunction(fake.text)
+    name         = factory.LazyFunction(fake.name)
+    sociable     = factory.SubFactory(SociableFactory)
     date_created = factory.LazyFunction(fake.date)
+
+
+class ProfileFactory(factory.django.DjangoModelFactory):
+    '''Mock for usermanagement Profile '''
+    class Meta:
+        model = Profile
+    user                        = factory.SubFactory(UserFactory)
+    location                    = factory.LazyFunction(fake.city)
+    custom_description_for_code = factory.LazyFunction(fake.text)

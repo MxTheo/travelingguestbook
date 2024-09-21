@@ -15,7 +15,7 @@ def helper_test_page_rendering(client, name_of_page, keyword_arguments=None):
 def create_sociable(client, data=None):
     '''Given the client and optional data for the sociable,
     creates sociable using the CreateView for unittesting purposes'''
-    if data is None:
+    if not data or 'description' not in data.keys():
         data = {
             'description': 'create_sociable'
         }

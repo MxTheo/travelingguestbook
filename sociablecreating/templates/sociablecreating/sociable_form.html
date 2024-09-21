@@ -3,5 +3,7 @@
 Nieuwe Sociable
 {% endblock %}
 {% block content %}
+{% load static %}
+{% block stylesheet %}<link href='{% static "sociablecreating/styles/sociable_form.css" %}' rel="stylesheet" >{% endblock stylesheet %}
 {% include "admin/form.html" %}
 {% endblock %}
