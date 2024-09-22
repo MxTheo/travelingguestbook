@@ -65,7 +65,7 @@ Sociable Detail
       <div class="card bg-secondary border-info mb-3">
           <div class="card-header justify-content-between d-flex fs-6">
             {% if message.author == sociable.owner %}
-            <b><a class='link-info text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-arrow-bar-right"></i> {{message.name}}</a></b>
+            <b class='my-auto'><a class='link-info text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-arrow-bar-right"></i> {{message.name}}</a></b>
             {% elif message.author %}
             <a class='link-info' href={% url "profile" message.author.username %}>{{message.name}}</a>
             {% else %}

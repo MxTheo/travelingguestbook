@@ -14,16 +14,38 @@ def home(request):
     return render(request, 'sociablecreating/index.html')
 
 
+def message(request):
+    '''Temporary link for message page'''
+    sociable = Sociable.objects.all()[0]
+    message  = LogMessage.objects.get(sociable=sociable)
+    context  = {'sociable': sociable, 'message': message}
+    return render(request, 'sociablecreating/message.html', context=context)
+
+
 def search_sociable(request):
     '''Given a slug entered by the user,
     redirects the user to the sociable associated'''
-    search_code = request.GET.get('search-code')
-    if search_code:
-        search_code = search_code.lower()
-        if Sociable.objects.filter(slug=search_code):
-            return redirect('sociable', slug=search_code)
-    context = {'search_code': search_code}
-    return render(request, 'sociablecreating/sociable_not_found.html', context)
+    search_code = request.GET.get('search-code').lower()
+    list_sociable = Sociable.objects.filter(slug=search_code)
+    if list_sociable:
+        return display_message_or_code(request, list_sociable)
+    else:
+        context = {'search_code': search_code}
+        return render(request, 'sociablecreating/sociable_not_found.html', context)
+
+
+def display_message_or_code(request, list_sociable):
+    '''Given a list of sociables containing 1 sociable, 
+    displays the first unread message
+    or displays the sociable detail page if there are no unread messages'''
+    sociable = list_sociable[0]
+    lst_logmessage = LogMessage.objects.filter(sociable=sociable, is_read=False)
+    if lst_logmessage:
+        context = {'sociable': sociable, 'message': lst_logmessage[0], 'search-code': sociable.slug}
+        return render(request, 'sociablecreating/message.html', context=context)
+    else:
+        return redirect('sociable', slug=sociable.slug)
+
 
 
 def get_logmessage_list_from_sociable_list(sociable_list):

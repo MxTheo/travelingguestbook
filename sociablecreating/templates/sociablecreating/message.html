@@ -1,0 +1,37 @@
+{% extends "admin/main.html" %}
+{% block title %}
+Bericht
+{% endblock %}
+{% block content %}
+<div class="offcanvas offcanvas-start" tabindex="-1" id="profile" aria-labelledby="profileLabel">
+    <div class="offcanvas-header">
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div>    {% include 'usermanagement/profile.html' with user=sociable.owner %}</div>
+    </div>
+  </div>
+<div class='container'>
+    <small class='test-muted d-flex'>{{sociable.slug}}</small>
+    <div class="bg-dark px-3 py-4 text-center">
+        
+        <div class="py-4">
+            {% if message.author == sociable.owner %}
+            <h1 class="display-5 fw-bold text-white"><a class='link-info text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-arrow-bar-right"></i> {{message.name}}</a></b></h1>
+            {% elif message.author %}
+            <h1 class="display-5 fw-bold text-white"><a class='link-info' href={% url "profile" message.author.username %}>{{message.name}}</a></h1>
+            {% else %}
+            <h1 class="display-5 fw-bold text-white">{{message.name}}</h1>
+            {% endif %}
+            <small class="text-muted">Geschreven op {{message.date_created|date:'d-m'}}</small>
+            <div class="col-lg-6 mx-auto mt-3">
+                <p class="fs-5 mb-3">{{message.body}}</p>
+                {% comment %} <div class="d-grid gap-2 d-sm-flex justify-content-sm-center px-5">
+                <a href='' class="btn btn-success btn-lg px-4 me-sm-3 fw-bold">Gelezen</a> {% endcomment %}
+                <a href='{% url "sociable" sociable.slug %}' class="my-auto">Niet voor mij bedoeld</a>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+{% endblock %}

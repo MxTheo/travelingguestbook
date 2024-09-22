@@ -1,7 +1,7 @@
 from django.urls import reverse
 import pytest
 from travelingguestbook.factories import LogMessageFactory, SociableFactory
-from sociablecreating.models import Sociable
+from sociablecreating.models import Sociable, LogMessage
 from sociablecreating.views import get_logmessage_list_from_sociable_list
 
 
@@ -36,11 +36,33 @@ class TestSearchSociable:
         assert response.status_code == 200
 
     def test_search_with_no_slug(self, client):
-        '''Given None,
-        tests if it returns Not Found'''
-        response = client.get(self.url)
+        '''Given empty slug,
+        tests if it returns Not Found
+
+        A user cannot enter None.
+        Even when the user presses enter, the search-code will not be none, but an empty string.
+        Therefore, input None will not work and is not tested'''
+        response = client.get(self.url, {'search-code': ''})
         assert b'niet gevonden' in response.content
         assert response.status_code == 200
+
+    def test_show_unread_message(self, client):
+        '''Given a slug and an unread message,
+        tests if the unread message is displayed'''
+        sociable   = Sociable.objects.get(slug='test123')
+        LogMessageFactory(sociable=sociable)
+        response   = client.get(self.url, {'search-code': sociable.slug})
+        assert response.status_code == 200
+        assert 'sociablecreating/message.html' == response.templates[0].name
+
+    def test_show_detailpage_when_message_is_read(self, client):
+        '''Given a slug and a read message,
+        tests if the detailpage is displayed'''
+        sociable   = Sociable.objects.get(slug='test123')
+        LogMessageFactory(sociable=sociable, is_read=True)
+        response   = client.get(self.url, {'search-code': sociable.slug})
+        assert sociable.slug in response.url
+        assert response.status_code == 302
 
 
 class TestGetLogmessageListFromSociableList:
