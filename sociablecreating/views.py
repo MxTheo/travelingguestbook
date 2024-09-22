@@ -47,6 +47,14 @@ def display_message_or_code(request, list_sociable):
         return redirect('sociable', slug=sociable.slug)
 
 
+def display_code_after_message_is_read(request, pk):
+    '''Given the visitor clicks gelezen,
+    update the message to read and display code'''
+    message = LogMessage.objects.get(id=pk)
+    message.is_read = True
+    message.save()
+    return redirect('sociable', slug=message.sociable)
+
 
 def get_logmessage_list_from_sociable_list(sociable_list):
     '''Given a sociable list,

@@ -14,5 +14,5 @@ urlpatterns = [
     path('delete-logmessage/<str:pk>', views.LogMessageDelete.as_view(), name='delete-logmessage'),
 
     path('message/', views.search_sociable, name='search-sociable'),
-
+    path('message-read/<str:pk>', views.display_code_after_message_is_read, name='message-read'),
 ]

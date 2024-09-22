@@ -26,8 +26,8 @@ Bericht
             <small class="text-muted">Geschreven op {{message.date_created|date:'d-m'}}</small>
             <div class="col-lg-6 mx-auto mt-3">
                 <p class="fs-5 mb-3">{{message.body}}</p>
-                {% comment %} <div class="d-grid gap-2 d-sm-flex justify-content-sm-center px-5">
-                <a href='' class="btn btn-success btn-lg px-4 me-sm-3 fw-bold">Gelezen</a> {% endcomment %}
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center px-5">
+                <a href='{% url "message-read" message.id %}' class="btn btn-success btn-lg px-4 me-sm-3 fw-bold">Gelezen</a>
                 <a href='{% url "sociable" sociable.slug %}' class="my-auto">Niet voor mij bedoeld</a>
                 </div>
             </div>

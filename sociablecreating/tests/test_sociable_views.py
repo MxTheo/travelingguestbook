@@ -65,6 +65,20 @@ class TestSearchSociable:
         assert response.status_code == 302
 
 
+def test_update_unread_message_to_read(client):
+    '''Given the click that the unread message is read,
+    tests if the detailpage of the code is displayed with altering the is_read from the message'''
+    sociable = SociableFactory()
+    message = LogMessageFactory(sociable=sociable)
+    url = reverse('message-read', kwargs={'pk': message.id})
+    response = client.get(url)
+    message = LogMessage.objects.get()
+
+    assert response.status_code == 302
+    assert message.is_read
+    assert sociable.slug in response.url
+
+
 class TestGetLogmessageListFromSociableList:
     '''Test the behavour of get_log_message_from_one_sociable'''
     def create_logmessage(self, number_of_messages: int, sociable: Sociable):
