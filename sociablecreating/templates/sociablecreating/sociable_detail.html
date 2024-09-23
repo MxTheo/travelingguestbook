@@ -39,7 +39,7 @@ Sociable Detail
     <h1>Bedankt voor het gesprek!</h1>
     <h5>{{sociable.slug}}</h5>
     <div class='justify-content-between d-flex align-items-center'>
-    <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><h6 class='mt-1'><b><i class="bi bi-arrow-bar-right"></i> {{sociable.owner}}</h6></b></button>
+    <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><h6 class='mt-1'><b><i class="bi bi-arrow-bar-right"></i>&ensp;{{sociable.owner}}</h6></b></button>
       
     <small>Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
     </div>
@@ -65,11 +65,11 @@ Sociable Detail
       <div class="card bg-secondary border-info mb-3">
           <div class="card-header justify-content-between d-flex fs-6">
             {% if message.author == sociable.owner %}
-            <b class='my-auto'><a class='link-info text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-arrow-bar-right"></i> {{message.name}}</a></b>
+            <b class='my-auto'><a class='link-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-arrow-bar-right"></i>&ensp;{{message.name}}</a></b>
             {% elif message.author %}
-            <a class='link-info' href={% url "profile" message.author.username %}>{{message.name}}</a>
+            <b class='my-auto'><a class='link-light' href={% url "profile" message.author.username %} target="_blank"><i class="bi bi-person-circle"></i>&ensp;{{message.name}}</a></b>
             {% else %}
-            {{message.name}}
+            <b class='my-auto'>{{message.name}}</b>
             {% endif %}
             <small class="text-muted">{{message.date_created|date:'d-m'}}
           {% if request.user == sociable.owner %}
@@ -78,8 +78,11 @@ Sociable Detail
           </div>
           <div class="card-body fs-6">
             <p class="card-text">{{message.body|linebreaks}}</p>
-            <p class="card-text"></p>
+            {% if message.is_read %}
+            <div class='d-flex justify-content-end' ><i class="bi bi-check-all display-6 text-info" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="gelezen"></i></div>
+            {% endif %}
           </div>
+          
         </div>
       {% endfor %}
 
