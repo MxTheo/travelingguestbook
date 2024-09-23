@@ -9,14 +9,10 @@ class TestSearchSociable:
     '''Test the behaviour of search_sociable'''
     url = reverse('search-sociable')
 
-    def setup_method(self):
-        '''For every test, a sociable with slug test123 is used
-        and url is search-sociable'''
-        SociableFactory(slug='test123')
-
     def test_search_with_correct_slug(self, client):
         '''Given correct slug,
         tests if it returns the page with the sociable'''
+        SociableFactory(slug='test123')
         response = client.get(self.url, {'search-code': 'test123'})
         assert 'test123' in response.url
         assert response.status_code == 302
@@ -24,6 +20,7 @@ class TestSearchSociable:
     def test_search_with_slug_with_capital(self, client):
         '''Given a slug with a capital,
         tests if it returns the page with the sociable'''
+        SociableFactory(slug='test123')
         response = client.get(self.url, {'search-code': 'Test123'})
         assert 'test123' in response.url
         assert response.status_code == 302
@@ -31,6 +28,7 @@ class TestSearchSociable:
     def test_search_with_incorrect_slug(self, client):
         '''Given incorrect slug,
         tests if it returns Not Found'''
+        SociableFactory(slug='test123')
         response = client.get(self.url, {'search-code': 'test456'})
         assert b'niet gevonden' in response.content
         assert response.status_code == 200
@@ -42,6 +40,7 @@ class TestSearchSociable:
         A user cannot enter None.
         Even when the user presses enter, the search-code will not be none, but an empty string.
         Therefore, input None will not work and is not tested'''
+        SociableFactory(slug='test123')
         response = client.get(self.url, {'search-code': ''})
         assert b'niet gevonden' in response.content
         assert response.status_code == 200
@@ -49,7 +48,7 @@ class TestSearchSociable:
     def test_show_unread_message(self, client):
         '''Given a slug and an unread message,
         tests if the unread message is displayed'''
-        sociable   = Sociable.objects.get(slug='test123')
+        sociable   = SociableFactory(slug='test123')
         LogMessageFactory(sociable=sociable)
         response   = client.get(self.url, {'search-code': sociable.slug})
         assert response.status_code == 200
@@ -58,9 +57,18 @@ class TestSearchSociable:
     def test_show_detailpage_when_message_is_read(self, client):
         '''Given a slug and a read message,
         tests if the detailpage is displayed'''
-        sociable   = Sociable.objects.get(slug='test123')
+        sociable   = SociableFactory(slug='test123')
         LogMessageFactory(sociable=sociable, is_read=True)
         response   = client.get(self.url, {'search-code': sociable.slug})
+        assert sociable.slug in response.url
+        assert response.status_code == 302
+
+    def test_show_sociable_when_user_is_owner(self,  auto_login_user):
+        '''Given that the visitor is the owner, tests if the unread message is skipped and the sociable is shown'''
+        client, user = auto_login_user()
+        sociable     = SociableFactory(slug='test123', owner=user)
+        LogMessageFactory(sociable=sociable)
+        response     = client.get(self.url, {'search-code': sociable.slug})
         assert sociable.slug in response.url
         assert response.status_code == 302
 

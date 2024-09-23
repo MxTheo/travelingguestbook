@@ -1,12 +1,13 @@
 import string
 from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
 from sociablecreating.forms import LogMessageForm, SociableForm
-from .models import LogMessage, Sociable
 from usermanagement.models import Profile
+from .models import LogMessage, Sociable
 
 
 def home(request):
@@ -14,31 +15,24 @@ def home(request):
     return render(request, 'sociablecreating/index.html')
 
 
-def message(request):
-    '''Temporary link for message page'''
-    sociable = Sociable.objects.all()[0]
-    message  = LogMessage.objects.get(sociable=sociable)
-    context  = {'sociable': sociable, 'message': message}
-    return render(request, 'sociablecreating/message.html', context=context)
-
-
 def search_sociable(request):
     '''Given a slug entered by the user,
     redirects the user to the sociable associated'''
     search_code = request.GET.get('search-code').lower()
-    list_sociable = Sociable.objects.filter(slug=search_code)
-    if list_sociable:
-        return display_message_or_code(request, list_sociable)
-    else:
+    try:
+        sociable = Sociable.objects.get(slug=search_code)
+        if sociable.owner == request.user:
+            return redirect('sociable', slug=sociable.slug)
+        return display_message_or_code(request, sociable)
+    except ObjectDoesNotExist:
         context = {'search_code': search_code}
         return render(request, 'sociablecreating/sociable_not_found.html', context)
 
 
-def display_message_or_code(request, list_sociable):
-    '''Given a list of sociables containing 1 sociable, 
+def display_message_or_code(request, sociable):
+    '''Given a sociable, 
     displays the first unread message
     or displays the sociable detail page if there are no unread messages'''
-    sociable = list_sociable[0]
     lst_logmessage = LogMessage.objects.filter(sociable=sociable, is_read=False)
     if lst_logmessage:
         context = {'sociable': sociable, 'message': lst_logmessage[0], 'search-code': sociable.slug}
