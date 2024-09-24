@@ -19,7 +19,7 @@ def create_sociable(client, data=None):
         data = {
             'description': 'create_sociable'
         }
-    client.post('/create-sociable/', data=data)
+    client.post(reverse('create-sociable'), data=data)
     return Sociable.objects.get(description=data['description'])
 
 

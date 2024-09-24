@@ -31,7 +31,7 @@ class TestCreateCode:
         custom_descr = 'Test123'
         Profile.objects.get(user=user).delete()
         ProfileFactory(user=user, custom_description_for_code=custom_descr)
-        response = client.get('/create-sociable/')
+        response = client.get(reverse('create-sociable'))
         assert custom_descr in str(response.content)
 
     def test_if_default_description_is_used_as_initial_value_with_only_whitespaces(self, auto_login_user):
@@ -41,7 +41,7 @@ class TestCreateCode:
         custom_descr = '    '
         Profile.objects.get(user=user).delete()
         ProfileFactory(user=user, custom_description_for_code=custom_descr)
-        response = client.get('/create-sociable/')
+        response = client.get(reverse('create-sociable'))
         assert 'Ik heb een bericht voor je achter gelaten.' in str(response.content)
 
     def test_if_changed_description_is_used_with_custom_description(self, auto_login_user):
@@ -50,7 +50,7 @@ class TestCreateCode:
         Profile.objects.get(user=user).delete()
         ProfileFactory(user=user, custom_description_for_code='test')
         changed_description = 'changed'
-        client.post('/create-sociable/', data={'description': changed_description})
+        client.post(reverse('create-sociable'), data={'description': changed_description})
         code = Sociable.objects.all()[0]
         assert code.description == changed_description
 
@@ -58,7 +58,7 @@ class TestCreateCode:
         '''Test if the description is saved as default, when the user wants to'''
         client, user = auto_login_user()
         description = 'test'
-        client.post('/create-sociable/', data={'description': description, 'is_default_description': True})
+        client.post(reverse('create-sociable'), data={'description': description, 'is_default_description': True})
         profile = Profile.objects.get(user=user)
         assert profile.custom_description_for_code == description
 
