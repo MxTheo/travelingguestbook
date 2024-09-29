@@ -18,7 +18,7 @@ def init_profile(auto_login_user, lvl, xp, xp_next_lvl, xp_start_lvl):
 
 class TestLvl:
     '''Tests for lvling up
-    3 + lvl = xp needed'''
+    lvl^1.2 = xp needed for next lvl'''
 
     def test_from_lvl_0_to_1(self, auto_login_user):
         '''Given a user of lvl 0 logging their 1st conversation, tests if they goes to lvl 1'''
@@ -28,75 +28,76 @@ class TestLvl:
 
         profile = Profile.objects.get(user=user)
         assert profile.lvl == 1
-        assert profile.xp_next_lvl == 5
+        assert profile.xp_next_lvl == 2
         assert profile.xp == 1
         assert profile.xp_start_lvl == 1
 
     def test_from_lvl_1_to_2(self, auto_login_user):
         '''Given a user of lvl 1 logging their 4th conversation, tests if they goes to lvl 2'''
-        client, user = init_profile(auto_login_user, 1, 4, 5, 1)
+        client, user = init_profile(auto_login_user, 1, 1, 2, 1)
 
         create_logmessage(client)
 
         profile = Profile.objects.get(user=user)
         assert profile.lvl == 2
-        assert profile.xp_next_lvl == 10
-        assert profile.xp == 5
-        assert profile.xp_start_lvl == 5
+        assert profile.xp_next_lvl == 4
+        assert profile.xp == 2
+        assert profile.xp_start_lvl == 2
 
     def test_from_lvl_0_to_2_for_loop(self, auto_login_user):
-        '''Given a user of lvl 0 logging 5 conversations, tests if they goes to lvl 2'''
+        '''Given a user of lvl 0 logging 5 conversations, tests if they goes to lvl 2
+        '''
         client, user = auto_login_user()
 
         for _ in range(5):
             create_logmessage(client)
 
         profile = Profile.objects.get(user=user)
-        assert profile.lvl == 2
-        assert profile.xp_next_lvl == 10
+        assert profile.lvl == 3
+        assert profile.xp_next_lvl == 8
         assert profile.xp == 5
-        assert profile.xp_start_lvl == 5
+        assert profile.xp_start_lvl == 4
 
-    def test_remain_lvl_1(self, auto_login_user):
-        '''Given a user of lvl 1 with 2 logmessage left, tests if they remain at lvl 1'''
-        client, user = init_profile(auto_login_user, 1, 2, 5, 1)
+    def test_remain_lvl_2(self, auto_login_user):
+        '''Given a user of lvl 2 with 2 logmessage left, tests if they remain at lvl 2'''
+        client, user = init_profile(auto_login_user, 2, 2, 4, 2)
 
         create_logmessage(client)
 
         profile = Profile.objects.get(user=user)
-        assert profile.lvl == 1
-        assert profile.xp_next_lvl == 5
+        assert profile.lvl == 2
+        assert profile.xp_next_lvl == 4
         assert profile.xp == 3
-        assert profile.xp_start_lvl == 1
+        assert profile.xp_start_lvl == 2
 
     def test_from_lvl_4_to_5(self, auto_login_user):
-        '''Given a user of lvl 4 logging their 21th conversation, tests if they remain at lvl 5'''
-        client, user = init_profile(auto_login_user, 4, 22, 23, 16)
+        '''Given a user of lvl 4 logging their 20th conversation, tests if they lvl up to 5'''
+        client, user = init_profile(auto_login_user, 4, 12, 13, 8)
 
         create_logmessage(client)
 
         profile = Profile.objects.get(user=user)
         assert profile.lvl == 5
-        assert profile.xp_next_lvl == 31
-        assert profile.xp == 23
-        assert profile.xp_start_lvl == 23
+        assert profile.xp_next_lvl == 20
+        assert profile.xp == 13
+        assert profile.xp_start_lvl == 13
 
     def test_remain_lvl_4(self, auto_login_user):
-        '''Given a user of lvl 4 logging their 20th conversation, tests if they remain at lvl 4'''
-        client, user = init_profile(auto_login_user, 4, 20, 23, 16)
+        '''Given a user of lvl 4 logging their 12th conversation, tests if they remain at lvl 4'''
+        client, user = init_profile(auto_login_user, 4, 11, 13, 8)
 
         create_logmessage(client)
 
         profile = Profile.objects.get(user=user)
         assert profile.lvl == 4
-        assert profile.xp_next_lvl == 23
-        assert profile.xp == 21
-        assert profile.xp_start_lvl == 16
+        assert profile.xp_next_lvl == 13
+        assert profile.xp == 12
+        assert profile.xp_start_lvl == 8
 
     def test_remain_lvl_4_when_logging_on_same_sociable(self, auto_login_user):
-        '''Given a user of lvl 4 logging their 21th message on a same sociable,
+        '''Given a user of lvl 4 logging their 13th message on a same sociable,
         tests if they remain at lvl 4'''
-        client, user = init_profile(auto_login_user, 4, 21, 23, 16)
+        client, user = init_profile(auto_login_user, 4, 11, 13, 8)
 
         sociable = SociableFactory()
         create_logmessage(client, sociable)
@@ -104,9 +105,9 @@ class TestLvl:
 
         profile = Profile.objects.get(user=user)
         assert profile.lvl == 4
-        assert profile.xp_next_lvl == 23
-        assert profile.xp == 22
-        assert profile.xp_start_lvl == 16
+        assert profile.xp_next_lvl == 13
+        assert profile.xp == 12
+        assert profile.xp_start_lvl == 8
 
     # def test_lvl_up_when_more_xp_then_needed(self, auto_login_user):
 
@@ -115,21 +116,21 @@ class TestCalcPercentageGained:
     '''Tests for calculating the values for the progress bar for lvling up'''
     def test_when_50_percent_to_go(self, auto_login_user):
         '''
-        Given a user that is lvl 1, and requires 2 more xp,
+        Given a user that is lvl 2, and requires 1 more xp,
         tests if the progress returned is 50%
         '''
-        _, user = init_profile(auto_login_user, 1, 3, 5, 1)
+        _, user = init_profile(auto_login_user, 2, 3, 4, 2)
         percentage_xp = calc_percentage_xp(user)
         assert percentage_xp == 50
 
     def test_when_16point66_percent_to_go(self, auto_login_user):
         '''
         Given a user that is lvl 9, and required 2 more xp,
-        tests if the progress returned is 83% and not 83,33
+        tests if the progress returned is rounded
         '''
-        _, user = init_profile(auto_login_user, 9, 71, 73, 61)
+        _, user = init_profile(auto_login_user, 9, 62, 65, 51)
         percentage_xp = calc_percentage_xp(user)
-        assert percentage_xp == 83
+        assert percentage_xp == 79
 
 
 def test_registered_user_has_lvl_values_initialized(client):

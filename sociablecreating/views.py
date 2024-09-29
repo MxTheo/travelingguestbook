@@ -96,7 +96,8 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
 
     def update_xp_and_lvl(self):
         '''When creating a logmessage,
-        update the xp_needed and lvl up when it reached 0
+        update the xp values and lvl when needed
+        xp_needed is lvl ^ 1.2
         '''
         user = self.request.user
         if not user.is_anonymous and self.is_first_logmessage():
@@ -105,7 +106,7 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
             if profile.xp == profile.xp_next_lvl:
                 profile.lvl         += 1
                 profile.xp_start_lvl = profile.xp_next_lvl
-                profile.xp_next_lvl += 3 + profile.lvl
+                profile.xp_next_lvl += round(profile.lvl**1.2)
             profile.save()
 
     def is_first_logmessage(self):
