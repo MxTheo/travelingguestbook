@@ -2,6 +2,10 @@
     <div class="d-flex gap-2 mb-3">
     <div class="card-body mt-3 mb-2">
         {% with full_name=user.get_full_name %}
+        <div class='row'>
+          <div class='col-2'>
+            <i class='text-muted'>lvl {{user.profile.lvl}}</i></div>
+            <div class='col-8'>
             <h4 class="card-title">
             {% if full_name %}
             {{ full_name }}
@@ -11,6 +15,8 @@
             </h4>
             {% if full_name %}<h6 class="card-subtitle mb-3 text-muted">{{ user.username }}</h6>{% endif %}
         {% endwith %}
+        </div>
+        </div>
         <p class="card-text">
             {{user.profile.location}}
         </p>
