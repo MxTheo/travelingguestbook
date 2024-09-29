@@ -1,12 +1,14 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import  redirect, render
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from game.views import calc_percentage_xp
 from sociablecreating.views import get_logmessage_list_from_sociable_list
 from .forms import RegisterForm, UserForm, ProfileForm
 from django.views.generic import CreateView, DetailView
+
 
 class Register(CreateView):
     '''The sign up functionality'''
@@ -20,6 +22,7 @@ class Register(CreateView):
         login(self.request, user)
         return redirect(self.success_url)
 
+
 @login_required(login_url='login')
 def dashboard(request):
     '''Given the user,
@@ -27,9 +30,11 @@ def dashboard(request):
     user = request.user
     sociable_list = user.sociable_set.all()
     logmessage_list = get_logmessage_list_from_sociable_list(sociable_list)
+    percentage_xp = calc_percentage_xp(user)
     context = {
         'sociable_list'  : sociable_list,
-        'logmessage_list': logmessage_list
+        'logmessage_list': logmessage_list,
+        'percentage_xp'  : percentage_xp
         }
     return render(request, 'usermanagement/dashboard.html', context)
 

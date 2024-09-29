@@ -17,7 +17,7 @@ Bericht voor jou
         
         <div class="py-4">
             {% if message.author == sociable.owner %}
-            <h1 class="display-5 fw-bold"><a class='link-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-arrow-bar-right"></i>&ensp;{{message.name}}</a></b></h1>
+            <h1 class="display-5 fw-bold"><a class='link-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-square-half"></i>&ensp;{{message.name}}</a></b></h1>
             {% elif message.author %}
             <h1 class="display-5 fw-bold "><a class='link-light' href={% url "profile" message.author.username %} target="_blank">{{message.name}}</a></h1>
             {% else %}

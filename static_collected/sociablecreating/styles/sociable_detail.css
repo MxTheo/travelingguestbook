@@ -3,3 +3,7 @@
     margin-left: -0.65em;
     margin-right: -0.65em;
 }
+
+.rotated {
+    transform: rotateY(180deg);
+}
