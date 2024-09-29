@@ -34,6 +34,7 @@ class LogMessageFactory(factory.django.DjangoModelFactory):
         model = LogMessage
     body         = factory.LazyFunction(fake.text)
     name         = factory.LazyFunction(fake.name)
+    author       = factory.SubFactory(UserFactory)
     sociable     = factory.SubFactory(SociableFactory)
     date_created = factory.LazyFunction(fake.date)
 

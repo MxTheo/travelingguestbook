@@ -32,4 +32,4 @@ def create_logmessage(client, sociable=None, data=None):
         data = {'name': 'create_logmessage', 'body': 'create_logmessage'}
     url_create = reverse('create-logmessage', args=[sociable.slug])
     client.post(url_create, data=data)
-    return LogMessage.objects.get(sociable=sociable)
+    return LogMessage.objects.filter(sociable=sociable)[0]

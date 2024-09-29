@@ -12,6 +12,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.CharField(max_length=500, blank=True)
     custom_description_for_code = models.TextField(max_length=3000, blank=True, help_text='Vul deze in als je je eigen standaard omschrijving wilt gebruiken voor codes', verbose_name='Omschrijving voor codes')
+    lvl = models.IntegerField(verbose_name='level van de gebruiker', default=0)
+    xp_needed = models.IntegerField(verbose_name='De benodigde xp voor het volgende level', default=1)
 
     def __str__(self):
         return self.user.username

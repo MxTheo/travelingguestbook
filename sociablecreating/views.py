@@ -30,7 +30,7 @@ def search_sociable(request):
 
 
 def display_message_or_code(request, sociable):
-    '''Given a sociable, 
+    '''Given a sociable,
     displays the first unread message
     or displays the sociable detail page if there are no unread messages'''
     lst_logmessage = LogMessage.objects.filter(sociable=sociable, is_read=False)
@@ -77,6 +77,7 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
         '''After the form is valid, set the relationships'''
         self.set_sociable(form)
         self.set_author(form)
+        self.update_xp_and_lvl()
         return super(LogMessageCreate, self).form_valid(form)
 
     def set_author(self, form):
@@ -92,6 +93,27 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
         slug                   = super().get_context_data()['view'].kwargs['slug']
         sociable               = Sociable.objects.get(slug=slug)
         form.instance.sociable = sociable
+
+    def update_xp_and_lvl(self):
+        '''When creating a logmessage,
+        update the xp_needed and lvl up when it reached 0'''
+        user = self.request.user
+        if not user.is_anonymous and self.is_first_logmessage():
+            profile = Profile.objects.get(user=user)
+            profile.xp_needed = profile.xp_needed - 1
+            if profile.xp_needed == 0:
+                profile.lvl       = profile.lvl + 1
+                profile.xp_needed = 3 + profile.lvl
+            profile.save()
+
+    def is_first_logmessage(self):
+        '''When updating xp and lvl,
+        checks if the created logmessage is the first logmessage
+        created by the user for this sociable'''
+        slug     = super().get_context_data()['view'].kwargs['slug']
+        sociable = Sociable.objects.get(slug=slug)
+        user     = self.request.user
+        return not sociable.logmessage_set.filter(author=user)
 
 
 class LogMessageDelete(UserPassesTestMixin, generic.edit.DeleteView):
@@ -128,7 +150,7 @@ class SociableCreate(LoginRequiredMixin, generic.edit.CreateView):
          - Owner
          - Slug'''
         form.instance.owner = self.request.user
-        form.instance.slug  = get_random_string(8, allowed_chars=string.ascii_lowercase + string.digits)
+        form.instance.slug  = get_random_string(8, allowed_chars=string.ascii_lowercase+string.digits)
 
     def get_initial(self):
         '''When creating a sociable, sets the initial values for descrition'''
