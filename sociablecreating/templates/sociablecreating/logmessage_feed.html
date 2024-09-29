@@ -7,7 +7,16 @@
         <a href='{% url "sociable" logmessage.sociable %}' class='list-group-item list-group-item-action border-light'>
             <div class=' justify-content-evenly d-flex align-items-center'>{{logmessage.name}} <small class='opacity-75'>{{logmessage.sociable}}</small></div>
         <p class="mb-0 opacity-80">{{logmessage}}</p>
-        <small class="opacity-50 text-nowrap">{{logmessage.date_created|timesince}} geleden</small>
+        <div class='row'>
+            <div class='col'>
+                <small class="opacity-50 text-nowrap">{{logmessage.date_created|date:'d-m'}}</small>
+            </div>
+            {% if logmessage.is_read %}
+            <div class='col'>
+                <i class="bi bi-check-all text-info" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="gelezen"></i>
+            </div>
+            {% endif %}
+        </div>
         </a>
         
         {% endfor %}
