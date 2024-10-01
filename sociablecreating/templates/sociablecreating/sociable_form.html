@@ -5,5 +5,48 @@ Nieuwe Sociable
 {% block content %}
 {% load static %}
 {% block stylesheet %}<link href='{% static "sociablecreating/styles/sociable_form.css" %}' rel="stylesheet" >{% endblock stylesheet %}
-{% include "admin/form.html" %}
+<div class='container m-auto'>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% load crispy_forms_tags %}
+        
+        {{form.description|as_crispy_field}}
+        <div class='row mt-4 mb-3'>
+            <div class='col my-auto'>
+                {{form.is_default_description|as_crispy_field}}
+            </div>
+            <div class='col my-auto'>
+                <button type='button' class="btn btn-warning text-black" data-bs-toggle="modal" data-bs-target="#resetdescr">
+                    Reset omschrijving
+                  </button>
+                <p><small class='form-text'>Verwijder je aangepaste standaard en keer terug naar de standaard</small></p>
+            </div>
+        </div>
+        <input class='btn btn-success text-black' type="submit" value="Opslaan" />
+        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
+    </form>
+
+
+
+    <div class="modal fade" id='resetdescr' aria-labelledby='resetdescr' >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reset omschrijving</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <p>Wijzigingen zullen niet opgeslagen worden. De pagina zal herladen worden.</p>
+              <p>Weet je zeker dat je de omschrijving wilt resetten?</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href='{% url "resetdescription" %}' class='btn btn-warning text-black'>Doorgaan</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
 {% endblock %}
