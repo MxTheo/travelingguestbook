@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from game.views import calc_percentage_xp
 from sociablecreating.views import get_logmessage_list_from_sociable_list
+from usermanagement.models import Profile
 from .forms import RegisterForm, UserForm, ProfileForm
 from django.views.generic import CreateView, DetailView
 
@@ -57,7 +58,7 @@ def update_profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, ('Your profile was successfully updated!'))
+            messages.success(request, ('Bewerken van je profiel is geslaagd!'))
             return redirect('dashboard')
     else:
         user_form = UserForm(instance=request.user)
@@ -66,3 +67,10 @@ def update_profile(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
+
+
+def reset_custom_description_for_code(user):
+    '''Resets the custom description of user'''
+    profile = Profile.objects.get(user=user)
+    profile.custom_description_for_code = ''
+    profile.save()

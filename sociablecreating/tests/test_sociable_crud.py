@@ -1,7 +1,7 @@
 from usermanagement.models import Profile
 from django.urls import reverse
 from travelingguestbook.factories import LogMessageFactory, ProfileFactory, SociableFactory, UserFactory
-from travelingguestbook.helpers_test import create_logmessage, helper_test_page_rendering, create_sociable
+from travelingguestbook.helpers_test import create_logmessage, create_user_and_profile_with_custom_description, helper_test_page_rendering, create_sociable
 from sociablecreating.models import LogMessage, Sociable
 
 
@@ -27,28 +27,21 @@ class TestCreateCode:
     def test_if_custom_description_is_used_as_initial_value(self, auto_login_user):
         '''Test if the description the user made itself is used as initial value,
         when creating a code'''
-        client, user = auto_login_user()
         custom_descr = 'Test123'
-        Profile.objects.get(user=user).delete()
-        ProfileFactory(user=user, custom_description_for_code=custom_descr)
+        client, _ = create_user_and_profile_with_custom_description(auto_login_user, custom_descr)
         response = client.get(reverse('create-sociable'))
         assert custom_descr in str(response.content)
 
     def test_if_default_description_is_used_as_initial_value_with_only_whitespaces(self, auto_login_user):
         '''Test if the default description is used, when the user entered only spaces in the custom description,
         when creating a code'''
-        client, user = auto_login_user()
-        custom_descr = '    '
-        Profile.objects.get(user=user).delete()
-        ProfileFactory(user=user, custom_description_for_code=custom_descr)
+        client, user = create_user_and_profile_with_custom_description(auto_login_user, '    ')
         response = client.get(reverse('create-sociable'))
         assert 'Ik heb een bericht voor je achter gelaten.' in str(response.content)
 
     def test_if_changed_description_is_used_with_custom_description(self, auto_login_user):
         '''Test if the description can be changed when the user also has a custom description, when creating a code'''
-        client, user = auto_login_user()
-        Profile.objects.get(user=user).delete()
-        ProfileFactory(user=user, custom_description_for_code='test')
+        client, user = create_user_and_profile_with_custom_description(auto_login_user, 'test')
         changed_description = 'changed'
         client.post(reverse('create-sociable'), data={'description': changed_description})
         code = Sociable.objects.all()[0]
