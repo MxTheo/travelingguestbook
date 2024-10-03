@@ -70,8 +70,8 @@ class TestUpdateCode:
         '''Logged in as a different user then the owner,
         tests if that user cannot change the description'''
         client, _ = auto_login_user()
-        owner = UserFactory()
-        code = SociableFactory(owner=owner)
+        owner     = UserFactory()
+        code      = SociableFactory(owner=owner)
 
         code_changed = self.update_code(client, code, 'Hello')
 
@@ -81,17 +81,25 @@ class TestUpdateCode:
         '''Logged in as the owner,
         tests if that owner is able to change the description'''
         client, owner = auto_login_user()
-        code      = SociableFactory(owner=owner)
+        code          = SociableFactory(owner=owner)
 
-        code_changed = self.update_code(client, code, 'Hello')
+        code_changed  = self.update_code(client, code, 'Hello')
 
         assert code_changed.description == 'Hello'
+
+    def test_update_by_anonymous(self, client):
+        '''As an anonymous user,
+        test if anonymous is not able to change the description'''
+        code          = SociableFactory()
+        code_changed  = self.update_code(client, code, 'Hello')
+        assert code_changed.description != 'Hello'
 
     def update_code(self, client, code, description_to_change):
         '''Given the client, code and the different description,
         change the description of the code'''
-        update_code_url = reverse('update-sociable', args=[code.slug])
-        client.post(update_code_url, data={'description': description_to_change})
+        url_update = reverse('update-sociable', args=[code.slug])
+        client.post(url_update, data={'description': description_to_change})
+        lst = Sociable.objects.all()[0]
         return Sociable.objects.get(slug=code.slug)
 
 
@@ -214,3 +222,39 @@ class TestCreateLogMessage:
         url_logmessage_form = reverse('create-logmessage', args=[code.slug])
         response = client.get(url_logmessage_form)
         assert 'value="Anoniem' in response.rendered_content
+
+
+class TestUpdateLogMessage:
+    '''Test user permissions for updating logmessage'''
+    def test_update_logmessage_by_author(self, auto_login_user):
+        '''Logged in as the author,
+        test if the author can update the logmessage'''
+        client, author = auto_login_user()
+        sociable = SociableFactory()
+        logmessage = LogMessageFactory(sociable=sociable, author=author)
+        logmessage_changed = self.update_logmessage(client, logmessage, 'Hello')
+        assert logmessage_changed.body == 'Hello'
+
+    def test_update_logmessage_by_owner(self, auto_login_user):
+        '''Logged in as the owner,
+        test if the owner can update the logmessage'''
+        client, owner = auto_login_user()
+        sociable = SociableFactory(owner=owner)
+        logmessage = LogMessageFactory(sociable=sociable)
+        logmessage_changed = self.update_logmessage(client, logmessage, 'Hello')
+        assert logmessage_changed.body == 'Hello'
+
+    def test_update_logmessage_by_anonymous(self, client):
+        '''Logged in as an anonymous user,
+        test if the user cannot update the logmessage'''
+        sociable = SociableFactory()
+        logmessage = LogMessageFactory(sociable=sociable)
+        logmessage_changed = self.update_logmessage(client, logmessage, 'Hello')
+        assert logmessage_changed.body != 'Hello'
+
+    def update_logmessage(self, client, logmessage, message_body):
+        '''Given the logmessage and the textbody,
+        change the message_body'''
+        url_update = reverse('update-logmessage', args=[logmessage.id])
+        client.post(url_update, data={'body': message_body, 'name':logmessage.name})
+        return LogMessage.objects.get(id=logmessage.id)

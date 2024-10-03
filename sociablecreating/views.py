@@ -126,14 +126,29 @@ class LogMessageDelete(UserPassesTestMixin, generic.edit.DeleteView):
     template_name = "admin/confirm_delete.html"
 
     def test_func(self):
-        logmessage = LogMessage.objects.get(id=self.kwargs['pk'])
+        '''Only the owner may delete logmessages from their sociable'''
+        logmessage = self.get_object()
         sociable   = logmessage.sociable
-        return self.request.user == sociable.owner
+        return self.request.user.pk == sociable.owner_id
 
     def get_success_url(self):
-        logmessage = LogMessage.objects.get(id=self.kwargs['pk'])
+        logmessage = self.get_object()
         sociable   = logmessage.sociable
         return reverse("sociable", kwargs={"slug": sociable.slug})
+
+
+class LogMessageUpdate(LoginRequiredMixin, UserPassesTestMixin, generic.edit.UpdateView):
+    '''Generic editing view to update LogMessage:
+    https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/'''
+    model = LogMessage
+    form_class = LogMessageForm
+
+    def test_func(self) -> bool | None:
+        '''Both the owner of the sociable and the author may update the sociable'''
+        logmessage = self.get_object()
+        sociable   = logmessage.sociable
+        user_id    = self.request.user.pk
+        return logmessage.author_id == user_id or sociable.owner_id == user_id
 
 
 class SociableCreate(LoginRequiredMixin, generic.edit.CreateView):
@@ -178,15 +193,16 @@ class SociableCreate(LoginRequiredMixin, generic.edit.CreateView):
             profile.save()
 
 
-class SociableUpdate(UserPassesTestMixin, generic.edit.UpdateView):
+class SociableUpdate(LoginRequiredMixin, UserPassesTestMixin, generic.edit.UpdateView):
     '''Generic editing view to update Sociable:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/'''
     model  = Sociable
     fields = ['description']
 
     def test_func(self):
-        sociable = Sociable.objects.get(slug=self.kwargs['slug'])
-        return self.request.user == sociable.owner
+        '''Only the owner may update the sociable'''
+        sociable = self.get_object()
+        return self.request.user.pk == sociable.owner_id
 
 
 class SociableDelete(UserPassesTestMixin, generic.edit.DeleteView):

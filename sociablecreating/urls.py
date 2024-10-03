@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('nieuwbericht/<slug:slug>', views.LogMessageCreate.as_view(), name='create-logmessage'),
     path('verwijderbericht/<str:pk>', views.LogMessageDelete.as_view(), name='delete-logmessage'),
+    path('bewerkbericht/<str:pk>', views.LogMessageUpdate.as_view(), name='update-logmessage'),
 
     path('berichtvoorjou/', views.search_sociable, name='search-sociable'),
     path('message-read/<str:pk>', views.display_code_after_message_is_read, name='message-read'),

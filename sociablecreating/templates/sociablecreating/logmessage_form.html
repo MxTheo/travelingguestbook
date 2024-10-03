@@ -9,25 +9,15 @@ Nieuw bericht
     <form method="POST" action="">
         {% csrf_token %}
         {% load crispy_forms_tags %}
-        {% comment %} <fieldset class='mb-3'>
-          <label class="form-label mt-4" for="name">Je naam</label>
-          <input class="form-control" id="name" type="text" name='name' placeholder='Anoniem'
-          {% if user.is_authenticated %}
-          value="{{user.username}}" disabled=''
-          {% endif %}
-          >
-          <small id="emailHelp" class="form-text text-muted">
-            {% if user.is_authenticated %}
-            Je gebruikersnaam wordt hier standaard voor ingevuld.
-            {% else %}
-            Een naam geeft al context aan een bericht. Voel je ook vrij om je naam op anoniem te houden. Niet verplicht
-            {% endif %}
-          </small>
-        </fieldset> {% endcomment %}
         {{form|crispy}}
-        <button type='button' class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirm">
-            Verzend
+        {% if not user.is_authenticated %}
+          <button type='button' class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirm">
+              Verzend
           </button>
+        {% else %}
+          <input class='btn btn-success' type="submit" value="Verzend"/>
+        {% endif %}
+
           
         <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
 
