@@ -197,7 +197,7 @@ class SociableUpdate(LoginRequiredMixin, UserPassesTestMixin, generic.edit.Updat
     '''Generic editing view to update Sociable:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/'''
     model  = Sociable
-    fields = ['description']
+    form_class  = SociableForm
 
     def test_func(self):
         '''Only the owner may update the sociable'''
