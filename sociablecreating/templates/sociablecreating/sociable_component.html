@@ -5,26 +5,25 @@
         <h4 class='mt-auto'>Jouw Codes</h4> <a class='btn btn-primary' href='{% url "create-sociable" %}'><b>+</b></a>
     </div>
     <div class="card-body">
-        {% if sociable_list %}
-        
         {% for sociable in  sociable_list %}
         <a href='{% url "sociable" sociable.slug %}' class='a-sociable'>
             <div class="card sociable-card">
+                <div class="badge rounded-pill bg-primary mx-auto my-auto position-absolute ms-1 mt-1"><b>{{forloop.revcounter}}</b></div>
                 <div class="card-body">
-                  <h4 class="card-title">{{sociable.slug}}</h4>
-                  <p class="card-text">{{sociable.description|truncatewords:23 }}</p>
-                  <small class="card-subtitle mb-2 text-muted">Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
+                    <h4 class="card-title"> {{sociable.slug}}</h4>
+
+                    <p class="card-text">{{sociable.description|truncatewords:23 }}</p>
+                    <small class="card-subtitle mb-2 text-muted">Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
                 </div>
             </div>  
-        </a>       
-        {% endfor %}
-        {% else %}
+        </a>
+        {% empty %}  
         <div class='card'>
             <div class="card-body">
                 Je hebt nog geen codes. Maak je eerste aan.
                 <p><a href='{% url "create-sociable" %}'><button href='{% url "create-sociable" %}' button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
             </div>
         </div>
-        {% endif %}
+        {% endfor %}
     </div>
 </div>
