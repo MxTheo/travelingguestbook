@@ -8,10 +8,16 @@
         <h2>Vul de code in en vind het berichtje dat voor jou is achter gelaten. Ga een gesprek aan met een ander. Bedank diegene met dezelfde code!</h2>
         {% load crispy_forms_tags %}
         <form class='form-control-lg' method="GET" action={% url "search-sociable" %}>
-            <div>
-                <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Zoek op:</b></label>
-                <input class="form-control form-control-lg  w-75 mx-auto" type="text" placeholder="Vul ontvangen code in..." id="inputLarge" name='search-code' aria-label="SearchCode">
-                  <input class='btn btn-primary mt-2' type="submit" value="Zoek" />
+            <div class='container'>
+                <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Vul code in:</b></label>
+                <div class='row mx-auto justify-content-center'>
+                  <div class='col-auto'>
+                    <input class="form-control form-control-lg mx-auto" type="text" placeholder="Vul ontvangen code in..." id="inputLarge" name='search-code' aria-label="SearchCode">
+                  </div>
+                  <div class='col-auto mt-1'>
+                    <input class='btn btn-primary' type="submit" value="Zoek" />
+                  </div>
+                </div>
               </div>
         </label>
         </form>
