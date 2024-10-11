@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='logmessage',
             name='body',
-            field=models.TextField(help_text='Vertel iets over je ervaringen van het gesprek. Voel je vrij te delen wat je wilt delen en niet te delen wat je niet wilt delen.', max_length=30000, verbose_name='Bericht'),
+            field=models.TextField(help_text='Vertel iets over je ervaringen van het contact. Voel je vrij te delen wat je wilt delen en niet te delen wat je niet wilt delen.', max_length=30000, verbose_name='Bericht'),
         ),
         migrations.AlterField(
             model_name='sociable',

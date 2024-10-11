@@ -4,25 +4,9 @@
 Sociable Detail
 {% endblock %}
 {% block stylesheet %}
-<link href='{% static "sociablecreating/styles/sociable_detail.css" %}' rel="stylesheet" >
+<link href='{% static "sociablecreating/styles/sociabledetail.css" %}' rel="stylesheet" >
 {% endblock stylesheet %}
 {% block content %}
-{% if request.user == sociable.owner %}
-<nav class="navbar navbar-expand bg-light crudbar" data-bs-theme="light">
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse" id="navbarColor03">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link" href={% url "update-sociable" sociable.slug %}>Edit</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href={% url "delete-sociable" sociable.slug %}>Verwijder</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-{% endif %}
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="profile" aria-labelledby="profileLabel">
   <div class="offcanvas-header">
@@ -33,75 +17,46 @@ Sociable Detail
   </div>
 </div>
 
+
 <div class='container'>
-  <div class='row'>
-    <div class='col-md-6'>
-    <h1>Bedankt voor het gesprek!</h1>
-    <h5>{{sociable.slug}}</h5>
-    <div class='justify-content-between d-flex align-items-center'>
+  <h1>Deel je ervaringen en geef door!</h1>
+  <h5 class='border-bottom pb-2 font-monospace text-uppercase'>{{sociable.slug}}</h5>
+  <div class='justify-content-between d-flex align-items-center mb-3'>
     <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><h6 class='mt-1'><b><i class="bi bi-square-half"></i>&ensp;{{sociable.owner}}</h6></b></button>
-      
-    <small>Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
-    </div>
-    <div class='container mt-4'>
-    {% with description=sociable.description %}
-    <p>
-    {% if description %}
-    {{description|linebreaks}}
-    {% else %}
-    Laat een bericht achter. Vertel iets over je ervaringen van het gesprek
+    {% if request.user == sociable.owner %}
+    <a class="btn btn-outline-danger" href={% url "delete-sociable" sociable.slug %}><i class="bi bi-trash3-fill"></i></a>
     {% endif %}
-    </p>
-    {% endwith %}
-    </div>
-    </div>
-
-
-    <div class='col-md-5'>
-      <div class='flex-container d-flex justify-content-end'>
-        <a class='btn btn-info btn-lg' href={% url "create-logmessage" sociable %}><b>Laat een bericht achter <i class="bi bi-chat-right-text-fill ms-2"></i></b></a>
-      </div>
-      {% for message in sociable.logmessage_set.all %}
-      <div class="card bg-secondary border-info mb-3">
-          <div class="card-header justify-content-between d-flex fs-6">
-            {% if message.author == sociable.owner %}
-            <b class='my-auto'><a class='link text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-square-half"></i>&ensp;{{message.name}}</a></b>
-            {% elif message.author %}
-            <b class='my-auto'><a class='link-light text-white' href={% url "profile" message.author.username %} target="_blank"><i class="bi bi-person-circle"></i>&ensp;{{message.name}}</a></b>
-            {% else %}
-            <b class='my-auto'>{{message.name}}</b>
-            {% endif %}
-            <div class='my-auto'>
-              {% if message.date_changed|date:'d-m' != message.date_created|date:'d-m' %}
-              <div class='row'>
-                <small class="text-muted my-auto">bewerkt op {{message.date_changed|date:'d-m'}}</small>
-              </div>
-              {% endif %}
-              <div class='row'>
-                <small class="text-muted">aangemaakt op {{message.date_created|date:'d-m'}}</small>
-              </div>
-            </div>
-            {% if request.user == sociable.owner or request.user == message.author %}
-            <div>
-              <small><a href='{% url "update-logmessage" message.id %}' class='btn btn-outline-warning ms-2'><i class="bi bi-pencil-square"></i></a></small>
-              {% endif %}
-              {% if request.user == sociable.owner %}
-              <small><a href='{% url "delete-logmessage" message.id %}' class='btn btn-outline-danger ms-2'><i class="bi bi-trash3"></i></a></small>
-            </div>
-            {% endif %}
-            </div>
-          <div class="card-body fs-6">
-            <p class="card-text">{{message.body|linebreaks}}</p>
-            {% if message.is_read %}
-            <div class='d-flex justify-content-end' ><i class="bi bi-check-all display-6 text-info" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="gelezen"></i></div>
-            {% endif %}
-          </div>
-          
-        </div>
-      {% endfor %}
-
+    <small>Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
+  </div>
+    <div class='flex-container d-flex justify-content-end mb-2'>
+      <a class='btn btn-info btn-lg' href={% url "create-logmessage" sociable %}><b>Laat een bericht achter <i class="bi bi-chat-right-text-fill ms-2"></i></b></a>
     </div>
   </div>
-</div>
+    <div class='bg-secondary mx-2'>
+      <ul class='list-group px-2 py-1 bg-secondary'>
+        {% for message in sociable.logmessage_set.all %}
+        <li class='list-group-item'>
+          {% if forloop.counter|divisibleby:"2" %}
+          <div class='row justify-content-start mt-2 mb-1'>
+              {% include "sociablecreating/chat_profile.html" %}
+              <div class='col-auto'>
+                <div class="position-absolute bottom-50 translate-middle-y triangle-left"></div>
+              </div>
+              <div class='col-9 col-sm-7 col-md-5'>
+              {% include "sociablecreating/chat_message.html" %}
+            {% else %}
+            <div class='row justify-content-end mt-2 mb-1'>
+              <div class='col-9 col-sm-7 col-md-5 g-0'>
+            {% include "sociablecreating/chat_message.html" %}
+            <div class='col-1 g-0'>
+              <div class="position-absolute bottom-50 translate-middle-y triangle-right"></div>
+            </div>
+            {% include "sociablecreating/chat_profile.html" %}
+            {% endif %}
+          </div>
 
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
 {% endblock %}

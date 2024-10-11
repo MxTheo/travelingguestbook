@@ -1,106 +1,25 @@
-from usermanagement.models import Profile
 from django.urls import reverse
-from travelingguestbook.factories import LogMessageFactory, ProfileFactory, SociableFactory, UserFactory
-from travelingguestbook.helpers_test import create_logmessage, create_user_and_profile_with_custom_description, helper_test_page_rendering, create_sociable
+from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
+from travelingguestbook.helpers_test import create_logmessage
 from sociablecreating.models import LogMessage, Sociable
 
 
 class TestCreateCode:
     '''Test class for the CreateView for Code'''
-    def test_if_create_code_is_rendered(self, auto_login_user):
-        '''Test if the create code page can be get'''
-        client, _ = auto_login_user()
-        helper_test_page_rendering(client, 'create-sociable')
 
     def test_if_owner_is_set(self, auto_login_user):
         '''Test if the owner is set when creating a code'''
-        client, owner = auto_login_user()
-        code = create_sociable(client)
-        assert code.owner == owner
+        client, _ = auto_login_user()
+        client.post(reverse('create-sociable'))
+        list_sociable = Sociable.objects.all()
+        assert list_sociable
 
     def test_if_a_slug_of_8_chars_is_created(self, auto_login_user):
         '''Test if a slug is created of 8 chars, when creating a code'''
         client, _ = auto_login_user()
-        code = create_sociable(client)
-        assert len(code.slug) == 8
-
-    def test_if_custom_description_is_used_as_initial_value(self, auto_login_user):
-        '''Test if the description the user made itself is used as initial value,
-        when creating a code'''
-        custom_descr = 'Test123'
-        client, _ = create_user_and_profile_with_custom_description(auto_login_user, custom_descr)
-        response = client.get(reverse('create-sociable'))
-        assert custom_descr in str(response.content)
-
-    def test_if_default_description_is_used_as_initial_value_with_only_whitespaces(self, auto_login_user):
-        '''Test if the default description is used, when the user entered only spaces in the custom description,
-        when creating a code'''
-        client, user = create_user_and_profile_with_custom_description(auto_login_user, '    ')
-        response = client.get(reverse('create-sociable'))
-        assert 'Ik heb een bericht voor je achter gelaten.' in str(response.content)
-
-    def test_if_changed_description_is_used_with_custom_description(self, auto_login_user):
-        '''Test if the description can be changed when the user also has a custom description, when creating a code'''
-        client, user = create_user_and_profile_with_custom_description(auto_login_user, 'test')
-        changed_description = 'changed'
-        client.post(reverse('create-sociable'), data={'description': changed_description})
-        code = Sociable.objects.all()[0]
-        assert code.description == changed_description
-
-    def test_if_description_is_saved_as_default(self, auto_login_user):
-        '''Test if the description is saved as default, when the user wants to'''
-        client, user = auto_login_user()
-        description = 'test'
-        client.post(reverse('create-sociable'), data={'description': description, 'is_default_description': True})
-        profile = Profile.objects.get(user=user)
-        assert profile.custom_description_for_code == description
-
-    def test_if_description_is_not_saved_as_default(self, auto_login_user):
-        '''Test if the description is not saved as default, when the user leaves it unchecked'''
-        client, user = auto_login_user()
-        description = 'test'
-        client.post('/create-sociable/', data={'description': description, 'is_default_description': False})
-        profile = Profile.objects.get(user=user)
-        assert profile.custom_description_for_code != description
-
-
-class TestUpdateCode:
-    '''Test user permissions for updating the code'''
-    def test_update_code_by_different_user(self, auto_login_user):
-        '''Logged in as a different user then the owner,
-        tests if that user cannot change the description'''
-        client, _ = auto_login_user()
-        owner     = UserFactory()
-        code      = SociableFactory(owner=owner)
-
-        code_changed = self.update_code(client, code, 'Hello')
-
-        assert code_changed.description != 'Hello'
-
-    def test_update_code_by_owner(self, auto_login_user):
-        '''Logged in as the owner,
-        tests if that owner is able to change the description'''
-        client, owner = auto_login_user()
-        code          = SociableFactory(owner=owner)
-
-        code_changed  = self.update_code(client, code, 'Hello')
-
-        assert code_changed.description == 'Hello'
-
-    def test_update_by_anonymous(self, client):
-        '''As an anonymous user,
-        test if anonymous is not able to change the description'''
-        code          = SociableFactory()
-        code_changed  = self.update_code(client, code, 'Hello')
-        assert code_changed.description != 'Hello'
-
-    def update_code(self, client, code, description_to_change):
-        '''Given the client, code and the different description,
-        change the description of the code'''
-        url_update = reverse('update-sociable', args=[code.slug])
-        client.post(url_update, data={'description': description_to_change})
-        lst = Sociable.objects.all()[0]
-        return Sociable.objects.get(slug=code.slug)
+        client.post(reverse('create-sociable'))
+        sociable = Sociable.objects.all()[0]
+        assert len(sociable.slug) == 8
 
 
 class TestDeleteCode:

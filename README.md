@@ -1,4 +1,4 @@
-# Bedank voor het gesprek (before Traveling Guestbook)
+# Bedank voor het contact (before Traveling Guestbook)
 ## Social media for real-life interactions
 
 ### Description

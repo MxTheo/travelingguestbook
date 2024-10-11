@@ -1,0 +1,20 @@
+{% load static %}
+
+<div class='col-2 col-lg-1 my-auto g-0'>  
+    {% if message.author == sociable.owner %}
+      <img src='{% static "images/smileyTeeth.jpg" %}' class='img-thumbnail rounded-5  border-primary border-3' alt='profilepic'>
+    {% elif message.author %}
+      <img src='{% static "images/smileyTemptation.jpg" %}' class='img-thumbnail rounded-5  border-warning border-3' alt='profilepic'>
+    {% else %}
+      <img src='{% static "images/smileyLaugh.jpg" %}' class='img-thumbnail rounded-5' alt='profilepic'>
+    {% endif %}
+    <div class='mt-1'>
+      {% if message.author == sociable.owner %}
+        <b class='my-auto'><a class='link text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile">{{message.name}}</a></b>
+        {% elif message.author %}
+        <b class='my-auto'><a class='link text-white' href={% url "profile" message.author.username %} target="_blank">{{message.name}}</a></b>
+        {% else %}
+        <b class='my-auto'>{{message.name}}</b>
+        {% endif %}
+      </div>
+  </div>

@@ -25,7 +25,6 @@ class SociableFactory(factory.django.DjangoModelFactory):
         model = Sociable
     slug        = factory.LazyFunction(fake.unique.postcode)
     owner       = factory.SubFactory(UserFactory)
-    description = factory.LazyFunction(fake.text)
 
 
 class LogMessageFactory(factory.django.DjangoModelFactory):

@@ -5,8 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from game.views import calc_percentage_xp
-from sociablecreating.views import SociableCreate, get_logmessage_list_from_sociable_list
-from usermanagement.models import Profile
+from sociablecreating.views import get_logmessage_list_from_sociable_list
 from .forms import RegisterForm, UserForm, ProfileForm
 from django.views.generic import CreateView, DetailView
 
@@ -67,16 +66,3 @@ def update_profile(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
-
-def reset_custom_description_for_code(request):
-    '''When user clicks on reset omschrijving,
-    clear its custom description and reload the sociable form'''
-    user = request.user
-    clear_custom_description_for_code(user)
-    return redirect('create-sociable')
-
-def clear_custom_description_for_code(user):
-    '''Resets the custom description of user'''
-    profile = Profile.objects.get(user=user)
-    profile.custom_description_for_code = ''
-    profile.save()
