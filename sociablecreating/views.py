@@ -57,7 +57,7 @@ def get_sociables_for_dashboard(user: User):
         - they participated in as author
         - and they own without a logmessage of themselves
     '''
-    def logmessage_date_created(sociable):
+    def logmessage_date_created(sociable: Sociable):
         return sociable.logmessage_set.all()[0].date_created
 
     list_sociable = get_sociables_user_participated_as_author(user)

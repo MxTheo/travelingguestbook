@@ -1,6 +1,5 @@
 from django.urls import reverse
 import pytest
-from conftest import auto_login_user
 from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
 from sociablecreating.models import Sociable, LogMessage
 from sociablecreating.views import get_sociables_for_dashboard
