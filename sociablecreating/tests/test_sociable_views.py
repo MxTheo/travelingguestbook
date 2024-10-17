@@ -1,8 +1,8 @@
 from django.urls import reverse
 import pytest
-from travelingguestbook.factories import LogMessageFactory, SociableFactory
+from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
 from sociablecreating.models import Sociable, LogMessage
-from sociablecreating.views import get_logmessage_list_from_sociable_list
+from sociablecreating.views import get_sociables_for_dashboard
 
 
 class TestSearchSociable:
@@ -77,13 +77,13 @@ def test_update_unread_message_to_read(client):
     '''Given the click that the unread message is read,
     tests if the detailpage of the code is displayed with altering the is_read from the message'''
     sociable = SociableFactory()
-    message = LogMessageFactory(sociable=sociable)
-    url = reverse('message-read', kwargs={'pk': message.id})
+    logmessage = LogMessageFactory(sociable=sociable)
+    url = reverse('message-read', kwargs={'pk': logmessage.id})
     response = client.get(url)
-    message = LogMessage.objects.get()
+    logmessage = LogMessage.objects.get()
 
     assert response.status_code == 302
-    assert message.is_read
+    assert logmessage.is_read
     assert sociable.slug in response.url
 
 
@@ -95,30 +95,81 @@ class TestGetLogmessageListFromSociableList:
         for _ in range(number_of_messages):
             LogMessageFactory(sociable=sociable)
 
-    @pytest.mark.parametrize('number_of_messages', list(range(0, 3)))
-    def test_get_log_messages_from_one_sociable(self, number_of_messages):
+    def test_get_log_messages_from_one_sociable_with_no_messages(self, auto_login_user):
+        '''Using the function create_logmessage and one sociable with no messages,
+        tests if no sociables are retrieved'''
+        _, owner = auto_login_user()
+        SociableFactory(owner=owner)
+
+        assert len(get_sociables_for_dashboard(owner)) == 0
+
+    @pytest.mark.parametrize('number_of_messages', list(range(1, 3)))
+    def test_get_log_messages_from_one_sociable(self, number_of_messages, auto_login_user):
         '''Using the function create_logmessage and one sociable,
-        tests if all the messages are retrieved from the sociable for 0 till 3 log messages'''
-        sociable_list_one = [SociableFactory()]
+        tests if one sociable is retrieved, no matter the number of messages'''
+        _, owner = auto_login_user()
+        sociable_list = [SociableFactory(owner=owner)]
 
-        self.create_logmessage(number_of_messages, sociable_list_one[0])
+        self.create_logmessage(number_of_messages, sociable_list[0])
 
-        assert len(get_logmessage_list_from_sociable_list(sociable_list_one)) == number_of_messages
+        assert len(get_sociables_for_dashboard(owner)) == 1
 
-    def test_get_list_of_two_logmessages_from_two_sociables(self):
+
+    def test_get_one_logmessage_from_one_sociable_that_does_not_belong_to_user(self, auto_login_user):
+        '''Given a user participating in a chat they did not initiate, test if it still returns the sociable'''
+        _, user = auto_login_user()
+        sociable = SociableFactory()
+        LogMessageFactory(sociable=sociable, author=user)
+
+        assert len(get_sociables_for_dashboard(user)) == 1
+
+    def test_get_two_logmessages_from_two_sociables(self, auto_login_user):
         '''Given two sociables with each a message,
-        tests if it returns 2 messages'''
-        sociable_list_one = [SociableFactory(), SociableFactory()]
+        tests if it returns 2 sociables'''
+        _, owner = auto_login_user()
+        sociable_list_one = [SociableFactory(owner=owner), SociableFactory(owner=owner)]
 
         LogMessageFactory(sociable=sociable_list_one[0])
         LogMessageFactory(sociable=sociable_list_one[1])
 
-        assert len(get_logmessage_list_from_sociable_list(sociable_list_one)) == 2
+        assert len(get_sociables_for_dashboard(owner)) == 2
 
-    def test_get_empty_list_from_no_sociables(self):
+    def test_get_one_logmessage_of_owner_of_sociable(self, auto_login_user):
+        '''When a user is both the author and the owner of a logmessage,
+        test if only one logmessage is retrieved'''
+        _, owner = auto_login_user()
+        sociable = SociableFactory(owner=owner)
+        LogMessageFactory(sociable=sociable, author=owner)
+        assert len(get_sociables_for_dashboard(owner)) == 1
+
+    def test_get_one_logmessage_of_sociable_with_two_messages_of_author_and_owner(self, auto_login_user):
+        '''Given a sociable with two messages, one from the owner of the sociable and one of a different user,
+        test if only one sociable is retrieved'''
+        _, owner = auto_login_user()
+        author = UserFactory()
+        sociable = SociableFactory(owner=owner)
+        LogMessageFactory(sociable=sociable, author=owner)
+        LogMessageFactory(sociable=sociable, author=author)
+        assert len(get_sociables_for_dashboard(owner)) == 1
+
+    def test_get_empty_list_from_no_sociables(self, auto_login_user):
         '''Given no sociables,
         tests if it returns no logmessages'''
-        assert len(get_logmessage_list_from_sociable_list([])) == 0
+        _, owner = auto_login_user()
+        assert len(get_sociables_for_dashboard(owner)) == 0
+
+
+# def test_filter_out_double_sociables_for_list_logmessage(auto_login_user):
+#     '''Given a user with multiple messages in one sociable,
+#     tests if only one message is returned'''
+#     _, author = auto_login_user()
+#     sociable = SociableFactory()
+
+#     list_logmessage = [LogMessageFactory(sociable=sociable, author=author) for _ in range(0,2)]
+
+#     filtered_list = filter_out_double_sociables_for_list_logmessage(list_logmessage)
+
+#     assert len(filtered_list) == 1
 
 
 def test_logmessage_str():

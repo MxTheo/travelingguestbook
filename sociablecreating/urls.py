@@ -4,7 +4,6 @@ from . import views
 urlpatterns = [
     # CRUD Sociable
     path('nieuwecode/', views.create_sociable, name='create-sociable'),
-    # path('edit/<slug:slug>', views.SociableUpdate.as_view(), name='update-sociable'),
     path('<slug:slug>', views.SociableDetail.as_view(), name='sociable'),
     path('verwijdercode/<slug:slug>', views.SociableDelete.as_view(), name='delete-sociable'),
 

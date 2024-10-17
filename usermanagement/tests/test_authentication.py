@@ -2,7 +2,7 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory
 from django.urls import reverse
 from django.contrib import auth
-from usermanagement.views import dashboard
+from usermanagement.views import dashboard_logmessage, dashboard_sociable
 from usermanagement.forms import RegisterForm
 from usermanagement.models import Profile
 from travelingguestbook.factories import UserFactory
@@ -96,20 +96,38 @@ class TestRegister():
 
 class TestDashboard:
     '''Test the redirecting behaviour for user permissions for the dashboard'''
-    def test_dashboard_authenticated(self):
+    def test_dashboard_logmessage_authenticated(self):
         '''Logged in as a user,
         tests if the user is redirected towards its dashboard'''
-        url          = reverse('dashboard')
+        url          = reverse('dashboard_logmessage')
         request      = RequestFactory().get(url)
         request.user = UserFactory()
-        response     = dashboard(request)
+        response     = dashboard_logmessage(request)
         assert response.status_code == 200
 
-    def test_dashboard_unauthenticated(self):
+    def test_dashboard_logmessage_unauthenticated(self):
         '''Not logged in as a user,
         tests if the anonymous user is redirected to a not allowed page'''
-        url          = reverse('dashboard')
+        url          = reverse('dashboard_logmessage')
         request      = RequestFactory().get(url)
         request.user = AnonymousUser()
-        response     = dashboard(request)
+        response     = dashboard_logmessage(request)
+        assert response.status_code == 302
+
+    def test_dashboard_sociable_authenticated(self):
+        '''Logged in as a user,
+        tests if the user is redirected towards its dashboard'''
+        url          = reverse('dashboard_sociable')
+        request      = RequestFactory().get(url)
+        request.user = UserFactory()
+        response     = dashboard_sociable(request)
+        assert response.status_code == 200
+
+    def test_dashboard_sociable_unauthenticated(self):
+        '''Not logged in as a user,
+        tests if the anonymous user is redirected to a not allowed page'''
+        url          = reverse('dashboard_sociable')
+        request      = RequestFactory().get(url)
+        request.user = AnonymousUser()
+        response     = dashboard_sociable(request)
         assert response.status_code == 302

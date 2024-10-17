@@ -13,8 +13,8 @@ class Sociable(models.Model):
         ordering = ['-date_created']
 
     def get_absolute_url(self):
-        '''Given the code of the sociable (slug),
-        returns the url with the code appended after,
+        '''Given the slug of the sociable,
+        returns the url with the slug appended after,
         so that sociablepage is findable by the reciever of the sociable'''
         return reverse("sociable", kwargs={"slug": self.slug})
 

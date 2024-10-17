@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from game.views import calc_percentage_xp
-from sociablecreating.views import get_logmessage_list_from_sociable_list
+from sociablecreating.models import Sociable
+from sociablecreating.views import get_sociables_for_dashboard
 from .forms import RegisterForm, UserForm, ProfileForm
 from django.views.generic import CreateView, DetailView
 
@@ -14,7 +15,7 @@ class Register(CreateView):
     '''The sign up functionality'''
     form_class = RegisterForm
     template_name = 'usermanagement/register.html'
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('dashboard_sociable')
 
     def form_valid(self, form):
         '''After the user input is valid, it logs in and redirects towards its dashboard'''
@@ -24,19 +25,26 @@ class Register(CreateView):
 
 
 @login_required(login_url='login')
-def dashboard(request):
+def dashboard_logmessage(request):
     '''Given the user,
-    generates its dashboard'''
-    user = request.user
-    sociable_list = user.sociable_set.all()
-    logmessage_list = get_logmessage_list_from_sociable_list(sociable_list)
-    percentage_xp = calc_percentage_xp(user)
+    generates the overview of the logmessages, one per sociable'''
+    list_sociable_logmessage = get_sociables_for_dashboard(request.user)
+    percentage_xp = calc_percentage_xp(request.user)
     context = {
-        'sociable_list'  : sociable_list,
-        'logmessage_list': logmessage_list,
-        'percentage_xp'  : percentage_xp
+        'list_sociable_logmessage': list_sociable_logmessage,
+        'percentage_xp': percentage_xp
         }
-    return render(request, 'usermanagement/dashboard.html', context)
+    return render(request, 'sociablecreating/dashboard_logmessage.html', context)
+
+
+@login_required(login_url='login')
+def dashboard_sociable(request):
+    '''Given the owner, generates the overview of its sociables'''
+    percentage_xp = calc_percentage_xp(request.user)
+    context = {
+        'percentage_xp': percentage_xp,
+        }
+    return render(request, 'sociablecreating/dashboard_sociable.html', context)
 
 
 class UserDetail(DetailView):
@@ -58,7 +66,7 @@ def update_profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request, ('Bewerken van je profiel is geslaagd!'))
-            return redirect('dashboard')
+            return redirect('dashboard_logmessage')
     else:
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)

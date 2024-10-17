@@ -3,7 +3,8 @@ from usermanagement import views
 
 urlpatterns = [
     path('register/', views.Register.as_view(), name='register'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/gespreksketting/', views.dashboard_logmessage, name='dashboard_logmessage'),
+    path('dashboard/wachtwoord/', views.dashboard_sociable, name='dashboard_sociable'),
     path('profile/<str:username>', views.UserDetail.as_view(), name='profile'),
     path('editaccount/', views.update_profile, name='editaccount'),
 ]

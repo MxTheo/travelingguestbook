@@ -1,29 +1,29 @@
 {% load static %}
-{% block stylesheet %}<link href='{% static "sociablecreating/styles/sociablecomponent.css" %}' rel="stylesheet" >{% endblock stylesheet %}
-<div class="card border-info text-white bg-secondary mb-3">
-    <div class="card-header d-flex justify-content-around">
-        <h4 class='mt-auto'>Jouw Codes</h4> <a class='btn btn-primary' href='{% url "create-sociable" %}'><b>+</b></a>
-    </div>
-    <div class="card-body">
-        {% for sociable in  sociable_list %}
-        <a href='{% url "sociable" sociable.slug %}' class='a-sociable'>
-            <div class="card sociable-card">
-                <div class="badge rounded-pill bg-primary mx-auto my-auto position-absolute ms-1 mt-1"><b>{{forloop.revcounter}}</b></div>
-                <div class="card-body">
-                    <h4 class="card-title"> {{sociable.slug}}</h4>
 
-                    <p class="card-text">{{sociable.description|truncatewords:23 }}</p>
-                    <small class="card-subtitle mb-2 text-muted">Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
+        <a href='{% url "create-sociable" %}' class='btn btn-success rounded-pill me-3 my-1'><b>+ nieuw</b></a>
+
+    <div class="list-group">
+        {% for sociable in user.sociable_set.all %}
+        
+        <a href='{% url "sociable" sociable.slug %}' class='list-group-item list-group-item-action border-light'>
+            <div class="badge rounded-pill bg-primary mx-auto my-auto position-absolute start-0 top-0 ms-1 mt-1">
+                <b>{{forloop.revcounter}}</b>
+            </div>
+            <div class='align-items-center justify-content-center'>
+                <div class="mb-0 opacity-80">{{sociable.slug}}</div>
+                <div class='container'>
+                    <small class="opacity-50 text-nowrap">{{sociable.date_created|date:'d-m'}}</small>
                 </div>
-            </div>  
+            </div>
         </a>
-        {% empty %}  
+        {% empty %}
         <div class='card'>
-            <div class="card-body">
-                Je hebt nog geen codes. Maak je eerste aan.
+            <div class="card-body mx-2 mt-2">
+                Je hebt nog geen wachtwoorden. Maak een wachtwoord aan om het gesprek te starten.
                 <p><a href='{% url "create-sociable" %}'><button href='{% url "create-sociable" %}' button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
             </div>
         </div>
         {% endfor %}
     </div>
+    
 </div>

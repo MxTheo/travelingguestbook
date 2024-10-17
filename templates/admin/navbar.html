@@ -3,7 +3,7 @@
   <div class="container-fluid">
     <a class="navbar-brand" href=
     {% if user.is_authenticated %}
-    {% url "dashboard" %}
+    {% url "dashboard_sociable" %}
     {% else %}
     "{% url 'home' %}"
     {% endif %}>Bedank</br>voor het contact</a>
@@ -35,7 +35,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href='{% url "dashboard" %}'>Dashboard</a>
+          <a class="nav-link" href='{% url "dashboard_logmessage" %}'>Dashboard</a>
         </li>
         {% else %}
         <li class="nav-item"><a class="nav-link" href='{% url "login" %}'>Login</a></li>

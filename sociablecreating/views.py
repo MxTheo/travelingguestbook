@@ -1,5 +1,5 @@
 import string
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
@@ -19,7 +19,7 @@ def home(request):
 def search_sociable(request):
     '''Given a slug entered by the user,
     redirects the user to the sociable associated'''
-    search_code = request.GET.get('search-code').lower()
+    search_code = request.GET['search-code'].lower()
     try:
         sociable = Sociable.objects.get(slug=search_code)
         if sociable.owner == request.user:
@@ -36,7 +36,7 @@ def display_message_or_code(request, sociable):
     or displays the sociable detail page if there are no unread messages'''
     lst_logmessage = LogMessage.objects.filter(sociable=sociable, is_read=False)
     if lst_logmessage:
-        context = {'sociable': sociable, 'message': lst_logmessage[0], 'search-code': sociable.slug}
+        context = {'sociable': sociable, 'logmessage': lst_logmessage[0]}
         return render(request, 'sociablecreating/message.html', context=context)
     else:
         return redirect('sociable', slug=sociable.slug)
@@ -45,19 +45,32 @@ def display_message_or_code(request, sociable):
 def display_code_after_message_is_read(request, pk):
     '''Given the visitor clicks gelezen,
     update the message to read and display code'''
-    message = LogMessage.objects.get(id=pk)
-    message.is_read = True
-    message.save()
-    return redirect('sociable', slug=message.sociable)
+    logmessage = LogMessage.objects.get(id=pk)
+    logmessage.is_read = True
+    logmessage.save()
+    return redirect('sociable', slug=logmessage.sociable)
 
 
-def get_logmessage_list_from_sociable_list(sociable_list):
-    '''Given a sociable list,
-    returns all the log messages from all the sociables in the list'''
-    logmessage_list = []
-    for sociable in sociable_list:
-        logmessage_list.extend(sociable.logmessage_set.all())
-    return logmessage_list
+def get_sociables_for_dashboard(user):
+    '''Given a user,
+    returns all the sociables
+        - they participated in as author
+        - and they own without a logmessage of themselves
+    '''
+    def logmessage_date_created(sociable):
+        return sociable.logmessage_set.all()[0].date_created
+
+    list_sociable = get_sociables_user_participated_as_author(user)
+    list_sociable.extend(user.sociable_set.filter(logmessage__isnull=False))
+
+    list_sociable.sort(reverse=True, key=logmessage_date_created)
+    return set(list_sociable)
+
+
+def get_sociables_user_participated_as_author(user):
+    '''Given a user, get all sociables that the user has written a logmessage in'''
+    list_key_sociable_of_logmessage = user.logmessage_set.all().values_list('sociable', flat=True)
+    return list(Sociable.objects.filter(pk__in=list_key_sociable_of_logmessage))
 
 
 @login_required(login_url='login')
@@ -165,7 +178,7 @@ class SociableDelete(UserPassesTestMixin, generic.edit.DeleteView):
     '''Generic editing view to delete Sociable:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/'''
     model         = Sociable
-    success_url   = reverse_lazy('dashboard')
+    success_url   = reverse_lazy('dashboard_sociable')
     template_name = "admin/confirm_delete.html"
 
     def test_func(self):

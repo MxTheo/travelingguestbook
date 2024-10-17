@@ -177,3 +177,12 @@ class TestUpdateLogMessage:
         url_update = reverse('update-logmessage', args=[logmessage.id])
         client.post(url_update, data={'body': message_body, 'name':logmessage.name})
         return LogMessage.objects.get(id=logmessage.id)
+
+
+def test_sociable_absolute_url_with_200(client):
+    '''Tests if the slug is used as absolute url of the sociable'''
+    sociable = SociableFactory()
+    absolute_url = sociable.get_absolute_url()
+    assert absolute_url == '/'+str(sociable.slug)
+    response = client.get(absolute_url)
+    assert response.status_code == 200

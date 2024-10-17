@@ -12,4 +12,4 @@ def test_auth_view(auto_login_user):
     '''Logged in,
     tests if the user reaches dashboard'''
     client, _ = auto_login_user()
-    helper_test_page_rendering(client, 'dashboard')
+    helper_test_page_rendering(client, 'dashboard_sociable')

@@ -34,24 +34,28 @@ Sociable Detail
   </div>
     <div class='bg-secondary mx-2'>
       <ul class='list-group px-2 py-1 bg-secondary'>
-        {% for message in sociable.logmessage_set.all %}
+        {% for logmessage in sociable.logmessage_set.all %}
         <li class='list-group-item'>
           {% if forloop.counter|divisibleby:"2" %}
-          <div class='row justify-content-start mt-2 mb-1'>
+            <div class='row justify-content-start mt-2 mb-1'>
+              <div class='col-2 col-lg-1 my-auto g-0'>  
               {% include "sociablecreating/chat_profile.html" %}
+              </div>
               <div class='col-auto'>
                 <div class="position-absolute bottom-50 translate-middle-y triangle-left"></div>
               </div>
               <div class='col-9 col-sm-7 col-md-5'>
               {% include "sociablecreating/chat_message.html" %}
-            {% else %}
+          {% else %}
             <div class='row justify-content-end mt-2 mb-1'>
               <div class='col-9 col-sm-7 col-md-5 g-0'>
             {% include "sociablecreating/chat_message.html" %}
             <div class='col-1 g-0'>
               <div class="position-absolute bottom-50 translate-middle-y triangle-right"></div>
             </div>
-            {% include "sociablecreating/chat_profile.html" %}
+            <div class='col-2 col-lg-1 my-auto g-0'>
+              {% include "sociablecreating/chat_profile.html" %}
+            </div>
             {% endif %}
           </div>
 
