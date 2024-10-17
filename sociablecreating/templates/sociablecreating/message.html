@@ -2,6 +2,11 @@
 {% block title %}
 Bericht voor jou
 {% endblock %}
+{% load static %}
+{% block stylesheet %}
+<link href='{% static "sociablecreating/styles/triangle.css" %}' rel="stylesheet" >
+{% endblock stylesheet %}
+
 {% block content %}
 <div class="offcanvas offcanvas-start" tabindex="-1" id="profile" aria-labelledby="profileLabel">
     <div class="offcanvas-header">
@@ -14,24 +19,52 @@ Bericht voor jou
 <div class='container'>
     <small class='test-muted d-flex'>{{sociable.slug}}</small>
     <div class="bg-dark px-3 py-4 text-center">
-        
-        <div class="py-4">
-            {% if logmessage.author == sociable.owner %}
-            <h1 class="display-5 fw-bold"><a class='link-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-square-half"></i>&ensp;{{logmessage.name}}</a></b></h1>
-            {% elif logmessage.author %}
-            <h1 class="display-5 fw-bold "><a class='link-light' href={% url "profile" logmessage.author.username %} target="_blank">{{logmessage.name}}</a></h1>
-            {% else %}
-            <h1 class="display-5 fw-bold text-white">{{logmessage.name}}</h1>
-            {% endif %}
-            <small class="text-muted">Geschreven op {{logmessage.date_created|date:'d-m'}}</small>
-            <div class="col-lg-6 mx-auto mt-3">
-                <p class="fs-5 mb-3">{{logmessage.body|linebreaks}}</p>
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center px-5">
-                <a href='{% url "message-read" logmessage.id %}' class="btn btn-success btn-lg px-4 me-sm-3 fw-bold">Gelezen</a>
-                <a href='{% url "sociable" sociable.slug %}' class="my-auto">Niet voor mij bedoeld</a>
+    
+      <div class='container my-auto mt-3'>
+        <div class='row'>
+            <div class='col-2 my-auto ms-2 g-0'>
+                {% include "sociablecreating/chat_profile.html" %}
+            </div>
+            <div class='col-auto'>
+                <div class="position-absolute   translate-middle-y mt-5 triangle-left"></div>
+            </div>
+            <div class='col'> 
+                <div class='card border-0 bg-transparent'>
+    
+                    <div class='card-body rounded-top-4 bg-white text-black'>
+                        <div class='container'>
+                            {{logmessage}}
+                        </div>
+                    </div>
+                    <div class='card-footer bg-white rounded-bottom-4'>
+                        <div class='row justify-content-between'>
+                            <div class='col-auto'>
+                                {% if logmessage.is_read %}
+                                    <i class="bi bi-check-all text-black" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="gelezen"></i>
+                                {% endif %}
+                            </div>
+                            <div class='col-auto'>
+                                <small class='text-light-emphasis'>
+                                    {% if logmessage.date_changed|date:'d-m' != logmessage.date_created|date:'d-m' %}
+                                        <i class="bi bi-pencil-fill"></i> {{logmessage.date_changed|date:'d-m'}}
+                                    {% else %}
+                                        {{logmessage.date_created|date:'d-m'}}
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+      </div>
+
+      <div class="col-lg-6 mx-auto mt-3">
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center px-5">
+          <a href='{% url "message-read" logmessage.id %}' class="btn btn-success btn-lg px-4 me-sm-3 fw-bold">Gelezen</a>
+          <a href='{% url "sociable" sociable.slug %}' class="my-auto">Niet voor mij bedoeld</a>
+          </div>
+      </div>
     </div>    
 </div>
 {% endblock %}

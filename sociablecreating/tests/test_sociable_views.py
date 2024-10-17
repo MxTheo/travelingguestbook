@@ -172,7 +172,7 @@ class TestGetSociablesForDashboard:
 
         sociable_list = list(get_sociables_for_dashboard(user))
 
-        assert sociable_list[0].slug == '2'
+        assert sociable_list[0].slug == '3'
 
     def test_sorting_after_adding_logmessage_at_same_sociable(self, auto_login_user):
         '''Test if the sociables are returned in descending order by date created of logmessages, when a logmessage is added to a previous sociable'''

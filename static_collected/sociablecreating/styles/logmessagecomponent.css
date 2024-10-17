@@ -5,11 +5,3 @@
 .sociable-card:hover {
   box-shadow: 3px 3px 3px var(--bs-primary);
 }
-
-.triangle-left {
-  width: 0;
-  height: 0;
-  border-top: 12px solid transparent;
-  border-right: 27px solid #fff;
-  border-bottom: 12px solid transparent;
-}

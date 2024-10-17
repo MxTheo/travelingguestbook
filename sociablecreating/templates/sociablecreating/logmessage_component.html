@@ -1,5 +1,7 @@
 {% load static %}
-{% block stylesheet %}<link href='{% static "sociablecreating/styles/logmessagecomponent.css" %}' rel="stylesheet" >{% endblock stylesheet %}
+{% block stylesheet %}<link href='{% static "sociablecreating/styles/logmessagecomponent.css" %}' rel="stylesheet" >
+<link href='{% static "sociablecreating/styles/triangle.css" %}' rel="stylesheet" >
+{% endblock stylesheet %}
 <div class='container'>
     <div class="card border-info text-white bg-secondary mb-3 col-lg-6 mx-auto">
         <div class="card-body">
@@ -24,7 +26,7 @@
                                 </div>
                                 <div class='col'> 
                                     <div class='card border-0'>
-
+                        
                                         <div class='card-body rounded-top-4 bg-white text-black'>
                                             <div class='container'>
                                                 {{logmessage}}
