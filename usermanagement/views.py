@@ -4,11 +4,10 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView
 from game.views import calc_percentage_xp
-from sociablecreating.models import Sociable
 from sociablecreating.views import get_sociables_for_dashboard
 from .forms import RegisterForm, UserForm, ProfileForm
-from django.views.generic import CreateView, DetailView
 
 
 class Register(CreateView):
