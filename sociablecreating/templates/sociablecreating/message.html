@@ -17,15 +17,15 @@ Bericht voor jou
         
         <div class="py-4">
             {% if logmessage.author == sociable.owner %}
-            <h1 class="display-5 fw-bold"><a class='link-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-square-half"></i>&ensp;{{message.name}}</a></b></h1>
+            <h1 class="display-5 fw-bold"><a class='link-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-square-half"></i>&ensp;{{logmessage.name}}</a></b></h1>
             {% elif logmessage.author %}
-            <h1 class="display-5 fw-bold "><a class='link-light' href={% url "profile" logmessage.author.username %} target="_blank">{{message.name}}</a></h1>
+            <h1 class="display-5 fw-bold "><a class='link-light' href={% url "profile" logmessage.author.username %} target="_blank">{{logmessage.name}}</a></h1>
             {% else %}
-            <h1 class="display-5 fw-bold text-white">{{message.name}}</h1>
+            <h1 class="display-5 fw-bold text-white">{{logmessage.name}}</h1>
             {% endif %}
-            <small class="text-muted">Geschreven op {{message.date_created|date:'d-m'}}</small>
+            <small class="text-muted">Geschreven op {{logmessage.date_created|date:'d-m'}}</small>
             <div class="col-lg-6 mx-auto mt-3">
-                <p class="fs-5 mb-3">{{message.body|linebreaks}}</p>
+                <p class="fs-5 mb-3">{{logmessage.body|linebreaks}}</p>
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center px-5">
                 <a href='{% url "message-read" logmessage.id %}' class="btn btn-success btn-lg px-4 me-sm-3 fw-bold">Gelezen</a>
                 <a href='{% url "sociable" sociable.slug %}' class="my-auto">Niet voor mij bedoeld</a>
