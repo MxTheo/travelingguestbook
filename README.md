@@ -19,7 +19,7 @@ The Web-Application is in Dutch. The code and back-end is in English.
 
 #### Glossary
 -  **User:** Users can create codes and start spreading them around. Messages can be left by anyone who have a code. You do not need an account for that.
-- **Code (Sociable):** The code can be written on some physical thing. This physical item is used to thank the other for the conversation. Hopefully that other will also thank others with the same code for the conversation. (Have not renamed it yet in the backend)
+- **Sociable:** The code can be written on some physical thing. This physical item is used to thank the other for the conversation. Hopefully that other will also thank others with the same code for the conversation. (Have not renamed it yet in the backend)
 - **LogMessage:** With the code, the giver leaves a message on the specific page for the receiver of the code to read. He can write about his experiences of the conversation.
 
 ### Contributing
