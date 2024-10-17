@@ -1,8 +1,8 @@
 {% load static %}
 {% if logmessage.author == sociable.owner %}
-  <img src='{% static "images/smileyTeeth.jpg" %}' class='img-thumbnail rounded-5  border-primary border-3' alt='profilepic'>
+  <img src='{% static "images/portrait_owner.jpg" %}' class='img-thumbnail rounded-5  border-primary border-3' alt='profilepic'>
 {% elif logmessage.author %}
-  <img src='{% static "images/smileyTemptation.jpg" %}' class='img-thumbnail rounded-5  border-warning border-3' alt='profilepic'>
+  <img src='{% static "images/portrait_user.jpg" %}' class='img-thumbnail rounded-5  border-warning border-3' alt='profilepic'>
 {% else %}
-  <img src='{% static "images/smileyLaugh.jpg" %}' class='img-thumbnail rounded-5' alt='profilepic'>
+  <img src='{% static "images/portrait_anonymous.jpg" %}' class='img-thumbnail rounded-5' alt='profilepic'>
 {% endif %}

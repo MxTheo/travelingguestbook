@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from sociablecreating.forms import LogMessageForm
-from usermanagement.models import Profile
+from usermanagement.models import Profile, User
 from .models import LogMessage, Sociable
 
 
@@ -30,7 +30,7 @@ def search_sociable(request):
         return render(request, 'sociablecreating/sociable_not_found.html', context)
 
 
-def display_message_or_code(request, sociable):
+def display_message_or_code(request, sociable: Sociable):
     '''Given a sociable,
     displays the first unread message
     or displays the sociable detail page if there are no unread messages'''
@@ -51,7 +51,7 @@ def display_code_after_message_is_read(request, pk):
     return redirect('sociable', slug=logmessage.sociable)
 
 
-def get_sociables_for_dashboard(user):
+def get_sociables_for_dashboard(user: User):
     '''Given a user,
     returns all the sociables
         - they participated in as author
@@ -62,12 +62,13 @@ def get_sociables_for_dashboard(user):
 
     list_sociable = get_sociables_user_participated_as_author(user)
     list_sociable.extend(user.sociable_set.filter(logmessage__isnull=False))
+    list_sociable = list(set(list_sociable))
 
     list_sociable.sort(reverse=True, key=logmessage_date_created)
-    return set(list_sociable)
+    return list_sociable
 
 
-def get_sociables_user_participated_as_author(user):
+def get_sociables_user_participated_as_author(user: User):
     '''Given a user, get all sociables that the user has written a logmessage in'''
     list_key_sociable_of_logmessage = user.logmessage_set.all().values_list('sociable', flat=True)
     return list(Sociable.objects.filter(pk__in=list_key_sociable_of_logmessage))

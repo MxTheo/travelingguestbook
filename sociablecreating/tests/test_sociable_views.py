@@ -1,5 +1,6 @@
 from django.urls import reverse
 import pytest
+from conftest import auto_login_user
 from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
 from sociablecreating.models import Sociable, LogMessage
 from sociablecreating.views import get_sociables_for_dashboard
@@ -87,7 +88,7 @@ def test_update_unread_message_to_read(client):
     assert sociable.slug in response.url
 
 
-class TestGetLogmessageListFromSociableList:
+class TestGetSociablesForDashboard:
     '''Test the behavour of get_log_message_from_one_sociable'''
     def create_logmessage(self, number_of_messages: int, sociable: Sociable):
         '''Given the number of messages and the sociable,
@@ -114,9 +115,9 @@ class TestGetLogmessageListFromSociableList:
 
         assert len(get_sociables_for_dashboard(owner)) == 1
 
-
-    def test_get_one_logmessage_from_one_sociable_that_does_not_belong_to_user(self, auto_login_user):
-        '''Given a user participating in a chat they did not initiate, test if it still returns the sociable'''
+    def test_get_one_logmessage_from_one_sociable_not_from_user(self, auto_login_user):
+        '''Given a user participating in a chat they did not initiate,
+        test if it still returns the sociable'''
         _, user = auto_login_user()
         sociable = SociableFactory()
         LogMessageFactory(sociable=sociable, author=user)
@@ -143,7 +144,8 @@ class TestGetLogmessageListFromSociableList:
         assert len(get_sociables_for_dashboard(owner)) == 1
 
     def test_get_one_logmessage_of_sociable_with_two_messages_of_author_and_owner(self, auto_login_user):
-        '''Given a sociable with two messages, one from the owner of the sociable and one of a different user,
+        '''Given a sociable with two messages,
+        one from the owner of the sociable and one of a different user,
         test if only one sociable is retrieved'''
         _, owner = auto_login_user()
         author = UserFactory()
@@ -158,18 +160,36 @@ class TestGetLogmessageListFromSociableList:
         _, owner = auto_login_user()
         assert len(get_sociables_for_dashboard(owner)) == 0
 
+    def test_sorting_by_logmessages_descending_order(self, auto_login_user):
+        '''Test if the sociables are returned in descending order by date created of logmessages'''
+        _, user = auto_login_user()
+        for i in range(0, 4):
+            if i % 2 == 0:
+                sociable = SociableFactory(slug=i, owner=user)
+                LogMessageFactory(sociable=sociable)
+            else:
+                sociable = SociableFactory(slug=i)
+                LogMessageFactory(sociable=sociable, author=user)
 
-# def test_filter_out_double_sociables_for_list_logmessage(auto_login_user):
-#     '''Given a user with multiple messages in one sociable,
-#     tests if only one message is returned'''
-#     _, author = auto_login_user()
-#     sociable = SociableFactory()
+        sociable_list = list(get_sociables_for_dashboard(user))
 
-#     list_logmessage = [LogMessageFactory(sociable=sociable, author=author) for _ in range(0,2)]
+        assert sociable_list[0].slug == '2'
 
-#     filtered_list = filter_out_double_sociables_for_list_logmessage(list_logmessage)
+    def test_sorting_after_adding_logmessage_at_same_sociable(self, auto_login_user):
+        '''Test if the sociables are returned in descending order by date created of logmessages, when a logmessage is added to a previous sociable'''
+        _, user = auto_login_user()
+        for i in range(0, 4):
+            if i % 2 == 0:
+                sociable = SociableFactory(slug=i, owner=user)
+                LogMessageFactory(sociable=sociable)
+            else:
+                sociable = SociableFactory(slug=i)
+                LogMessageFactory(sociable=sociable, author=user)
+        LogMessageFactory(sociable=Sociable.objects.get(slug='2'))
 
-#     assert len(filtered_list) == 1
+        sociable_list = get_sociables_for_dashboard(user)
+
+        assert sociable_list[0].slug == '2'
 
 
 def test_logmessage_str():
