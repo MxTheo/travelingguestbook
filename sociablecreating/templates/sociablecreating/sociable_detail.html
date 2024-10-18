@@ -22,7 +22,7 @@ Sociable Detail
   <h1>Deel je ervaringen en geef door!</h1>
   <h5 class='border-bottom pb-2 font-monospace text-uppercase'>{{sociable.slug}}</h5>
   <div class='justify-content-between d-flex align-items-center mb-3'>
-    <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><h6 class='mt-1'><b><i class="bi bi-square-half"></i>&ensp;{{sociable.owner}}</h6></b></button>
+    <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><h6 class='mt-1'><b><i class="bi bi-person-lines-fill"></i>&ensp;{{sociable.owner}}</h6></b></button>
     {% if request.user == sociable.owner %}
     <a class="btn btn-outline-danger" href={% url "delete-sociable" sociable.slug %}><i class="bi bi-trash3-fill"></i></a>
     {% endif %}
@@ -35,31 +35,69 @@ Sociable Detail
     <div class='bg-secondary mx-2'>
       <ul class='list-group px-2 py-1 bg-secondary'>
         {% for logmessage in sociable.logmessage_set.all %}
-        <li class='list-group-item'>
-          {% if forloop.counter|divisibleby:"2" %}
-            <div class='row justify-content-start mt-2 mb-1'>
+          <li class='list-group-item'>
+            {% if forloop.counter|divisibleby:"2" %}
+              <div class='row justify-content-start mt-2 mb-1'>
+                <div class='col-2 col-lg-1 my-auto g-0'>  
+                  {% include "sociablecreating/chat_profile.html" %}
+                </div>
+                <div class='col-auto'>
+                  <div class="position-absolute bottom-50 translate-middle-y triangle-left"></div>
+                </div>
+                <div class='col-9 col-sm-7 col-md-5'>
+                  {% include "sociablecreating/chat_message.html" %}
+                </div>
+            {% else %}
+              <div class='row justify-content-end mt-2 mb-1'>
+                <div class='col-9 col-sm-7 col-md-5 g-0'>
+                  {% include "sociablecreating/chat_message.html" %}
+                </div>
+                <div class='col-1 g-0'>
+                  <div class="position-absolute bottom-50 translate-middle-y triangle-right"></div>
+                </div>
+                <div class='col-2 col-lg-1 my-auto g-0'>
+                  {% include "sociablecreating/chat_profile.html" %}
+                </div>
+              {% endif %}
+          </li>
+          {% empty %}
+          <li class='list-group-item'>
+            <div class='row justify-content-center my-5'>
               <div class='col-2 col-lg-1 my-auto g-0'>  
-              {% include "sociablecreating/chat_profile.html" %}
+                <img src='{% static "images/portrait_owner.jpg" %}' class='img-thumbnail rounded-5  border-primary border-3' alt='profilepic'>
+                <div class='mt-1'>
+                  <b class='my-auto'><a class='link text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile">{{sociable.owner}}</a></b>
+                </div>
               </div>
               <div class='col-auto'>
                 <div class="position-absolute bottom-50 translate-middle-y triangle-left"></div>
               </div>
               <div class='col-9 col-sm-7 col-md-5'>
-              {% include "sociablecreating/chat_message.html" %}
-          {% else %}
-            <div class='row justify-content-end mt-2 mb-1'>
-              <div class='col-9 col-sm-7 col-md-5 g-0'>
-            {% include "sociablecreating/chat_message.html" %}
-            <div class='col-1 g-0'>
-              <div class="position-absolute bottom-50 translate-middle-y triangle-right"></div>
+                <div class='card border-0 h-50'>
+                  <div class='card-body rounded-top-4 bg-white text-black'>
+                    <div class='container text-start'>
+                      <p>Ik ben opgetogen dat je dit bericht gevonden heb!</br>
+                      Dat betekent wel dat ik nog geen persoonlijk berichtje voor jou hebt geschreven.</br>
+                      Ik hoop dat je morgen nog eens komt kijken!</br>
+                      <small class='text-light-emphasis'>[Dit is een automatisch bericht]</small>
+                      </p>
+                    </div>
+                  </div>
+                  <div class='card-footer bg-white rounded-bottom-4'>
+                    <div class='row justify-content-between'>
+                      <div class='col-auto'>
+                        <i class="bi bi-check-all text-black"></i>
+                      </div>
+                      <div class='col-auto'>
+                        <small class='text-light-emphasis'>
+                          {{sociable.date_created|date:'d-m'}}</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class='col-2 col-lg-1 my-auto g-0'>
-              {% include "sociablecreating/chat_profile.html" %}
-            </div>
-            {% endif %}
-          </div>
-
-        </li>
+          </li>
         {% endfor %}
       </ul>
     </div>

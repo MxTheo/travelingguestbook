@@ -14,8 +14,8 @@ class TestCreateCode:
         list_sociable = Sociable.objects.all()
         assert list_sociable
 
-    def test_if_a_slug_of_8_chars_is_created(self, auto_login_user):
-        '''Test if a slug is created of 8 chars, when creating a code'''
+    def test_if_a_slug_of_5_chars_is_created(self, auto_login_user):
+        '''Test if a slug is created of 5 chars, when creating a code'''
         client, _ = auto_login_user()
         client.post(reverse('create-sociable'))
         sociable = Sociable.objects.all()[0]
