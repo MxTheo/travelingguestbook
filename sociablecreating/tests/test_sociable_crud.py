@@ -19,7 +19,7 @@ class TestCreateCode:
         client, _ = auto_login_user()
         client.post(reverse('create-sociable'))
         sociable = Sociable.objects.all()[0]
-        assert len(sociable.slug) == 8
+        assert len(sociable.slug) == 5
 
 
 class TestDeleteCode:
