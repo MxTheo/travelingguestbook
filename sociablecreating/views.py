@@ -12,8 +12,9 @@ from .models import LogMessage, Sociable
 
 
 def home(request):
-    '''Renders the homepage'''
-    return render(request, 'sociablecreating/index.html')
+    '''Renders the homepage with a url of the homepage as QR code'''
+    context = {'url_for_qr': request.build_absolute_uri()}
+    return render(request, 'sociablecreating/index.html', context=context)
 
 
 def search_sociable(request):

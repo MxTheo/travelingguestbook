@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'contact',
     'game',
+    'qr_code',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
@@ -140,6 +141,8 @@ STATIC_ROOT = BASE_DIR / 'static_collected'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SERVE_QR_CODE_IMAGE_PATH = 'qr-code-image/'
 
 # EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

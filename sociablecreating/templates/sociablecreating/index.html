@@ -1,28 +1,32 @@
 {% extends "admin/main.html" %}
 {% block title %}Bedankt!{% endblock title %}
 {% block content %}
-    
-      <main class="px-3">
-        <div class='container'>
-        <h1>Bedank voor het contact!</h1>
-        <h2>Vul de code in en vind het berichtje dat voor jou is achter gelaten. Ga het contact aan met een ander. Bedank diegene met dezelfde code!</h2>
-        {% load crispy_forms_tags %}
-        <form class='form-control-lg' method="GET" action={% url "search-sociable"%}>
-            <div class='container'>
-                <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Vul code in:</b></label>
-                <div class='row mx-auto justify-content-center'>
-                  <div class='col-auto'>
-                    <input class="form-control form-control-lg mx-auto text-monospace text-uppercase" type="text" placeholder="1l2abc3i" id="inputLarge" name='search-code' aria-label="SearchCode">
-                  </div>
-                  <div class='col-auto mt-1'>
-                    <input class='btn btn-primary' type="submit" value="Zoek" />
-                  </div>
-                </div>
-              </div>
-        </label>
-        </form>
-            </div>
-      </main>
-</div>
+{% load qr_code %}
+<main class="px-3">
+  <div class='container'>
+    <h1>Bedank voor het contact!</h1>
+    <h2>Vul de code in en vind het berichtje dat voor jou is achter gelaten. Ga het contact aan met een ander. Bedank diegene met dezelfde code!</h2>
+    {% load crispy_forms_tags %}
+    <form class='form-control-lg' method="GET" action={% url "search-sociable"%}>
+      <div class='container'>
+        <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Vul code in:</b></label>
+        <div class='row mx-auto justify-content-center'>
+          <div class='col-auto'>
+            <input class="form-control form-control-lg mx-auto text-monospace text-uppercase" type="text" placeholder="dfrts" id="inputLarge" name='search-code' aria-label="SearchCode">
+          </div>
+          <div class='col-auto mt-1'>
+            <input class='btn btn-primary' type="submit" value="Zoek" />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <hr class='solid'>
+
+  <div class='container mt-4'>
+    <img src='{% qr_url_from_text url_for_qr %}' alt="qrcode voor home">
+  </div>
+  </div>
+</main>
 {% endblock content %}
 
