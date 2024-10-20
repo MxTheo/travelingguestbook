@@ -63,14 +63,23 @@ class TestSearchSociable:
         assert sociable.slug in response.url
         assert response.status_code == 302
 
-    def test_show_sociable_when_user_is_owner(self,  auto_login_user):
-        '''Given that the visitor is the owner, tests if the unread message is skipped and the sociable is shown'''
+    def test_show_message_when_user_is_owner(self,  auto_login_user):
+        '''Given that the visitor is the owner, tests if the unread message written by somebody else is still shown'''
         client, user = auto_login_user()
         sociable     = SociableFactory(slug='test123', owner=user)
         LogMessageFactory(sociable=sociable)
         response     = client.get(self.url, {'search-code': sociable.slug})
-        assert sociable.slug in response.url
+        assert response.status_code == 200
+        assert 'sociablecreating/message.html' == response.templates[0].name
+
+    def test_show_sociable_when_user_is_author(self,  auto_login_user):
+        '''Given that the visitor is the author, tests if he is redirected toward the sociable'''
+        client, user = auto_login_user()
+        sociable     = SociableFactory(slug='test123', owner=user)
+        LogMessageFactory(sociable=sociable, author=user)
+        response     = client.get(self.url, {'search-code': sociable.slug})
         assert response.status_code == 302
+        assert sociable.slug in response.url
 
 
 def test_update_unread_message_to_read(client):

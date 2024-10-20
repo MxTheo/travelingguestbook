@@ -23,8 +23,6 @@ def search_sociable(request):
     search_code = request.GET['search-code'].lower()
     try:
         sociable = Sociable.objects.get(slug=search_code)
-        if sociable.owner == request.user:
-            return redirect('sociable', slug=sociable.slug)
         return display_message_or_code(request, sociable)
     except ObjectDoesNotExist:
         context = {'search_code': search_code}
@@ -36,7 +34,7 @@ def display_message_or_code(request, sociable: Sociable):
     displays the first unread message
     or displays the sociable detail page if there are no unread messages'''
     lst_logmessage = LogMessage.objects.filter(sociable=sociable, is_read=False)
-    if lst_logmessage:
+    if lst_logmessage and lst_logmessage[0].author != request.user:
         context = {'sociable': sociable, 'logmessage': lst_logmessage[0]}
         return render(request, 'sociablecreating/message.html', context=context)
     else:
