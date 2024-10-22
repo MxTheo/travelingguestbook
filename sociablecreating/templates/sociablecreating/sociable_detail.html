@@ -1,5 +1,6 @@
 {% extends "admin/main.html" %}
 {% load static %}
+{% load qr_code %}
 {% block title %}
 Sociable Detail
 {% endblock %}
@@ -19,14 +20,55 @@ Sociable Detail
 
 
 <div class='container'>
-  <h1>Deel je ervaringen en geef door!</h1>
-  <h5 class='border-bottom pb-2 font-monospace text-uppercase'>{{sociable.slug}}</h5>
-  <div class='justify-content-between d-flex align-items-center mb-3'>
-    <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><h6 class='mt-1'><b><i class="bi bi-person-lines-fill"></i>&ensp;{{sociable.owner}}</h6></b></button>
-    {% if request.user == sociable.owner %}
-    <a class="btn btn-outline-danger" href={% url "delete-sociable" sociable.slug %}><i class="bi bi-trash3-fill"></i></a>
-    {% endif %}
-    <small>Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
+  <div>
+    <h1>Deel je ervaringen en geef door!</h1>
+    <h5 class='border-bottom pb-2 font-monospace text-uppercase'>{{sociable.slug}}</h5>
+    <div class='justify-content-between d-flex align-items-center mb-3'>
+      <button class='btn btn-outline-light' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile">
+        <h6 class='mt-1'><b><i class="bi bi-person-lines-fill"></i>&ensp;{{sociable.owner}}</h6></b>
+      </button>
+      {% if request.user == sociable.owner %}
+        <a class="btn btn-outline-danger" href={% url "delete-sociable" sociable.slug %}><i class="bi bi-trash3-fill"></i></a>
+      {% endif %}
+      <small>Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
+    </div>
+  </div>
+  <div class='row my-5'>
+    <div class='col-12 col-md-6'>
+      <div class='accordion' id='accordionSendMessage'>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <i class="bi bi-qr-code"></i>&ensp; Bericht versturen
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <img src="{% qr_url_from_text create_logmessage_qr_url %}" alt="QR code to send messages" class='w-100'>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='col-12 col-md-6'>
+      <div class='accordion' id='accordionDetailPage'>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              <i class="bi bi-qr-code"></i>&ensp; Deze pagina
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <img src='{% qr_url_from_text page_url %}' alt="qrcode voor detail page" class='w-100'>
+            </div>
+          </div>
+        </div>
+      
+      
+      
+      </div>
+    </div>
   </div>
     <div class='flex-container d-flex justify-content-end mb-2'>
       <a class='btn btn-info btn-lg' href={% url "create-logmessage" sociable %}><b>Laat een bericht achter <i class="bi bi-chat-right-text-fill ms-2"></i></b></a>
