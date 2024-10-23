@@ -8,7 +8,6 @@
             {% for sociable in  list_sociable_logmessage %}
             <a href='{% url "sociable" sociable.slug %}' class='a-sociable'>
                 <div class="card sociable-card">
-                    
                     <div class='card-header'>
                         <h5 class='mt-1'>{{sociable.slug}}</h5>
                     </div>
@@ -16,7 +15,13 @@
                         <div class='container my-auto mt-3'>
                             <div class='row'>
                                 <div class='col-2 my-auto ms-2 g-0'>
-                                    {% include "sociablecreating/chat_profile_pic.html" %}
+                                    {% if logmessage.author == sociable.owner %}
+                                        <img src='{% static "images/portrait_owner.jpg" %}' class='img-thumbnail rounded-5  border-primary border-3' alt='profilepic'>
+                                    {% elif logmessage.author %}
+                                        <img src='{% static "images/portrait_user.jpg" %}' class='img-thumbnail rounded-5  border-warning border-3' alt='profilepic'>
+                                    {% else %}
+                                    <img src='{% static "images/portrait_anonymous.jpg" %}' class='img-thumbnail rounded-5' alt='profilepic'>
+                                    {% endif %}
                                     <div class='mt-1'>
                                         <b>{{logmessage.name}}</b>
                                     </div>
