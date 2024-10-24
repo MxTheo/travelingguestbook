@@ -155,6 +155,34 @@ Sociable Detail
     </div>
     {% include "sociablecreating/chat_message.html" %}
   </div>
+  {% empty %}
+  <div class="container mb-4 fs-5">
+    <div class="text-start ms-4 mb-1 fs-4">
+      <b class='my-auto'><a class='link-light text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-person-lines-fill"></i>&ensp;{{sociable.owner}}</a></b>
+    </div>
+    <div class='card border-0 h-50 bg-transparent' >
+      <div class='card-body rounded-top-4 bg-white text-black'>
+        <div class='container text-start'>
+          <p>Ik ben opgetogen dat je dit bericht gevonden heb!</br>
+          Dat betekent wel dat ik nog geen persoonlijk berichtje voor jou hebt geschreven.</br>
+          Ik hoop dat je morgen nog eens komt kijken!</br>
+          <small class='text-light-emphasis'>[Dit is een automatisch bericht]</small>
+          </p>
+        </div>
+      </div>
+      <div class='card-footer bg-white rounded-bottom-4'>
+        <div class='row justify-content-between'>
+          <div class='col-auto'>
+            <i class="bi bi-check-all text-black"></i>
+          </div>
+          <div class='col-auto'>
+            <small class='text-light-emphasis'>
+              {{sociable.date_created|date:'d-m'}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   {% endfor %}
 </div>
 {% endblock %}
