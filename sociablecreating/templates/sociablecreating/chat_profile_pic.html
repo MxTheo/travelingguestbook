@@ -1,12 +1,12 @@
 {% load static %}
 {% if logmessage.author == sociable.owner %}
-  <a class='link text-white' data-bs-toggle="offcanvas" href="#profile" aria-controls="profile">
-    <img src='{% static "images/portrait_owner.jpg" %}' class='img-thumbnail rounded-5  border-primary border-3' alt='profilepic'>
+  <a class="link text-white" data-bs-toggle="offcanvas" href="#profile" aria-controls="profile">
+    <img src={% static "images/portrait_owner.jpg" %} class="img-thumbnail rounded-5  border-primary border-3" alt="profilepic" width="306" height="306">
   </a>
 {% elif logmessage.author %}
-  <a class='link text-white' href={% url "profile" logmessage.author.username %} target="_blank">
-    <img src='{% static "images/portrait_user.jpg" %}' class='img-thumbnail rounded-5  border-warning border-3' alt='profilepic'>
+  <a class="link text-white" href={% url "profile" logmessage.author.username %} target="_blank">
+    <img src={% static "images/portrait_user.jpg" %} class="img-thumbnail rounded-5  border-warning border-3" alt="profilepic" width="410" height="410">
   </a>
 {% else %}
-  <img src='{% static "images/portrait_anonymous.jpg" %}' class='img-thumbnail rounded-5' alt='profilepic'>
+  <img src={% static "images/portrait_anonymous.jpg" %} class="img-thumbnail rounded-5" alt="profilepic" width="427" height="427">
 {% endif %}

@@ -1,17 +1,17 @@
 {% extends "admin/main.html" %}
 {% block title %}
 Bevestig verwijderen
-{% endblock %}
+{% endblock title %}
 {% block content %}
 <form method='post'>
     {% csrf_token %}
     <fieldset class="form-group mb-3">
         <legend class="border-bottom mb-4">Verwijder {{ object }}</legend>
-        <h2>Weet je zeker dat je '{{object}}' wilt verwijderen?</h2>
+        <h2>Weet je zeker dat je '{{ object }}' wilt verwijderen?</h2>
     </fieldset>
     <fieldset class="form-group">
         <button class="btn btn-danger" type="submit">Bevestig</button>
         <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
     </fieldset>
 </form>
-{% endblock %}
+{% endblock content %}

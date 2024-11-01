@@ -112,7 +112,7 @@ form ul.inline li {
     margin-bottom: 0;
 }
 
-.colMS .aligned .vLargeTextField, .colMS .aligned .vXMLLargeTextField {
+.colMS .aligned .vLargetextField, .colMS .aligned .vXMLLargetextField {
     width: 350px;
 }
 
@@ -180,7 +180,7 @@ form .aligned table p {
     margin-top: -4px;
 }
 
-.colM .aligned .vLargeTextField, .colM .aligned .vXMLLargeTextField {
+.colM .aligned .vLargetextField, .colM .aligned .vXMLLargetextField {
     width: 610px;
 }
 
@@ -211,7 +211,7 @@ form div.help ul {
     margin-left: 0;
 }
 
-.colM fieldset.wide .vLargeTextField, .colM fieldset.wide .vXMLLargeTextField {
+.colM fieldset.wide .vLargetextField, .colM fieldset.wide .vXMLLargetextField {
     width: 450px;
 }
 
@@ -348,7 +348,7 @@ body.popup .submit-row {
     width: 30em;
 }
 
-.vLargeTextField, .vXMLLargeTextField {
+.vLargetextField, .vXMLLargetextField {
     width: 48em;
 }
 

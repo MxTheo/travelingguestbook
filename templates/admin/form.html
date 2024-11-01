@@ -1,11 +1,11 @@
 {% load static %}
-{% block stylesheet %}<link href='{% static "styles/form.css" %}' rel="stylesheet" >{% endblock stylesheet %}
-<div class='container m-auto'>
-    <form method="POST" action="">
+{% block stylesheet %}<link href="{% static "styles/form.css" %}" rel="stylesheet" >{% endblock stylesheet %}
+<div class="container m-auto">
+    <form method="post" action="">
         {% csrf_token %}
         {% load crispy_forms_tags %}
-        {{form|crispy}}
-        <input class='btn btn-success' type="submit" value="Opslaan" />
+        {{ form|crispy }}
+        <input class="btn btn-success" type="submit" value="Opslaan" />
         <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
     </form>
 </div>

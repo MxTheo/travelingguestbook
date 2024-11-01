@@ -2,48 +2,48 @@
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href=
-    {% if user.is_authenticated %}
-    {% url "dashboard_sociable" %}
-    {% else %}
-    "{% url 'home' %}"
-    {% endif %}>Bedank</br>voor het contact</a>
+      {% if user.is_authenticated %}
+        {% url "dashboard_sociable" %}
+      {% else %}
+        {% url "home" %}
+      {% endif %}>
+      Bedank</br>voor het contact
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id='mainmenu'>
+    <div class="collapse navbar-collapse" id="mainmenu">
       <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Info</a>
           <ul class="dropdown-menu open-left" aria-labelledby="dropdown03">
-            <li><a class="dropdown-item" href='{% url "help" %}'>Help</a></li>
-            <li><a class="dropdown-item" href='{% url "about" %}'>Over</a></li>
-            <li><a class="dropdown-item" href='{% url "contact" %}'>Contact</a></li>
+            <li><a class="dropdown-item" href="{% url "help" %}">Help</a></li>
+            <li><a class="dropdown-item" href="{% url "about" %}">Over</a></li>
+            <li><a class="dropdown-item" href="{% url "contact" %}">Contact</a></li>
           </ul>
         </li>
        
         {% if user.is_authenticated %}
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i> {{user.username}}</a>
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i> {{ user.username }}</a>
           <ul class="dropdown-menu" aria-labelledby="dropdown03">
-            <li><a class="dropdown-item" href='{% url "profile" user.username %}'>Mijn Profiel</a></li>
-            <li><a class="dropdown-item" href='{% url "editaccount" %}'>Edit Account</a></li>
-            <li><form method='post' action='{% url "logout" %}'>{% csrf_token %}
-              <button class='dropdown-item' type='submit'>Logout</button>
+            <li><a class="dropdown-item" href="{% url "profile" user.username %}">Mijn Profiel</a></li>
+            <li><a class="dropdown-item" href="{% url "editaccount" %}">Edit Account</a></li>
+            <li><form method="post" action="{% url "logout" %}">{% csrf_token %}
+              <button class="dropdown-item" type="submit">Logout</button>
             </form></li>
           </ul>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href='{% url "dashboard_sociable" %}'>Dashboard</a>
+          <a class="nav-link" href="{% url "dashboard_sociable" %}">Dashboard</a>
         </li>
         {% else %}
-        <li class="nav-item"><a class="nav-link" href='{% url "login" %}'>Login</a></li>
-        <li class="nav-item"><a class="nav-link" href='{% url "register" %}'>Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url "login" %}">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url "register" %}">Register</a></li>
         {% endif %}
         
-      </ul>
-      <ul>
       </ul>
     </div>
   </div>

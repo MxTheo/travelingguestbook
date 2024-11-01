@@ -1,29 +1,27 @@
 {% load static %}
 
-        <a href='{% url "create-sociable" %}' class='btn btn-success rounded-pill me-3 my-1'><b>+ nieuw</b></a>
+<a href="{% url "create-sociable" %}" class="btn btn-success rounded-pill me-3 my-1"><b>+ nieuw</b></a>
 
-    <div class="list-group">
-        {% for sociable in user.sociable_set.all %}
-        
-        <a href='{% url "sociable" sociable.slug %}' class='list-group-item list-group-item-action border-light'>
-            <div class="badge rounded-pill bg-primary mx-auto my-auto position-absolute start-0 top-0 ms-1 mt-1">
-                <b>{{forloop.revcounter}}</b>
-            </div>
-            <div class='align-items-center justify-content-center'>
-                <div class="mb-0 opacity-80">{{sociable.slug}}</div>
-                <div class='container'>
-                    <small class="opacity-50 text-nowrap">{{sociable.date_created|date:'d-m'}}</small>
-                </div>
-            </div>
-        </a>
-        {% empty %}
-        <div class='card'>
-            <div class="card-body mx-2 mt-2">
-                Je hebt nog geen codes. Maak een code aan om het gesprek te starten.
-                <p><a href='{% url "create-sociable" %}'><button href='{% url "create-sociable" %}' button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
+<div class="list-group">
+    {% for sociable in user.sociable_set.all %}
+    
+    <a href="{% url "sociable" sociable.slug %}" class="list-group-item list-group-item-action border-light">
+        <div class="badge rounded-pill bg-primary mx-auto my-auto position-absolute start-0 top-0 ms-1 mt-1">
+            <b>{{ forloop.revcounter }}</b>
+        </div>
+        <div class="align-items-center justify-content-center">
+            <div class="mb-0 opacity-80">{{ sociable.slug }}</div>
+            <div class="container">
+                <small class="opacity-50 text-nowrap">{{ sociable.date_created | date:"d-m" }}</small>
             </div>
         </div>
-        {% endfor %}
+    </a>
+    {% empty %}
+    <div class="card">
+        <div class="card-body mx-2 mt-2">
+            Je hebt nog geen codes. Maak een code aan om het gesprek te starten.
+            <p><a href={% url "create-sociable" %}><button href={% url "create-sociable" %} button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
+        </div>
     </div>
-    
+    {% endfor %}
 </div>

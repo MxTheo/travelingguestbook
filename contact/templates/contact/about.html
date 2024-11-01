@@ -1,18 +1,18 @@
 {% extends "admin/main.html" %}
 {% block title %}
 About
-{% endblock %}
+{% endblock title %}
 {% load static %}
-{% block stylesheet %}<link href={% static "contact/styles/about.css" %} rel='stylesheet'/>{% endblock stylesheet %}
+{% block stylesheet %}<link href={% static "contact/styles/about.css" %} rel="stylesheet"/>{% endblock stylesheet %}
 {% block content %}
 
-<div class='container'>
+<div class="container">
   <h1 class="display-5 fw-bold mt-1 mb-3 ms-auto me-auto">Over mij</h1>
-  <img class='img-fluid img-thumbnail mb-4 rounded-5' src="../../../static/images/portraitbw.jpg" alt="profile of theo"/>
+  <img class="img-fluid img-thumbnail mb-4 rounded-5" src="../../../static/images/portraitbw.jpg" alt="profile of theo"/ width="1081" height="1276">
 </div>
-<div class='container maintext'>
+<div class="container maintext">
   <p>
-    Mijn naam is Theo. Ik was klaar met studeren en begon te forenzen. Ik daagde mijzelf uit in het openbaar vervoer om kletspraatjes aan te gaan. Ik had behoefte aan andere persoonlijkere gesprekken, dan te praten over werk. Daarbij zat ik te experimenteren hoe ik dat kon doen. Ik stelde directe, persoonlijke vragen. Ik gaf dilemma's. Soms werden de experimenten gewaardeerd. Vaak ook niet. Dit was een paar jaar geleden. Toen zocht ik al naar manieren om het contact aan te gaan.
+    Mijn naam is Theo. Ik was klaar met studeren en begon te forenzen. Ik daagde mijzelf uit in het openbaar vervoer om kletspraatjes aan te gaan. Ik had behoefte aan andere persoonlijkere gesprekken, dan te praten over werk. Daarbij zat ik te experimenteren hoe ik dat kon doen. Ik stelde directe, persoonlijke vragen. Ik gaf dilemma"s. Soms werden de experimenten gewaardeerd. Vaak ook niet. Dit was een paar jaar geleden. Toen zocht ik al naar manieren om het contact aan te gaan.
   </p>  
   <p>
     Tegenwoordig maak ik het wat makkelijker voor mezelf. Ik zeg hallo en stel mijn naam voor. Dat is meestal al genoeg gespreksstarter. Ik kan vragen hoe iemands dag is. Het hoeft niet lastig te zijn.
@@ -21,7 +21,7 @@ About
     Het idee van deze applicatie sudderde dus al meerdere jaren in mijn onbewuste. Ik forens niet meer. Ik heb veel vrije tijd. Deze tijd besteed ik vooral aan vrijwilligerswerk. Ik heb mij voorgenomen om zoveel mogelijk in dienst te zijn voor anderen. Zolang ik spaargeld heb, kan ik dit volhouden. Ik hoop ook met deze applicatie iets te kunnen betekenen voor anderen.
   </p>
   <p>
-    Meer over mijn persoonlijke verhaal wil ik je graag verwijzen naar <a href='https://theoschutte.substack.com' target='_blank'>mijn substack</a>. Dit over mij stukje is beperkt tot het ontwikkelen van de applicatie.
+    Meer over mijn persoonlijke verhaal wil ik je graag verwijzen naar <a href="https://theoschutte.substack.com" target="_blank">mijn substack</a>. Dit over mij stukje is beperkt tot het ontwikkelen van de applicatie.
   </p>
 
   <h3>Bijdragen:</h3>
@@ -38,7 +38,7 @@ About
     Als je feedback hebt, dan hoor ik dat graag:
   </p>
   <p>
-    <a href=' {% url "contact" %} ' class='btn btn-dark'>Contact</a>
+    <a href=" {% url "contact" %} " class="btn btn-dark">Contact</a>
   </p>
 </div>
-{% endblock %}
+{% endblock content %}

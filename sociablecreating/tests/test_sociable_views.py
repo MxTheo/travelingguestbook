@@ -97,7 +97,7 @@ def test_update_unread_message_to_read(client):
     assert sociable.slug in response.url
 
 
-class TestGetSociablesForDashboard:
+class TestgetSociablesForDashboard:
     '''Test the behavour of get_log_message_from_one_sociable'''
     def create_logmessage(self, number_of_messages: int, sociable: Sociable):
         '''Given the number of messages and the sociable,

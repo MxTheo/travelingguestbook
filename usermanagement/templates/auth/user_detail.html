@@ -1,9 +1,9 @@
 {% extends "admin/main.html" %}
 {% block title %}
-{{user.username}}
-{% endblock %}
+{{ user.username }}
+{% endblock title %}
 {% block content %}
-<div class='container'>
+<div class="container">
     {% include "usermanagement/profile.html" %}
 </div>
-{% endblock %}
+{% endblock content %}

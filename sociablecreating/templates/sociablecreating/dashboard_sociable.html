@@ -3,17 +3,17 @@
 {% load static %}
 {% block content %}
 
-<div class='row mb-4'>
-    <div class='col'>
-        <a href='{% url "dashboard_logmessage" %}' class="btn btn-lg btn-primary w-100">Gespreksketens</a>
+<div class="row mb-4">
+    <div class="col">
+        <a href={% url "dashboard_logmessage" %} class="btn btn-lg btn-primary w-100">Gespreksketens</a>
     </div>
-    <div class='col'>
-        <a href='' class="btn btn-lg btn-primary w-100 active">Codes</a>
+    <div class="col">
+        <a href="" class="btn btn-lg btn-primary w-100 active">Codes</a>
     </div>
 </div>
 
 {% include "game/progressbar.html" %}
-<div class='container mb-3 col-md-6'>
+<div class="container mb-3 col-md-6">
     {% include "sociablecreating/sociable_component.html" %}
 </div>
 {% endblock content %}

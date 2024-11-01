@@ -1,55 +1,55 @@
 {% load static %}
-{% block stylesheet %}<link href='{% static "sociablecreating/styles/logmessagecomponent.css" %}' rel="stylesheet" >
-<link href='{% static "sociablecreating/styles/triangle.css" %}' rel="stylesheet" >
+{% block stylesheet %}<link href="{% static "sociablecreating/styles/logmessagecomponent.css" %}" rel="stylesheet" >
+<link href="{% static "sociablecreating/styles/triangle.css" %}" rel="stylesheet" >
 {% endblock stylesheet %}
-<div class='container'>
+<div class="container">
     <div class="card border-info text-white bg-secondary mb-3 col-lg-6 mx-auto">
         <div class="card-body">
-            {% for sociable in  list_sociable_logmessage %}
-            <a href='{% url "sociable" sociable.slug %}' class='a-sociable'>
+            {% for sociable in list_sociable_logmessage %}
+            <a href="{% url "sociable" sociable.slug %}" class="a-sociable">
                 <div class="card sociable-card">
-                    <div class='card-header'>
-                        <h5 class='mt-1'>{{sociable.slug}}</h5>
+                    <div class="card-header">
+                        <h5 class="mt-1">{{ sociable.slug }}</h5>
                     </div>
                     {% with logmessage=sociable.logmessage_set.all.0 %}
-                        <div class='container my-auto mt-3'>
-                            <div class='row'>
-                                <div class='col-2 my-auto ms-2 g-0'>
+                        <div class="container my-auto mt-3">
+                            <div class="row">
+                                <div class="col-2 my-auto ms-2 g-0">
                                     {% if logmessage.author == sociable.owner %}
-                                        <img src='{% static "images/portrait_owner.jpg" %}' class='img-thumbnail rounded-5  border-primary border-3' alt='profilepic'>
+                                        <img src="{% static "images/portrait_owner.jpg" %}" class="img-thumbnail rounded-5  border-primary border-3" alt="profilepic">
                                     {% elif logmessage.author %}
-                                        <img src='{% static "images/portrait_user.jpg" %}' class='img-thumbnail rounded-5  border-warning border-3' alt='profilepic'>
+                                        <img src="{% static "images/portrait_user.jpg" %}" class="img-thumbnail rounded-5  border-warning border-3" alt="profilepic">
                                     {% else %}
-                                    <img src='{% static "images/portrait_anonymous.jpg" %}' class='img-thumbnail rounded-5' alt='profilepic'>
+                                    <img src="{% static "images/portrait_anonymous.jpg" %}" class="img-thumbnail rounded-5" alt="profilepic">
                                     {% endif %}
-                                    <div class='mt-1'>
-                                        <b>{{logmessage.name}}</b>
+                                    <div class="mt-1">
+                                        <b>{{ logmessage.name }}</b>
                                     </div>
                                 </div>
-                                <div class='col-auto'>
+                                <div class="col-auto">
                                     <div class="position-absolute top-50 translate-middle-y triangle-left"></div>
                                 </div>
-                                <div class='col'> 
-                                    <div class='card border-0'>
+                                <div class="col"> 
+                                    <div class="card border-0">
                         
-                                        <div class='card-body rounded-top-4 bg-white text-black'>
-                                            <div class='container'>
-                                                {{logmessage}}
+                                        <div class="card-body rounded-top-4 bg-white text-black">
+                                            <div class="container">
+                                                {{ logmessage }}
                                             </div>
                                         </div>
-                                        <div class='card-footer bg-white rounded-bottom-4'>
-                                            <div class='row justify-content-between'>
-                                                <div class='col-auto'>
+                                        <div class="card-footer bg-white rounded-bottom-4">
+                                            <div class="row justify-content-between">
+                                                <div class="col-auto">
                                                     {% if logmessage.is_read %}
                                                         <i class="bi bi-check-all text-black" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="gelezen"></i>
                                                     {% endif %}
                                                 </div>
-                                                <div class='col-auto'>
-                                                    <small class='text-light-emphasis'>
-                                                        {% if logmessage.date_changed|date:'d-m' != logmessage.date_created|date:'d-m' %}
-                                                            <i class="bi bi-pencil-fill"></i> {{logmessage.date_changed|date:'d-m'}}
+                                                <div class="col-auto">
+                                                    <small class="text-light-emphasis">
+                                                        {% if logmessage.date_changed|date:"d-m" != logmessage.date_created|date:"d-m" %}
+                                                            <i class="bi bi-pencil-fill"></i> {{ logmessage.date_changed | date:"d-m" }}
                                                         {% else %}
-                                                            {{logmessage.date_created|date:'d-m'}}
+                                                            {{ logmessage.date_created | date:"d-m" }}
                                                         {% endif %}
                                                     </small>
                                                 </div>
@@ -60,14 +60,14 @@
                             </div>
                         </div>
                     {% endwith %}
-                    <small class="card-subtitle mb-2 text-muted">Aangemaakt op {{sociable.date_created|date:'d-M-y'}}</small>
+                    <small class="card-subtitle mb-2 text-muted">Aangemaakt op {{ sociable.date_created|date:"d-M-y" }}</small>
                 </div>  
             </a>
             {% empty %}  
-            <div class='card'>
+            <div class="card">
                 <div class="card-body">
                     Je hebt nog geen berichten. Maak een sociable om het gesprek te starten.
-                    <p><a href='{% url "create-sociable" %}'><button href='{% url "create-sociable" %}' button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
+                    <p><a href="{% url "create-sociable" %}"><button href="{% url "create-sociable" %}" button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
                 </div>
             </div>
             {% endfor %}

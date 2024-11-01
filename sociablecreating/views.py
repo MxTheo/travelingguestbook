@@ -20,7 +20,7 @@ def home(request):
 def search_sociable(request):
     """Given a search-code entered by the user,
     redirect the user to the sociable associated or let the user knows the sociable is not found"""
-    search_code = request.GET["search-code"].lower()
+    search_code = request.get["search-code"].lower()
     try:
         return display_message_or_code(request, search_code)
     except ObjectDoesNotExist:

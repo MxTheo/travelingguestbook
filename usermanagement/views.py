@@ -60,9 +60,9 @@ class UserDetail(DetailView):
 def update_profile(request):
     """When the user navigates to his profile,
     it either gets the forms to update his profile or it post his changed settings"""
-    if request.method == "POST":
-        user_form    = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+    if request.method == "post":
+        user_form    = UserForm(request.post, instance=request.user)
+        profile_form = ProfileForm(request.post, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()

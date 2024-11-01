@@ -2,14 +2,14 @@
 {% block title %}Login{% endblock title %}
 {% block content %}
 {% load crispy_forms_tags %}
-    <div class='container'>
-        <form method="POST" action="">
+    <div class="container">
+        <form method="post" action="">
             {% csrf_token %}
-            {{form|crispy}}
-            <input type='submit' value="Login"/>
+            {{ form|crispy }}
+            <input type="submit" value="Login"/>
         </form>
     </br>
-        <p>Nog geen account? <a href='{% url "register" %}'>Register</a></p>
+        <p>Nog geen account? <a href="{% url "register" %}">Register</a></p>
 
     </div>
 {% endblock content %}

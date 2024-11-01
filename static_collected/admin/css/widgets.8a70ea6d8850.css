@@ -577,7 +577,7 @@ ul.timelist, .timelist li {
     cursor: pointer;
 }
 
-/* RELATED WIDGET WRAPPER */
+/* RELATED WIDget WRAPPER */
 .related-widget-wrapper {
     display: flex;
     gap: 0 10px;
