@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'contact',
     'game',
     'qr_code',
+    'nvc',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'

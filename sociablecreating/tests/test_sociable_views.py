@@ -14,16 +14,16 @@ class TestSearchSociable:
         tests if it returns the page with the sociable'''
         SociableFactory(slug='test123')
         response = client.get(self.url, {'search-code': 'test123'})
-        assert 'test123' in response.url
-        assert response.status_code == 302
+        assert 'test123'  == response.context_data['sociable'].slug
+        assert response.status_code == 200
 
     def test_search_with_slug_with_capital(self, client):
         '''Given a slug with a capital,
         tests if it returns the page with the sociable'''
         SociableFactory(slug='test123')
         response = client.get(self.url, {'search-code': 'Test123'})
-        assert 'test123' in response.url
-        assert response.status_code == 302
+        assert 'test123' == response.context_data['sociable'].slug
+        assert response.status_code == 200
 
     def test_search_with_incorrect_slug(self, client):
         '''Given incorrect slug,
@@ -60,11 +60,12 @@ class TestSearchSociable:
         sociable   = SociableFactory(slug='test123')
         LogMessageFactory(sociable=sociable, is_read=True)
         response   = client.get(self.url, {'search-code': sociable.slug})
-        assert sociable.slug in response.url
-        assert response.status_code == 302
+        assert 'test123' == response.context_data['sociable'].slug
+        assert response.status_code == 200
 
     def test_show_message_when_user_is_owner(self,  auto_login_user):
-        '''Given that the visitor is the owner, tests if the unread message written by somebody else is still shown'''
+        '''Given that the visitor is the owner,
+        tests if the unread message written by somebody else is still shown'''
         client, user = auto_login_user()
         sociable     = SociableFactory(slug='test123', owner=user)
         LogMessageFactory(sociable=sociable)
@@ -78,17 +79,17 @@ class TestSearchSociable:
         sociable     = SociableFactory(slug='test123', owner=user)
         LogMessageFactory(sociable=sociable, author=user)
         response     = client.get(self.url, {'search-code': sociable.slug})
-        assert response.status_code == 302
-        assert sociable.slug in response.url
+        assert 'test123' == response.context_data['sociable'].slug
+        assert response.status_code == 200
 
 
 def test_update_unread_message_to_read(client):
     '''Given the click that the unread message is read,
     tests if the detailpage of the code is displayed with altering the is_read from the message'''
-    sociable = SociableFactory()
+    sociable   = SociableFactory()
     logmessage = LogMessageFactory(sociable=sociable)
-    url = reverse('message-read', kwargs={'pk': logmessage.id})
-    response = client.get(url)
+    url        = reverse('message-read', kwargs={'pk': logmessage.id})
+    response   = client.get(url)
     logmessage = LogMessage.objects.get()
 
     assert response.status_code == 302
@@ -116,7 +117,7 @@ class TestGetSociablesForDashboard:
     def test_get_log_messages_from_one_sociable(self, number_of_messages, auto_login_user):
         '''Using the function create_logmessage and one sociable,
         tests if one sociable is retrieved, no matter the number of messages'''
-        _, owner = auto_login_user()
+        _, owner      = auto_login_user()
         sociable_list = [SociableFactory(owner=owner)]
 
         self.create_logmessage(number_of_messages, sociable_list[0])
@@ -126,7 +127,7 @@ class TestGetSociablesForDashboard:
     def test_get_one_logmessage_from_one_sociable_not_from_user(self, auto_login_user):
         '''Given a user participating in a chat they did not initiate,
         test if it still returns the sociable'''
-        _, user = auto_login_user()
+        _, user  = auto_login_user()
         sociable = SociableFactory()
         LogMessageFactory(sociable=sociable, author=user)
 
@@ -151,12 +152,12 @@ class TestGetSociablesForDashboard:
         LogMessageFactory(sociable=sociable, author=owner)
         assert len(get_sociables_for_dashboard(owner)) == 1
 
-    def test_get_one_logmessage_of_sociable_with_two_messages_of_author_and_owner(self, auto_login_user):
+    def test_one_logmessage_of_sociable_for_two_messages_of_author_and_owner(self, auto_login_user):
         '''Given a sociable with two messages,
         one from the owner of the sociable and one of a different user,
         test if only one sociable is retrieved'''
         _, owner = auto_login_user()
-        author = UserFactory()
+        author   = UserFactory()
         sociable = SociableFactory(owner=owner)
         LogMessageFactory(sociable=sociable, author=owner)
         LogMessageFactory(sociable=sociable, author=author)
@@ -184,7 +185,8 @@ class TestGetSociablesForDashboard:
         assert sociable_list[0].slug == '3'
 
     def test_sorting_after_adding_logmessage_at_same_sociable(self, auto_login_user):
-        '''Test if the sociables are returned in descending order by date created of logmessages, when a logmessage is added to a previous sociable'''
+        '''Test if the sociables are returned in descending order by date created of logmessages,
+        when a logmessage is added to a previous sociable'''
         _, user = auto_login_user()
         for i in range(0, 4):
             if i % 2 == 0:

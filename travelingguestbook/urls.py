@@ -23,8 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('django.contrib.auth.urls')),
     path('', include('usermanagement.urls')),
-    path('', include('sociablecreating.urls')),
     path('', include('contact.urls')),
+    path('', include('sociablecreating.urls')),
     path('qr_code/', include('qr_code.urls', namespace="qr_code")),
 ]
 
