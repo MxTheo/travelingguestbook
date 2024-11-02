@@ -46,17 +46,16 @@ class LogMessage(models.Model):
     body     = models.TextField(
         max_length=30000,
         verbose_name="Bericht",
-        help_text="Vertel iets over je ervaringen van het contact. Voel je vrij te delen wat je wilt delen en niet te delen wat je niet wilt delen.",
+        help_text="Schrijf over je ervaringen van het contact. Voel je vrij te delen wat je wel en niet wilt delen.",
     )
     date_created = models.DateTimeField(
         auto_now_add=True, verbose_name="Datum aangemaakt"
     )
-    date_changed = models.DateTimeField(auto_now=True, verbose_name="Datum bewerkt")
+    date_changed = models.DateTimeField(verbose_name="Datum bewerkt", null=True)
     is_read      = models.BooleanField(verbose_name="is gelezen", default=False)
 
     class Meta:
-        """Put the messages that are most recently modified, then put the messages that are most recently created"""
-
+        """Order logmessages in descending order by date created"""
         ordering = ["-date_created"]
 
     def __str__(self):

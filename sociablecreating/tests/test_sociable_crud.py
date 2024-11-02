@@ -1,3 +1,4 @@
+from datetime import date
 from django.urls import reverse
 from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
 from travelingguestbook.helpers_test import create_logmessage
@@ -159,6 +160,7 @@ class TestUpdateLogMessage:
         logmessage     = LogMessageFactory(sociable=sociable, author=author)
         logmessage_changed = self.update_logmessage(client, logmessage, "Hello")
         assert logmessage_changed.body == "Hello"
+        assert logmessage_changed.date_changed.date() == date.today()
 
     def test_update_logmessage_by_owner(self, auto_login_user):
         """Logged in as the owner,
@@ -168,6 +170,7 @@ class TestUpdateLogMessage:
         logmessage    = LogMessageFactory(sociable=sociable)
         logmessage_changed = self.update_logmessage(client, logmessage, "Hello")
         assert logmessage_changed.body == "Hello"
+        assert logmessage_changed.date_changed.date() == date.today()
 
     def test_update_logmessage_by_anonymous(self, client):
         """Logged in as an anonymous user,
@@ -176,6 +179,7 @@ class TestUpdateLogMessage:
         logmessage = LogMessageFactory(sociable=sociable)
         logmessage_changed = self.update_logmessage(client, logmessage, "Hello")
         assert logmessage_changed.body != "Hello"
+        assert logmessage_changed.date_changed is None
 
     def update_logmessage(self, client, logmessage, message_body):
         """Given the logmessage and the textbody,

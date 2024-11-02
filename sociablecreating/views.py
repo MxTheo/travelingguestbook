@@ -1,4 +1,6 @@
 import string
+from datetime import datetime
+from django.forms import BaseModelForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -180,6 +182,11 @@ class LogMessageUpdate(
         sociable = logmessage.sociable
         user_id = self.request.user.pk
         return logmessage.author_id == user_id or sociable.owner_id == user_id
+
+    def form_valid(self, form: BaseModelForm):
+        """Set the date changed to today"""
+        form.instance.date_changed = datetime.now()
+        return super(LogMessageUpdate, self).form_valid(form)
 
 
 class SociableDelete(UserPassesTestMixin, generic.edit.DeleteView):
