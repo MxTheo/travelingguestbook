@@ -94,9 +94,9 @@ class TestLvl:
         assert profile.xp == 12
         assert profile.xp_start_lvl == 8
 
-    def test_remain_lvl_4_when_logging_on_same_sociable(self, auto_login_user):
+    def test_lvl_up_when_logging_on_same_sociable(self, auto_login_user):
         '''Given a user of lvl 4 logging their 13th message on a same sociable,
-        tests if they remain at lvl 4'''
+        tests if they lvl up'''
         client, user = init_profile(auto_login_user, 4, 11, 13, 8)
 
         sociable = SociableFactory()
@@ -104,12 +104,10 @@ class TestLvl:
         create_logmessage(client, sociable)
 
         profile = Profile.objects.get(user=user)
-        assert profile.lvl == 4
-        assert profile.xp_next_lvl == 13
-        assert profile.xp == 12
-        assert profile.xp_start_lvl == 8
-
-    # def test_lvl_up_when_more_xp_then_needed(self, auto_login_user):
+        assert profile.lvl == 5
+        assert profile.xp_next_lvl == 20
+        assert profile.xp == 13
+        assert profile.xp_start_lvl == 13
 
 
 class TestCalcPercentageGained:

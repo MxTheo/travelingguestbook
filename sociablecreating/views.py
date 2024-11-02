@@ -1,5 +1,5 @@
 import string
-from datetime import datetime
+from django.utils import timezone
 from django.forms import BaseModelForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -129,7 +129,7 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
         xp_needed is lvl ^ 1.2
         """
         user = self.request.user
-        if not user.is_anonymous and self.is_first_logmessage():
+        if not user.is_anonymous:
             profile = Profile.objects.get(user=user)
             profile.xp += 1
             if profile.xp == profile.xp_next_lvl:
@@ -137,15 +137,6 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
                 profile.xp_start_lvl = profile.xp_next_lvl
                 profile.xp_next_lvl += round(profile.lvl**1.2)
             profile.save()
-
-    def is_first_logmessage(self):
-        """When updating xp and lvl,
-        checks if the created logmessage is the first logmessage
-        created by the user for this sociable"""
-        slug = super().get_context_data()["view"].kwargs["slug"]
-        sociable = Sociable.objects.get(slug=slug)
-        user = self.request.user
-        return not sociable.logmessage_set.filter(author=user)
 
 
 class LogMessageDelete(UserPassesTestMixin, generic.edit.DeleteView):
@@ -185,7 +176,7 @@ class LogMessageUpdate(
 
     def form_valid(self, form: BaseModelForm):
         """Set the date changed to today"""
-        form.instance.date_changed = datetime.now()
+        form.instance.date_changed = timezone.now()
         return super(LogMessageUpdate, self).form_valid(form)
 
 
