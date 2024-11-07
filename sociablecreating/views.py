@@ -19,31 +19,48 @@ def home(request):
     return render(request, "sociablecreating/index.html", context=context)
 
 
+def show_unread_messages(request, slug):
+    """Given the sociable,
+    show the unread messages that are not of the author
+        - Multiple unread messages
+        - One unread message
+        - No unread message, then show sociable"""
+    sociable       = Sociable.objects.get(slug=slug)
+    lst_logmessage = LogMessage.objects.filter(sociable=sociable, is_read=False)
+    if request.user.is_authenticated:
+        lst_logmessage = lst_logmessage.exclude(author=request.user)
+    lst_logmessage = remove_duplicate_toperson(lst_logmessage)
+    if len(lst_logmessage) > 1:
+        context = {"sociable": sociable, "list_logmessage": lst_logmessage}
+        return render(request, "sociablecreating/logmessage_multiple.html", context=context)
+    elif len(lst_logmessage) == 1:
+        return redirect('detail-logmessage', pk=lst_logmessage[0].id)
+    return redirect('detail-sociable', slug=sociable.slug)
+        
+
+
+def remove_duplicate_toperson(lst_logmessage):
+    """Given a list of logmessages with duplicate to_person's,
+    return the logmessages with only one logmessage per to_person"""
+    unique_logmessage = {}
+    for logmessage in lst_logmessage:
+        if logmessage.to_person not in unique_logmessage:
+            unique_logmessage[logmessage.to_person] = logmessage
+    return list(unique_logmessage.values())
+
+
 def search_sociable(request):
     """Given a search-code entered by the user,
     redirect the user to the sociable associated or let the user knows the sociable is not found"""
     search_code = request.GET["search-code"].lower()
     try:
-        return display_message_or_code(request, search_code)
+        return show_unread_messages(request, search_code)
     except ObjectDoesNotExist:
         context = {"search_code": search_code}
         return render(request, "sociablecreating/sociable_not_found.html", context)
 
 
-def display_message_or_code(request, slug):
-    """Given a sociable,
-    displays the first unread message
-    or displays the sociable detail page if there are no unread messages"""
-    sociable       = Sociable.objects.get(slug=slug)
-    lst_logmessage = LogMessage.objects.filter(sociable=sociable, is_read=False)
-    if lst_logmessage and lst_logmessage[0].author != request.user:
-        context = {"sociable": sociable, "logmessage": lst_logmessage[0]}
-        return render(request, "sociablecreating/message.html", context=context)
-    sociable_detail = SociableDetail.as_view()
-    return sociable_detail(request, slug=slug)
-
-
-def display_code_after_message_is_read(request, pk):
+def display_sociable_after_message_is_read(request, pk):
     """Given the visitor clicks gelezen,
     update the message to read and display code"""
     logmessage = LogMessage.objects.get(id=pk)
@@ -58,7 +75,6 @@ def get_sociables_for_dashboard(user: User):
         - they participated in as author
         - and they own without a logmessage of themselves
     """
-
     def logmessage_date_created(sociable: Sociable):
         return sociable.logmessage_set.all()[0].date_created
 
@@ -178,6 +194,19 @@ class LogMessageUpdate(
         """Set the date changed to today"""
         form.instance.date_changed = timezone.now()
         return super(LogMessageUpdate, self).form_valid(form)
+
+
+class LogMessageDetail(generic.DetailView):
+    """Given the anonymous user clicks on their name,
+    return the unread message page"""
+    model = LogMessage
+    template_name = "sociablecreating/unread_message.html"
+    context_object_name = "logmessage"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sociable'] = self.object.sociable
+        return context
 
 
 class SociableDelete(UserPassesTestMixin, generic.edit.DeleteView):

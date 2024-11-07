@@ -1,8 +1,9 @@
+from re import A
 from django.urls import reverse
 import pytest
 from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
 from sociablecreating.models import Sociable, LogMessage
-from sociablecreating.views import get_sociables_for_dashboard
+from sociablecreating.views import get_sociables_for_dashboard, remove_duplicate_toperson
 
 
 class TestSearchSociable:
@@ -14,16 +15,16 @@ class TestSearchSociable:
         tests if it returns the page with the sociable'''
         SociableFactory(slug='test123')
         response = client.get(self.url, {'search-code': 'test123'})
-        assert 'test123'  == response.context_data['sociable'].slug
-        assert response.status_code == 200
+        assert response.status_code == 302
+        assert 'test123' in response.url
 
     def test_search_with_slug_with_capital(self, client):
         '''Given a slug with a capital,
         tests if it returns the page with the sociable'''
         SociableFactory(slug='test123')
         response = client.get(self.url, {'search-code': 'Test123'})
-        assert 'test123' == response.context_data['sociable'].slug
-        assert response.status_code == 200
+        assert response.status_code == 302
+        assert 'test123' in response.url
 
     def test_search_with_incorrect_slug(self, client):
         '''Given incorrect slug,
@@ -51,8 +52,8 @@ class TestSearchSociable:
         sociable   = SociableFactory(slug='test123')
         LogMessageFactory(sociable=sociable)
         response   = client.get(self.url, {'search-code': sociable.slug})
-        assert response.status_code == 200
-        assert 'sociablecreating/message.html' == response.templates[0].name
+        assert response.status_code == 302
+        assert 'berichtvoorjou' in response.url
 
     def test_show_detailpage_when_message_is_read(self, client):
         '''Given a slug and a read message,
@@ -60,8 +61,8 @@ class TestSearchSociable:
         sociable   = SociableFactory(slug='test123')
         LogMessageFactory(sociable=sociable, is_read=True)
         response   = client.get(self.url, {'search-code': sociable.slug})
-        assert 'test123' == response.context_data['sociable'].slug
-        assert response.status_code == 200
+        assert response.status_code == 302
+        assert 'test123' in response.url
 
     def test_show_message_when_user_is_owner(self,  auto_login_user):
         '''Given that the visitor is the owner,
@@ -70,8 +71,8 @@ class TestSearchSociable:
         sociable     = SociableFactory(slug='test123', owner=user)
         LogMessageFactory(sociable=sociable)
         response     = client.get(self.url, {'search-code': sociable.slug})
-        assert response.status_code == 200
-        assert 'sociablecreating/message.html' == response.templates[0].name
+        assert response.status_code == 302
+        assert 'berichtvoorjou' in response.url
 
     def test_show_sociable_when_user_is_author(self,  auto_login_user):
         '''Given that the visitor is the author, tests if he is redirected toward the sociable'''
@@ -79,8 +80,8 @@ class TestSearchSociable:
         sociable     = SociableFactory(slug='test123', owner=user)
         LogMessageFactory(sociable=sociable, author=user)
         response     = client.get(self.url, {'search-code': sociable.slug})
-        assert 'test123' == response.context_data['sociable'].slug
-        assert response.status_code == 200
+        assert response.status_code == 302
+        assert 'test123' in response.url
 
 
 def test_update_unread_message_to_read(client):
@@ -201,6 +202,107 @@ class TestgetSociablesForDashboard:
 
         assert sociable_list[0].slug == '2'
 
+
+class TestMultipleUnreadMessages:
+    def test_only_unread_messages(self, client):
+        '''Test when only unread messages,
+        then the page of unread messages should be shown'''
+        sociable  = SociableFactory()
+        for _ in range(5):
+            logmessage = LogMessageFactory(sociable=sociable)
+        response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
+        assert response.status_code == 200
+        assert logmessage.to_person in str(response.content)
+
+    def test_3_of_5_unread_messages(self, client):
+        '''Should then all names still be shown or only the 3 unread messages left?'''
+        sociable  = SociableFactory()
+        for _ in range(3):
+            logmessage_unread = LogMessageFactory(sociable=sociable)
+        for _ in range(2):
+            logmessage_read = LogMessageFactory(sociable=sociable, is_read=True)
+        response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
+        assert response.status_code == 200
+        assert logmessage_unread.to_person in str(response.content)
+        assert logmessage_read.to_person not in str(response.content)
+        
+
+    def test_1_unread_message(self, client):
+        '''Test when only 1 unread message is there,
+        then the page of multiple unread messages should not be shown'''
+        sociable  = SociableFactory()
+        LogMessageFactory(sociable=sociable)
+        response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
+        assert response.status_code == 302
+        assert 'berichtvoorjou' in response.url
+
+    def test_multiple_unread_for_same_person(self, client):
+        """Test when multiple unread messages are left for the same person, that person is only shown once"""
+        sociable  = SociableFactory()
+        for _ in range(3):
+            LogMessageFactory(sociable=sociable, to_person='Lydia')
+        LogMessageFactory(sociable=sociable)
+        response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
+        assert response.status_code == 200
+        assert str(response.content).count('Lydia') == 1
+
+    def test_for_one_person_only(self, client):
+        '''Test when only messages are left for one person, then it should directly go to the message page'''
+        sociable  = SociableFactory()
+        for _ in range(3):
+            LogMessageFactory(sociable=sociable, to_person='Lydia')
+        response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
+        assert response.status_code == 302
+        assert 'berichtvoorjou' in response.url
+
+    def test_no_unread_messages(self, client):
+        '''Test when there are no unread messages,
+        the detail page is shown'''
+        sociable  = SociableFactory()
+        for _ in range(3):
+            LogMessageFactory(sociable=sociable, is_read=True)
+        response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
+        assert response.status_code == 302
+        assert sociable.slug in response.url
+
+
+class TestLogMessageDetail:
+    """Test if a specific message can be read"""
+    @pytest.fixture
+    def logmessage(self):
+        """Set up logmessage"""
+        return LogMessageFactory()
+    
+    def test_view_url_exists_at_desired_location(self, client, logmessage):
+        response = client.get(f'/berichtvoorjou/{logmessage.id}')
+        assert response.status_code == 200
+
+    def test_view_url_accessible_by_name(self, client, logmessage):
+        response = client.get(reverse('detail-logmessage', args=[logmessage.id]))
+        assert response.status_code == 200
+
+    def test_view_uses_correct_template(self, client, logmessage):
+        response = client.get(reverse('detail-logmessage', args=[logmessage.id]))
+        assert response.status_code == 200
+        assert response.template_name == ['sociablecreating/unread_message.html']
+
+    def test_context_contains_logmessage(self, client, logmessage):
+        response = client.get(reverse('detail-logmessage', args=[logmessage.id]))
+        assert 'logmessage' in response.context
+        assert response.context['logmessage'] == logmessage
+
+    def test_context_contains_sociable(self, client, logmessage):
+        response = client.get(reverse('detail-logmessage', args=[logmessage.id]))
+        assert 'sociable' in response.context
+        assert response.context['sociable'] == logmessage.sociable
+
+
+def test_remove_duplicate_toperson():
+    """Given a list of 3 logmessages for Mark,
+    tests if the list is reduced to 1"""
+    lst_logmessage = [LogMessageFactory(to_person='Mark') for _ in range(3)]
+    lst_logmessage = remove_duplicate_toperson(lst_logmessage)
+    assert len(lst_logmessage) == 1
 
 def test_logmessage_str():
     '''Test the __str__ function of logmessage'''

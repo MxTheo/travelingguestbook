@@ -123,7 +123,7 @@ class TestCreateLogMessage:
     def test_if_name_is_not_changed_with_anonymous_user(self, client):
         """Not logged in, tests if the name is not altered"""
         logmessage = create_logmessage(
-            client, data={"name": "test-name", "body": "test-body"}
+            client, data={"name": "test-name", "body": "test-body", "to_person": "test-to_person"}
         )
         assert logmessage.name == "test-name"
 
@@ -185,7 +185,7 @@ class TestUpdateLogMessage:
         """Given the logmessage and the textbody,
         change the message_body"""
         url_update = reverse("update-logmessage", args=[logmessage.id])
-        client.post(url_update, data={"body": message_body, "name": logmessage.name})
+        client.post(url_update, data={"body": message_body, "name": logmessage.name, "to_person": logmessage.to_person})
         return LogMessage.objects.get(id=logmessage.id)
 
 
@@ -195,17 +195,17 @@ class TestDetailSociable:
     def test_get_context_data(self, client):
         """Test if the detailpage is reached"""
         sociable = SociableFactory(slug="test")
-        url      = reverse("sociable", args=[sociable.slug])
+        url      = reverse("detail-sociable", args=[sociable.slug])
         response = client.get(url)
 
         assert response.status_code == 200
-        assert response.context_data["page_url"] == "http://testserver/test"
+        assert response.context_data["page_url"] == "http://testserver/test/"
 
     def test_create_createlogmessageurl_for_qr(self, client):
         """Test if the url to creating a logmessage for qr-code is correctly created"""
         sociable = SociableFactory(slug="test")
 
-        response = client.get(reverse("sociable", args=[sociable.slug]))
+        response = client.get(reverse("detail-sociable", args=[sociable.slug]))
         qr_url   = response.context["view"].create_createlogmessageurl_for_qr()
 
         assert qr_url == "http://testserver/nieuwbericht/test"
@@ -217,4 +217,4 @@ def test_sociable_absolute_url_with_200(client):
     absolute_url = sociable.get_absolute_url()
     assert absolute_url == "/" + str(sociable.slug)
     response     = client.get(absolute_url)
-    assert response.status_code == 200
+    assert response.status_code == 302

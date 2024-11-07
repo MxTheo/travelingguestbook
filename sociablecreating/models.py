@@ -35,15 +35,21 @@ class Sociable(models.Model):
 class LogMessage(models.Model):
     """The message the receiver of the sociable leaves on the sociable page"""
 
-    sociable = models.ForeignKey(Sociable, on_delete=models.CASCADE)
-    author   = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    name     = models.CharField(
+    sociable  = models.ForeignKey(Sociable, on_delete=models.CASCADE)
+    author    = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    name      = models.CharField(
         max_length=70,
         default="Anoniem",
         verbose_name="Je naam",
         help_text="Een naam geeft al context aan een bericht. Voel je ook vrij om je naam op anoniem te houden",
     )
-    body     = models.TextField(
+    to_person = models.CharField(
+        max_length=70,
+        default="Anoniem",
+        verbose_name="Aan wie?",
+        help_text="De (voor)naam aan wie dit bericht is bestemd. Dit is nodig zodat diegene zijn bericht terug kan vinden, als er meerdere ongelezen berichten zijn.",
+    )
+    body      = models.TextField(
         max_length=30000,
         verbose_name="Bericht",
         help_text="Schrijf over je ervaringen van het contact. Voel je vrij te delen wat je wel en niet wilt delen.",

@@ -5,7 +5,7 @@
 <div class="list-group">
     {% for sociable in user.sociable_set.all %}
     
-    <a href="{% url "sociable" sociable.slug %}" class="list-group-item list-group-item-action border-light">
+    <a href="{% url "detail-sociable" sociable.slug %}" class="list-group-item list-group-item-action border-light">
         <div class="badge rounded-pill bg-primary mx-auto my-auto position-absolute start-0 top-0 ms-1 mt-1">
             <b>{{ forloop.revcounter }}</b>
         </div>

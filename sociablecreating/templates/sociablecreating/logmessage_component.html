@@ -6,7 +6,7 @@
     <div class="card border-info text-white bg-secondary mb-3 col-lg-6 mx-auto">
         <div class="card-body">
             {% for sociable in list_sociable_logmessage %}
-            <a href="{% url "sociable" sociable.slug %}" class="a-sociable">
+            <a href={% url "sociable" sociable.slug %} class="a-sociable">
                 <div class="card sociable-card">
                     <div class="card-header">
                         <h5 class="mt-1">{{ sociable.slug }}</h5>
