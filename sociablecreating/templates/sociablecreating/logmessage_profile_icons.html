@@ -1,0 +1,10 @@
+{% load static %}
+<div class="text-start ms-4 mb-1 fs-4">
+    {% if logmessage.author == sociable.owner %}
+    <b class="my-auto"><a class="link-light text-white" data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-person-lines-fill"></i>&ensp;{{ logmessage.name }}</a></b>
+    {% elif logmessage.author %}
+    <b class="my-auto"><a class="link-light text-white" href={% url "profile" logmessage.author.username %} target="_blank"><i class="bi bi-person-fill"></i>&ensp;{{ logmessage.name }}</a></b>
+    {% else %}
+    <b class="my-auto">{{ logmessage.name }}</b>
+    {% endif %}
+  </div>

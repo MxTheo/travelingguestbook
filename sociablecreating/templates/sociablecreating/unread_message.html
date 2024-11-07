@@ -9,56 +9,68 @@ Bericht voor jou
 
 {% block content %}
 <div class="offcanvas offcanvas-start" tabindex="-1" id="profile" aria-labelledby="profileLabel">
-    <div class="offcanvas-header">
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <div>{% include "usermanagement/profile.html" with user=sociable.owner %}</div>
-    </div>
+  <div class="offcanvas-header">
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
+  <div class="offcanvas-body">
+    <div>{% include "usermanagement/profile.html" with user=sociable.owner %}</div>
+  </div>
+</div>
 <div class="container">
-    <small class="test-muted d-flex">{{ sociable.slug }}</small>
+  <small class="test-muted d-flex">{{ sociable.slug }}</small>
+</div>
+<div class="d-none d-sm-block container">
     <div class="bg-dark px-3 py-4 text-center">
     
-      <div class="container my-auto mt-3">
-        <div class="row">
-            <div class="col-2 my-auto ms-2 g-0">
-                {% include "sociablecreating/chat_profile.html" %}
-            </div>
-            <div class="col-auto">
-                <div class="position-absolute   translate-middle-y mt-5 triangle-left"></div>
-            </div>
-            <div class="col"> 
-                <div class="card border-0 bg-transparent">
-                    <div class="card-body rounded-top-4 bg-white text-black">
-                      <div class="container text-start">
-                        {{ logmessage.body | linebreaks }}
+    <div class="container my-auto mt-3">
+      <div class="row">
+          <div class="col-2 my-auto ms-2 g-0">
+              {% include "sociablecreating/chat_profile.html" %}
+          </div>
+          <div class="col-auto">
+              <div class="position-absolute   translate-middle-y mt-5 triangle-left"></div>
+          </div>
+          <div class="col"> 
+              <div class="card border-0 bg-transparent">
+                  <div class="card-body rounded-top-4 bg-white text-black">
+                    <div class="container text-start">
+                      {{ logmessage.body | linebreaks }}
+                    </div>
+                  </div>
+                  <div class="card-footer bg-white rounded-bottom-4">
+                      <div class="row justify-content-end">
+                          <div class="col-auto">
+                            {% include "sociablecreating/logmessage_dates.html" %}
+                          </div>
                       </div>
-                    </div>
-                    <div class="card-footer bg-white rounded-bottom-4">
-                        <div class="row justify-content-between">
-                            <div class="col-auto">
-                                <small class="text-light-emphasis">
-                                    {% if logmessage.date_changed|date:"d-m" != logmessage.date_created|date:"d-m" %}
-                                        <i class="bi bi-pencil-fill"></i> {{ logmessage.date_changed | date:"d-m" }}
-                                    {% else %}
-                                        {{ logmessage.date_created | date:"d-m" }}
-                                    {% endif %}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    {% include "sociablecreating/readbuttons.html" %}
+  </div>    
+</div>
+<div class="d-sm-none bg-dark py-3">
+  <div class="container mb-4 fs-5">
+    {% include "sociablecreating/logmessage_profile_icons.html" %}
+    {% with user=request.user %}
+      <div class="card bg-transparent border-0 h-50">
+        <div class="card-body rounded-top-4 bg-white text-black">
+          <div class="container text-start">
+            {{ logmessage.body | linebreaks }}
+          </div>
+        </div>
+        <div class="card-footer bg-white rounded-bottom-4">
+          <div class="row justify-content-end">
+            {% include "sociablecreating/logmessage_dates.html" %}
+          </div>
         </div>
       </div>
 
-      <div class="col-lg-6 mx-auto mt-3">
-          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center px-5">
-          <a href="{% url "message-read" logmessage.id %}" class="btn btn-success btn-lg px-4 me-sm-3 fw-bold">Gelezen</a>
-          <a href="{% url "detail-sociable" sociable.slug %}" class="my-auto">Niet voor mij bedoeld</a>
-          </div>
-      </div>
-    </div>    
+    {% endwith %}
+  </div>
+  {% include "sociablecreating/readbuttons.html" %}
 </div>
 {% endblock content %}

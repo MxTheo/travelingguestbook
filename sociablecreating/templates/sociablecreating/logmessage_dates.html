@@ -1,0 +1,9 @@
+{% load static %}
+<div class="col-auto">
+    <small class="text-light-emphasis">
+      {{ logmessage.date_created | date:"d-m" }}
+      {% if logmessage.date_changed|date:"d-m" != logmessage.date_created|date:"d-m" %}
+        <i class="bi bi-pencil-fill ms-4"></i> {{ logmessage.date_changed | date:"d-m" }}
+      {% endif %}
+    </small>
+  </div>
