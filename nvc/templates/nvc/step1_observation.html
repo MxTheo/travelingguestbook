@@ -1,0 +1,61 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+Stap1
+{% endblock title %}
+{% block stylesheet %}
+<link href={% static "nvc/styles/step1observation.css" %} rel="stylesheet" >
+{% endblock stylesheet %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container text-start">
+<h1>Schrijf 7 dingen op die de ander letterlijk zei of deed</h1>
+<h2 >Vul <i>Ik hoorde je / Ik zag je</i> aan</h2>
+<p>Houd het kort en beperkt tot 1 handeling of uitspraak wat je obeserveerde bij de ander</p>
+</div>
+<div class="container mx-auto">
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <div id="formset-container">
+            {% for form in formset %}
+                    {{ form|crispy }}
+            {% endfor %}
+        </div>
+        <div class="container">
+            <button type="button" id="add-form" class="btn btn-primary"><b>+</b></button>
+        </div>
+        <div class="container mt-3">
+            <div class="btn btn-success" type="submit">Volgende</div>
+        </div>
+    </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('add-form').addEventListener('click', function() {
+            var formsetContainer = document.getElementById('formset-container');
+            var totalForms = document.getElementById('id_form-TOTAL_FORMS');
+            var currentFormCount = parseInt(totalForms.value);
+            
+            // Clone the last form
+            var newForm = formsetContainer.lastElementChild.cloneNode(true);
+            
+            // Update the cloned form's input names and IDs
+            newForm.querySelectorAll('input, select, textarea').forEach(function(input) {
+                var name = input.name.replace(/-\d+-/, '-' + currentFormCount + '-');
+                var id = input.id.replace(/-\d+-/, '-' + currentFormCount + '-');
+                input.name = name;
+                input.id = id;
+                input.value = 'Ik hoorde je zeggen '; // Clear the value of the new form
+            });
+
+            // Append the new form to the formset container
+            formsetContainer.appendChild(newForm);
+            
+            // Update the total forms count
+            totalForms.value = currentFormCount + 1;
+        });
+    });
+</script>
+
+{% endblock content %}

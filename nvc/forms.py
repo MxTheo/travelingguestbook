@@ -2,6 +2,13 @@ from django import forms
 from django.forms import formset_factory
 
 class ObservationForm(forms.Form):
-    observation = forms.CharField(max_length=255, help_text="Houd het kort en beperkt tot 1 handeling of uitspraak wat je obeserveerde bij de ander", label="Ik hoorde je...",)
+    """Single line where the user can enter an observation of what the other said or did"""
+    observation = forms.CharField(
+        max_length=255,
+        label='',
+        required=False,
+        initial='Ik hoorde je zeggen ',
+        widget=forms.TextInput(attrs={'placeholder': 'Ik hoorde je zeggen...'}),
+        )
 
-ObservationFormSet = formset_factory(ObservationForm, extra=7, can_delete=True,)
+ObservationFormSet = formset_factory(ObservationForm, extra=7)

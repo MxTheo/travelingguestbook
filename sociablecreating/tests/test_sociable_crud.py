@@ -199,7 +199,7 @@ class TestDetailSociable:
         response = client.get(url)
 
         assert response.status_code == 200
-        assert response.context_data["page_url"] == "http://testserver/test/"
+        assert response.context_data["page_url"] == "http://testserver/s/test/"
 
     def test_create_createlogmessageurl_for_qr(self, client):
         """Test if the url to creating a logmessage for qr-code is correctly created"""
@@ -215,6 +215,6 @@ def test_sociable_absolute_url_with_200(client):
     """Tests if the slug is used as absolute url of the sociable"""
     sociable     = SociableFactory()
     absolute_url = sociable.get_absolute_url()
-    assert absolute_url == "/" + str(sociable.slug)
+    assert absolute_url == "/s/" + str(sociable.slug)
     response     = client.get(absolute_url)
     assert response.status_code == 302
