@@ -15,6 +15,9 @@ For more Dutch information about how the application works, see [help](https://b
 ### Language
 The Web-Application is in Dutch. The code and back-end is in English.
 
+### Code language
+For the back-end django is used. For the front-end bootstrap v5.3 is used.
+
 ### Domain model
 ![Entity Relationship Diagram](architecture/domainModel.jpg)
 
