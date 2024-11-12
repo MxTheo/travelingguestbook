@@ -3,9 +3,6 @@
 {% block title %}
 Stap1
 {% endblock title %}
-{% block stylesheet %}
-<link href={% static "nvc/styles/step1observation.css" %} rel="stylesheet" >
-{% endblock stylesheet %}
 {% block content %}
 {% load crispy_forms_tags %}
 <div class="container text-start">
@@ -26,7 +23,7 @@ Stap1
             <button type="button" id="add-form" class="btn btn-primary"><b>+</b></button>
         </div>
         <div class="container mt-3">
-            <div class="btn btn-success" type="submit">Volgende</div>
+            <input class="btn btn-success" type="submit" value="Volgende">
         </div>
     </form>
 </div>

@@ -1,0 +1,12 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+Stap 2
+{% endblock title %}
+{% block content %}
+<ul class="list-group">
+    {% for observation in observations %}
+        <a href="#" class="list-group-item d-flex align-items-center">{{ observation }}</a>
+    {% endfor %}
+</ul>
+{% endblock content %}
