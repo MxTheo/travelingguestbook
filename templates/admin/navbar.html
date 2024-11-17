@@ -1,13 +1,8 @@
 <header>
 <nav class="navbar navbar-expand-sm navbar-dark bg-primary text-center mb-0 pb-0">
   <div class="container-fluid mb-2">
-    <a class="navbar-brand" href=
-      {% if user.is_authenticated %}
-        {% url "dashboard_sociable" %}
-      {% else %}
-        {% url "home" %}
-      {% endif %}>
-      Bedank</br>voor het contact
+    <a class="navbar-brand" href={% url "home" %}>
+      Bedankt</br>voor het contact
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
