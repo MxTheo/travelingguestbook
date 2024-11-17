@@ -5,7 +5,7 @@ Nieuw bericht
 {% block content %}
 {% load static %}
 {% block stylesheet %}<link href="{% static "styles/form.css" %}" rel="stylesheet" >{% endblock stylesheet %}
-<div class="container">
+<div class="container mt-4">
     <form method="post" action="">
         {% csrf_token %}
         {% load crispy_forms_tags %}

@@ -7,60 +7,64 @@
 <link href={% static "contact/styles/help.css" %} rel="stylesheet" type="text/css"/>
 {% endblock stylesheet %}
 {% block content %}
-<div class="container">
-  <h1 class="display-5 fw-bold mt-2 mb-4">Ga gesprekken aan:</h1>
-  {% with interval=4500 %}
-  <div id="carouselHelp" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="3" aria-label="Slide 4"></button>
-      <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="4" aria-label="Slide 5"></button>
+<div class="bg-dark">
+  <div class="container">
+    <h1 class="display-5 fw-bold mb-4 pt-5 text-white">Ga gesprekken aan:</h1>
+    {% with interval=4500 %}
+    <div id="carouselHelp" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="4" aria-label="Slide 5"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="{{ interval }}">
+          <img src={% static "images/startaconversation.png" %} class="d-block w-100" alt="startaconversation.png" height="496" width="920">
+          <div class="carousel-caption d-block">
+            <h5><b>1 )</b>&nbsp;&nbsp; Begin een gesprek met iemand die je nog niet kent, bijvoorbeeld in de trein.</h5>
+          </div>
+        </div>
+        <div class="carousel-item" data-bs-interval="{ interval }}">
+          <img src={% static "images/thankforconversation.png" %} class="d-block w-100" alt="thankforconversation\.png" width="1058" height="523">
+          <div class="carousel-caption d-block">
+            <h5><b>2 )</b>&nbsp;&nbsp; Bedank diegene voor het contact met een code.</h5>
+          </div>
+        </div>
+        <div class="carousel-item" data-bs-interval="{ interval }}">
+          <img src={% static "images/logconversation.png" %} class="d-block w-100" alt="logconversation.png" height="486" width="715">
+          <div class="carousel-caption d-block">
+            <h5><b>3 )</b>&nbsp;&nbsp; Log je gesprek voor de ander, zodat die het kan lezen.</h5>
+          </div>
+        </div>
+        <div class="carousel-item" data-bs-interval="{ interval }}">
+          <img src={% static "images/readlog.png" %} class="d-block w-100" alt="readlog.png" width="953" height="647">
+          <div class="carousel-caption d-block">
+            <h5><b>4 )</b>&nbsp;&nbsp; De ander vult de code in en leest jouw berichtje.</h5>
+          </div>
+        </div>
+        <div class="carousel-item" data-bs-interval="{ interval }}">
+          <img src={% static "images/repeat.png" %} class="d-block w-100" alt="repeat.png" width="647" height="649">
+          <div class="carousel-caption d-block">
+            <h5><b>5 )</b>&nbsp;&nbsp; De ander begint vervolgens opnieuw met dezelfde code. Pay it forward!</h5>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselHelp" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselHelp" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
-    <div class="carousel-inner">
-      <div class="carousel-item active" data-bs-interval="{{ interval }}">
-        <img src={% static "images/startaconversation.png" %} class="d-block w-100" alt="startaconversation.png" height="496" width="920">
-        <div class="carousel-caption d-block">
-          <h5><b>1 )</b>&nbsp;&nbsp; Begin een gesprek met iemand die je nog niet kent, bijvoorbeeld in de trein.</h5>
-        </div>
-      </div>
-      <div class="carousel-item" data-bs-interval="{ interval }}">
-        <img src={% static "images/thankforconversation.png" %} class="d-block w-100" alt="thankforconversation\.png" width="1058" height="523">
-        <div class="carousel-caption d-block">
-          <h5><b>2 )</b>&nbsp;&nbsp; Bedank diegene voor het contact met een code.</h5>
-        </div>
-      </div>
-      <div class="carousel-item" data-bs-interval="{ interval }}">
-        <img src={% static "images/logconversation.png" %} class="d-block w-100" alt="logconversation.png" height="486" width="715">
-        <div class="carousel-caption d-block">
-          <h5><b>3 )</b>&nbsp;&nbsp; Log je gesprek voor de ander, zodat die het kan lezen.</h5>
-        </div>
-      </div>
-      <div class="carousel-item" data-bs-interval="{ interval }}">
-        <img src={% static "images/readlog.png" %} class="d-block w-100" alt="readlog.png" width="953" height="647">
-        <div class="carousel-caption d-block">
-          <h5><b>4 )</b>&nbsp;&nbsp; De ander vult de code in en leest jouw berichtje.</h5>
-        </div>
-      </div>
-      <div class="carousel-item" data-bs-interval="{ interval }}">
-        <img src={% static "images/repeat.png" %} class="d-block w-100" alt="repeat.png" width="647" height="649">
-        <div class="carousel-caption d-block">
-          <h5><b>5 )</b>&nbsp;&nbsp; De ander begint vervolgens opnieuw met dezelfde code. Pay it forward!</h5>
-        </div>
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHelp" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselHelp" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+    {% endwith %}
   </div>
-  {% endwith %}
+</div>
 
+<div class="container">
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-2">
   <div class="col">
     <div class="card mb-3">

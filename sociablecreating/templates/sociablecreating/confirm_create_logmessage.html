@@ -3,7 +3,7 @@
 Bevestig
 {% endblock title %}
 {% block content %}
-<form method='post'>
+<form class="mt-4" method='post'>
     {% csrf_token %}
     <fieldset class="form-group mb-3">
         <legend class="border-bottom mb-4">Plaats bericht {{ object }}</legend>

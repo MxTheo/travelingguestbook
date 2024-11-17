@@ -1,0 +1,62 @@
+.list-group {
+    position: relative; /* Set position relative for the list group */
+}
+
+.central-item {
+    position: relative; /* Position relative for the central item */
+}
+
+.central-item::after {
+    content: '';
+    position: absolute;
+    left: 28px; /* Center the line horizontally */
+    top: 100%; /* Position the line at the bottom of the central item */
+    height: 50%; /* Extend the line down */
+    width: 2px; /* Width of the vertical line */
+    background-color: transparent; /* Make background transparent */
+    border: 2px solid white; /* Use border for the line */
+    z-index: 1; /* Ensure the line is above the items */
+}
+
+
+.list-group-item {
+    position: relative; /* Position relative to allow absolute positioning of the line */
+}
+
+.list-group-item:not(.central-item)::before {
+    content: '';
+    position: absolute;
+    left: -20px; /* Adjust this value to position the line */
+    top: 50%; /* Center the line vertically */
+    transform: translateY(-50%); /* Adjust for proper centering */
+    width: 20px; /* Width of the horizontal line */
+
+    background-color: transparent; /* Make background transparent */
+    border: 2px solid white; /* Use border for the line */
+    border-radius: 10px; /* Adjust the value for more or less curvature */
+    z-index: 0; /* Place the line behind the list items */
+}
+
+.list-group-item:not(.central-item)::after {
+    content: '';
+    position: absolute;
+    left: -20px; /* Position the vertical line */
+    top: 0px; /* Start from the top of the item */
+    height: calc(100% + 25px); /* Extend to connect with central item */
+    background-color: transparent; /* Make background transparent */
+    border: 2px solid white; /* Use border for the line */
+    border-radius: 10px; /* Adjust the value for more or less curvature */
+    z-index: 0; /* Place the line behind the list items */
+}
+
+.list-group-item:not(.central-item):last-child:after {
+    content: '';
+    position: absolute;
+    left: -20px; /* Position the vertical line */
+    top: 0px; /* Start from the top of the item */
+    height: 50%; /* Extend to connect with central item */
+    background-color: transparent; /* Make background transparent */
+    border: 2px solid white; /* Use border for the line */
+    border-radius: 10px; /* Adjust the value for more or less curvature */
+    z-index: 0; /* Place the line behind the list items */
+}

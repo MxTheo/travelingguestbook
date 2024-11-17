@@ -5,14 +5,14 @@
 <div class="list-group">
     {% for sociable in user.sociable_set.all %}
     
-    <a href="{% url "detail-sociable" sociable.slug %}" class="list-group-item list-group-item-action border-light">
+    <a href="{% url "detail-sociable" sociable.slug %}" class="list-group-item list-group-item-action list-group-item-light border-dark">
         <div class="badge rounded-pill bg-primary mx-auto my-auto position-absolute start-0 top-0 ms-1 mt-1">
             <b>{{ forloop.revcounter }}</b>
         </div>
         <div class="align-items-center justify-content-center">
-            <div class="mb-0 opacity-80">{{ sociable.slug }}</div>
+            <div class="mb-0">{{ sociable.slug }}</div>
             <div class="container">
-                <small class="opacity-50 text-nowrap">{{ sociable.date_created | date:"d-m" }}</small>
+                <small class="opacity-75 text-nowrap">{{ sociable.date_created | date:"d-m" }}</small>
             </div>
         </div>
     </a>

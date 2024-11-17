@@ -23,7 +23,7 @@ Sociable Detail
     <h1>Deel je ervaringen en geef door!</h1>
     <h5 class="border-bottom pb-2 font-monospace text-uppercase">{{ sociable.slug }}</h5>
     <div class="justify-content-between d-flex align-items-center mb-3">
-      <button class="btn btn-outline-light" data-bs-toggle="offcanvas" href="#profile" aria-controls="profile">
+      <button class="btn btn-outline-dark" data-bs-toggle="offcanvas" href="#profile" aria-controls="profile">
         <h6 class="mt-1"><b><i class="bi bi-person-lines-fill"></i>&ensp;{{ sociable.owner }}</h6></b>
       </button>
       {% if request.user == sociable.owner %}
@@ -35,7 +35,7 @@ Sociable Detail
   <div class="row my-5">
     <div class="col-12 col-md-6">
       <div class="accordion" id="accordionSendMessage">
-        <div class="accordion-item">
+        <div class="accordion-item border-2 border-dark">
           <h2 class="accordion-header">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
               <i class="bi bi-qr-code"></i>&ensp; Bericht versturen
@@ -51,7 +51,7 @@ Sociable Detail
     </div>
     <div class="col-12 col-md-6">
       <div class="accordion" id="accordionDetailPage">
-        <div class="accordion-item">
+        <div class="accordion-item border-2 border-dark">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
               <i class="bi bi-qr-code"></i>&ensp; Deze pagina
@@ -70,13 +70,13 @@ Sociable Detail
     <a class="btn btn-info btn-lg" href={% url "create-logmessage" sociable %}><b>Laat een bericht achter <i class="bi bi-chat-right-text-fill ms-2"></i></b></a>
   </div>
 </div>
-<div class="d-none d-sm-block bg-dark mx-2">
-  <ul class="list-group px-2 py-1">
+<div class="d-none d-sm-block mx-2">
+  <ul class="list-group">
     {% for logmessage in sociable.logmessage_set.all %}
-      <li class="list-group-item bg-dark">
+      <li class="list-group-item bg-dark border-bottom-0">
         {% if forloop.counter|divisibleby:"2" %}
           <div class="row justify-content-start mt-2 mb-1">
-            <div class="col-2 col-lg-1 my-auto g-0">  
+            <div class="col-2 col-lg-1 my-auto ms-3 g-0">  
               {% include "sociablecreating/chat_profile.html" %}
             </div>
             <div class="col-auto">
@@ -94,14 +94,14 @@ Sociable Detail
             <div class="col-1 g-0">
               <div class="position-absolute bottom-50 translate-middle-y triangle-right"></div>
             </div>
-            <div class="col-2 col-lg-1 my-auto g-0">
+            <div class="col-2 col-lg-1 my-auto me-3 g-0">
               {% include "sociablecreating/chat_profile.html" %}
             </div>
           </div>
         {% endif %}
       </li>
       {% empty %}
-      <li class="list-group-item">
+      <li class="list-group-item bg-dark">
         <div class="row justify-content-center my-5">
           <div class="col-2 col-lg-1 my-auto g-0">  
             <img src="{% static "images/portrait_owner.jpg" %}" class="img-thumbnail rounded-5  border-primary border-3" alt="profilepic">

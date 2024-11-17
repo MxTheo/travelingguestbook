@@ -3,10 +3,10 @@
 {% include "sociablecreating/chat_profile_pic.html" %}
 <div class="mt-1">
   {% if logmessage.author == sociable.owner %}
-    <b class="my-auto"><a class="link text-white" data-bs-toggle="offcanvas" href="#profile" aria-controls="profile">{{ logmessage.name }}</a></b>
+    <b class="my-auto"><a class="link text-white" data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-person-lines-fill"></i>&ensp;{{ logmessage.name }}</a></b>
     {% elif logmessage.author %}
-    <b class="my-auto"><a class="link text-white" href={% url "profile" logmessage.author.username %} target="_blank">{{ logmessage.name }}</a></b>
+    <b class="my-auto"><a class="link text-white" href={% url "profile" logmessage.author.username %} target="_blank"><i class="bi bi-person-fill"></i>&ensp;{{ logmessage.name }}</a></b>
     {% else %}
-    <b class="my-auto">{{ logmessage.name }}</b>
+    <b class="my-auto text-light">{{ logmessage.name }}</b>
   {% endif %}
 </div>
