@@ -97,7 +97,7 @@ def get_sociables_user_participated_as_author(user: User):
 @login_required(login_url="login")
 def create_sociable(request):
     """Creates a sociable and redirects to it's detail page"""
-    slug = get_random_string(5, allowed_chars=string.ascii_lowercase)
+    slug = get_random_string(7, allowed_chars='abcdefghjklmnpqrstuvwxyz23456789')
     sociable = Sociable(owner=request.user, slug=slug)
     sociable.save()
     return redirect(reverse("sociable", args=[sociable.slug]))
