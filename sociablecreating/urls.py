@@ -11,10 +11,9 @@ urlpatterns = [
     path('verwijderbericht/<str:pk>', views.LogMessageDelete.as_view(), name='delete-logmessage'),
     path('bewerkbericht/<str:pk>', views.LogMessageUpdate.as_view(), name='update-logmessage'),
 
-    path('c/<slug:slug>', views.show_unread_messages, name='sociable'),
+    path('c/<slug:slug>', views.show_unread_message, name='sociable'),
     path('berichtvoorjou/', views.search_sociable, name='search-sociable'),
-    path('berichtvoorjou/<str:pk>', views.LogMessageDetail.as_view(), name='detail-logmessage'),
-    path('message-read/<str:pk>', views.display_sociable_after_message_is_read, name='message-read'),
+    path('message-read/xy3dk2ldi/<str:pk>', views.display_sociable_after_message_is_read, name='message-read'),
     path('c/<slug:slug>/', views.SociableDetail.as_view(), name='detail-sociable'),
 
 ]

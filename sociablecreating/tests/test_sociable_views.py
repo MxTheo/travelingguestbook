@@ -51,8 +51,7 @@ class TestSearchSociable:
         sociable   = SociableFactory(slug='test123')
         LogMessageFactory(sociable=sociable)
         response   = client.get(self.url, {'search-code': sociable.slug})
-        assert response.status_code == 302
-        assert 'berichtvoorjou' in response.url
+        assert response.status_code == 200
 
     def test_show_detailpage_when_message_is_read(self, client):
         '''Given a slug and a read message,
@@ -70,8 +69,7 @@ class TestSearchSociable:
         sociable     = SociableFactory(slug='test123', owner=user)
         LogMessageFactory(sociable=sociable)
         response     = client.get(self.url, {'search-code': sociable.slug})
-        assert response.status_code == 302
-        assert 'berichtvoorjou' in response.url
+        assert response.status_code == 200
 
     def test_show_sociable_when_user_is_author(self,  auto_login_user):
         '''Given that the visitor is the author, tests if he is redirected toward the sociable'''
@@ -210,7 +208,7 @@ class TestMultipleUnreadMessages:
         for _ in range(5):
             LogMessageFactory(sociable=sociable)
         response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
-        assert response.status_code == 302
+        assert response.status_code == 200
 
     def test_3_of_5_unread_messages(self, client):
         '''Should then all names still be shown or only the 3 unread messages left?'''
@@ -220,7 +218,7 @@ class TestMultipleUnreadMessages:
         for _ in range(2):
             LogMessageFactory(sociable=sociable, is_read=True)
         response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
-        assert response.status_code == 302
+        assert response.status_code == 200
 
     def test_1_unread_message(self, client):
         '''Test when only 1 unread message is there,
@@ -228,8 +226,7 @@ class TestMultipleUnreadMessages:
         sociable  = SociableFactory()
         LogMessageFactory(sociable=sociable)
         response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
-        assert response.status_code == 302
-        assert 'berichtvoorjou' in response.url
+        assert response.status_code == 200
 
     def test_no_unread_messages(self, client):
         '''Test when there are no unread messages,
@@ -240,37 +237,6 @@ class TestMultipleUnreadMessages:
         response = client.get(reverse('search-sociable'), {'search-code': sociable.slug})
         assert response.status_code == 302
         assert sociable.slug in response.url
-
-
-class TestLogMessageDetail:
-    """Test if a specific message can be read"""
-    @pytest.fixture
-    def logmessage(self):
-        """Set up logmessage"""
-        return LogMessageFactory()
-
-    def test_view_url_exists_at_desired_location(self, client, logmessage):
-        response = client.get(f'/berichtvoorjou/{logmessage.id}')
-        assert response.status_code == 200
-
-    def test_view_url_accessible_by_name(self, client, logmessage):
-        response = client.get(reverse('detail-logmessage', args=[logmessage.id]))
-        assert response.status_code == 200
-
-    def test_view_uses_correct_template(self, client, logmessage):
-        response = client.get(reverse('detail-logmessage', args=[logmessage.id]))
-        assert response.status_code == 200
-        assert response.template_name == ['sociablecreating/unread_message.html']
-
-    def test_context_contains_logmessage(self, client, logmessage):
-        response = client.get(reverse('detail-logmessage', args=[logmessage.id]))
-        assert 'logmessage' in response.context
-        assert response.context['logmessage'] == logmessage
-
-    def test_context_contains_sociable(self, client, logmessage):
-        response = client.get(reverse('detail-logmessage', args=[logmessage.id]))
-        assert 'sociable' in response.context
-        assert response.context['sociable'] == logmessage.sociable
 
 
 def test_logmessage_str():
