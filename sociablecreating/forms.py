@@ -6,7 +6,7 @@ class LogMessageForm(ModelForm):
     '''The form the sociable reciever uses to leave a message on the sociable page'''
     class Meta:
         model   = LogMessage
-        fields  = ['name', 'to_person', 'body']
+        fields  = ['name', 'body']
         widgets = {
             'body': Textarea(attrs={
                 'rows': 3,

@@ -17,7 +17,7 @@ def create_logmessage(client, sociable=None, data=None):
     if sociable is None:
         sociable = SociableFactory()
     if data is None:
-        data = {'name': 'create_logmessage', 'body': 'create_logmessage', 'to_person':'create_logmessage'}
+        data = {'name': 'create_logmessage', 'body': 'create_logmessage'}
     url_create = reverse('create-logmessage', args=[sociable.slug])
     client.post(url_create, data=data)
     return LogMessage.objects.filter(sociable=sociable)[0]

@@ -1,4 +1,3 @@
-import string
 from django.utils import timezone
 from django.forms import BaseModelForm
 from django.shortcuts import redirect, render
@@ -21,32 +20,15 @@ def home(request):
 
 def show_unread_messages(request, slug):
     """Given the sociable,
-    show the unread messages that are not of the author
-        - Multiple unread messages
-        - One unread message
-        - No unread message, then show sociable"""
+    show the first unread message that are not of the author
+    No unread message, then show sociable"""
     sociable       = Sociable.objects.get(slug=slug)
     lst_logmessage = LogMessage.objects.filter(sociable=sociable, is_read=False)
     if request.user.is_authenticated:
         lst_logmessage = lst_logmessage.exclude(author=request.user)
-    lst_logmessage = remove_duplicate_toperson(lst_logmessage)
-    if len(lst_logmessage) > 1:
-        context = {"sociable": sociable, "list_logmessage": lst_logmessage}
-        return render(request, "sociablecreating/logmessage_multiple.html", context=context)
-    elif len(lst_logmessage) == 1:
+    if len(lst_logmessage) > 0:
         return redirect('detail-logmessage', pk=lst_logmessage[0].id)
     return redirect('detail-sociable', slug=sociable.slug)
-        
-
-
-def remove_duplicate_toperson(lst_logmessage):
-    """Given a list of logmessages with duplicate to_person's,
-    return the logmessages with only one logmessage per to_person"""
-    unique_logmessage = {}
-    for logmessage in lst_logmessage:
-        if logmessage.to_person not in unique_logmessage:
-            unique_logmessage[logmessage.to_person] = logmessage
-    return list(unique_logmessage.values())
 
 
 def search_sociable(request):

@@ -40,14 +40,8 @@ class LogMessage(models.Model):
     name      = models.CharField(
         max_length=70,
         default="Anoniem",
-        verbose_name="Je naam",
+        verbose_name="Je (voor)naam",
         help_text="Een naam geeft al context aan een bericht. Voel je ook vrij om je naam op anoniem te houden",
-    )
-    to_person = models.CharField(
-        max_length=70,
-        default="Anoniem",
-        verbose_name="Aan wie?",
-        help_text="De (voor)naam aan wie dit bericht is bestemd. Dit is nodig zodat diegene zijn bericht terug kan vinden, als er meerdere ongelezen berichten zijn.",
     )
     body      = models.TextField(
         max_length=30000,

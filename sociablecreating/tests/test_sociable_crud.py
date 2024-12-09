@@ -123,7 +123,7 @@ class TestCreateLogMessage:
     def test_if_name_is_not_changed_with_anonymous_user(self, client):
         """Not logged in, tests if the name is not altered"""
         logmessage = create_logmessage(
-            client, data={"name": "test-name", "body": "test-body", "to_person": "test-to_person"}
+            client, data={"name": "test-name", "body": "test-body"}
         )
         assert logmessage.name == "test-name"
 
@@ -185,7 +185,7 @@ class TestUpdateLogMessage:
         """Given the logmessage and the textbody,
         change the message_body"""
         url_update = reverse("update-logmessage", args=[logmessage.id])
-        client.post(url_update, data={"body": message_body, "name": logmessage.name, "to_person": logmessage.to_person})
+        client.post(url_update, data={"body": message_body, "name": logmessage.name})
         return LogMessage.objects.get(id=logmessage.id)
 
 
