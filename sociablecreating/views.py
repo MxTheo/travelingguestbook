@@ -13,9 +13,8 @@ from .models import LogMessage, Sociable
 
 
 def home(request):
-    """Renders the homepage with a url of the homepage as QR code"""
-    context = {"url_for_qr": request.build_absolute_uri()}
-    return render(request, "sociablecreating/index.html", context=context)
+    """Renders the homepage"""
+    return render(request, "sociablecreating/index.html")
 
 
 def show_unread_message(request, slug):
@@ -197,23 +196,6 @@ class SociableDetail(generic.DetailView):
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/"""
 
     model = Sociable
-
-    def get_context_data(self, **kwargs):
-        """At 2 urls to the context_data:
-        - url for qr to create a new logmessage
-        - url of the detailpage"""
-        context = super().get_context_data(**kwargs)
-        context["create_logmessage_qr_url"] = self.create_createlogmessageurl_for_qr()
-        context["page_url"] = self.request.build_absolute_uri()
-        return context
-
-    def create_createlogmessageurl_for_qr(self):
-        """Create the url for the qr code to create a new logmessage"""
-        absolute_url  = self.request.build_absolute_uri("/")
-        sociable      = self.get_object()
-        relative_path = reverse("create-logmessage", args=[sociable.slug])[1:]
-        return absolute_url + relative_path
-
 
 class SociableList(generic.ListView):
     """Generic display view to show an overview of Sociable:

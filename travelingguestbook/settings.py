@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'contact',
     'game',
-    'qr_code',
 
         # Machina dependencies:
     'mptt',
@@ -168,8 +167,6 @@ STATIC_ROOT = BASE_DIR / 'static_collected'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-SERVE_QR_CODE_IMAGE_PATH = 'qr-code-image/'
 
 CACHES = {
     'default': {

@@ -192,23 +192,13 @@ class TestUpdateLogMessage:
 class TestDetailSociable:
     """Tests for DetailView of Sociable"""
 
-    def test_get_context_data(self, client):
+    def test_detail_page(self, client):
         """Test if the detailpage is reached"""
         sociable = SociableFactory(slug="test")
         url      = reverse("detail-sociable", args=[sociable.slug])
         response = client.get(url)
 
         assert response.status_code == 200
-        assert response.context_data["page_url"] == "http://testserver/c/test/"
-
-    def test_create_createlogmessageurl_for_qr(self, client):
-        """Test if the url to creating a logmessage for qr-code is correctly created"""
-        sociable = SociableFactory(slug="test")
-
-        response = client.get(reverse("detail-sociable", args=[sociable.slug]))
-        qr_url   = response.context["view"].create_createlogmessageurl_for_qr()
-
-        assert qr_url == "http://testserver/nieuwbericht/test"
 
 
 def test_sociable_absolute_url_with_200(client):

@@ -1,8 +1,7 @@
 {% extends "admin/main.html" %}
 {% block title %}Bedankt!{% endblock title %}
 {% block content %}
-{% load qr_code %}
-<main class="px-3 mt-4">
+<main class="px-3 mt-5">
   <div class="container">
     <h1>Bedankt voor het contact!</h1>
     <h2>Vul de code in en laat een bericht achter!</h2>
@@ -20,11 +19,6 @@
         </div>
       </div>
     </form>
-  </div>
-  <hr class="solid">
-
-  <div class="container mt-4">
-    <img src={% qr_url_from_text url_for_qr %} alt="qrcode voor home">
   </div>
 </main>
 {% endblock content %}

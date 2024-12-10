@@ -26,7 +26,6 @@ urlpatterns = [
     path('', include('usermanagement.urls')),
     path('', include('contact.urls')),
     path('', include('sociablecreating.urls')),
-    path('qr_code/', include('qr_code.urls', namespace="qr_code")),
     path('forum/', include(machina_urls)),
 ]
 
