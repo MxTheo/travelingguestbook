@@ -1,7 +1,8 @@
 {% load static %}
 
 {% include "sociablecreating/chat_profile_pic.html" %}
-<div class="mt-1">
+{% block stylesheet %}<link href={% static "sociablecreating/styles/chatprofile.css" %} rel="stylesheet" type="text/css">{% endblock stylesheet %}
+<div class="profile-name mt-1 text-wrap w-100">
   {% if logmessage.author == sociable.owner %}
     <b class="my-auto"><a class="link text-white" data-bs-toggle="offcanvas" href="#profile" aria-controls="profile"><i class="bi bi-person-lines-fill"></i>&ensp;{{ logmessage.name }}</a></b>
     {% elif logmessage.author %}

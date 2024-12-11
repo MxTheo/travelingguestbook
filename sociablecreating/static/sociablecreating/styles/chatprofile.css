@@ -1,0 +1,5 @@
+.profile-name {
+    word-wrap: break-word; /* Allows long words to be broken and wrapped onto the next line */
+    overflow-wrap: break-word; /* For better compatibility with different browsers */
+    white-space: normal; /* Ensures that the text wraps normally */
+}

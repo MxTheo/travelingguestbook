@@ -3,10 +3,11 @@
 {% block content %}
 <main class="px-3 mt-5">
   <div class="container">
-    <h1>Bedankt voor het contact!</h1>
-    <h2>Vul de code in en laat een bericht achter!</h2>
+    <h1>Ieder gesprek is belangrijk om aangeknoopt te worden</h1>
+    <hr>
+    <h4>Hoe was het gesprek voor jou?</h4>
     {% load crispy_forms_tags %}
-    <form class="form-control-lg" method="get" action={% url "search-sociable" %} >
+    <form class="form-control-lg mb-5" method="get" action={% url "search-sociable" %} >
       <div class="container">
         <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Vul code in:</b></label>
         <div class="row mx-auto justify-content-center">
@@ -19,6 +20,7 @@
         </div>
       </div>
     </form>
+    <div class="container text-start">Bedanktvoorhetcontact is bedoeld om je te helpen oefenen met vreemden in contact te komen, zoals op straat of in de trein.</div>
   </div>
 </main>
 {% endblock content %}
