@@ -63,5 +63,5 @@ class LogMessage(models.Model):
 
     def get_absolute_url(self):
         """After entering a message,
-        the visitor is redirected towards the sociable page"""
-        return reverse("sociable", kwargs={"slug": self.sociable.slug})
+        the visitor is redirected towards the sociable detail page"""
+        return reverse("detail-sociable", kwargs={"slug": self.sociable.slug})
