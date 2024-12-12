@@ -13,17 +13,20 @@
         <a class="nav-link" href={% url "forum:index" %}>Forum</a>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Info</a>
-          <ul class="dropdown-menu open-left" aria-labelledby="dropdown03">
+          <ul class="dropdown-menu {% if not user.is_authenticated and request.path == '/' %}dropdown-menu-end {% endif %}open-left" aria-labelledby="dropdown03">
             <li><a class="dropdown-item" href="{% url "help" %}">Help</a></li>
             <li><a class="dropdown-item" href="{% url "about" %}">Over mij</a></li>
             <li><a class="dropdown-item" href="{% url "contact" %}">Contact</a></li>
           </ul>
         </li>
-       
+        
         {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url "dashboard_sociable" %}">Dashboard</a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i> {{ user.username }}</a>
-          <ul class="dropdown-menu" aria-labelledby="dropdown03">
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown03">
             <li><a class="dropdown-item" href="{% url "profile" user.username %}">Mijn Profiel</a></li>
             <li><a class="dropdown-item" href="{% url "editaccount" %}">Edit Account</a></li>
             <li><form method="post" action="{% url "logout" %}">{% csrf_token %}
@@ -32,12 +35,12 @@
           </ul>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url "dashboard_sociable" %}">Dashboard</a>
-        </li>
+        
         {% else %}
+        {% if request.path != '/' %}
         <li class="nav-item"><a class="nav-link" href="{% url "login" %}">Login</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url "register" %}">Register</a></li>
+        {% endif %}
         {% endif %}
         
       </ul>
