@@ -5,6 +5,6 @@
     {% elif logmessage.author %}
     <b class="my-auto"><a class="link-light text-white" href={% url "profile" logmessage.author.username %} target="_blank"><i class="bi bi-person-fill"></i>&ensp;{{ logmessage.name }}</a></b>
     {% else %}
-    <b class="my-auto text-light">{{ logmessage.name }}</b>
+    <b class="my-auto text-light">{{ logmessage.name|default:"Anoniem" }}</b>
     {% endif %}
   </div>

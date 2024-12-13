@@ -39,7 +39,7 @@ class LogMessage(models.Model):
     author    = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name      = models.CharField(
         max_length=70,
-        default="Anoniem",
+        blank=True,
         verbose_name="Je (voor)naam",
         help_text="Een naam geeft al context aan een bericht. Voel je ook vrij om je naam op anoniem te houden",
     )

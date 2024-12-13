@@ -24,7 +24,7 @@
                                     <img src="{% static "images/portrait_anonymous.jpg" %}" class="img-thumbnail rounded-5" alt="profilepic">
                                     {% endif %}
                                     <div class="mt-1">
-                                        <b>{{ logmessage.name }}</b>
+                                        <b>{{ logmessage.name|default:"Anoniem" }}</b>
                                     </div>
                                 </div>
                                 <div class="col-auto">
