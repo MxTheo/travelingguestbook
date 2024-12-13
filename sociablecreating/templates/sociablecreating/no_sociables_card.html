@@ -1,0 +1,21 @@
+{% load static %}
+<div class="card">
+    <div class="card-body text-start">
+        <p>
+        Welkom! Als je hulp nodig hebt, voel je vrij om contact op the nemen met mij, <a href={% url "contact" %}>Theo</a>.
+        </p>
+        <p>
+        <ul>
+            <li>Waar kijk je tegen op om gesprekken aan te gaan?</li>
+            <li>In welke behoefte hoop je te voorzien door met vreemden in contact te komen?</li>
+        </ul>
+        </p>
+        <p>
+            Als je behoefte hebt om over deze vragen te praten, of iets anders, mail gerust of post op het <a href={% url "forum:index" %}>forum</a>.
+        </p>
+        <p>
+            Of ga direct aan de slag. Klik op nieuw. Schrijf de code op een kaartje. Bedank voor het kletspraatje met het kaartje.
+        </p>
+        <p><a href={% url "create-sociable" %}><button href={% url "create-sociable" %} button type="button" class="btn btn-primary mt-3">Nieuw</button></a></p>
+    </div>
+</div>
