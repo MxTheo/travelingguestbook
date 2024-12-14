@@ -41,12 +41,13 @@ class LogMessage(models.Model):
         max_length=70,
         blank=True,
         verbose_name="Je (voor)naam",
-        help_text="Een naam geeft al context aan een bericht. Voel je ook vrij om je naam op anoniem te houden",
+        help_text="Een naam geeft al context. Niet verplicht. Anoniem kan ook",
     )
     body      = models.TextField(
         max_length=30000,
         verbose_name="Bericht",
-        help_text="Schrijf over je ervaringen van het contact. Voel je vrij te delen wat je wel en niet wilt delen.",
+        help_text="Schrijf over je ervaringen. Alleen hallo wordt ook gewaardeerd",
+        default="Hallo"
     )
     date_created = models.DateTimeField(
         auto_now_add=True, verbose_name="Datum aangemaakt"
