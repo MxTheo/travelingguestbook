@@ -23,8 +23,9 @@ class SociableFactory(factory.django.DjangoModelFactory):
     '''Mock for sociablecreating Sociable'''
     class Meta:
         model = Sociable
-    slug        = factory.LazyFunction(fake.unique.postcode)
-    owner       = factory.SubFactory(UserFactory)
+    slug   = factory.LazyFunction(fake.unique.postcode)
+    owner  = factory.SubFactory(UserFactory)
+    number = 1
 
 
 class LogMessageFactory(factory.django.DjangoModelFactory):

@@ -80,10 +80,16 @@ def get_sociables_user_participated_as_author(user: User):
 def create_sociable(request):
     """Creates a sociable and redirects to it's detail page"""
     slug = get_random_string(7, allowed_chars='abcdefghjklmnpqrstuvwxyz23456789')
-    sociable = Sociable(owner=request.user, slug=slug)
+    number = calc_number_for_sociable(request)
+    sociable = Sociable(owner=request.user, slug=slug, number=number)
     sociable.save()
     return redirect(reverse("sociable", args=[sociable.slug]))
 
+def calc_number_for_sociable(request):
+    """The number of the sociable is the n'th sociable of the user
+    Calculates the number for the sociable"""
+    list_sociable = Sociable.objects.filter(owner=request.user)
+    return list_sociable[0].number + 1 if list_sociable else 1
 
 class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
     """Generic editing view to create LogMessage:

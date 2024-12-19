@@ -16,6 +16,7 @@ class Sociable(models.Model):
     date_created = models.DateTimeField(
         auto_now_add=True, verbose_name="Datum aangemaakt"
     )
+    number       = models.IntegerField("De hoeveelste sociable van de user geeft")
 
     class Meta:
         """Order descending"""

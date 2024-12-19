@@ -5,84 +5,131 @@ from travelingguestbook.helpers_test import create_logmessage
 from sociablecreating.models import LogMessage, Sociable
 
 
-class TestCreateCode:
-    """Test class for the CreateView for Code"""
+class TestCreateSociable:
+    """Test class for the CreateView for Sociable"""
 
     def test_if_owner_is_set(self, auto_login_user):
-        """Test if the owner is set when creating a code"""
+        """Test if the owner is set when creating a sociable"""
         client, _ = auto_login_user()
         client.post(reverse("create-sociable"))
         list_sociable = Sociable.objects.all()
         assert list_sociable
 
     def test_if_a_slug_of_5_chars_is_created(self, auto_login_user):
-        """Test if a slug is created of 5 chars, when creating a code"""
+        """Test if a slug is created of 5 chars, when creating a sociable"""
         client, _ = auto_login_user()
         client.post(reverse("create-sociable"))
         sociable  = Sociable.objects.all()[0]
         assert len(sociable.slug) == 7
 
+    def test_number_1(self, auto_login_user):
+        """Test if number 1 is set for the first sociable"""
+        client, _ = auto_login_user()
+        client.post(reverse("create-sociable"))
+        sociable  = Sociable.objects.all()[0]
+        assert sociable.number == 1
 
-class TestDeleteCode:
-    """Test user permissions for deleting a code"""
+    def test_number_3(self, auto_login_user):
+        """Test if number 3 is set for the third sociable"""
+        client, _ = auto_login_user()
+        for _ in range(3):
+            client.post(reverse("create-sociable"))
+        sociable  = Sociable.objects.all()[0]
+        assert sociable.number == 3
 
-    def test_delete_code_by_different_user(self, auto_login_user):
+    def test_number_with_delete_last(self, auto_login_user):
+        """Test if number 3 is set, when 3 are created, the last is deleted and then the sociable is created"""
+        client, _ = auto_login_user()
+        for _ in range(3):
+            client.post(reverse("create-sociable"))
+        slug = Sociable.objects.all()[0].slug
+        client.post(reverse("delete-sociable", args=[slug]))
+        client.post(reverse("create-sociable"))
+        sociable = Sociable.objects.all()[0]
+        assert sociable.number == 3
+
+    def test_number_with_delete_in_middle(self, auto_login_user):
+        """Test if number 3 is set, when 3 are created, the second is deleted and then the sociable is created"""
+        client, _ = auto_login_user()
+        for _ in range(3):
+            client.post(reverse("create-sociable"))
+        slug = Sociable.objects.all()[1].slug
+        client.post(reverse("delete-sociable", args=[slug]))
+        client.post(reverse("create-sociable"))
+        sociable = Sociable.objects.all()[0]
+        assert sociable.number == 4
+
+    def test_number_3_with_other_sociables(self, auto_login_user):
+        """Test if number 3 is set for the third sociable, when there are also other sociables"""
+        for _ in range(3):
+            SociableFactory()
+        client, _ = auto_login_user()
+        for _ in range(3):
+            client.post(reverse("create-sociable"))
+        sociable  = Sociable.objects.all()[0]
+        assert sociable.number == 3
+
+
+class TestDeleteSociable:
+    """Test user permissions for deleting a sociable"""
+
+    def test_delete_sociable_by_different_user(self, auto_login_user):
         """Logged in as a different user then the owner,
-        tests if the user is not able to delete the code"""
+        tests if the user is not able to delete the sociable"""
         client, _ = auto_login_user()
         owner     = UserFactory()
-        code      = SociableFactory(owner=owner)
+        sociable      = SociableFactory(owner=owner)
 
-        self.delete_code(client, code)
+        self.delete_sociable(client, sociable)
 
         assert Sociable.objects.count() == 1
 
-    def test_delete_code_by_owner(self, auto_login_user):
+    def test_delete_sociable_by_owner(self, auto_login_user):
         """Logged in as the owner,
-        tests if the owner is able to delete the code"""
+        tests if the owner is able to delete the sociable"""
         client, owner = auto_login_user()
-        code = SociableFactory(owner=owner)
+        sociable = SociableFactory(owner=owner)
 
-        self.delete_code(client, code)
+        self.delete_sociable(client, sociable)
 
         assert Sociable.objects.count() == 0
 
-    def test_delete_code_without_authentication(self, client):
+    def test_delete_sociable_without_authentication(self, client):
         """Not logged in,
-        tests if the anonymous user is not able to delete the code"""
-        code = SociableFactory()
+        tests if the anonymous user is not able to delete the sociable"""
+        sociable = SociableFactory()
 
-        self.delete_code(client, code)
+        self.delete_sociable(client, sociable)
 
         assert Sociable.objects.count() == 1
 
-    def delete_code(self, client, code):
-        """Given the client and the code, delete the code"""
-        delete_code_url = reverse("delete-sociable", args=[code.slug])
-        client.delete(delete_code_url)
+    def delete_sociable(self, client, sociable):
+        """Given the client and the sociable, delete the sociable"""
+        delete_sociable_url = reverse("delete-sociable", args=[sociable.slug])
+        client.delete(delete_sociable_url)
 
 
 class TestDeleteLogMessage:
     """Test user permissions to delete log message"""
 
     def test_delete_logmessage_by_different_user(self, auto_login_user):
-        """Logged in as a different user then the owner of the code,
+        """Logged in as a different user then the owner of the sociable,
         tests if the user is not able to delete the logmessage"""
         client, _  = auto_login_user()
         owner      = UserFactory()
-        code       = SociableFactory(owner=owner)
-        logmessage = LogMessageFactory(sociable=code)
+        sociable       = SociableFactory(owner=owner)
+        logmessage = LogMessageFactory(sociable=sociable)
 
         self.delete_logmessage(client, logmessage)
 
         assert LogMessage.objects.count() == 1
 
     def test_delete_logmessage_by_owner(self, auto_login_user):
-        """Logged in as the owner of the code,
+        """Logged in as the owner of the sociable,
         tests if the owner is able to delete the logmessage"""
         client, owner = auto_login_user()
-        code          = SociableFactory(owner=owner)
-        logmessage    = LogMessageFactory(sociable=code)
+        sociable          = SociableFactory(owner=owner)
+        logmessage    = LogMessageFactory(sociable=sociable)
 
         self.delete_logmessage(client, logmessage)
 
@@ -91,8 +138,8 @@ class TestDeleteLogMessage:
     def test_delete_logmessage_without_authentication(self, client):
         """Not logged in,
         tests if the anonymous user is not able to delete the logmessage"""
-        code       = SociableFactory()
-        logmessage = LogMessageFactory(sociable=code)
+        sociable       = SociableFactory()
+        logmessage = LogMessageFactory(sociable=sociable)
 
         self.delete_logmessage(client, logmessage)
 
@@ -107,12 +154,12 @@ class TestDeleteLogMessage:
 class TestCreateLogMessage:
     """Tests for creating logmessage"""
 
-    def test_message_code_relationship_set(self, client):
-        """Given a code and creating a logmessage,
-        tests if the code relationship is set"""
-        code       = SociableFactory()
-        logmessage = create_logmessage(client, code)
-        assert logmessage.sociable == code
+    def test_message_sociable_relationship_set(self, client):
+        """Given a sociable and creating a logmessage,
+        tests if the sociable relationship is set"""
+        sociable       = SociableFactory()
+        logmessage = create_logmessage(client, sociable)
+        assert logmessage.sociable == sociable
 
     def test_if_logged_in_user_is_set_as_user(self, auto_login_user):
         """Logged in, tests if the user is set for the logmessage"""
@@ -135,18 +182,11 @@ class TestCreateLogMessage:
     def test_if_username_is_filled_in_on_form(self, auto_login_user):
         """Logged in, tests if the username is shown in the name field of the form"""
         client, user = auto_login_user()
-        code         = SociableFactory()
-        url_logmessage_form = reverse("create-logmessage", args=[code.slug])
+        sociable         = SociableFactory()
+        url_logmessage_form = reverse("create-logmessage", args=[sociable.slug])
         response = client.get(url_logmessage_form)
         username = 'value="' + user.username
         assert username in response.rendered_content
-
-    def test_if_anoniem_is_entered_with_anonymous_user(self, client):
-        """Not logged in, tests if "Anoniem" is shown in the name field of the form"""
-        code     = SociableFactory()
-        url_logmessage_form = reverse("create-logmessage", args=[code.slug])
-        response = client.get(url_logmessage_form)
-        assert 'value="Anoniem' in response.rendered_content
 
 
 class TestUpdateLogMessage:
