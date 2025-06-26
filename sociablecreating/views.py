@@ -42,6 +42,14 @@ def search_sociable(request):
         return render(request, "sociablecreating/sociable_not_found.html", context)
 
 
+def search_sociable_by_number(request):
+    """When the user enters the number on the card,
+    redirect the user to the sociable"""
+    number = request.GET["number"]
+    owner  = request.GET["owner"]
+    sociable = Sociable.objects.get(number=number, owner=owner)
+    return show_unread_message(request, sociable.slug)
+
 def display_sociable_after_message_is_read(request, pk):
     """Given the visitor clicks gelezen,
     update the message to read and display code"""

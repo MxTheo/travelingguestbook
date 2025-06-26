@@ -80,6 +80,46 @@ class TestSearchSociable:
         assert response.status_code == 302
         assert 'test123' in response.url
 
+class TestSearchSociableByNumber:
+    '''Test the behaviour of search_sociable_by_number'''
+    owner = UserFactory()
+    url = reverse('search-sociable-by-number', kwargs={'number': 1, 'owner': owner})
+
+    def test_show_unread_message(self, client):
+        '''Given a number, owner and an unread message,
+        tests if the unread message is displayed'''
+        sociable   = SociableFactory(number=1, owner=self.owner)
+        LogMessageFactory(sociable=sociable)
+        response   = client.get(self.url)
+        assert response.status_code == 200
+
+    # def test_show_detailpage_when_message_is_read(self, client):
+    #     '''Given a slug and a read message,
+    #     tests if the detailpage is displayed'''
+    #     sociable   = sociable   = SociableFactory(number=1, owner=UserFactory())
+    #     LogMessageFactory(sociable=sociable, is_read=True)
+    #     response   = client.get(self.url, {'search-code': sociable.slug})
+    #     assert response.status_code == 302
+    #     assert 1 in response.url
+
+    # def test_show_message_when_user_is_owner(self,  auto_login_user):
+    #     '''Given that the visitor is the owner,
+    #     tests if the unread message written by somebody else is still shown'''
+    #     client, user = auto_login_user()
+    #     sociable     = SociableFactory(number=1, owner=user)
+    #     LogMessageFactory(sociable=sociable)
+    #     response     = client.get(self.url, {'search-code': sociable.slug})
+    #     assert response.status_code == 200
+
+    # def test_show_sociable_when_user_is_author(self,  auto_login_user):
+    #     '''Given that the visitor is the author, tests if he is redirected toward the sociable'''
+    #     client, user = auto_login_user()
+    #     sociable     = SociableFactory(slug='test123', owner=user)
+    #     LogMessageFactory(sociable=sociable, author=user)
+    #     response     = client.get(self.url, {'search-code': sociable.slug})
+    #     assert response.status_code == 302
+    #     assert 'test123' in response.url
+
 
 def test_update_unread_message_to_read(client):
     '''Given the click that the unread message is read,

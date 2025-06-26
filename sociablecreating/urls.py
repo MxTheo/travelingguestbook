@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('c/<slug:slug>', views.show_unread_message, name='sociable'),
     path('berichtvoorjou/', views.search_sociable, name='search-sociable'),
+    path('berichtvoorjou/', views.search_sociable_by_number, name='search-sociable-by-number'),
     path('message-read/xy3dk2ldi/<str:pk>', views.display_sociable_after_message_is_read, name='message-read'),
     path('c/<slug:slug>/', views.SociableDetail.as_view(), name='detail-sociable'),
 
