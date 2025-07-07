@@ -3,7 +3,7 @@ from .models import Registration
 
 class RegistrationForm(ModelForm):
     """Form for user registration."""
-    
+
     class Meta:
         model = Registration
         fields = ['name', 'email']

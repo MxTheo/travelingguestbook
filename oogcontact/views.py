@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.urls import reverse
 
-from contact.views import create_mailto_url
-from .models import Registration
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from contact.views import create_mailto_url
+from .models import Registration
 
 def oogcontact_home(request):
     """Renders the homepage of oogcontact course."""
@@ -31,7 +31,7 @@ class RegistrationDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Registration Details'
         return context
-    
+
 class RegistrationCreateView(generic.CreateView):
     """View to create a new registration."""
     model = Registration
@@ -51,7 +51,7 @@ class RegistrationUpdateView(generic.UpdateView, LoginRequiredMixin):
     model = Registration
     fields = ['name', 'email', 'hasCanceled']
     template_name = "oogcontact/registration_form.html"
-    
+
     def get_success_url(self):
         return reverse('registration_detail', args=[self.object.pk])
 
