@@ -3,7 +3,7 @@
     max-width: 175px;
 }
 
-.jumbotron {
+.jumbo-eyes {
     background-image: url('/static/images/girleyes.jpg');
-    background-size: contain;
+    background-size: cover;
 }
