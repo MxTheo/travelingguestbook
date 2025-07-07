@@ -9,6 +9,14 @@ from usermanagement.models import Profile
 
 fake = Faker()
 
+class RegistrationFactory(factory.django.DjangoModelFactory):
+    """Mock for oogcontact Registration"""
+    class Meta:
+        model = 'oogcontact.Registration'
+    name         = factory.LazyFunction(fake.name)
+    email        = factory.LazyFunction(fake.email)
+    date_created = factory.LazyFunction(fake.date_time_this_year)
+    hasCanceled  = False
 
 class UserFactory(factory.django.DjangoModelFactory):
     '''Mock for django.contrib.auth User'''

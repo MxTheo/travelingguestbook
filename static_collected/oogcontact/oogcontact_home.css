@@ -1,0 +1,9 @@
+.img-thumbnail {
+    width: 36%;
+    max-width: 175px;
+}
+
+.jumbotron {
+    background-image: url('/static/images/girleyes.jpg');
+    background-size: contain;
+}

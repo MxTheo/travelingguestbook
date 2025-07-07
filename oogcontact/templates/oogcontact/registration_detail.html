@@ -1,0 +1,17 @@
+{% extends "oogcontact/oogcontact_main.html" %}
+{% load static %}
+{% block title %}
+Jouw aanmelding
+{% endblock title %}
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Bedankt voor je aanmelding</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ registration.name }}</h5>
+            <p class="card-text">Email: {{ registration.email }}</p>
+        </div>
+    </div>
+    <p class="mt-3">Je bent succesvol aangemeld. Je krijgt geen bevestigingsmail. Als je iets wilt aanpassen of wilt annuleren, kun je <a href='{% url "oogcontact_home" %}'>contact</a> met mij opnemen.</p>
+    <button onclick="window.history.back();" class="btn btn-secondary ms-4 mt-3" type="button">Terug</button>
+{% endblock content %}

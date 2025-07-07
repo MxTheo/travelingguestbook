@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'contact',
     'game',
+    'oogcontact',
 
         # Machina dependencies:
     'mptt',

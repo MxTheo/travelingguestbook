@@ -23,6 +23,7 @@ from machina import urls as machina_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('django.contrib.auth.urls')),
+    path('', include('oogcontact.urls')),
     path('', include('usermanagement.urls')),
     path('', include('contact.urls')),
     path('', include('sociablecreating.urls')),
