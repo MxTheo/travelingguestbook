@@ -5,6 +5,7 @@ class RegistrationForm(ModelForm):
     """Form for user registration."""
 
     class Meta:
+        '''Model form for the Registration model.'''
         model = Registration
         fields = ['name', 'email']
         labels = {
