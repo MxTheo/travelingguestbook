@@ -1,3 +1,4 @@
+{% load static %}
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark"
      aria-label="Third navbar example">
     <div class="container-fluid">
@@ -15,6 +16,12 @@
             <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                 <li class="nav-item">
                     <a class="nav-link" href='{% url "registration_create" %}'>Aanmelden</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='{% static "pdfs/agenda_oogcontact.pdf" %}'>PDF Opzet</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='{{ mailto_url }}'>Mail</a>
                 </li>
             </ul>
         </div>

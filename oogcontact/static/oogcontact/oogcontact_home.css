@@ -11,3 +11,9 @@
 .practicalinfo {
     top: 2rem;
 }
+
+.card {
+    font-weight: bold;
+    width: 80%;
+    margin-left: 10%;
+}
