@@ -18,7 +18,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-LOGIN_REDIRECT_URL  = "dashboard_sociable"
+LOGIN_REDIRECT_URL  = "chat"
 LOGOUT_REDIRECT_URL = "chat"
 
 # Quick-start development settings - unsuitable for production
@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django_extensions',
     'contact',
-    'game',
     'oogcontact',
 
         # Machina dependencies:

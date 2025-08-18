@@ -5,70 +5,24 @@ from travelingguestbook.helpers_test import create_logmessage
 from sociablecreating.models import LogMessage, Sociable
 
 
-class TestCreateSociable:
-    """Test class for the CreateView for Sociable"""
-
-    def test_if_owner_is_set(self, auto_login_user):
-        """Test if the owner is set when creating a sociable"""
-        client, _ = auto_login_user()
-        client.post(reverse("create-sociable"))
-        list_sociable = Sociable.objects.all()
-        assert list_sociable
-
-    def test_if_a_slug_of_5_chars_is_created(self, auto_login_user):
-        """Test if a slug is created of 5 chars, when creating a sociable"""
-        client, _ = auto_login_user()
-        client.post(reverse("create-sociable"))
-        sociable  = Sociable.objects.all()[0]
-        assert len(sociable.slug) == 7
-
-    def test_number_1(self, auto_login_user):
-        """Test if number 1 is set for the first sociable"""
-        client, _ = auto_login_user()
-        client.post(reverse("create-sociable"))
-        sociable  = Sociable.objects.all()[0]
-        assert sociable.number == 1
-
-    def test_number_3(self, auto_login_user):
-        """Test if number 3 is set for the third sociable"""
-        client, _ = auto_login_user()
-        for _ in range(3):
-            client.post(reverse("create-sociable"))
-        sociable  = Sociable.objects.all()[0]
-        assert sociable.number == 3
-
-    def test_number_with_delete_last(self, auto_login_user):
-        """Test if number 3 is set, when 3 are created, the last is deleted and then the sociable is created"""
-        client, _ = auto_login_user()
-        for _ in range(3):
-            client.post(reverse("create-sociable"))
-        slug = Sociable.objects.all()[0].slug
-        client.post(reverse("delete-sociable", args=[slug]))
-        client.post(reverse("create-sociable"))
-        sociable = Sociable.objects.all()[0]
-        assert sociable.number == 3
-
-    def test_number_with_delete_in_middle(self, auto_login_user):
-        """Test if number 3 is set, when 3 are created, the second is deleted and then the sociable is created"""
-        client, _ = auto_login_user()
-        for _ in range(3):
-            client.post(reverse("create-sociable"))
-        slug = Sociable.objects.all()[1].slug
-        client.post(reverse("delete-sociable", args=[slug]))
-        client.post(reverse("create-sociable"))
-        sociable = Sociable.objects.all()[0]
-        assert sociable.number == 4
-
-    def test_number_3_with_other_sociables(self, auto_login_user):
-        """Test if number 3 is set for the third sociable, when there are also other sociables"""
-        for _ in range(3):
-            SociableFactory()
-        client, _ = auto_login_user()
-        for _ in range(3):
-            client.post(reverse("create-sociable"))
-        sociable  = Sociable.objects.all()[0]
-        assert sociable.number == 3
-
+def test_create_sociable_view(client):
+    '''Test the create_sociable view to ensure it creates a Sociable object and redirects correctly.'''
+    url = reverse('create-sociable')  # pas aan naar jouw url name
+    
+    # Doe een POST request naar de view
+    response = client.post(url)
+    
+    # Check dat het antwoord een redirect is (statuscode 302)
+    assert response.status_code == 302
+    
+    # Check dat er een Sociable object is aangemaakt
+    assert Sociable.objects.exists()
+    
+    # Check dat de redirect locatie de detail url is van het gemaakte object
+    sociable = Sociable.objects.first()
+    assert len(sociable.slug) == 7  # Controleer of de slug correct is aangemaakt
+    expected_url = reverse('sociable', args=[sociable.slug])
+    assert response.url == expected_url
 
 class TestDeleteSociable:
     """Test user permissions for deleting a sociable"""
@@ -109,33 +63,12 @@ class TestCreateLogMessage:
         logmessage = create_logmessage(client, sociable)
         assert logmessage.sociable == sociable
 
-    def test_if_logged_in_user_is_set_as_user(self, auto_login_user):
-        """Logged in, tests if the user is set for the logmessage"""
-        client, user = auto_login_user()
-        logmessage   = create_logmessage(client)
-        assert logmessage.author == user
-
     def test_if_name_is_not_changed_with_anonymous_user(self, client):
         """Not logged in, tests if the name is not altered"""
         logmessage = create_logmessage(
             client, data={"name": "test-name", "body": "test-body"}
         )
         assert logmessage.name == "test-name"
-
-    def test_if_user_is_blank_with_anonymous_user(self, client):
-        """Not logged in, tests if the name is not altered"""
-        logmessage = create_logmessage(client)
-        assert logmessage.author is None
-
-    def test_if_username_is_filled_in_on_form(self, auto_login_user):
-        """Logged in, tests if the username is shown in the name field of the form"""
-        client, user = auto_login_user()
-        sociable         = SociableFactory()
-        url_logmessage_form = reverse("create-logmessage", args=[sociable.slug])
-        response = client.get(url_logmessage_form)
-        username = 'value="' + user.username
-        assert username in response.rendered_content
-
 
 class TestUpdateLogMessage:
     """Test user permissions for updating logmessage"""
@@ -163,7 +96,7 @@ class TestDetailSociable:
     def test_detail_page(self, client):
         """Test if the detailpage is reached"""
         sociable = SociableFactory(slug="test")
-        url      = reverse("detail-sociable", args=[sociable.slug])
+        url      = reverse("sociable", args=[sociable.slug])
         response = client.get(url)
 
         assert response.status_code == 200
@@ -173,6 +106,6 @@ def test_sociable_absolute_url_with_200(client):
     """Tests if the slug is used as absolute url of the sociable"""
     sociable     = SociableFactory()
     absolute_url = sociable.get_absolute_url()
-    assert absolute_url == "/c/" + str(sociable.slug)
+    assert absolute_url == "/c/" + str(sociable.slug)+'/'
     response     = client.get(absolute_url)
-    assert response.status_code == 302
+    assert response.status_code == 200

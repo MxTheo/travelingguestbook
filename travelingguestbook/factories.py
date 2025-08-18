@@ -32,8 +32,6 @@ class SociableFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Sociable
     slug   = factory.LazyFunction(fake.unique.postcode)
-    owner  = factory.SubFactory(UserFactory)
-    number = 1
 
 
 class LogMessageFactory(factory.django.DjangoModelFactory):
@@ -42,7 +40,6 @@ class LogMessageFactory(factory.django.DjangoModelFactory):
         model = LogMessage
     body         = factory.LazyFunction(fake.text)
     name         = factory.LazyFunction(fake.name)
-    author       = factory.SubFactory(UserFactory)
     sociable     = factory.SubFactory(SociableFactory)
     date_created = factory.LazyFunction(fake.date)
 
