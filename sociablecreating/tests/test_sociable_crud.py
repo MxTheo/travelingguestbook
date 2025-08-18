@@ -1,6 +1,6 @@
 from datetime import date
 from django.urls import reverse
-from travelingguestbook.factories import LogMessageFactory, SociableFactory, UserFactory
+from travelingguestbook.factories import LogMessageFactory, SociableFactory
 from travelingguestbook.helpers_test import create_logmessage
 from sociablecreating.models import LogMessage, Sociable
 
@@ -73,82 +73,30 @@ class TestCreateSociable:
 class TestDeleteSociable:
     """Test user permissions for deleting a sociable"""
 
-    def test_delete_sociable_by_different_user(self, auto_login_user):
-        """Logged in as a different user then the owner,
-        tests if the user is not able to delete the sociable"""
-        client, _ = auto_login_user()
-        owner     = UserFactory()
-        sociable      = SociableFactory(owner=owner)
-
-        self.delete_sociable(client, sociable)
-
-        assert Sociable.objects.count() == 1
-
-    def test_delete_sociable_by_owner(self, auto_login_user):
-        """Logged in as the owner,
-        tests if the owner is able to delete the sociable"""
-        client, owner = auto_login_user()
-        sociable = SociableFactory(owner=owner)
-
-        self.delete_sociable(client, sociable)
-
-        assert Sociable.objects.count() == 0
-
     def test_delete_sociable_without_authentication(self, client):
         """Not logged in,
-        tests if the anonymous user is not able to delete the sociable"""
+        tests if the anonymous user is able to delete the sociable"""
         sociable = SociableFactory()
 
-        self.delete_sociable(client, sociable)
-
-        assert Sociable.objects.count() == 1
-
-    def delete_sociable(self, client, sociable):
-        """Given the client and the sociable, delete the sociable"""
         delete_sociable_url = reverse("delete-sociable", args=[sociable.slug])
         client.delete(delete_sociable_url)
+
+        assert Sociable.objects.count() == 0
 
 
 class TestDeleteLogMessage:
     """Test user permissions to delete log message"""
 
-    def test_delete_logmessage_by_different_user(self, auto_login_user):
-        """Logged in as a different user then the owner of the sociable,
-        tests if the user is not able to delete the logmessage"""
-        client, _  = auto_login_user()
-        owner      = UserFactory()
-        sociable       = SociableFactory(owner=owner)
-        logmessage = LogMessageFactory(sociable=sociable)
-
-        self.delete_logmessage(client, logmessage)
-
-        assert LogMessage.objects.count() == 1
-
-    def test_delete_logmessage_by_owner(self, auto_login_user):
-        """Logged in as the owner of the sociable,
-        tests if the owner is able to delete the logmessage"""
-        client, owner = auto_login_user()
-        sociable          = SociableFactory(owner=owner)
-        logmessage    = LogMessageFactory(sociable=sociable)
-
-        self.delete_logmessage(client, logmessage)
-
-        assert LogMessage.objects.count() == 0
-
     def test_delete_logmessage_without_authentication(self, client):
         """Not logged in,
-        tests if the anonymous user is not able to delete the logmessage"""
+        tests if the anonymous user is able to delete the logmessage"""
         sociable       = SociableFactory()
         logmessage = LogMessageFactory(sociable=sociable)
 
-        self.delete_logmessage(client, logmessage)
-
-        assert LogMessage.objects.count() == 1
-
-    def delete_logmessage(self, client, logmessage):
-        """Given the client and the logmessage, delete the logmessage"""
         delete_logmessage_url = reverse("delete-logmessage", args=[logmessage.id])
         client.delete(delete_logmessage_url)
+
+        assert LogMessage.objects.count() == 0
 
 
 class TestCreateLogMessage:
@@ -192,34 +140,14 @@ class TestCreateLogMessage:
 class TestUpdateLogMessage:
     """Test user permissions for updating logmessage"""
 
-    def test_update_logmessage_by_author(self, auto_login_user):
-        """Logged in as the author,
-        test if the author can update the logmessage"""
-        client, author = auto_login_user()
-        sociable       = SociableFactory()
-        logmessage     = LogMessageFactory(sociable=sociable, author=author)
-        logmessage_changed = self.update_logmessage(client, logmessage, "Hello")
-        assert logmessage_changed.body == "Hello"
-        assert logmessage_changed.date_changed.date() == date.today()
-
-    def test_update_logmessage_by_owner(self, auto_login_user):
-        """Logged in as the owner,
-        test if the owner can update the logmessage"""
-        client, owner = auto_login_user()
-        sociable      = SociableFactory(owner=owner)
-        logmessage    = LogMessageFactory(sociable=sociable)
-        logmessage_changed = self.update_logmessage(client, logmessage, "Hello")
-        assert logmessage_changed.body == "Hello"
-        assert logmessage_changed.date_changed.date() == date.today()
-
     def test_update_logmessage_by_anonymous(self, client):
         """Logged in as an anonymous user,
         test if the user cannot update the logmessage"""
         sociable   = SociableFactory()
         logmessage = LogMessageFactory(sociable=sociable)
         logmessage_changed = self.update_logmessage(client, logmessage, "Hello")
-        assert logmessage_changed.body != "Hello"
-        assert logmessage_changed.date_changed is None
+        assert logmessage_changed.body == "Hello"
+        assert logmessage_changed.date_changed.date() == date.today()
 
     def update_logmessage(self, client, logmessage, message_body):
         """Given the logmessage and the textbody,

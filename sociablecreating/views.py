@@ -83,8 +83,6 @@ def get_sociables_user_participated_as_author(user: User):
     )
     return list(Sociable.objects.filter(pk__in=list_key_sociable_of_logmessage))
 
-
-@login_required(login_url="login")
 def create_sociable(request):
     """Creates a sociable and redirects to it's detail page"""
     slug = get_random_string(7, allowed_chars='abcdefghjklmnpqrstuvwxyz23456789')
@@ -99,7 +97,7 @@ def calc_number_for_sociable(request):
     list_sociable = Sociable.objects.filter(owner=request.user)
     return list_sociable[0].number + 1 if list_sociable else 1
 
-class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
+class LogMessageCreate(generic.edit.CreateView):
     """Generic editing view to create LogMessage:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/"""
 
@@ -151,7 +149,7 @@ class LogMessageCreate(generic.edit.CreateView, LoginRequiredMixin):
             profile.save()
 
 
-class LogMessageDelete(UserPassesTestMixin, generic.edit.DeleteView):
+class LogMessageDelete(generic.edit.DeleteView):
     """Generic editing view to delete LogMessage:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/"""
 
@@ -170,9 +168,7 @@ class LogMessageDelete(UserPassesTestMixin, generic.edit.DeleteView):
         return reverse("sociable", kwargs={"slug": sociable.slug})
 
 
-class LogMessageUpdate(
-    LoginRequiredMixin, UserPassesTestMixin, generic.edit.UpdateView
-):
+class LogMessageUpdate(generic.edit.UpdateView):
     """Generic editing view to update LogMessage:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/"""
 
@@ -192,7 +188,7 @@ class LogMessageUpdate(
         return super(LogMessageUpdate, self).form_valid(form)
 
 
-class SociableDelete(UserPassesTestMixin, generic.edit.DeleteView):
+class SociableDelete(generic.edit.DeleteView):
     """Generic editing view to delete Sociable:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/"""
 

@@ -10,40 +10,8 @@ Nieuw bericht
         {% csrf_token %}
         {% load crispy_forms_tags %}
         {{ form|crispy }}
-        {% if not user.is_authenticated %}
-          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirm">
-              Verzend
-          </button>
-        {% else %}
-          <input class="btn btn-success" type="submit" value="Verzend"/>
-        {% endif %}
-
-          
-        <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
-
-        <div class="modal fade" id="confirm" aria-labelledby="confirm" >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title">Bevestig</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true"></span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                <p>Berichten kunnen niet meer aangepast worden, nadat zij geplaatst zijn. Alleen de eigenaar van de code kan berichten verwijderen.</p>
-                <p>Weet je zeker dat je dit bericht wilt plaatsen?</p>
-              </div>
-              <div class="modal-footer justify-content-center">
-                  <input class="btn btn-success" type="submit" value="Verzend"/>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluit</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-          
-
+          <input class="btn btn-success" type="submit" value="Verzend"/>     
+          <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
     </form>
 </div>
 {% endblock content %}
