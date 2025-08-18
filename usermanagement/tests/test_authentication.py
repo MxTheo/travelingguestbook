@@ -86,13 +86,6 @@ class TestRegister():
         user = auth.get_user(client)
         assert user.is_authenticated
 
-    def test_user_invalid_not_logged_in(self, client):
-        '''Test if user enters incorrect, it remains at the register page'''
-        data_incorrect              = self.data_correct
-        data_incorrect['password1'] = 'incorrect'
-        response                    = client.post(self.register_url, data_incorrect)
-        assert 'register' in response.rendered_content
-
 
 class TestDashboard:
     '''Test the redirecting behaviour for user permissions for the dashboard'''

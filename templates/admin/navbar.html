@@ -1,7 +1,7 @@
 <header>
 <nav class="navbar navbar-expand-sm navbar-dark bg-primary text-center mb-0 pb-0">
   <div class="container-fluid mb-2">
-    <a class="navbar-brand" href={% url "home" %}>
+    <a class="navbar-brand" href={% url "chat" %}>
       Bedankt</br>voor het contact
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,39 +10,15 @@
 
     <div class="collapse navbar-collapse" id="mainmenu">
       <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
-        <a class="nav-link" href={% url "forum:index" %}>Forum</a>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Info</a>
-          <ul class="dropdown-menu {% if not user.is_authenticated and request.path == '/' %}dropdown-menu-end {% endif %}open-left" aria-labelledby="dropdown03">
-            <li><a class="dropdown-item" href="{% url "help" %}">Help</a></li>
-            <li><a class="dropdown-item" href="{% url "about" %}">Over mij</a></li>
-            <li><a class="dropdown-item" href="{% url "contact" %}">Contact</a></li>
-          </ul>
-        </li>
-        
-        {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url "dashboard_sociable" %}">Dashboard</a>
+          <a class="nav-link" href="{% url "help" %}">Help</a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i> {{ user.username }}</a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown03">
-            <li><a class="dropdown-item" href="{% url "profile" user.username %}">Mijn Profiel</a></li>
-            <li><a class="dropdown-item" href="{% url "editaccount" %}">Edit Account</a></li>
-            <li><form method="post" action="{% url "logout" %}">{% csrf_token %}
-              <button class="dropdown-item" type="submit">Logout</button>
-            </form></li>
-          </ul>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url "about" %}">Over mij</a>
         </li>
-
-        
-        {% else %}
-        {% if request.path != '/' %}
-        <li class="nav-item"><a class="nav-link" href="{% url "login" %}">Login</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url "register" %}">Register</a></li>
-        {% endif %}
-        {% endif %}
-        
+        <li class="nav-item">
+          <a class="nav-link" href="{% url "contact" %}">Contact</a>
+        </li>
       </ul>
     </div>
   </div>

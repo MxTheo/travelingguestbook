@@ -3,29 +3,9 @@
 {% block content %}
 <main class="px-3 mt-5">
   <div class="container">
-    <h1>Ieder gesprek is belangrijk om aangeknoopt te worden</h1>
+    <h1>Maak een chat aan, deel de link en begin het gesprek!</h1>
     <hr>
-    <h4>Zeg hallo of bedankt, kan ook anoniem</h4>
-    {% load crispy_forms_tags %}
-    <form class="form-control-lg mb-5" method="get" action={% url "search-sociable" %} >
-      <div class="container">
-        <label class="col-form-label col-form-label-lg mt-2" for="inputLarge"><b>Vul code in:</b></label>
-        <div class="row mx-auto justify-content-center">
-          <div class="col-auto">
-            <input class="form-control form-control-lg mx-auto text-monospace" type="text" placeholder="..." id="inputLarge" name="search-code" aria-label="SearchCode">
-          </div>
-          <div class="col-auto mt-1">
-            <input class="btn btn-primary" type="submit" value="Zoek" />
-          </div>
-        </div>
-      </div>
-    </form>
-    <div class="container text-start">
-      <p>Bedanktvoorhetcontact is bedoeld om je te helpen oefenen met vreemden in contact te komen, zoals op straat of in de trein.
-      </p>
-      <p>Ondanks ik het ook spannend vind, ervaar ik veel plezier door te praten met vreemden. Wat ik kan, dat kan jij ook. Kletspraatjes kunnen maken met vreemden is een verrijking van je leven.
-      </p>
-      </div>
+        <a href="{% url "create-sociable" %}" class="btn btn-primary btn-lg w-50 py-4"><b>Start Chat</b></a>
   </div>
 </main>
 {% endblock content %}

@@ -13,7 +13,7 @@ from .models import LogMessage, Sociable
 
 
 def home(request):
-    """Renders the homepage"""
+    """Renders the homepage of the sociablecreating app"""
     return render(request, "sociablecreating/index.html")
 
 
