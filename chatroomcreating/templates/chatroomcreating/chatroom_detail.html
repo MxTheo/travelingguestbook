@@ -1,0 +1,75 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+ChatRoom Detail
+{% endblock title %}
+{% block stylesheet %}
+<link href={% static "chatroomcreating/styles/triangle.css" %} rel="stylesheet" >
+{% endblock stylesheet %}
+{% block content %}
+
+<div class="container mt-4">
+  <div>
+    <h1 id="tekstOmTeKopieren" class="border-bottom pb-2 font-monospace">{{ request.get_host }}/c/{{ chatroom.slug }}</h1>
+
+    <div class="justify-content-between d-flex align-items-center mb-3">
+        <a class="btn btn-outline-danger" href={% url "delete-chatroom" chatroom.slug %}><i class="bi bi-trash3-fill"></i></a>
+        <button
+  class="btn btn-secondary"
+  tabindex="0"
+  onClick="copyText()"
+  onKeyDown="if(event.key === 'Enter' || event.key === ' ') { copyText(); event.preventDefault(); }"
+>
+  Kopieer url <i class="bi bi-copy"></i> 
+</button>
+      <small>Aangemaakt op {{ chatroom.date_created |date:"d-M-y" }}</small>
+    </div>
+  </div>
+  <div class="flex-container d-flex justify-content-end mb-2">
+    <a class="btn btn-info btn-lg" href={% url "create-chatmessage" chatroom %}><b>Bericht <i class="bi bi-chat-right-text-fill ms-2"></i></b></a>
+  </div>
+</div>
+<div class="d-none d-sm-block mx-2">
+  <ul class="list-group bg-dark py-5">
+    {% for chatmessage in chatroom.chatmessage_set.all %}
+      <li class="list-group-item bg-dark border-0">
+        {% if forloop.counter|divisibleby:"2" %}
+          <div class="row justify-content-start mt-2 mb-1">
+            <div class="col-auto">
+              <div class="position-absolute bottom-50 translate-middle-y triangle-left"></div>
+            </div>
+            <div class="col-8 col-sm-7 col-md-5">
+              {% include "chatroomcreating/chat_message.html" %}
+            </div>
+          </div>
+        {% else %}
+          <div class="row justify-content-end mt-2 mb-1">
+            <div class="col-9 col-sm-7 col-md-5 g-0">
+              {% include "chatroomcreating/chat_message.html" %}
+            </div>
+            <div class="col-1 g-0">
+              <div class="position-absolute bottom-50 translate-middle-y triangle-right"></div>
+            </div>
+          </div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="d-sm-none bg-dark py-3">
+  {% for chatmessage in chatroom.chatmessage_set.all %}
+  <div class="container mb-4 fs-5">
+    {% include "chatroomcreating/chat_message.html" %}
+  </div>
+  {% endfor %}
+</div>
+<script>
+function copyText() {
+    const tekst = document.getElementById("tekstOmTeKopieren").innerText;
+    navigator.clipboard.writeText(tekst).then(() => {
+        alert("Tekst gekopieerd!");
+    });
+}
+</script>
+{% endblock content %}

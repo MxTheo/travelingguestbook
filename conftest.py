@@ -4,8 +4,8 @@ from pytest_factoryboy import register
 from travelingguestbook import factories
 
 register(factories.UserFactory)
-register(factories.SociableFactory)
-register(factories.LogMessageFactory)
+register(factories.ChatRoomFactory)
+register(factories.ChatMessageFactory)
 
 
 @pytest.fixture(autouse=True)

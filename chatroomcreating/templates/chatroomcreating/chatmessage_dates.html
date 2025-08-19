@@ -1,0 +1,9 @@
+{% load static %}
+<div class="col-auto">
+    <small class="text-light-emphasis">
+      {{ chatmessage.date_created | date:"d-m" }}
+      {% if chatmessage.date_changed|date:"d-m" > chatmessage.date_created|date:"d-m" %}
+        <i class="bi bi-pencil-fill ms-4"></i> {{ chatmessage.date_changed | date:"d-m" }}
+      {% endif %}
+    </small>
+  </div>

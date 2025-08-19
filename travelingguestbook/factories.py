@@ -4,7 +4,7 @@ to be able to mock the objects in tests"""
 import factory
 from faker import Faker
 from django.contrib.auth.models import User
-from sociablecreating.models import Sociable, LogMessage
+from chatroomcreating.models import ChatRoom, ChatMessage
 from usermanagement.models import Profile
 
 fake = Faker()
@@ -27,20 +27,20 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = factory.LazyFunction(fake.unique.password)
 
 
-class SociableFactory(factory.django.DjangoModelFactory):
-    '''Mock for sociablecreating Sociable'''
+class ChatRoomFactory(factory.django.DjangoModelFactory):
+    '''Mock for chatroomcreating ChatRoom'''
     class Meta:
-        model = Sociable
+        model = ChatRoom
     slug   = factory.LazyFunction(fake.unique.postcode)
 
 
-class LogMessageFactory(factory.django.DjangoModelFactory):
-    '''Mock for sociablecreation LogMessage'''
+class ChatMessageFactory(factory.django.DjangoModelFactory):
+    '''Mock for chatroomcreation ChatMessage'''
     class Meta:
-        model = LogMessage
+        model = ChatMessage
     body         = factory.LazyFunction(fake.text)
     name         = factory.LazyFunction(fake.name)
-    sociable     = factory.SubFactory(SociableFactory)
+    chatroom     = factory.SubFactory(ChatRoomFactory)
     date_created = factory.LazyFunction(fake.date)
 
 

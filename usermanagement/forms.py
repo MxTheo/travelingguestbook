@@ -9,12 +9,12 @@ class RegisterForm(UserCreationForm):
 
     first_name = forms.CharField(
         max_length=100,
-        help_text="Not required. If not entered, then your username will be displayed on your sociable pages",
+        help_text="Not required. If not entered, then your username will be displayed on your chatroom pages",
         required=False,
     )
     last_name  = forms.CharField(
         max_length=100,
-        help_text="Not required. It is optional, so that your name will be displayed on your sociable pages",
+        help_text="Not required. It is optional, so that your name will be displayed on your chatroom pages",
         required=False,
     )
     email      = forms.EmailField(

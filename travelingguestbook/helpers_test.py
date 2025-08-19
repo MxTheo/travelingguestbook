@@ -1,6 +1,6 @@
 from django.urls import reverse
-from sociablecreating.models import LogMessage
-from travelingguestbook.factories import SociableFactory
+from chatroomcreating.models import ChatMessage
+from travelingguestbook.factories import ChatRoomFactory
 
 
 def helper_test_page_rendering(client, name_of_page, keyword_arguments=None):
@@ -11,13 +11,13 @@ def helper_test_page_rendering(client, name_of_page, keyword_arguments=None):
     assert response.status_code == 200
 
 
-def create_logmessage(client, sociable=None, data=None):
-    '''Given the client and optional data for the sociable,
-    creates a logmessage using the CreateView for unittesting purposes'''
-    if sociable is None:
-        sociable = SociableFactory()
+def create_chatmessage(client, chatroom=None, data=None):
+    '''Given the client and optional data for the chatroom,
+    creates a chatmessage using the CreateView for unittesting purposes'''
+    if chatroom is None:
+        chatroom = ChatRoomFactory()
     if data is None:
-        data = {'name': 'create_logmessage', 'body': 'create_logmessage'}
-    url_create = reverse('create-logmessage', args=[sociable.slug])
+        data = {'name': 'create_chatmessage', 'body': 'create_chatmessage'}
+    url_create = reverse('create-chatmessage', args=[chatroom.slug])
     client.post(url_create, data=data)
-    return LogMessage.objects.filter(sociable=sociable)[0]
+    return ChatMessage.objects.filter(chatroom=chatroom)[0]
