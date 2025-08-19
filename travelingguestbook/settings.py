@@ -37,7 +37,6 @@ CSRF_TRUSTED_ORIGINS = ['https://www.bedanktvoorhetcontact.nl']
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
-    'usermanagement',
     'chatroomcreating',
     'crispy_forms',
     'crispy_bootstrap5',

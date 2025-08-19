@@ -1,1 +1,0 @@
-'''Followed the tutorial: https://djangostars.com/blog/django-pytest-testing/'''

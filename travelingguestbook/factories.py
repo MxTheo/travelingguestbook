@@ -5,7 +5,6 @@ import factory
 from faker import Faker
 from django.contrib.auth.models import User
 from chatroomcreating.models import ChatRoom, ChatMessage
-from usermanagement.models import Profile
 
 fake = Faker()
 
@@ -42,12 +41,3 @@ class ChatMessageFactory(factory.django.DjangoModelFactory):
     name         = factory.LazyFunction(fake.name)
     chatroom     = factory.SubFactory(ChatRoomFactory)
     date_created = factory.LazyFunction(fake.date)
-
-
-class ProfileFactory(factory.django.DjangoModelFactory):
-    '''Mock for usermanagement Profile '''
-    class Meta:
-        model = Profile
-    user                        = factory.SubFactory(UserFactory)
-    location                    = factory.LazyFunction(fake.city)
-    custom_description_for_code = factory.LazyFunction(fake.text)
