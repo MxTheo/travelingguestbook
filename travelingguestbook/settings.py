@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from machina import MACHINA_MAIN_TEMPLATE_DIR, MACHINA_MAIN_STATIC_DIR
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -50,24 +49,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'contact',
     'oogcontact',
-
-        # Machina dependencies:
-    'mptt',
-    'haystack',
-    'widget_tweaks',
-
-    # Machina apps:
-    'machina',
-    'machina.apps.forum',
-    'machina.apps.forum_conversation',
-    'machina.apps.forum_conversation.forum_attachments',
-    'machina.apps.forum_conversation.forum_polls',
-    'machina.apps.forum_feeds',
-    'machina.apps.forum_moderation',
-    'machina.apps.forum_search',
-    'machina.apps.forum_tracking',
-    'machina.apps.forum_member',
-    'machina.apps.forum_permission',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
@@ -81,7 +62,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
 ]
 
 ROOT_URLCONF = 'travelingguestbook.urls'
@@ -93,8 +73,6 @@ TEMPLATES = [
         'APP_DIRS': True,
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
-            os.path.join(BASE_DIR, 'machina_custom/templates/machina_custom'),
-            MACHINA_MAIN_TEMPLATE_DIR,
             ],
         'OPTIONS': {
             'context_processors': [
@@ -102,7 +80,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'machina.core.context_processors.metadata',
             ],
         },
     },
@@ -159,7 +136,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    MACHINA_MAIN_STATIC_DIR,
 ]
 STATIC_ROOT = BASE_DIR / 'static_collected'
 
@@ -172,10 +148,6 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     },
-    'machina_attachments': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/tmp',
-    },
 }
 
 HAYSTACK_CONNECTIONS = {
@@ -183,22 +155,3 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
-
-MACHINA_FORUM_NAME = "Forum"
-
-MACHINA_DEFAULT_AUTHENTICATED_USER_FORUM_PERMISSIONS = [
-    'can_see_forum',
-    'can_read_forum',
-    'can_start_new_topics',
-    'can_reply_to_topics',
-    'can_edit_own_posts',
-    'can_post_without_approval',
-    'can_create_polls',
-    'can_vote_in_polls',
-    'can_download_file',
-]
-
-# EMAIL
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'info@travelingguestbook.com'
-NOTIFY_EMAIL = 'info@travelingguestbook.com'
