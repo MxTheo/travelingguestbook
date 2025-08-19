@@ -14,7 +14,7 @@ def home(request):
 
 def create_chatroom(request):
     """Creates a chatroom and redirects to it's detail page"""
-    slug = get_random_string(7, allowed_chars='abcdefghjklmnpqrstuvwxyz23456789')
+    slug = get_random_string(21, allowed_chars='abcdefghjklmnpqrstuvwxyz23456789')
     chatroom = ChatRoom(slug=slug)
     chatroom.save()
     return redirect(reverse("chatroom", args=[chatroom.slug]))
@@ -40,8 +40,8 @@ class ChatMessageCreate(generic.edit.CreateView):
         return super(ChatMessageCreate, self).form_valid(form)
 
     def set_chatroom(self, form):
-        """Given the log message and the chatroom slug from the context,
-        sets the chatroom relationship for the created log message"""
+        """Given the chatmessage and the chatroom slug from the context,
+        sets the chatroom relationship for the created chatmessage"""
         slug = super().get_context_data()["view"].kwargs["slug"]
         chatroom = ChatRoom.objects.get(slug=slug)
         form.instance.chatroom = chatroom

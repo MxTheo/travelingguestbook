@@ -7,7 +7,7 @@ class ChatRoom(models.Model):
 
     slug         = models.SlugField(
         verbose_name="Code om de chatroom te kunnen vinden",
-        max_length=8,
+        max_length=22,
         unique=True,
         editable=False,
     )

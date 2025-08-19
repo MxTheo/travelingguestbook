@@ -20,7 +20,7 @@ def test_create_chatroom_view(client):
     
     # Check dat de redirect locatie de detail url is van het gemaakte object
     chatroom = ChatRoom.objects.first()
-    assert len(chatroom.slug) == 7  # Controleer of de slug correct is aangemaakt
+    assert len(chatroom.slug) == 21  # Controleer of de slug correct is aangemaakt
     expected_url = reverse('chatroom', args=[chatroom.slug])
     assert response.url == expected_url
 
@@ -39,7 +39,7 @@ class TestDeleteChatRoom:
 
 
 class TestDeleteChatMessage:
-    """Test user permissions to delete log message"""
+    """Test user permissions to delete chatmessage"""
 
     def test_delete_chatmessage_without_authentication(self, client):
         """Not logged in,
