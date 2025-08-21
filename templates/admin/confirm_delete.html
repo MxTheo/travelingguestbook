@@ -5,7 +5,7 @@ Bevestig verwijderen
 {% block content %}
 <form method='post'>
     {% csrf_token %}
-    <fieldset class="form-group mb-3">
+    <fieldset class="form-group mt-5">
         <legend class="border-bottom mb-4">Verwijder {{ object }}</legend>
         <h2>Weet je zeker dat je '{{ object }}' wilt verwijderen?</h2>
     </fieldset>

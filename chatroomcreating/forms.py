@@ -14,7 +14,7 @@ class ChatMessageForm(ModelForm):
             "body": Textarea(
                 attrs={
                     "rows": 3,
-                    "placeholder": "Schrijf over je ervaringen. Alleen hallo wordt ook gewaardeerd",
+                    "placeholder": "Schrijf hier je bericht",
                 }
             ),
             "nonce": HiddenInput(),

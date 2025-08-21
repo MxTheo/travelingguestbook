@@ -47,7 +47,7 @@ class ChatMessage(models.Model):
     body      = models.TextField(
         max_length=3000,
         verbose_name="Bericht",
-        help_text="Schrijf over je ervaringen. Alleen hallo wordt ook gewaardeerd",
+        help_text="Schrijf hier je bericht. Maximaal 3000 karakters",
         default="Hallo"
     )
     nonce = models.CharField(max_length=64)
@@ -73,7 +73,7 @@ class ChatMessage(models.Model):
         """After entering a message,
         the visitor is redirected towards the chatroom detail page"""
         return reverse("chatroom", kwargs={"slug": self.chatroom.slug})
-    
+
     @property
     def decrypted_body(self):
         """Decrypt the body of the message using the secret key and nonce"""

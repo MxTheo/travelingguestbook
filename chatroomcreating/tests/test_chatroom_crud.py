@@ -7,20 +7,16 @@ from chatroomcreating.models import ChatMessage, ChatRoom
 
 def test_create_chatroom_view(client):
     '''Test the create_chatroom view to ensure it creates a ChatRoom object and redirects correctly.'''
-    url = reverse('create-chatroom')  # pas aan naar jouw url name
-    
-    # Doe een POST request naar de view
+    url = reverse('create-chatroom')
+
     response = client.post(url)
-    
-    # Check dat het antwoord een redirect is (statuscode 302)
+
     assert response.status_code == 302
-    
-    # Check dat er een ChatRoom object is aangemaakt
+
     assert ChatRoom.objects.exists()
-    
-    # Check dat de redirect locatie de detail url is van het gemaakte object
+
     chatroom = ChatRoom.objects.first()
-    assert len(chatroom.slug) == 21  # Controleer of de slug correct is aangemaakt
+    assert len(chatroom.slug) == 21
     expected_url = reverse('chatroom', args=[chatroom.slug])
     assert response.url == expected_url
 
@@ -39,9 +35,9 @@ def test_chatroom_secret_key_is_unique(client):
     url = reverse('create-chatroom')
     client.post(url)
     chatroom = ChatRoom.objects.first()
-    # Create another chatroom to check if the secret key is different
+
     client.post(url)
-    chatroom2 = ChatRoom.objects.first()  # Uncomment if you want to check
+    chatroom2 = ChatRoom.objects.first()
     assert chatroom.secret_key != chatroom2.secret_key
 
 class TestDeleteChatRoom:
@@ -110,6 +106,6 @@ def test_chatroom_absolute_url_with_200(client):
     """Tests if the slug is used as absolute url of the chatroom"""
     chatroom     = ChatRoomFactory()
     absolute_url = chatroom.get_absolute_url()
-    assert absolute_url == "/c/" + str(chatroom.slug)+'/'
+    assert absolute_url == "/" + str(chatroom.slug)
     response     = client.get(absolute_url)
     assert response.status_code == 200
