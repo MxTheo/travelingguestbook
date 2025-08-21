@@ -1,0 +1,27 @@
+.card.resultslist {
+  margin-bottom: 6px;
+}
+.card.resultslist .card-body {
+  padding: 0;
+}
+.card.resultslist .card-body table.table {
+  margin: 0 auto;
+}
+.card.resultslist .card-body table.table td {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  vertical-align: middle !important;
+}
+.card.resultslist .card-body table.table td.post-name {
+  width: 40%;
+}
+.card.resultslist .card-body table.table td.post-content {
+  width: 60%;
+}
+.card.resultslist .card-body .post-name .post-created {
+  font-size: 11px;
+  color: #666;
+}
+.card.resultslist .card-body .post-content .highlighted {
+  font-weight: bold;
+}/*# sourceMappingURL=search.css.map */

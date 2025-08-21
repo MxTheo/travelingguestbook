@@ -1,4 +1,4 @@
-from datetime import date
+import base64
 from django.urls import reverse
 from travelingguestbook.factories import ChatMessageFactory, ChatRoomFactory
 from travelingguestbook.helpers_test import create_chatmessage
@@ -23,6 +23,26 @@ def test_create_chatroom_view(client):
     assert len(chatroom.slug) == 21  # Controleer of de slug correct is aangemaakt
     expected_url = reverse('chatroom', args=[chatroom.slug])
     assert response.url == expected_url
+
+def test_chatroom_generates_secret_key(client):
+    """Test if the chatroom generates a secret key upon creation."""
+    url = reverse('create-chatroom')
+    client.post(url)
+    chatroom = ChatRoom.objects.first()
+    assert chatroom.secret_key is not None
+    assert isinstance(chatroom.secret_key, str)
+    decoded_key = base64.b64decode(chatroom.secret_key)
+    assert len(decoded_key) == 32  # Check if the key is 32 bytes
+
+def test_chatroom_secret_key_is_unique(client):
+    """Test if the secret key is unique for each chatroom."""
+    url = reverse('create-chatroom')
+    client.post(url)
+    chatroom = ChatRoom.objects.first()
+    # Create another chatroom to check if the secret key is different
+    client.post(url)
+    chatroom2 = ChatRoom.objects.first()  # Uncomment if you want to check
+    assert chatroom.secret_key != chatroom2.secret_key
 
 class TestDeleteChatRoom:
     """Test user permissions for deleting a chatroom"""
@@ -59,35 +79,19 @@ class TestCreateChatMessage:
     def test_message_chatroom_relationship_set(self, client):
         """Given a chatroom and creating a chatmessage,
         tests if the chatroom relationship is set"""
-        chatroom       = ChatRoomFactory()
+        chatroom    = ChatRoomFactory()
         chatmessage = create_chatmessage(client, chatroom)
         assert chatmessage.chatroom == chatroom
 
-    def test_if_name_is_not_changed_with_anonymous_user(self, client):
-        """Not logged in, tests if the name is not altered"""
-        chatmessage = create_chatmessage(
-            client, data={"name": "test-name", "body": "test-body"}
-        )
-        assert chatmessage.name == "test-name"
-
-class TestUpdateChatMessage:
-    """Test user permissions for updating chatmessage"""
-
-    def test_update_chatmessage_by_anonymous(self, client):
+    def test_create_chatmessage_by_anonymous(self, client):
         """Logged in as an anonymous user,
-        test if the user cannot update the chatmessage"""
-        chatroom   = ChatRoomFactory()
-        chatmessage = ChatMessageFactory(chatroom=chatroom)
-        chatmessage_changed = self.update_chatmessage(client, chatmessage, "Hello")
-        assert chatmessage_changed.body == "Hello"
-        assert chatmessage_changed.date_changed.date() == date.today()
-
-    def update_chatmessage(self, client, chatmessage, message_body):
-        """Given the chatmessage and the textbody,
-        change the message_body"""
-        url_update = reverse("update-chatmessage", args=[chatmessage.id])
-        client.post(url_update, data={"body": message_body, "name": chatmessage.name})
-        return ChatMessage.objects.get(id=chatmessage.id)
+        test if the user can create a chatmessage"""
+        chatroom = ChatRoomFactory()
+        chatmessage = create_chatmessage(client, chatroom)
+        assert chatmessage.body == "create_chatmessage"
+        assert chatmessage.name == "create_chatmessage"
+        assert chatmessage.chatroom == chatroom
+        assert chatmessage.nonce == "dGVzdG5vbmNl"
 
 
 class TestDetailChatRoom:

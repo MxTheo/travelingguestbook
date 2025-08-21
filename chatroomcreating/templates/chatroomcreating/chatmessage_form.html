@@ -5,6 +5,8 @@ Nieuw bericht
 {% block content %}
 {% load static %}
 {% block stylesheet %}<link href="{% static "styles/form.css" %}" rel="stylesheet" >{% endblock stylesheet %}
+
+
 <div class="container mt-4">
     <form method="post" action="">
         {% csrf_token %}
@@ -14,4 +16,9 @@ Nieuw bericht
           <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
     </form>
 </div>
+<script>
+  window.keyBase64 = "{{ chatroom.secret_key|escapejs }}";
+</script>
+<script src="{% static 'js/bundle.js' %}"></script>
+
 {% endblock content %}

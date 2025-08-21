@@ -1,0 +1,7 @@
+.a-chatroom:link{
+  text-decoration: none;
+}
+  
+.chatroom-card:hover {
+  box-shadow: 3px 3px 3px var(--bs-primary);
+}

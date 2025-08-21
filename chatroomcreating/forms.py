@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Textarea, TextInput
+from django.forms import HiddenInput, ModelForm, Textarea, TextInput
 from .models import ChatMessage
 
 
@@ -8,7 +8,7 @@ class ChatMessageForm(ModelForm):
     class Meta:
         """Fields present on the form and extra that needs to be shown on the page"""
         model   = ChatMessage
-        fields  = ["name", "body"]
+        fields  = ["name", "body", "nonce"]
         widgets = {
             "name": TextInput(attrs={"placeholder": "Anoniem"}),
             "body": Textarea(
@@ -17,4 +17,5 @@ class ChatMessageForm(ModelForm):
                     "placeholder": "Schrijf over je ervaringen. Alleen hallo wordt ook gewaardeerd",
                 }
             ),
+            "nonce": HiddenInput(),
         }

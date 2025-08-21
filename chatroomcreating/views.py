@@ -1,5 +1,5 @@
-from django.utils import timezone
-from django.forms import BaseModelForm
+import base64
+import os
 from django.shortcuts import redirect, render
 from django.views import generic
 from django.urls import reverse, reverse_lazy
@@ -15,7 +15,9 @@ def home(request):
 def create_chatroom(request):
     """Creates a chatroom and redirects to it's detail page"""
     slug = get_random_string(21, allowed_chars='abcdefghjklmnpqrstuvwxyz23456789')
-    chatroom = ChatRoom(slug=slug)
+    key = os.urandom(32)
+    key = base64.b64encode(key).decode()
+    chatroom = ChatRoom(slug=slug, secret_key=key)
     chatroom.save()
     return redirect(reverse("chatroom", args=[chatroom.slug]))
 
@@ -26,25 +28,21 @@ class ChatMessageCreate(generic.edit.CreateView):
     form_class = ChatMessageForm
     model = ChatMessage
 
-    def get_initial(self):
-        """If logged in, the username is entered as initial value of name"""
-        initial = super().get_initial()
-        user = self.request.user
-        if not user.is_anonymous:
-            initial["name"] = user.username
-        return initial
+    def dispatch(self, request, *args, **kwargs):
+        '''Override dispatch to get the chatroom from the URL slug. And save at self.chatroom'''
+        self.chatroom = ChatRoom.objects.get(slug=self.kwargs["slug"])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["chatroom"] = self.chatroom
+        return context
+
 
     def form_valid(self, form):
-        """After the form is valid, set the relationships"""
-        self.set_chatroom(form)
-        return super(ChatMessageCreate, self).form_valid(form)
-
-    def set_chatroom(self, form):
-        """Given the chatmessage and the chatroom slug from the context,
-        sets the chatroom relationship for the created chatmessage"""
-        slug = super().get_context_data()["view"].kwargs["slug"]
-        chatroom = ChatRoom.objects.get(slug=slug)
-        form.instance.chatroom = chatroom
+        '''Link the chatroom to the message'''
+        form.instance.chatroom = self.chatroom
+        return super().form_valid(form)
 
 class ChatMessageDelete(generic.edit.DeleteView):
     """Generic editing view to delete ChatMessage:
@@ -58,18 +56,6 @@ class ChatMessageDelete(generic.edit.DeleteView):
         chatroom = chatmessage.chatroom
         return reverse("chatroom", kwargs={"slug": chatroom.slug})
 
-
-class ChatMessageUpdate(generic.edit.UpdateView):
-    """Generic editing view to update ChatMessage:
-    https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/"""
-
-    model = ChatMessage
-    form_class = ChatMessageForm
-
-    def form_valid(self, form: BaseModelForm):
-        """Set the date changed to today"""
-        form.instance.date_changed = timezone.now()
-        return super(ChatMessageUpdate, self).form_valid(form)
 
 class ChatRoomDelete(generic.edit.DeleteView):
     """Generic editing view to delete ChatRoom:
