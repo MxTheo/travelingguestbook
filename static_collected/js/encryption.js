@@ -1,3 +1,5 @@
+import * as sodium from "https://cdn.jsdelivr.net/npm/libsodium-wrappers@0.7.15/dist/modules/libsodium-wrappers.min.js";
+
 async function encryptMessage(message, key) {
   await sodium.ready;
   const nonce = sodium.randombytes_buf(sodium.crypto_secretbox_NONCEBYTES);
