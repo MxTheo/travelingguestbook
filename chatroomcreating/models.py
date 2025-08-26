@@ -38,12 +38,6 @@ class ChatMessage(models.Model):
     """The message the receiver of the chatroom leaves on the chatroom page"""
 
     chatroom  = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
-    name      = models.CharField(
-        max_length=70,
-        blank=True,
-        verbose_name="Je (voor)naam",
-        help_text="Een naam geeft al context. Niet verplicht. Anoniem kan ook",
-    )
     body      = models.TextField(
         max_length=3000,
         verbose_name="Bericht",

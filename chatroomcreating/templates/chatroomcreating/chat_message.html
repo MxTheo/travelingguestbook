@@ -1,9 +1,6 @@
 {% load static %}
 {% with user=request.user %}
   <div class="card rounded-4 bg-white h-100">
-    <div class="card-header bg-transparent border-1 d-flex justify-content-center align-items-center">
-        <b class="my-auto">{{ chatmessage.name }}</b>
-    </div>
     <div class="card-body text-black">
       <div class="container text-start">
         {{ chatmessage.decrypted_body | linebreaks }}

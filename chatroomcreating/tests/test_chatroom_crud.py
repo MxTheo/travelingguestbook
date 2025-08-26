@@ -16,7 +16,7 @@ def test_create_chatroom_view(client):
     assert ChatRoom.objects.exists()
 
     chatroom = ChatRoom.objects.first()
-    assert len(chatroom.slug) == 21
+    assert len(chatroom.slug) == 9
     expected_url = reverse('chatroom', args=[chatroom.slug])
     assert response.url == expected_url
 
@@ -85,7 +85,6 @@ class TestCreateChatMessage:
         chatroom = ChatRoomFactory()
         chatmessage = create_chatmessage(client, chatroom)
         assert chatmessage.body == "create_chatmessage"
-        assert chatmessage.name == "create_chatmessage"
         assert chatmessage.chatroom == chatroom
         assert chatmessage.nonce == "dGVzdG5vbmNl"
 

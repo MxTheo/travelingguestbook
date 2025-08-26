@@ -17,7 +17,7 @@ def create_chatmessage(client, chatroom=None, data=None):
     if chatroom is None:
         chatroom = ChatRoomFactory()
     if data is None:
-        data = {'name': 'create_chatmessage', 'body': 'create_chatmessage',"nonce": "dGVzdG5vbmNl"}
+        data = {'body': 'create_chatmessage',"nonce": "dGVzdG5vbmNl"}
     url_create = reverse('create-chatmessage', args=[chatroom.slug])
     client.post(url_create, data=data)
     return ChatMessage.objects.filter(chatroom=chatroom)[0]

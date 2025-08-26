@@ -31,6 +31,7 @@ class ChatRoomFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ChatRoom
     slug   = factory.LazyFunction(fake.unique.postcode)
+    secret_key = factory.LazyFunction(lambda: fake.sha256(raw_output=False))
 
 
 class ChatMessageFactory(factory.django.DjangoModelFactory):
@@ -38,6 +39,6 @@ class ChatMessageFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ChatMessage
     body         = factory.LazyFunction(fake.text)
-    name         = factory.LazyFunction(fake.name)
     chatroom     = factory.SubFactory(ChatRoomFactory)
     date_created = factory.LazyFunction(fake.date)
+    nonce        = factory.LazyFunction(lambda: fake.sha256(raw_output=False))

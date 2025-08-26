@@ -8,9 +8,8 @@ class ChatMessageForm(ModelForm):
     class Meta:
         """Fields present on the form and extra that needs to be shown on the page"""
         model   = ChatMessage
-        fields  = ["name", "body", "nonce"]
+        fields  = ["body", "nonce"]
         widgets = {
-            "name": TextInput(attrs={"placeholder": "Anoniem"}),
             "body": Textarea(
                 attrs={
                     "rows": 3,
