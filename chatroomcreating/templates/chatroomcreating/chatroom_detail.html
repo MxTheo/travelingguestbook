@@ -9,7 +9,7 @@ ChatRoom Detail
 {% block content %}
 <div class="container mt-4">
   <div>
-    <h1 id="tekstOmTeKopieren" class="border-bottom pb-2 font-monospace">{{ request.get_host }}/c/{{ chatroom.slug }}</h1>
+    <h1 id="tekstOmTeKopieren" class="border-bottom pb-2 font-monospace">{{ request.get_host }}/{{ chatroom.slug }}</h1>
 
     <div class="justify-content-between d-flex align-items-center mb-3">
         <a class="btn btn-outline-danger" href={% url "delete-chatroom" chatroom.slug %}><i class="bi bi-trash3-fill"></i></a>
