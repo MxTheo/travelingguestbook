@@ -14,7 +14,7 @@ def home(request):
 
 def create_chatroom(request):
     """Creates a chatroom and redirects to it's detail page"""
-    slug = get_random_string(21, allowed_chars='abcdefghjklmnpqrstuvwxyz23456789')
+    slug = get_random_string(9, allowed_chars='abcdefghjklmnpqrstuvwxyz23456789')
     key = os.urandom(32)
     key = base64.b64encode(key).decode()
     chatroom = ChatRoom(slug=slug, secret_key=key)
