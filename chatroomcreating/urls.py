@@ -5,7 +5,7 @@ urlpatterns = [
     path('nieuwechat/', views.create_chatroom, name='create-chatroom'),
     path('verwijderchat/<slug:slug>', views.ChatRoomDelete.as_view(), name='delete-chatroom'),
 
-    path('chat', views.home, name='chat'),
+    path('uitwisseling', views.home, name='chat'),
 
     path('nieuwbericht/<slug:slug>', views.ChatMessageCreate.as_view(), name='create-chatmessage'),
     path('verwijderbericht/<str:pk>', views.ChatMessageDelete.as_view(), name='delete-chatmessage'),
