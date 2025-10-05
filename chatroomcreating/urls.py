@@ -10,6 +10,6 @@ urlpatterns = [
     path('nieuwbericht/<slug:slug>', views.ChatMessageCreate.as_view(), name='create-chatmessage'),
     path('verwijderbericht/<str:pk>', views.ChatMessageDelete.as_view(), name='delete-chatmessage'),
 
-    path('<slug:slug>', views.ChatRoomDetail.as_view(), name='chatroom'),
+    path('c/<slug:slug>', views.ChatRoomDetail.as_view(), name='chatroom'),
 
 ]

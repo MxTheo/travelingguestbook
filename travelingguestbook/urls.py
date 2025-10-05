@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('oogcontact.urls')),
     path('', include('contact.urls')),
     path('', include('chatroomcreating.urls')),
+    path('', include('streetactivity.urls')),
 ]
 
 if settings.DEBUG:

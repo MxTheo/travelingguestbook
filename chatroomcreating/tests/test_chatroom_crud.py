@@ -105,6 +105,6 @@ def test_chatroom_absolute_url_with_200(client):
     """Tests if the slug is used as absolute url of the chatroom"""
     chatroom     = ChatRoomFactory()
     absolute_url = chatroom.get_absolute_url()
-    assert absolute_url == "/" + str(chatroom.slug)
+    assert absolute_url == "/c/" + str(chatroom.slug)
     response     = client.get(absolute_url)
     assert response.status_code == 200

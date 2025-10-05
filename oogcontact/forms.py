@@ -1,5 +1,4 @@
-from django.forms import ModelForm
-from .models import Registration
+
 
 class RegistrationForm(ModelForm):
     """Form for user registration."""

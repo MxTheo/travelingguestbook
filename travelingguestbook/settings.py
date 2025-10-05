@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'contact',
     'oogcontact',
+    'streetactivity',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
