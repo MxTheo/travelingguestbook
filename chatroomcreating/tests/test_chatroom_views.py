@@ -1,12 +1,12 @@
 import base64
-
+from django.urls import reverse
 import nacl
 from chatroomcreating.models import ChatMessage, ChatRoom
 from travelingguestbook.factories import ChatMessageFactory, ChatRoomFactory
 
 def test_home_view(client):
     """Test the home view to ensure it renders the homepage correctly."""
-    response = client.get('/uitwisseling')
+    response = client.get(reverse('chat'))
     assert response.status_code == 200
 
 def test_chatmessage_str():

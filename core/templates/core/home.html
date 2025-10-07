@@ -1,0 +1,232 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+    Menscellium - De straat als ontmoetingsplek
+{% endblock title %}
+{% block content %}
+    <div class="container py-5">
+        <!-- Hero Sectie -->
+        <header class="row align-items-center mb-5">
+            <div class="col-lg-8">
+                <h1 class="display-4 text-success-emphasis mb-3">Menscellium</h1>
+                <p class="lead mb-4">
+                    Samen onderzoeken we hoe de publieke ruimte kan zijn, waarbij een eerste aanspraak de intentie van verbinden wordt verondersteld, niet die van verkoop of overtuigen.
+                </p>
+                <div class="d-flex flex-wrap justify-content-between gap-3">
+                    <a href="{% url 'streetactivity_list' %}" class="btn btn-success btn-lg">
+                        <i class="bi bi-play-circle me-2"></i>
+                        Verken straatactiviteiten
+                    </a>
+                    <a href="#hoe-het-werkt" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-question-circle me-2"></i>
+                        Meer informatie
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="card border-0 bg-light">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-people display-1 text-success-emphasis mb-3"></i>
+                        <h3 class="h5 text-success-emphasis">Vrij om aan te passen</h3>
+                        <p class="mb-0">
+                            Alle straatactiviteiten kun je aanpassen, verbeteren of hergebruiken.
+                            Alles staat open voor verandering.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Visie -->
+        <section class="row mb-5">
+            <div class="col-12">
+                <h2 class="h3 text-success-emphasis mb-4">Visie</h2>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0">
+                    <div class="card-body">
+                        <i class="bi bi-gift display-6 text-success-emphasis mb-3"
+                           aria-hidden="true"></i>
+                        <p>
+                            Jij bent het geschenk in contact, ongeacht hoe sociaal vaardig je bent.
+                            Contact is enkel het middel om dat geschenk, dat jij zelf bent, te geven.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0">
+                    <div class="card-body">
+                        <i class="bi bi-tree display-6 text-success-emphasis mb-3"
+                           aria-hidden="true"></i>
+                        <p>
+                            Net zoals mycorrhiza schimmels bomen met elkaar verbinden, faciliteren straatactiviteiten ontmoetingen tussen mensen.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Verschillende manieren van bijdragen -->
+        <section class="row mb-5" id="hoe-het-werkt">
+            <div class="col-12">
+                <h2 class="h3 text-success-emphasis mb-4">Hoe kun je meedoen?</h2>
+                <p class=" mb-4">Er zijn vele manieren om bij te dragen. Kies wat bij je past:</p>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-person-walking display-6 text-success-emphasis mb-3"
+                           aria-hidden="true"></i>
+                        <h3 class="h6 text-success-emphasis mb-3">Als voorbijganger</h3>
+                        <p class=" small">
+                            Vertel wat wel en niet werkte voor jou. Jouw inzichten helpen anderen
+                            om te leren en te groeien.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-play-btn display-6 text-success-emphasis mb-3"
+                           aria-hidden="true"></i>
+                        <h3 class="h6 text-success-emphasis mb-3">Straatactiviteit doen</h3>
+                        <p class=" small">
+                            Vertel wat wel en niet werkte voor jou. Jouw inzichten helpt de gemeenschap de straatactiviteiten verder te ontwikkelen.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-pencil display-6 text-success-emphasis mb-3"
+                           aria-hidden="true"></i>
+                        <h3 class="h6 text-success-emphasis mb-3">Activiteiten aanpassen</h3>
+                        <p class=" small">
+                            Alle activiteiten zijn open. Je kunt ze aanpassen, variaties bedenken
+                            of nieuwe manieren voorstellen.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Over straatactiviteiten -->
+        <section class="row mb-5 bg-light rounded p-4">
+            <div class="col-12">
+                <h2 class="h3 text-success-emphasis mb-3">Over straatactiviteiten</h2>
+                <p class="mb-4">Straatactiviteiten helpen om contact te maken in de publieke ruimte.</p>
+                <div class="row align-items-stretch">
+                    <div class="col-md-6 mb-3 d-flex">
+                        <div class="card h-100 w-100 border-0 bg-transparent">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-start mb-3">
+                                    <span class="badge bg-success me-3 mt-1">Beschikbaar</span>
+                                    <div>
+                                        <h4 class="h6 text-success-emphasis mb-2">Uitgeprobeerde activiteiten</h4>
+                                        <p class="mb-0">
+                                            Activiteiten waarbij mensen het lukt om contact met onbekenden te maken. Daarbij is het nog steeds de vraag hoe het voor jou werkt. Bovendien, mensen blijven onvoorspelbaar. Sta open voor wat er ook gebeurt, ook als er niemand op je afstapt.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-auto">
+                                    <a href="{% url 'streetactivity_list' %}"
+                                       class="btn btn-success btn-sm w-100">
+                                        <i class="bi bi-play-circle me-1"></i> Verken activiteiten
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3 d-flex">
+                        <div class="card h-100 w-100 border-0 bg-transparent">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-start mb-3">
+                                    <span class="badge bg-warning me-3 mt-1">Hulp gevraagd</span>
+                                    <div>
+                                        <h4 class="h6 text-success-emphasis mb-2">Activiteiten in ontwikkeling</h4>
+                                        <p class="mb-0">
+                                            Nieuwe ideeën die verder onderzocht worden.
+                                            Ga de uitdaging aan om bij te dragen aan de ontwikkeling van deze experimentele straatactiviteiten.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-auto">
+                                    <a href="{% url 'streetactivity_list' %}?filter=help_needed"
+                                       class="btn btn-warning btn-sm w-100">
+                                        <i class="bi bi-megaphone-fill me-1"></i> Help ontwikkelen
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-4 mb-0">
+                    <i class="bi bi-lightbulb me-2"></i>
+                    <strong>Een activiteit werkt</strong> wanneer je bij 1 van de 3 pogingen binnen 20 minuten
+                    contact maakt met een onbekende in de winkelstraat.
+                </div>
+            </div>
+        </section>
+        <!-- Over camera gebruik -->
+        <section class="row mb-5">
+            <div class="col-12">
+                <h2 class="h3 text-success-emphasis mb-3">Over camera gebruik</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <p class=" mb-3">
+                            Om de ontmoeting zo open en gelijkwaardig mogelijk te houden, werken we met een
+                            eenvoudig principe:
+                        </p>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-x-circle  me-3 mt-1" aria-hidden="true"></i>
+                                    <div>
+                                        <p class=" mb-0">
+                                            <strong>Wie een straatactiviteit initieert, doet dit zonder camera.</strong>
+                                            Zo blijft de focus op het contact, niet op het maken van content.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle text-success me-3 mt-1" aria-hidden="true"></i>
+                                    <div>
+                                        <p class=" mb-0">
+                                            <strong>Voorbijgangers zijn vrij om te filmen</strong>. Dit kan helpen om de drempel te verlagen om mee te doen.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-light mt-3 mb-0">
+                            <p class=" mb-0 small">
+                                Het maken van content kan een groot publiek bereiken. Zo inspireert het ook een publieke ruimte waar bij de eerste aanspraak de intentie van verbinden wordt verondersteld. Het doen van straatactiviteiten zonder camera is niet beter. Het heeft alleen het andere doel om de intentie zo open mogelijk te houden.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Call to Action -->
+        <section class="text-center py-5 bg-success bg-opacity-10 rounded">
+            <h2 class="h2 text-success-emphasis mb-3">Begin met onderzoeken</h2>
+            <p class=" lead mb-4">
+                Iedereen kan bijdragen aan het onderzoeken van straatactiviteiten.
+                Samen dragen we bij aan een cultuur van verbinding in de publieke ruimte.
+            </p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <a href="{% url 'streetactivity_list' %}" class="btn btn-success btn-lg">
+                    <i class="bi bi-play-circle me-2" aria-hidden="true"></i>
+                    Verken activiteiten
+                </a>
+                <a href="{% url 'create-streetactivity' %}"
+                   class="btn btn-outline-success btn-lg">
+                    <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
+                    Voeg activiteit toe
+                </a>
+            </div>
+        </section>
+    </div>
+{% endblock content %}

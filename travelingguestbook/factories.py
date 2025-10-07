@@ -9,15 +9,6 @@ from chatroomcreating.models import ChatRoom, ChatMessage
 
 fake = Faker()
 
-class RegistrationFactory(factory.django.DjangoModelFactory):
-    """Mock for oogcontact Registration"""
-    class Meta:
-        model = 'oogcontact.Registration'
-    name         = factory.LazyFunction(fake.name)
-    email        = factory.LazyFunction(fake.email)
-    date_created = factory.LazyFunction(fake.date_time_this_year)
-    hasCanceled  = False
-
 class UserFactory(factory.django.DjangoModelFactory):
     '''Mock for django.contrib.auth User'''
     class Meta:
@@ -31,7 +22,7 @@ class ChatRoomFactory(factory.django.DjangoModelFactory):
     '''Mock for chatroomcreating ChatRoom'''
     class Meta:
         model = ChatRoom
-    slug   = factory.LazyFunction(fake.unique.postcode)
+    slug       = factory.LazyFunction(fake.unique.postcode)
     secret_key = factory.LazyFunction(lambda: fake.sha256(raw_output=False))
 
 
@@ -48,11 +39,13 @@ class StreetActivityFactory(factory.django.DjangoModelFactory):
     '''Mock for streetactivities StreetActivity'''
     class Meta:
         model =  StreetActivity
-    name         = factory.LazyFunction(fake.name)
-    description  = factory.LazyFunction(fake.text)
-    method       = 'invite'
-    question     = factory.LazyFunction(fake.text)
-    supplies     = factory.LazyFunction(fake.text)
-    difficulty   = 3
-    chance       = 3
-    needHelp = False
+    name          = factory.LazyFunction(fake.name)
+    description   = factory.LazyFunction(fake.text)
+    method        = 'invite'
+    question      = factory.LazyFunction(fake.text)
+    supplies      = factory.LazyFunction(fake.text)
+    difficulty    = 3
+    chance        = 3
+    needHelp      = False
+    date_created  = factory.LazyFunction(fake.date)
+    date_modified = factory.LazyFunction(fake.date)

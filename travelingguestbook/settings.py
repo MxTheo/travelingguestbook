@@ -46,8 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django_extensions',
-    'contact',
-    'oogcontact',
+    'core',
     'streetactivity',
 ]
 

@@ -24,7 +24,10 @@ class StreetActivity(models.Model):
     blog        = models.URLField(blank=True,
                                 verbose_name="Link naar een blogpost over de activiteit")
     literature  = models.CharField(max_length=200, blank=True, verbose_name="Relevante literatuur")
-    needHelp = models.BooleanField(default=True, verbose_name="Experimenteel")
+    needHelp    = models.BooleanField(default=True, verbose_name="Experimenteel")
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.name)

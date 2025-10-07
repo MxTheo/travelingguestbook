@@ -2,7 +2,6 @@ import pytest
 from django.urls import reverse
 from streetactivity.models import StreetActivity
 from travelingguestbook.factories import StreetActivityFactory
-from streetactivity.views import StreetActivityListView
 
 
 class TestStreetActivityModel:
@@ -12,7 +11,8 @@ class TestStreetActivityModel:
         """Test the StreetActivity detail view to ensure it returns a 200 status code
         and contains the expected context."""
         activity = StreetActivityFactory()
-        response = client.get(f"/straatactiviteit/{activity.id}/")
+        url = reverse("streetactivity_detail", args=[activity.id])
+        response = client.get(url)
         assert response.status_code == 200
         assert "activity" in response.context
 
@@ -21,7 +21,7 @@ class TestStreetActivityModel:
         and contains the expected context."""
         # Maak eerst wat activiteiten aan
         StreetActivityFactory.create_batch(3)
-        response = client.get("/straatactiviteiten")
+        response = client.get(reverse("streetactivity_list"))
         assert response.status_code == 200
         assert "activities" in response.context
         assert len(response.context["activities"]) == 3

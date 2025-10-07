@@ -22,10 +22,9 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('django.contrib.auth.urls')),
-    path('', include('oogcontact.urls')),
-    path('', include('contact.urls')),
-    path('', include('chatroomcreating.urls')),
-    path('', include('streetactivity.urls')),
+    path('', include('core.urls')),
+    path('straatactiviteiten/', include('streetactivity.urls')),
+    path('uitwisseling/', include('chatroomcreating.urls')),
 ]
 
 if settings.DEBUG:
