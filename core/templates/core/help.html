@@ -1,186 +1,101 @@
+<!-- help.html -->
 {% extends "admin/main.html" %}
 {% load static %}
-{% block title %}
-  Help
-{% endblock title %}
-{% block stylesheet %}
-<link href={% static "contact/styles/help.css" %} rel="stylesheet" type="text/css"/>
-{% endblock stylesheet %}
+{% block title %}Help - Menscellium{% endblock title %}
+
 {% block content %}
-<div class="bg-dark">
-  <div class="container">
-    <h1 class="display-5 fw-bold mb-4 pt-5 text-white">Ga gesprekken aan:</h1>
-    {% with interval=4500 %}
-    <div id="carouselHelp" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="3" aria-label="Slide 4"></button>
-        <button type="button" data-bs-target="#carouselHelp" data-bs-slide-to="4" aria-label="Slide 5"></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="{{ interval }}">
-          <img src={% static "images/startaconversation.png" %} class="d-block w-100" alt="startaconversation.png" height="496" width="920">
-          <div class="carousel-caption d-block">
-            <h5><b>1 )</b>&nbsp;&nbsp; Begin een gesprek met iemand die je nog niet kent, bijvoorbeeld in de trein.</h5>
-          </div>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 text-success-emphasis mb-3">Help</h1>
+            
+            <div class="alert alert-info mb-4">
+                <i class="bi bi-github me-2"></i>
+                <strong>Deze help pagina's worden samen beheerd</strong> via GitHub. 
+                Iedereen kan bijdragen, verbeteringen voorstellen of nieuwe onderwerpen toevoegen.
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 text-success-emphasis mb-3">Bekijk de volledige documentatie</h2>
+                    <p class="mb-3">
+                        Alle handleidingen, tips en veelgestelde vragen staan in onze GitHub Wiki:
+                    </p>
+                    <a href="https://github.com/MxTheo/travelingguestbook/wiki" 
+                       target="_blank" 
+                       class="btn btn-success btn-lg">
+                        <i class="bi bi-book me-2"></i>
+                        Open GitHub Wiki
+                    </a>
+                </div>
+            </div>
+
+            <!-- Samenvatting van belangrijke onderwerpen -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="h5 text-success-emphasis">
+                                <i class="bi bi-lightbulb me-2"></i>
+                                Wanneer werkt een activiteit?
+                            </h3>
+                            <ul>
+                                <li class="mb-1">1 van 3 pogingen in 20 minuten contact met iemand</li>
+                                <li class="mb-1">Afgebakende, duidelijke verzoeken</li>
+                                <li class="mb-1">Gebaseerd op praktijkervaring</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="h5 text-success-emphasis">
+                                <i class="bi bi-tools me-2"></i>
+                                Praktische tips
+                            </h3>
+                            <ul>
+                                <li class="mb-1">Waar vind je karton?</li>
+                                <li class="mb-1">Hoe pas je tekst op een bord?</li>
+                                <li class="mb-1">Binnen gemeentelijke regels blijven</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hoe bijdragen -->
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h3 class="h5 mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Help mee verbeteren
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p>Iedereen kan bijdragen aan de documentatie:</p>
+                    <ol class="mb-3">
+                        <li class="mb-2">Ga naar de <a href="https://github.com/MxTheo/travelingguestbook/wiki" target="_blank">GitHub Wiki</a></li>
+                        <li class="mb-2">Klik op "Edit" bovenaan een pagina</li>
+                        <li class="mb-2">Maak je verbeteringen (je moet wel een GitHub account hebben)</li>
+                        <li>Of stuur een email met je suggesties</li>
+                    </ol>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="https://github.com/MxTheo/travelingguestbook/wiki" 
+                           target="_blank" 
+                           class="btn btn-outline-success">
+                            <i class="bi bi-github me-2"></i>
+                            Wiki bewerken
+                        </a>
+                        <a href="mailto:{{ mailto_url|default:'#' }}" 
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-envelope me-2"></i>
+                            Stuur suggesties
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="carousel-item" data-bs-interval="{ interval }}">
-          <img src={% static "images/thankforconversation.png" %} class="d-block w-100" alt="thankforconversation\.png" width="1058" height="523">
-          <div class="carousel-caption d-block">
-            <h5><b>2 )</b>&nbsp;&nbsp; Bedank diegene voor het contact met een code.</h5>
-          </div>
-        </div>
-        <div class="carousel-item" data-bs-interval="{ interval }}">
-          <img src={% static "images/logconversation.png" %} class="d-block w-100" alt="logconversation.png" height="486" width="715">
-          <div class="carousel-caption d-block">
-            <h5><b>3 )</b>&nbsp;&nbsp; Log je gesprek voor de ander, zodat die het kan lezen.</h5>
-          </div>
-        </div>
-        <div class="carousel-item" data-bs-interval="{ interval }}">
-          <img src={% static "images/readlog.png" %} class="d-block w-100" alt="readlog.png" width="953" height="647">
-          <div class="carousel-caption d-block">
-            <h5><b>4 )</b>&nbsp;&nbsp; De ander vult de code in en leest jouw berichtje.</h5>
-          </div>
-        </div>
-        <div class="carousel-item" data-bs-interval="{ interval }}">
-          <img src={% static "images/repeat.png" %} class="d-block w-100" alt="repeat.png" width="647" height="649">
-          <div class="carousel-caption d-block">
-            <h5><b>5 )</b>&nbsp;&nbsp; De ander begint vervolgens opnieuw met dezelfde code. Pay it forward!</h5>
-          </div>
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselHelp" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselHelp" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
     </div>
-    {% endwith %}
-  </div>
-</div>
-<div class="container mb-5 text-start">
-  <h2>Met het uitwisselen en tekenen van gevoelens, ben ik op zoek naar een andere toepassing voor de website dan deze toepassing.</br>Hierdoor is de help pagina niet meer up to date. Excuses voor de verwarring.</h2>
-</div>
-<div class="container text-start">
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-2">
-  <div class="col">
-    <div class="card mb-3">
-      <h3 class="card-header"><b>1 )</b>&nbsp;&nbsp; Start het contact</h3>
-      <div class="card-body">
-        <img src={% static "images/startaconversation.png" %} class=" img-fluid d-block w-75 ms-auto me-auto" alt="startaconversation.png" height="496" width="920">
-      </div>
-
-      <div class="card-body">
-        <p class="card-text">Zeg je naam. Stel jezelf voor. Hoeveel gespreksopeners er ook zijn, een gespreksopener zal niet op iemand af stappen en iemand voor jou aanspreken. Alleen jij zelf kan iemand aanspreken. Dat kan jij!</p>
-      </div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="card mb-3">
-      <h3 class="card-header"><b>2 )</b>&nbsp;&nbsp; Eindig het contact</h3>
-      <div class="card-body">
-        <img src={% static "images/thankforconversation.png" %} class="img-fluid d-block w-75 ms-auto me-auto" alt="thankforconversation\.png" width="1058" height="523">
-      </div>
-
-      <div class="card-body">
-        <p class="card-text">Deze applicatie is bedoeld als gesprekseindiger. Bedank de ander met een code. Waar je deze code op schrijft, dat is geheel aan jou. Een kaartje, of een origami figuurtje.
-        </p>
-        <p class="card-text">
-          Voorbeeld om te schrijven op het kaartje:
-        </p>
-        <p class="card-text">
-          <i>" Bedankt voor het contact!</br>
-          Ik laat een berichtje achter op</br>
-          bedanktvoorhetcontact.nl</br>
-          Vul in:</br>
-          1234abcd "</i>
-        </p>
-
-      </div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="card mb-3">
-      <h3 class="card-header"><b>3 )</b>&nbsp;&nbsp; Deel je ervaringen</h3>
-      <div class="card-body">
-        <img src={% static "images/logconversation.png" %} class="img-fluid d-block w-75 ms-auto me-auto" alt="logconversation.png" height="486" width="715">
-      </div>
-
-      <div class="card-body">
-        <p class="card-text">Schrijf over je ervaringen van de interactie.</br>
-        Hoe was het om te starten?</br>
-        Wat neem je mee van het contact?</br>
-        Wat wil je die ander nog meegeven?</br>
-        Je schrijft dit berichtje voor de ander die je hebt bedankt voor het contact. 
-        </p>
-        <p class="card-text">
-          Als die ander vervolgens ook een berichtje schrijft voor weer de volgende, dan ontstaat er een keten van contact op de pagina van de code. Zo ontmoeten we elkaar indirect en lezen we van elkaars ervaringen. Via een code, dat elke keer weer wordt doorgegeven via iemand die het contact aangaat, zijn we met elkaar verbonden.
-        </p>
-        <p class="card-text">
-          <i>" Bedankt voor het contact!</br>
-          Ik laat een berichtje achter op</br>
-          bedankt.pythonanywhere.com</br>
-          Met code:</br>
-          1234abcd "</i>
-        </p>
-
-      </div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="card mb-3">
-      <h3 class="card-header"><b>4 )</b>&nbsp;&nbsp; Vind en lees de log</h3>
-      <div class="card-body">
-        <img src={% static "images/readlog.png" %} class="img-fluid d-block w-75 ms-auto me-auto" alt="readlog.png" width="953" height="647">
-      </div>
-
-      <div class="card-body">
-        <p class="card-text">
-          De ander vult de code in. Zo komt die ander terecht bij de pagina waar jij een berichtje op hebt geplaatst. Wie weet vindt die ander ook andere berichtjes van andere gesprekken. Die ander kan alle berichtjes lezen. Daar kan die ander ook zelf een bericht plaatsen om te delen over diens ervaringen.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="card mb-3">
-      <h3 class="card-header"><b>5 )</b>&nbsp;&nbsp; Pay it forward!</h3>
-      <div class="card-body">
-        <img src={% static "images/repeat.png" %} class="img-fluid d-block w-75 ms-auto me-auto" alt="repeat.png" width="647" height="649">
-      </div>
-
-      <div class="card-body">
-        <p class="card-text">
-          Dit is de kers op de taart. Nu is het de keuze aan de ander om te doen wat jij voor die ander hebt gedaan. Nu is de ander vrij om anderen te bedanken, zoals jij die ander te bedanken.</br>
-          Het zou ideaal zijn als jij zo een hele keten van berichtjes hebt gestart. Liever ben jij degene die de hele keten van gesprekken doorzet. 
-        </p>
-        <p class="card-text">
-          Echter, dat is niet iets waar wij invloed op hebben. Jij hebt gedaan wat je kon doen. Of die ander de gespreksketen voorzet of niet, jij hebt de wereld een stukje socialer gemaakt. Jij hebt niet alleen een gesprek gestart. Je hebt ook nog een berichtje voor die ander gelaten. Hoe dan ook, jij hebt iets voor een ander betekent!
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="card mb-3">
-      <h3 class="card-header"><b><i class="bi bi-lightbulb-fill"></i></b> Wat denk jij?</h3>
-      <div class="card-body">
-        <img src={% static "images/lightbulb.png" %} class="img-fluid bulb d-block w-50 ms-auto me-auto" alt="lightbulb.png" width="540" height="774">
-      </div>
-
-      <div class="card-body">
-        <p class="card-text">
-          Deze app is nog volop in ontwikkeling. Met een code heb je toegang tot een specifieke pagina, waar je berichtjes kan achterlaten. Dit is een suggestie hoe je dat kunt inzetten, om met anderen in gesprek te gaan. Er is natuurlijk veel meer mogelijk.</p>
-        <p class="card-text">
-          Voel je dus vooral ook vrij om ermee te experimenteren. Wie weet kom je tot een manier die nog effectiever om kletspraatjes aan te gaan. Als je feedback hebt, dan hoor ik dat graag! Neem dan vooral <a href={% url "contact" %}>contact</a> op
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-
 </div>
 {% endblock content %}

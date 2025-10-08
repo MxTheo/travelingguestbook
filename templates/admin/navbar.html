@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-sm navbar-dark bg-primary text-center mb-0 pb-0">
   <div class="container-fluid mb-2">
     <a class="navbar-brand" href={% url "home" %}>
-      Bedankt</br>voor het contact
+      Menscellium
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -11,10 +11,10 @@
     <div class="collapse navbar-collapse" id="mainmenu">
       <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
         <li class="nav-item">
-          <a class="nav-link" href="{% url "about" %}">Over mij</a>
+          <a class="nav-link" href="{% url "contact" %}">Contact</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url "contact" %}">Contact</a>
+          <a class="nav-link" href="{% url "help" %}">Hulp</a>
         </li>
          {% if user.is_authenticated %}
         <li><form method='post' action='{% url "logout" %}'>{% csrf_token %}
