@@ -6,6 +6,7 @@ from faker import Faker
 from django.contrib.auth.models import User
 from streetactivity.models import StreetActivity
 from chatroomcreating.models import ChatRoom, ChatMessage
+from persona.models import Persona, Problem, Reaction
 
 fake = Faker()
 
@@ -49,3 +50,28 @@ class StreetActivityFactory(factory.django.DjangoModelFactory):
     needHelp      = False
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)
+
+class PersonaFactory(factory.django.DjangoModelFactory):
+    """Mock for persona Persona"""
+    class Meta:
+        model = Persona
+
+    title = factory.Sequence(lambda n: f'Test Persona {n}')
+    core_question = factory.Sequence(lambda n: f'Core question {n}?')
+    description = factory.Faker('paragraph', nb_sentences=3)
+
+class ProblemFactory(factory.django.DjangoModelFactory):
+    """Mock for persona Problem"""
+    class Meta:
+        model = Problem
+
+    persona = factory.SubFactory(PersonaFactory)
+    text = factory.Sequence(lambda n: f'Problem text {n}')
+
+class ReactionFactory(factory.django.DjangoModelFactory):
+    """Mock for persona Reaction"""
+    class Meta:
+        model = Reaction
+
+    persona = factory.SubFactory(PersonaFactory)
+    text = factory.Sequence(lambda n: f'Reaction text {n}')

@@ -17,12 +17,9 @@ class StreetActivityListView(ListView):
 
         filter_param = self.request.GET.get('filter')
         if filter_param == 'help_needed':
-            queryset = queryset.filter(needHelp=True)
+            return queryset.filter(needHelp=True)
         else:
-            queryset = queryset.filter(needHelp=False)
-
-        queryset = queryset.order_by('name')
-        return queryset
+            return queryset.filter(needHelp=False)
 
     def get_context_data(self, **kwargs):
         '''Add additional context data for the template.'''

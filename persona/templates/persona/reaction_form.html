@@ -1,0 +1,31 @@
+<!-- templates/personas/includes/reaction_modal.html -->
+<div class="modal fade" id="reactionModal" tabindex="-1" aria-labelledby="reactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="reactionModalLabel">
+                    <i class="bi bi-chat-quote me-2"></i>
+                    Reactie toevoegen
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <form method="post" action="{% url 'create-reaction' persona_pk=persona.pk %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p class="text-muted mb-4">Voeg een reactie toe voor: <strong>{{ persona.title }}</strong></p>
+                    
+                    <div class="mb-3">
+                        <label for="reactionText" class="form-label">Reactie tekst</label>
+                        <textarea class="form-control" id="reactionText" name="text" rows="4" required placeholder="Typ de reactie..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i>Reactie toevoegen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

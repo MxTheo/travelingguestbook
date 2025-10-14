@@ -1,0 +1,31 @@
+<!-- templates/personas/includes/problem_modal.html -->
+<div class="modal fade" id="problemModal" tabindex="-1" aria-labelledby="problemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="problemModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Probleem toevoegen
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <form method="post" action="{% url 'create-problem' persona_pk=persona.pk %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p class="text-muted mb-4">Voeg een probleem toe voor: <strong>{{ persona.title }}</strong></p>
+                    
+                    <div class="mb-3">
+                        <label for="problemText" class="form-label">Probleem beschrijving</label>
+                        <textarea class="form-control" id="problemText" name="text" rows="4" required placeholder="Beschrijf het probleem..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i>Probleem toevoegen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

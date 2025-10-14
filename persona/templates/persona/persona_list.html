@@ -1,0 +1,97 @@
+<!-- personas_list.html -->
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+    Soorten voorbijgangers
+{% endblock title %}
+{% block stylesheet %}
+    <link href="{% static "persona/styles/persona_list.css" %}" rel="stylesheet">
+{% endblock stylesheet %}
+{% block content %}
+    <div class="container py-5">
+        <header class="row align-items-center mb-5">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <i class="bi bi-person-walking display-1 text-success-emphasis mb-3"></i>
+                        <h1 class="display-4 text-success-emphasis mb-3">Soorten voorbijgangers</h1>
+                    </div>
+                    <a href="{% url 'create-persona' %}" class="btn btn-success btn-lg">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Nieuw voorbeeld
+                    </a>
+                </div>
+                <p class="lead mb-4">
+                    Op straat kom je verschillende soorten mensen tegen. Sommigen zijn enthousiast en open,
+                    anderen zijn wat argwanend of hebben hun eigen zorgen. Deze voorbeelden helpen je
+                    om een idee te krijgen wat je kunt verwachten op straat.
+                </p>
+                <p>
+                    Je kunt alle voorbeelden aanpassen, verbeteren of nieuwe toevoegen.
+                    Zo leren we samen hoe we makkelijker contact kunnen maken op straat.
+                </p>
+            </div>
+        </header>
+        <div class="row">
+            {% for persona in personas %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="persona-card h-100">
+                        <div class="persona-header">
+                            <h2 class="persona-title h5 mb-0">{{ persona.title }}</h2>
+                        </div>
+                        <div class="persona-body d-flex flex-column">
+                            <div class="persona-core-question mb-3">
+                                <small class="text-muted">Kernvraag:</small>
+                                <div class="fst-italic">{{ persona.core_question }}</div>
+                            </div>
+                            <div class="persona-description mb-3 flex-grow-1">
+                                <p class="small text-muted mb-2">Beschrijving:</p>
+                                <div class="small">{{ persona.description|truncatewords:30 }}</div>
+                            </div>
+                            <div class="persona-section mb-3">
+                                <h4 class="h6 text-primary mb-2">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>Problemen
+                                </h4>
+                                <ul class="problems-list small mb-0">
+                                    {% for problem in persona.problems.all|slice:":3" %}
+                                        <li>{{ problem.text }}</li>
+                                    {% endfor %}
+                                    {% if persona.problems.count > 3 %}
+                                        <li class="text-muted">... en {{ persona.problems.count|add:"-3" }} meer</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="persona-section mb-3">
+                                <h4 class="h6 text-primary mb-2">
+                                    <i class="bi bi-chat-quote me-1"></i>Reacties
+                                </h4>
+                                <ul class="reactions-list small mb-0">
+                                    {% for reaction in persona.reactions.all|slice:":3" %}
+                                        <li>"{{ reaction.text }}"</li>
+                                    {% endfor %}
+                                    {% if persona.reactions.count > 3 %}
+                                        <li class="text-muted">... en {{ persona.reactions.count|add:"-3" }} meer</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <a href="{% url 'persona-detail' persona.pk %}" class="btn btn-outline-primary btn-sm w-100">
+                                    <i class="bi bi-eye me-1"></i>Bekijk details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center py-5">
+                    <i class="bi bi-people display-1 text-muted mb-3"></i>
+                    <h3 class="h4 text-muted">Nog geen voorbeelden</h3>
+                    <p class="text-muted">Wees de eerste die een voorbeeld toevoegt!</p>
+                    <a href="{% url 'create-persona' %}" class="btn btn-success">
+                        <i class="bi bi-plus-circle me-2"></i>Voeg eerste voorbeeld toe
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

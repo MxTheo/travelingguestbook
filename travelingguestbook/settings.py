@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'core',
     'streetactivity',
+    'persona',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'

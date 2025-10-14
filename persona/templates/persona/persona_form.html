@@ -1,0 +1,65 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}{% if object %}Bewerk {{ object.title }}{% else %}Nieuwe Persona{% endif %}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">{% if object %}Bewerk {{ object.title }}{% else %}Nieuwe Persona{% endif %}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <h3 class="h5 mb-3">Persona Basis</h3>
+                            {{ form.as_p }}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Opslaan</button>
+                            <a href="{% url 'persona-list' %}" class="btn btn-secondary">Annuleren</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Probleem formset dynamisch toevoegen
+    document.getElementById('add-problem').addEventListener('click', function() {
+        const formset = document.getElementById('problem-formset');
+        const totalForms = document.getElementById('id_problems-TOTAL_FORMS');
+        const formNum = parseInt(totalForms.value);
+        
+        const newForm = formset.querySelector('.problem-form').cloneNode(true);
+        newForm.innerHTML = newForm.innerHTML.replace(/problems-\d+-/g, `problems-${formNum}-`);
+        newForm.querySelector('input[name$="-text"]').value = '';
+        newForm.querySelector('input[name$="-DELETE"]').checked = false;
+        
+        formset.appendChild(newForm);
+        totalForms.value = formNum + 1;
+    });
+    
+    // Reactie formset dynamisch toevoegen
+    document.getElementById('add-reaction').addEventListener('click', function() {
+        const formset = document.getElementById('reaction-formset');
+        const totalForms = document.getElementById('id_reactions-TOTAL_FORMS');
+        const formNum = parseInt(totalForms.value);
+        
+        const newForm = formset.querySelector('.reaction-form').cloneNode(true);
+        newForm.innerHTML = newForm.innerHTML.replace(/reactions-\d+-/g, `reactions-${formNum}-`);
+        newForm.querySelector('input[name$="-text"]').value = '';
+        newForm.querySelector('input[name$="-DELETE"]').checked = false;
+        
+        formset.appendChild(newForm);
+        totalForms.value = formNum + 1;
+    });
+});
+</script>
+{% endblock %}
