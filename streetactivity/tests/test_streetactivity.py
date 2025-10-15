@@ -80,18 +80,15 @@ class TestStreetActivityModel:
         activity.refresh_from_db()
         assert activity.name == "Updated Activiteit"
 
-    def test_streetactivity_deleteview(self, auto_login_user):
+    def test_streetactivity_deleteview(self, client):
         """Test the StreetActivity delete view to ensure it returns a 200 status code
         and contains the expected context."""
-        client, _ = auto_login_user()
         activity = StreetActivityFactory()
 
-        # Controleer eerst dat het object bestaat
         assert StreetActivity.objects.filter(id=activity.id).exists()
 
         delete_streetactivity_url = reverse("delete-streetactivity", args=[activity.id])
 
-        # Gebruik POST voor delete (Django gebruikt vaak POST voor delete bevestiging)
         response = client.post(delete_streetactivity_url)
 
         assert response.status_code == 302

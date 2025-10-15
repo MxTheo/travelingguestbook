@@ -108,15 +108,14 @@
     margin: 2rem 0;
 }
 
-.supplies-section, .extension-section, .remarks-section, .literature-section {
+.supplies-section, .extension-section {
     background: white;
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.supplies-section h3, .extension-section h3, 
-.remarks-section h3, .literature-section h3 {
+.supplies-section h3, .extension-section h3 {
     margin-top: 0;
     color: #444;
 }

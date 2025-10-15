@@ -7,4 +7,5 @@ urlpatterns = [
     path("nieuw/", views.StreetActivityCreateView.as_view(), name="create-streetactivity"),
     path("update/<int:pk>/", views.StreetActivityUpdateView.as_view(), name="update-streetactivity"),
     path("delete/<int:pk>/", views.StreetActivityDeleteView.as_view(), name="delete-streetactivity"),
+    path('<int:activity_id>/references/add/', views.ExternalReferenceCreateView.as_view(), name='external_reference_create'),
 ]

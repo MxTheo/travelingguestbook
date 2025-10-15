@@ -19,88 +19,112 @@
                         <span class="badge bg-success mb-2"><i class="bi bi-check-lg"></i> Werkend</span>
                     {% endif %}
                 </div>
-                <a href="{% url 'update-streetactivity' activity.pk %}"
-                   class="btn btn-outline-primary">
-                    <i class="bi bi-pencil-square"></i> Bewerk
-                </a>
-            </div>
-            </header>
-            <!-- Kernvraag sectie -->
-            <section class="mb-4 p-3 bg-light rounded">
-                <h2 class="h4 mb-3">Uitnodiging</h2>
-                <blockquote class="core-question fs-5 text-success-emphasis mb-0">
-                    "{{ activity.question }}"
-                </blockquote>
-            </section>
-            <!-- Beschrijving sectie -->
-            <section class="mb-4">
-                <h2 class="h4 text-primary mb-3">Beschrijving</h2>
-                <div class="description-content fs-6 lh-base">{{ activity.description|linebreaks }}</div>
-            </section>
-            <!-- Praktische informatie -->
-            <div class="row mb-4">
-                <div class="col-md-6 mb-3">
-                    <section class="card h-100">
-                        <div class="card-body">
-                            <h3 class="h5 card-title text-primary">
-                                <i class="bi bi-tools"></i> Benodigdheden
-                            </h3>
-                            <div class="supplies-content">{{ activity.supplies|linebreaks }}</div>
-                        </div>
-                    </section>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <section class="card h-100">
-                        <div class="card-body">
-                            <h3 class="h5 card-title text-primary">
-                                <i class="bi bi-arrow-repeat"></i> Uitbreidingen
-                            </h3>
-                            <div class="extension-content">
-                                {% if activity.extension %}
-                                    {{ activity.extension|linebreaks }}
-                                {% else %}
-                                    <p class="text-secondary mb-0">Geen uitbreidingen beschreven</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-            <!-- Additionele informatie -->
-            {% if activity.remarks or activity.literature %}
-                <div class="row mb-4">
-                    {% if activity.literature %}
-                        <div class="col-md-6 mb-3">
-                            <section class="card h-100">
-                                <div class="card-body">
-                                    <h3 class="h5 card-title text-primary">
-                                        <i class="bi bi-book"></i> Literatuur
-                                    </h3>
-                                    <div class="literature-content">{{ activity.literature }}</div>
-                                </div>
-                            </section>
-                        </div>
-                    {% endif %}
-                </div>
-            {% endif %}
-            <!-- Externe links -->
-            {% if activity.blog %}
-                <section class="mb-4 p-3 bg-info bg-opacity-10 rounded">
-                    <h3 class="h5 text-primary mb-2">
-                        <i class="bi bi-link-45deg"></i> Lees meer
-                    </h3>
-                    <a href="{{ activity.blog }}"
-                       target="_blank"
-                       class="btn btn-outline-primary">
-                        Blogpost over deze activiteit <i class="bi bi-arrow-up-right"></i>
+                <div>
+                    <a href="{% url 'delete-streetactivity' activity.pk %}"
+                       class="btn btn-outline-danger me-2">
+                        <i class="bi bi-trash"></i> Verwijder
                     </a>
+                    <a href="{% url 'update-streetactivity' activity.pk %}"
+                       class="btn btn-outline-primary">
+                        <i class="bi bi-pencil-square"></i> Bewerk
+                    </a>
+                </div>
+            </div>
+        </header>
+        <!-- Kernvraag sectie -->
+        <section class="mb-4 p-3 bg-light rounded">
+            <h2 class="h4 mb-3">Uitnodiging</h2>
+            <blockquote class="core-question fs-5 text-success-emphasis mb-0">
+                "{{ activity.question }}"
+            </blockquote>
+        </section>
+        <!-- Beschrijving sectie -->
+        <section class="mb-4">
+            <h2 class="h4 text-primary mb-3">Beschrijving</h2>
+            <div class="description-content fs-6 lh-base">{{ activity.description|linebreaks }}</div>
+        </section>
+        <!-- Praktische informatie -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h5 card-title text-primary">
+                            <i class="bi bi-tools"></i> Benodigdheden
+                        </h3>
+                        <div class="supplies-content">{{ activity.supplies|linebreaks }}</div>
+                    </div>
                 </section>
-            {% endif %}
-            <!-- Navigatie knoppen -->
-            <div class="action-buttons pt-3 border-top">
-                <a href="{% url 'streetactivity_list' %}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Terug naar overzicht
-                </a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h5 card-title text-primary">
+                            <i class="bi bi-arrow-repeat"></i> Uitbreidingen
+                        </h3>
+                        <div class="extension-content">
+                            {% if activity.extension %}
+                                {{ activity.extension|linebreaks }}
+                            {% else %}
+                                <p class="text-secondary mb-0">Geen uitbreidingen beschreven</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
-    {% endblock content %}
+        <!-- Additionele informatie -->
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h3 text-success-emphasis">Verwante Bronnen & Ervaringen</h2>
+                <a href="{% url 'external_reference_create' activity.pk %}"
+                   class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-plus-circle"></i> Bron toevoegen
+                </a>
+            </div>
+            {% if activity.external_references.exists %}
+                <div class="row">
+                    {% for ref in activity.external_references.all %}
+                        <!-- Optie 2: Hele card is klikbaar (alleen als er URL is) -->
+                        <div class="col-12 mb-3">
+                            {% if ref.url %}<a href="{{ ref.url }}" target="_blank" class="text-decoration-none">{% endif %}
+                                <div class="card {% if ref.url %}hover-shadow{% endif %}">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">
+                                            {{ ref.title }}
+                                            {% if ref.url %}<i class="bi bi-box-arrow-up-right ms-1 small opacity-75"></i>{% endif %}
+                                        </h5>
+                                        <p class="card-text text-secondary">{{ ref.description }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                {% if ref.reference_type %}
+                                                    <span class="badge bg-secondary border me-2">{{ ref.reference_type }}</span>
+                                                {% endif %}
+                                                {% if ref.submitted_by %}<small class="text-muted">Door {{ ref.submitted_by }}</small>{% endif %}
+                                            </div>
+                                            <small class="text-muted">{{ ref.created_at|date:"j M Y" }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if ref.url %}</a>{% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-book display-4"></i>
+                    <p class="mt-3">Nog geen bronnen gedeeld. Deel je ervaringen, inspiratie of onderzoek!</p>
+                    <a href="{% url 'external_reference_create' activity.pk %}"
+                       class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Eerste bron toevoegen
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+        <!-- Navigatie knoppen -->
+        <div class="action-buttons pt-3 border-top">
+            <a href="{% url 'streetactivity_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Terug naar overzicht
+            </a>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .models import StreetActivity
-from .forms import StreetActivityForm
+from .models import StreetActivity, ExternalReference
+from django.urls import reverse
+from django.contrib import messages
+from .forms import StreetActivityForm, ExternalReferenceForm
 
 # views.py
 class StreetActivityListView(ListView):
@@ -47,9 +49,23 @@ class StreetActivityUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('streetactivity_detail', kwargs={'pk': self.object.pk})
 
-class StreetActivityDeleteView(LoginRequiredMixin, DeleteView):
+class StreetActivityDeleteView(DeleteView):
     '''View to delete a street activity.'''
     model = StreetActivity
     template_name = 'admin/confirm_delete.html'
     success_url = reverse_lazy('streetactivity_list')
-    login_url = reverse_lazy('login')
+
+class ExternalReferenceCreateView(CreateView):
+    """View to create a new external reference for a specific street activity.
+    """
+    model = ExternalReference
+    form_class = ExternalReferenceForm
+    
+    def form_valid(self, form):
+        activity_id = self.kwargs['activity_id']
+        form.instance.activity_id = activity_id
+        messages.success(self.request, 'Bedankt voor je bijdrage!')
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('streetactivity_detail', kwargs={'pk': self.object.activity.pk})
