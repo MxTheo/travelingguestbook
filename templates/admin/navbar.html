@@ -16,6 +16,9 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url "help" %}">Hulp</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url "about" %}">Over</a>
+        </li>
          {% if user.is_authenticated %}
         <li><form method='post' action='{% url "logout" %}'>{% csrf_token %}
               <button class="dropdown-item" type="submit">Logout</button>

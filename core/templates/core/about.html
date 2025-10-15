@@ -1,37 +1,125 @@
 {% extends "admin/main.html" %}
-{% block title %}
-About
-{% endblock title %}
 {% load static %}
-{% block stylesheet %}<link href={% static "contact/styles/about.css" %} rel="stylesheet"/>{% endblock stylesheet %}
+
+{% block title %}Over Ons - Menscellium{% endblock title %}
+
 {% block content %}
+<div class="container py-5">
+    <!-- Hero Sectie -->
+    <header class="text-center mb-5">
+        <h1 class="display-4 text-success-emphasis mb-3">Over Ons</h1>
+        <p class="lead">
+            De community die bijdraagt aan meer verbinding in de publieke ruimte
+        </p>
+    </header>
 
-<div class="container mt-4">
-  <img class="img-fluid img-thumbnail mb-4 rounded-5" src="../../../static/images/portraitbw.jpg" alt="profile of theo"/ width="1081" height="1276">
-</div>
-<div class="container maintext text-start">
-  <h3>Ieder is belangrijk in het geheel</h3>
-  <p>Ik geloof dat ieder mens belangrijk is in het geheel. Het maakt niet uit of je uitkeringtrekker bent of de leraar die de volgende generaties inspireert. Ieder mens is belangrijk in het geheel. Zo is ook elk gesprek belangrijk om aangeknoopt te worden.</p>
-  <h3>Over mij</h3>
-  <p>Ieder gesprek is belangrijk om aangeknoopt te worden. Zo komt ook elk gesprek zoals het komt. Daarbij hoeft het niet lastig te zijn. In mijn studententijd experimenteerde ik met dilemma's en directe persoonlijke vragen. Ik heb die experimenten achter mij gelaten. Ik neem het gesprek nu meer zoals het komt. Ik zeg hallo en stel mijzelf voor. Dat is meestal al gespreksopener genoeg.</p>
-  <p>Het is spannend. Zeker. Dat vind ik ook. Dan realiseer ik mij dat het gesprek komt zoals het gesprek komt. Alles is ok. Ieder is belangrijk in het geheel, ook degene die nee zeggen.</p>
-  <p>Er zijn werelden te ontdekken door te praten met vreemden. Ieder is belangrijk in het geheel. Hoe het geheel zich ontvouwt, is bij ieder anders. Ik wil van dienst zijn aan anderen, zoals ik pas in dit geheel. Ik ben werkvrij. Ik leef zolang ik spaargeld heb. Ik doe vrijwilligerswerk. Ik heb er vertrouwen in dat ik ook van dienst kan zijn door deze applicatie te ontwikkelen. Elk gesprek is belangrijk om aangeknoopt te worden. Al is het maar 1 gesprek die aangeknoopt is door deze applicatie, dan is dat het werk voor mij waard.</p>
-  <p>
-  Op <a href="https://theoschutte.substack.com" target="_blank">mijn substack</a> kun je meer lezen over mij.
-  </p>
+    <!-- Kernboodschap -->
+    <section class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 bg-light">
+                <div class="card-body p-4">
+                    <h2 class="h3 text-success-emphasis text-center mb-4">Wie is Menscellium?</h2>
+                    <p class=" mb-3">
+                        <strong>Dat zijn wij. Wie zijn wij? Dat ben jij!</strong>
+                    </p>
+                    <p>
+                        Ieder die bijdraagt aan de missie van een publieke ruimte waarbij de intentie van verbinden 
+                        wordt verondersteld, niet die van verkoop of overtuigen, is onderdeel van Menscellium. 
+                    </p>
+                    <p class=" mb-0">
+                        Of je nu hallo zegt tegen een onbekende op straat of deelneemt aan een straatactiviteit: 
+                        <strong>iedereen is welkom</strong>, hoe sociaal vaardig of zelfverzekerd je ook bent.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <h3>Bijdragen:</h3>
-  <p>
-    Zie <a href="https://github.com/MxTheo/travelingguestbook" target="_blank">github</a> voor de broncode en de issues.
-  </p>
-  <p>
-    Kwaliteit van code vind ik belangrijk. Ik streef mijn code leesbaar te houden, met documentatie. Ik streef een 100% test coverage. Zodat wat ontwikkeld is ook werkt. Ik maak nog steeds fouten. Zeker omdat ik het vooral in mijn eentje doe. Hierdoor is mijn programmeren nog foutgevoeliger. Ik heb wel wat programmeer ervaring, maar ik leer ook nog steeds veel terwijl ik aan het programmeren ben. Ik kan feedback dus goed gebruiken.
-  </p>
-  <p>
-    Als je feedback hebt, dan hoor ik dat graag:
-  </p>
-  <p>
-    <a href=" {% url "contact" %} " class="btn btn-dark">Contact</a>
-  </p>
+    <!-- Community Contact -->
+    <section class="row mb-5">
+        <div class="col-12">
+            <h2 class="h3 text-success-emphasis text-center mb-4">Kom in contact met de community</h2>
+            <p class="text-center mb-4">
+                Ontmoet anderen, deel ervaringen en leer van de community
+            </p>
+        </div>
+        
+        <!-- Matrix Chat -->
+        <div class="col-lg-6 mx-auto mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-chat-dots display-1 text-success-emphasis mb-3"></i>
+                    <h3 class="h4 text-success-emphasis mb-3">Community Chat</h3>
+                    <p class=" mb-4">
+                        Onze live chat community op Matrix. Deel ervaringen, stel vragen en ontmoet anderen 
+                        die ook geloven in verbinding in de publieke ruimte.
+                    </p>
+                    <a href="https://matrix.to/#/#menscellium:matrix.org" 
+                       target="_blank" 
+                       class="btn btn-success btn-lg">
+                        <i class="bi bi-arrow-right-circle me-2"></i>
+                        Join de Chat
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meer leren over de community -->
+    <section class="row mb-5">
+        <div class="col-12">
+            <h2 class="h3 text-success-emphasis text-center mb-4">Meer leren over de community</h2>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-journal-text display-6 text-success-emphasis mb-3"></i>
+                    <h3 class="h5 text-success-emphasis mb-3">Lees ervaringen</h3>
+                    <p>
+                        Ontdek hoe anderen straatactiviteiten ervaren en wat ze leren over verbinding maken.
+                    </p>
+                    <a href="{% url 'streetactivity_list' %}" class="btn btn-outline-success btn-sm">
+                        Bekijk activiteiten
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-question-circle display-6 text-success-emphasis mb-3"></i>
+                    <h3 class="h5 text-success-emphasis mb-3">Stel vragen</h3>
+                    <p>
+                        Iedereen begint ergens. Stel je vragen in de chat of neem contact op via email.
+                    </p>
+                    <a href="{% url "contact" %}" class="btn btn-outline-primary btn-sm">
+                        Email ons
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Uitnodiging -->
+    <section class="text-center py-5 bg-success bg-opacity-10 rounded">
+        <h2 class="h2 text-success-emphasis mb-3">Iedereen is welkom</h2>
+        <p class="lead mb-4">
+            Of je nu veel ervaring hebt met contact maken of net begint:<br>
+            <strong>je bijdrage aan meer verbinding in de publieke ruimte is waardevol.</strong>
+        </p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a href="https://matrix.to/#/#menscellium:matrix.org" 
+               target="_blank" 
+               class="btn btn-success btn-lg">
+                <i class="bi bi-chat-dots me-2"></i>
+                Sluit je aan bij de chat
+            </a>
+            <a href="{% url "contact" %}" 
+               class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-envelope me-2"></i>
+                Neem contact op
+            </a>
+        </div>
+    </section>
 </div>
 {% endblock content %}
