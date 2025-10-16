@@ -8,7 +8,7 @@ from chatroomcreating.forms import ChatMessageForm
 from .models import ChatMessage, ChatRoom
 
 
-def home(request):
+def chat_home(request):
     """Renders the homepage of the chatroomcreating app"""
     return render(request, "chatroomcreating/index.html")
 
@@ -62,7 +62,7 @@ class ChatRoomDelete(generic.edit.DeleteView):
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-editing/"""
 
     model = ChatRoom
-    success_url = reverse_lazy("chat")
+    success_url = reverse_lazy("chatroom-home")
     template_name = "admin/confirm_delete.html"
 
 
