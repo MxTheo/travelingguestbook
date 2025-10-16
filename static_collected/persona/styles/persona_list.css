@@ -1,0 +1,124 @@
+.persona-card {
+    background-color: var(--bs-white);
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--bs-box-shadow-sm);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--bs-border-color);
+}
+
+.persona-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--bs-box-shadow);
+}
+
+.persona-header {
+    background-color: var(--bs-dark);
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.persona-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.persona-body {
+    padding: 1.5rem;
+}
+
+.persona-core-question {
+    font-style: italic;
+    background-color: var(--bs-light);
+    padding: 1rem;
+    border-left: 4px solid var(--bs-warning);
+    margin-bottom: 1.5rem;
+    border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0;
+    font-weight: 500;
+}
+
+.persona-description {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.persona-section {
+    margin-bottom: 1.5rem;
+}
+
+.persona-section h4 {
+    color: var(--bs-primary);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.persona-section h4 i {
+    margin-right: 0.5rem;
+}
+
+.problems-list, .reactions-list {
+    padding-left: 1.5rem;
+    margin-bottom: 0;
+}
+
+.problems-list li, .reactions-list li {
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.problems-list li::before {
+    color: var(--bs-danger);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+.reactions-list li::before {
+    color: var(--bs-warning);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+.edit-btn {
+    background-color: var(--bs-warning);
+    border: none;
+    color: var(--bs-dark);
+    padding: 0.5rem 1rem;
+    border-radius: var(--bs-border-radius);
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+    color: var(--bs-dark);
+}
+
+.edit-btn i {
+    margin-right: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .persona-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .persona-title {
+        font-size: 1.3rem;
+    }
+}

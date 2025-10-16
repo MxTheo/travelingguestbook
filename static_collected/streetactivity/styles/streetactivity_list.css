@@ -1,35 +1,69 @@
-/* streetactivity_detail.css - MINIMALE custom CSS */
+/* streetactivity_list.css - MINIMALE aanpassingen */
 
-.activity-detail-container {
-    max-width: 1000px;
+.activity-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.activity-card {
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.activity-card:hover {
+    transform: translateY(-4px);
+}
+
+.activity-question {
+    font-style: italic;
+    border-left: 3px solid var(--bs-primary);
+    padding-left: 1rem;
+    margin: 0;
 }
 
 /* Moeilijkheidsgraden - gebruik Bootstrap kleuren */
-.difficulty-1 { background-color: var(--bs-success-bg-subtle); color: var(--bs-success); border: 1px solid var(--bs-success); }
-.difficulty-2 { background-color: var(--bs-success-bg-subtle); color: var(--bs-success); border: 1px solid var(--bs-success); }
-.difficulty-3 { background-color: var(--bs-warning-bg-subtle); color: var(--bs-warning); border: 1px solid var(--bs-warning); }
-.difficulty-4 { background-color: var(--bs-warning-bg-subtle); color: var(--bs-warning); border: 1px solid var(--bs-warning); }
-.difficulty-5 { background-color: var(--bs-danger-bg-subtle); color: var(--bs-danger); border: 1px solid var(--bs-danger); }
+.difficulty-1 { background: var(--bs-success-bg-subtle); color: var(--bs-success); }
+.difficulty-2 { background: var(--bs-success-bg-subtle); color: var(--bs-success); }
+.difficulty-3 { background: var(--bs-warning-bg-subtle); color: var(--bs-warning); }
+.difficulty-4 { background: var(--bs-warning-bg-subtle); color: var(--bs-warning); }
+.difficulty-5 { background: var(--bs-danger-bg-subtle); color: var(--bs-danger); }
 
 /* Kans op contact */
-.chance-1 { background-color: var(--bs-danger-bg-subtle); color: var(--bs-danger); border: 1px solid var(--bs-danger); }
-.chance-2 { background-color: var(--bs-warning-bg-subtle); color: var(--bs-warning); border: 1px solid var(--bs-warning); }
-.chance-3 { background-color: var(--bs-warning-bg-subtle); color: var(--bs-warning); border: 1px solid var(--bs-warning); }
-.chance-4 { background-color: var(--bs-success-bg-subtle); color: var(--bs-success); border: 1px solid var(--bs-success); }
-.chance-5 { background-color: var(--bs-success-bg-subtle); color: var(--bs-success); border: 1px solid var(--bs-success); }
+.chance-1 { background: var(--bs-danger-bg-subtle); color: var(--bs-danger); }
+.chance-2 { background: var(--bs-warning-bg-subtle); color: var(--bs-warning); }
+.chance-3 { background: var(--bs-warning-bg-subtle); color: var(--bs-warning); }
+.chance-4 { background: var(--bs-success-bg-subtle); color: var(--bs-success); }
+.chance-5 { background: var(--bs-success-bg-subtle); color: var(--bs-success); }
 
-.core-question {
-    border-left: 4px solid var(--bs-primary);
-    padding-left: 1rem;
+.difficulty, .chance {
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--bs-border-radius-pill);
+    font-weight: bold;
+    font-size: 0.8rem;
+    border: 1px solid currentColor;
 }
 
-/* Responsive aanpassingen */
+/* Responsive design */
 @media (max-width: 768px) {
-    .activity-detail-container {
-        padding: 0 0.5rem;
+    .activity-list-container {
+        padding: 1rem;
     }
     
-    .core-question {
-        font-size: 1.1rem !important;
+    .activities-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
     }
 }
