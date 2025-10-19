@@ -29,28 +29,6 @@
     margin: 0;
 }
 
-/* Moeilijkheidsgraden - gebruik Bootstrap kleuren */
-.difficulty-1 { background: var(--bs-success-bg-subtle); color: var(--bs-success); }
-.difficulty-2 { background: var(--bs-success-bg-subtle); color: var(--bs-success); }
-.difficulty-3 { background: var(--bs-warning-bg-subtle); color: var(--bs-warning); }
-.difficulty-4 { background: var(--bs-warning-bg-subtle); color: var(--bs-warning); }
-.difficulty-5 { background: var(--bs-danger-bg-subtle); color: var(--bs-danger); }
-
-/* Kans op contact */
-.chance-1 { background: var(--bs-danger-bg-subtle); color: var(--bs-danger); }
-.chance-2 { background: var(--bs-warning-bg-subtle); color: var(--bs-warning); }
-.chance-3 { background: var(--bs-warning-bg-subtle); color: var(--bs-warning); }
-.chance-4 { background: var(--bs-success-bg-subtle); color: var(--bs-success); }
-.chance-5 { background: var(--bs-success-bg-subtle); color: var(--bs-success); }
-
-.difficulty, .chance {
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--bs-border-radius-pill);
-    font-weight: bold;
-    font-size: 0.8rem;
-    border: 1px solid currentColor;
-}
-
 /* Responsive design */
 @media (max-width: 768px) {
     .activity-list-container {

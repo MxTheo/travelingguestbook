@@ -22,45 +22,15 @@
         <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
             <div class="d-flex gap-5 align-items-center">
                 <span class="text-secondary fw-medium">{{ activities.count }} activiteiten gevonden</span>
-                {% if has_help_needed %}
-                    <a href="?filter=help_needed" class="btn btn-warning btn-sm">
-                        <i class="bi bi-megaphone-fill"></i> {{ help_needed_count }} hulp gevraagd
-                    </a>
-                {% endif %}
             </div>
-            {% if request.GET.filter == 'help_needed' %}
-                <a href="?" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-arrow-left"></i> Alle activiteiten
-                </a>
-            {% endif %}
         </div>
     <!-- Activiteiten grid -->
     <div class="activities-grid">
         {% for activity in activities %}
         <div class="activity-card card shadow-sm h-100">
             <div class="card-header bg-white">
-                <!-- Header met titel en needHelp badge -->
-                <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex justify-content-center align-items-start mb-2">
                     <h2 class="activity-name text-success-emphasis fs-5 mb-0">{{ activity.name }}</h2>
-                    {% if activity.needHelp %}
-                    <span class="badge bg-warning">
-                        <i class="bi bi-megaphone-fill"></i> Hulp gevraagd
-                    </span>
-                    {% else %}
-                    <span class="badge bg-success">
-                        <i class="bi bi-check-circle"></i> Beschikbaar
-                    </span>
-                    {% endif %}
-                </div>
-                
-                <!-- Moeilijkheid en kans badges -->
-                <div class="activity-meta mb-2 d-flex justify-content-evenly">
-                    <span class="difficulty difficulty-{{ activity.difficulty }} badge">
-                        <i class="bi bi-speedometer2"></i> Moeilijkheid: {{ activity.difficulty }}/5
-                    </span>
-                    <span class="chance chance-{{ activity.chance }} badge">
-                        <i class="bi bi-graph-up"></i> Kans: {{ activity.chance }}/5
-                    </span>
                 </div>
             </div>
             
@@ -86,11 +56,7 @@
             <div class="card-footer bg-white border-0 pt-0">
                 <div class="d-flex justify-content-between align-items-center">
                     <a href="{% url 'streetactivity_detail' activity.pk %}" class="btn btn-success btn-sm">
-                        {% if activity.needHelp %}
-                        <i class="bi bi-radioactive"></i> Help ontwikkelen
-                        {% else %}
                         <i class="bi bi-rocket-takeoff-fill"></i> Probeer uit
-                        {% endif %}
                     </a>
                 </div>
             </div>
