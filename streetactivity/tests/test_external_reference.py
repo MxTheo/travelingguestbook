@@ -141,10 +141,10 @@ class TestExternalReferenceInActivityDetail:
         """Test that references are shown on activity detail page"""
         activity = StreetActivityFactory()
         reference = ExternalReferenceFactory(activity=activity)
-        
+
         response = client.get(reverse('streetactivity_detail', kwargs={'pk': activity.pk}))
         content = response.content.decode()
-        
+
         assert reference.title in content
         assert reference.description in content
     

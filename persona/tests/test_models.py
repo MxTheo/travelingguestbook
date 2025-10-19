@@ -7,6 +7,11 @@ class TestModels:
         persona = PersonaFactory()
         assert persona.title.startswith('Test Persona')
         assert persona.get_absolute_url() is not None
+
+    def test_persona_str(self):
+        """Test string representation of persona"""
+        persona = PersonaFactory(title="test")
+        assert str(persona) == "test"
     
     def test_problem_creation(self):
         """Test creation of Problem model"""

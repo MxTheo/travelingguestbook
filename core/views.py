@@ -6,13 +6,12 @@ class MailtoMixin:
 
     def get_mailto_url(self):
         """Creates a mailto url for the admin"""
-        try:
-            admin = User.objects.filter(is_superuser=True).first()
-            if admin and admin.email:
-                return f"mailto:{admin.email}"
-        except (User.DoesNotExist, IndexError, AttributeError):
-            pass
-        return "mailto:admin@example.com"  # Fallback email
+        admin = User.objects.filter(is_superuser=True).first()
+        if admin and admin.email:
+            return f"mailto:{admin.email}"
+        else:
+            return "mailto:admin@example.com"
+
     
     def get_context_data(self, **kwargs):
         """Adds mailto_url to the context"""

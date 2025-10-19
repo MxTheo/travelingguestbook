@@ -6,7 +6,7 @@ from travelingguestbook.factories import ChatMessageFactory, ChatRoomFactory
 
 def test_home_view(client):
     """Test the home view to ensure it renders the homepage correctly."""
-    response = client.get(reverse('chat'))
+    response = client.get(reverse('chatroom-home'))
     assert response.status_code == 200
 
 def test_chatmessage_str():

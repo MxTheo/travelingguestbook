@@ -14,8 +14,6 @@ def helper_test_page_rendering(client, name_of_page, keyword_arguments=None):
 def create_chatmessage(client, chatroom=None, data=None):
     '''Given the client and optional data for the chatroom,
     creates a chatmessage using the CreateView for unittesting purposes'''
-    if chatroom is None:
-        chatroom = ChatRoomFactory()
     if data is None:
         data = {'body': 'create_chatmessage',"nonce": "dGVzdG5vbmNl"}
     url_create = reverse('create-chatmessage', args=[chatroom.slug])

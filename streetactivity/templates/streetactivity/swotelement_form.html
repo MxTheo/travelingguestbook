@@ -1,0 +1,16 @@
+ {% extends "admin/main.html" %}
+ {% load static %}
+ {% block title %}
+    SWOT {% if form.instance.pk %}bewerken{% else %}toevoegen{% endif %}
+ {% endblock title %}
+{% block stylesheet %}<link href="{% static "styles/form.css" %}" rel="stylesheet" >{% endblock stylesheet %}
+ {% block content %}
+    <div class="container mt-4">
+        <form method="post" action="">
+            {% csrf_token %}
+            {% load crispy_forms_tags %}
+            {{ form|crispy }}
+            <input class="btn btn-success" type="submit" value="Verzend"/>     
+            <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
+        </form>
+ {% endblock content %}

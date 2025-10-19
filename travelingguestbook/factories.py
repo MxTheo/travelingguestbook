@@ -4,7 +4,7 @@ to be able to mock the objects in tests"""
 import factory
 from faker import Faker
 from django.contrib.auth.models import User
-from streetactivity.models import StreetActivity, ExternalReference
+from streetactivity.models import StreetActivity, ExternalReference, SWOTElement
 from chatroomcreating.models import ChatRoom, ChatMessage
 from persona.models import Persona, Problem, Reaction
 
@@ -18,14 +18,12 @@ class UserFactory(factory.django.DjangoModelFactory):
     email    = factory.LazyFunction(fake.unique.email)
     password = factory.LazyFunction(fake.unique.password)
 
-
 class ChatRoomFactory(factory.django.DjangoModelFactory):
     '''Mock for chatroomcreating ChatRoom'''
     class Meta:
         model = ChatRoom
     slug       = factory.LazyFunction(fake.unique.postcode)
     secret_key = factory.LazyFunction(lambda: fake.sha256(raw_output=False))
-
 
 class ChatMessageFactory(factory.django.DjangoModelFactory):
     '''Mock for chatroomcreation ChatMessage'''
@@ -99,21 +97,6 @@ class ExternalReferenceFactory(factory.django.DjangoModelFactory):
     ])
     submitted_by = factory.Faker('name')
 
-    @factory.lazy_attribute
-    def url(self):
-        """30% chance that the URL is empty (for books/theory)"""
-        if factory.Faker('boolean', chance_of_getting_true=30):
-            return ""
-        return factory.Faker('url').generate({})
-
-    @factory.lazy_attribute
-    def submitted_by(self):
-        """Submitted by can be empty (anonymous) - in 20% of cases"""
-        if factory.Faker('boolean', chance_of_getting_true=20):
-            return ""
-        return factory.Faker('name').generate({})
-
-
 class BookReferenceFactory(ExternalReferenceFactory):
     """Factory specific for book references (without URL)"""
     reference_type = "boek"
@@ -133,3 +116,20 @@ class ResearchReferenceFactory(ExternalReferenceFactory):
     reference_type = "onderzoek"
     title = factory.LazyAttribute(lambda o: f"Onderzoek naar {o.activity.name}")
     description = factory.LazyAttribute(lambda o: f"Academisch onderzoek gerelateerd aan {o.activity.name}")
+
+class SWOTElementFactory(factory.django.DjangoModelFactory):
+    """Factory for SWOTElement model"""
+    
+    class Meta:
+        model = SWOTElement
+    
+    street_activity = factory.SubFactory(StreetActivityFactory)
+    element_type = factory.LazyFunction(
+        lambda: fake.random_element(elements=('S', 'W', 'O', 'T'))
+    )
+    formulation = factory.LazyFunction(lambda: fake.text(max_nb_chars=200))
+    recognition_count = 0
+    alternative_formulation = None
+    votes_current = 0
+    votes_alternative = 0
+    needs_voting = False

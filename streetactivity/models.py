@@ -4,6 +4,12 @@ METHOD_CHOICES = [
     ('invite', 'Uitnodigen'),
     ('approach', 'Aanspreken'),
 ]
+SWOT_CHOICES = [
+    ('S', 'Sterke punt'),
+    ('W', 'Zwakke punt'),
+    ('O', 'Kans'),
+    ('T', 'Bedreiging'),
+]
 
 class StreetActivity(models.Model):
     '''A street activity is an activity that can be done on the street to engage with strangers.'''
@@ -32,7 +38,6 @@ class StreetActivity(models.Model):
     def __str__(self):
         return str(self.name)
 
-# models.py
 class ExternalReference(models.Model):
     """
     Decentralized references to anything relevant to a street activity:
@@ -78,3 +83,35 @@ class ExternalReference(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.activity.name}"
+
+class SWOTElement(models.Model):
+    """Model for a strength, weakness, opportunity or threat"""
+    street_activity = models.ForeignKey('StreetActivity', on_delete=models.CASCADE)
+    element_type = models.CharField(max_length=1, choices=SWOT_CHOICES)
+    formulation = models.TextField(max_length=500)
+
+    recognition_count = models.IntegerField(default=0, verbose_name="Aantal herkenningen")
+
+    # Stemming tussen twee formuleringen
+    alternative_formulation = models.TextField(max_length=500, blank=True, null=True)
+    votes_current = models.IntegerField(default=0)
+    votes_alternative = models.IntegerField(default=0)
+    needs_voting = models.BooleanField(default=False)
+
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-recognition_count', '-date_created']
+
+    def __str__(self):
+        return f"{self.element_type}: {self.formulation[:50]}"
+
+class SWOTHistory(models.Model):
+    """Save old formulations for archive"""
+    swot_element = models.ForeignKey(SWOTElement, on_delete=models.CASCADE)
+    old_formulation = models.TextField(max_length=500)
+    new_formulation = models.TextField(max_length=500)
+    changed_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-changed_at']

@@ -101,6 +101,7 @@ class TestDetailChatRoom:
         assert response.status_code == 200
 
 
+
 def test_chatroom_absolute_url_with_200(client):
     """Tests if the slug is used as absolute url of the chatroom"""
     chatroom     = ChatRoomFactory()

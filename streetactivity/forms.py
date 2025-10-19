@@ -1,5 +1,5 @@
 from django import forms
-from .models import StreetActivity, ExternalReference
+from .models import StreetActivity, ExternalReference, SWOTElement
 
 class StreetActivityForm(forms.ModelForm):
     """Form for creating or updating a StreetActivity."""
@@ -11,7 +11,7 @@ class StreetActivityForm(forms.ModelForm):
                   'difficulty', 'chance', 'extension', 'needHelp']
         labels = {
             'name': 'Naam van de activiteit',
-            'description': 'Beschrijving van de activiteit',
+            'description': 'Stap-voor-stap handleiding',
             'method': 'Methode van benadering',
             'question': 'Kernvraag',
             'supplies': 'Benodigdheden voor de activiteit',
@@ -22,7 +22,7 @@ class StreetActivityForm(forms.ModelForm):
         }
         help_texts = {
             'name': 'Vul alsjeblieft de naam van de activiteit in.',
-            'description': 'Geef een korte beschrijving van de activiteit.',
+            'description': 'Geef een stap-voor-stap uitleg hoe je de activiteit uitvoert.',
             'method': 'Kies hoe je mensen benadert: uitnodigen of aanspreken.',
             'question': 'Formuleer de kernvraag die je gebruikt om mensen uit te nodigen of aan te spreken.',
             'supplies': 'Welke materialen heb je nodig voor deze activiteit?',
@@ -61,3 +61,40 @@ class ExternalReferenceForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
         }
+
+class SWOTElementForm(forms.ModelForm):
+    """Form for new SWOT element - with the focus on W and T"""
+
+    class Meta:
+        model = SWOTElement
+        fields = ['element_type', 'formulation']
+        labels = {
+            'element_type': 'Welk aspect wil je beschrijven?',
+            'formulation': 'Jouw beschrijving',
+        }
+        help_texts = {
+            'element_type': 'Kies vooral zwakke punten of bedreigingen - die helpen ons het meest!',
+            'formulation': 'Beschrijf wat je ervaart of waar je je zorgen over maakt',
+        }
+        widgets = {
+            'formulation': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Bijv: "Ik merk dat mensen afhaken wanneer..."'
+            }),
+        }
+
+
+class SWOTAlternativeForm(forms.ModelForm):
+    """Form for alternative formulation"""
+
+    alternative_formulation = forms.CharField(
+        label='Betere beschrijving',
+        help_text='Hoe kunnen we dit duidelijker of beter verwoorden?',
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=True
+    )
+
+    class Meta:
+        """Only alternative formulation through custom field"""
+        model = SWOTElement
+        fields = []

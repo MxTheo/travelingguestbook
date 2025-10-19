@@ -96,9 +96,7 @@
                                         <p class="card-text text-secondary">{{ ref.description }}</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                {% if ref.reference_type %}
-                                                    <span class="badge bg-secondary border me-2">{{ ref.reference_type }}</span>
-                                                {% endif %}
+                                                {% if ref.reference_type %}<span class="badge bg-secondary border me-2">{{ ref.reference_type }}</span>{% endif %}
                                                 {% if ref.submitted_by %}<small class="text-muted">Door {{ ref.submitted_by }}</small>{% endif %}
                                             </div>
                                             <small class="text-muted">{{ ref.created_at|date:"j M Y" }}</small>

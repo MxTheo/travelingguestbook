@@ -1,0 +1,82 @@
+<!-- SWOT Analysis Section -->
+<section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h3 text-success-emphasis">Gezamenlijke Inzichten</h2>
+        <a href="{% url 'swotelement-list' activity.pk %}" class="btn btn-outline-primary">
+            <i class="bi bi-list-ul"></i> Alle inzichten bekijken
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Focus op Zwakke Punten en Bedreigingen -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-danger h-100">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        Waar lopen we tegenaan?
+                        <small class="d-block mt-1 opacity-75">Help ons verbeteren</small>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for element in activity.swot_elements.all %}
+                        {% if element.element_type == 'W' %}
+                            {% include 'streetactivity/partials/swot_preview_card.html' %}
+                        {% endif %}
+                    {% empty %}
+                        <div class="text-center py-3">
+                            <i class="bi bi-lightbulb display-4 text-muted"></i>
+                            <p class="mt-2 text-muted">Deel je ervaringen waar het moeilijk was</p>
+                            <a href="{% url 'swotelement-list' activity.pk %}" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-plus-circle"></i> Deel je ervaring
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card border-warning h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="bi bi-shield-exclamation"></i>
+                        Waar moeten we op letten?
+                        <small class="d-block mt-1 opacity-75">Voorkom problemen</small>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for element in activity.swot_elements.all %}
+                        {% if element.element_type == 'T' %}
+                            {% include 'streetactivity/partials/swot_preview_card.html' %}
+                        {% endif %}
+                    {% empty %}
+                        <div class="text-center py-3">
+                            <i class="bi bi-eye display-4 text-muted"></i>
+                            <p class="mt-2 text-muted">Deel waar je je zorgen over maakt</p>
+                            <a href="{% url 'swotelement-list' activity.pk %}" class="btn btn-outline-warning btn-sm">
+                                <i class="bi bi-plus-circle"></i> Deel je zorg
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sterke punten en kansen - minder prominent -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h6 class="text-success">
+                <i class="bi bi-check-circle"></i> Wat gaat goed
+                <small class="text-muted">({{ activity.swot_elements.filter|length }})</small>
+            </h6>
+        </div>
+        <div class="col-md-6">
+            <h6 class="text-primary">
+                <i class="bi bi-lightning"></i> Nieuwe mogelijkheden  
+                <small class="text-muted">({{ activity.swot_elements.filter|length }})</small>
+            </h6>
+        </div>
+    </div>
+</section>
