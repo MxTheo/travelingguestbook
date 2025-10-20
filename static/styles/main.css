@@ -21,6 +21,15 @@ html, body {
     flex-shrink: 0;
 }
 
+:root {
+  --bs-primary: #7b664b;
+  --bs-primary-rgb: 123, 102, 75;
+  --bs-secondary: #78C2AD;
+  --bs-secondary-rgb: 120, 194, 173;
+  --bs-link-color: var(--bs-primary);
+  --bs-link-hover-color: #3c3225; /* Donkerder bruin voor hover */
+}
+
 /* Bootstrap core css */
 .bd-placeholder-img {
     font-size: 1.125rem;
