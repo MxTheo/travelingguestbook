@@ -1,0 +1,28 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+    Tags Overzicht
+{% endblock title %}
+{% block content %}
+    <h1>Tags Overzicht</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Hoofdtag</th>
+                <th>NVC Categorie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag in tags %}
+            <tr>
+                <td>{{ tag.name }}</td>
+                {% if tag.maintag %}
+                <td>{{ tag.maintag.name }}</td>
+                {% endif %}
+                <td>{{ tag.nvc_category }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

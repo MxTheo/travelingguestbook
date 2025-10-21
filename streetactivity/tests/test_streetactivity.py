@@ -8,7 +8,7 @@ class TestStreetActivityModel:
         """Test the StreetActivity list view to ensure it returns a 200 status code
         and contains the expected context."""
         StreetActivityFactory.create_batch(3)
-        response = client.get(reverse("streetactivity_list"))
+        response = client.get(reverse("streetactivity-list"))
         assert response.status_code == 200
         assert "activities" in response.context
         assert len(response.context["activities"]) == 3
@@ -73,12 +73,12 @@ class TestStreetActivityListView:
 
     def test_list_view_returns_200(self, client):
         """Test that the list view returns a 200 status code"""
-        response = client.get(reverse("streetactivity_list"))
+        response = client.get(reverse("streetactivity-list"))
         assert response.status_code == 200
 
     def test_list_view_uses_correct_template(self, client):
         """Test that the list view uses the correct template"""
-        response = client.get(reverse("streetactivity_list"))
+        response = client.get(reverse("streetactivity-list"))
         assert "streetactivity/streetactivity_list.html" in [
             t.name for t in response.templates
         ]
@@ -89,7 +89,7 @@ class TestStreetActivityListView:
         StreetActivityFactory(name="Test Activiteit 1")
         StreetActivityFactory(name="Test Activiteit 2")
 
-        response = client.get(reverse("streetactivity_list"))
+        response = client.get(reverse("streetactivity-list"))
         content = response.content.decode()
 
         assert "Test Activiteit 1" in content
@@ -100,7 +100,7 @@ class TestStreetActivityListView:
         for i in range(15):
             StreetActivityFactory(name=f"Pagination Test {i}")
 
-        response = client.get(reverse("streetactivity_list"))
+        response = client.get(reverse("streetactivity-list"))
 
         assert response.context["is_paginated"]
         assert len(response.context["activities"]) == 10
@@ -111,7 +111,7 @@ class TestStreetActivityListView:
         StreetActivityFactory(name="Alpha Activiteit")
         StreetActivityFactory(name="Beta Activiteit")
 
-        response = client.get(reverse('streetactivity_list'))
+        response = client.get(reverse('streetactivity-list'))
         activities = list(response.context['activities'])
 
         names = [activity.name for activity in activities]
@@ -121,7 +121,7 @@ class TestStreetActivityListView:
         """Test that the correct context data is provided"""
         StreetActivityFactory()
 
-        response = client.get(reverse("streetactivity_list"))
+        response = client.get(reverse("streetactivity-list"))
         context = response.context
 
         assert "activities" in context

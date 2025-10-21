@@ -54,7 +54,7 @@ class ExperienceFactory(factory.django.DjangoModelFactory):
     report        = factory.LazyFunction(fake.text)
     external_link = factory.LazyFunction(fake.url)
     fase          = 'pioneer'
-    fromPractitioner = False
+    from_practitioner = False
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)
 
@@ -64,6 +64,14 @@ class TagFactory(factory.django.DjangoModelFactory):
         model = Tag
 
     name = factory.Sequence(lambda n: f'Tag {n}')
+    nvc_category = 'needs'
+    main_tag = None
+
+class SubTagFactory(TagFactory):
+    """Mock for streetactivities Tag as subtag"""
+    main_tag = factory.LazyAttribute(
+        lambda o: TagFactory.create(main_tag=None)
+    )
 
 class PersonaFactory(factory.django.DjangoModelFactory):
     """Mock for persona Persona"""

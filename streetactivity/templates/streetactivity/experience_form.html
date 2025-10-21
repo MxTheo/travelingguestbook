@@ -1,0 +1,6 @@
+ {% extends "admin/main.html" %}
+ {% load static %}
+ {% block title %}
+    Nieuw ervaring {% if form.instance.pk %}bewerken{% else %}aanmaken{% endif %}
+ {% endblock title %}
+{% include "admin/form.html" %}
