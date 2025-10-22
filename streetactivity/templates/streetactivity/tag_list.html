@@ -4,25 +4,301 @@
     Tags Overzicht
 {% endblock title %}
 {% block content %}
-    <h1>Tags Overzicht</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Naam</th>
-                <th>Hoofdtag</th>
-                <th>NVC Categorie</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for tag in tags %}
-            <tr>
-                <td>{{ tag.name }}</td>
-                {% if tag.maintag %}
-                <td>{{ tag.maintag.name }}</td>
-                {% endif %}
-                <td>{{ tag.nvc_category }}</td>
-            </tr>
+<div class="container mt-5">
+    <!-- Header sectie -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-1">
+                <i class="bi bi-tags-fill text-primary me-2"></i>
+                Tags Overzicht
+            </h1>
+            <p class="text-muted mb-0">
+                Categorisering gebaseerd op Geweldloze Communicatie
+            </p>
+        </div>
+        <a href="{% url 'create-tag' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            Nieuwe Tag
+        </a>
+    </div>
+
+    <!-- Bronvermelding -->
+    <div class="alert alert-info mb-4">
+        <div class="d-flex">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <div>
+                <strong>Bronvermelding:</strong> Deze tags zijn gebaseerd op het gedachtegoed van Geweldloze Communicatie 
+                zoals ontwikkeld door Marshall Rosenberg en vertaald door het Nederlands Centrum voor Geweldloze Communicatie.
+            </div>
+        </div>
+    </div>
+
+    <!-- Snelle statistieken -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                    <i class="bi bi-heart-fill text-success display-6"></i>
+                    <h3 class="h4 mt-2">{{ categories.needs.tags|length }}</h3>
+                    <p class="text-muted mb-0">Behoeften</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                    <i class="bi bi-emoji-smile-fill text-info display-6"></i>
+                    <h3 class="h4 mt-2">{{ categories.feelings_fulfilled.tags|length }}</h3>
+                    <p class="text-muted mb-0">Gevoelens vervuld</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                    <i class="bi bi-emoji-frown-fill text-info display-6"></i>
+                    <h3 class="h4 mt-2">{{ categories.feelings_unfulfilled.tags|length }}</h3>
+                    <p class="text-muted mb-0">Gevoelens onvervuld</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                    <i class="bi bi-tags-fill text-secondary display-6"></i>
+                    <h3 class="h4 mt-2">{{ categories.other.tags|length }}</h3>
+                    <p class="text-muted mb-0">Overige tags</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Behoeften sectie -->
+    <div class="category-section mb-5">
+        <div class="d-flex align-items-center mb-4">
+            <div class="bg-success bg-opacity-10 p-3 rounded me-3">
+                <i class="bi bi-heart-fill text-success display-6"></i>
+            </div>
+            <div>
+                <h2 class="h3 mb-1 text-success">Behoeften</h2>
+                <p class="text-muted mb-0">Fundamentele menselijke behoeften die bijdragen aan welzijn</p>
+            </div>
+            <span class="badge bg-success fs-6 ms-auto">{{ categories.needs.tags|length }} tags</span>
+        </div>
+
+        <div class="row">
+            {% for maintag in categories.needs.maintags %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-success border-opacity-25 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="bi bi-tag-fill text-success mt-1 me-2"></i>
+                            <h5 class="card-title mb-0">{{ maintag.name }}</h5>
+                        </div>
+                        
+                        {% if maintag.subtags.all %}
+                        <div class="subtags mt-3">
+                            <h6 class="text-muted small mb-2">
+                                <i class="bi bi-arrow-return-right me-1"></i>Subtags:
+                            </h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for subtag in maintag.subtags.all %}
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-tag me-1"></i>{{ subtag.name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-3 pt-3 border-top">
+                            <small class="text-muted">
+                                <i class="bi bi-collection me-1"></i>
+                                {{ maintag.experiences.count }} ervaringen
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
-{% endblock content %}
+        </div>
+    </div>
+
+    <!-- Gevoelens bij vervulde behoeften -->
+    <div class="category-section mb-5">
+        <div class="d-flex align-items-center mb-4">
+            <div class="bg-info bg-opacity-10 p-3 rounded me-3">
+                <i class="bi bi-emoji-smile-fill text-info display-6"></i>
+            </div>
+            <div>
+                <h2 class="h3 mb-1 text-info">Gevoelens bij Vervulde Behoeften</h2>
+                <p class="text-muted mb-0">Gevoelens die ontstaan wanneer behoeften worden vervuld</p>
+            </div>
+            <span class="badge bg-info fs-6 ms-auto">{{ categories.feelings_fulfilled.tags|length }} tags</span>
+        </div>
+
+        <div class="row">
+            {% for maintag in categories.feelings_fulfilled.maintags %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-info border-opacity-25 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="bi bi-tag-fill text-info mt-1 me-2"></i>
+                            <h5 class="card-title mb-0">{{ maintag.name }}</h5>
+                        </div>
+                        
+                        {% if maintag.subtags.all %}
+                        <div class="subtags mt-3">
+                            <h6 class="text-muted small mb-2">
+                                <i class="bi bi-arrow-return-right me-1"></i>Subtags:
+                            </h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for subtag in maintag.subtags.all %}
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-tag me-1"></i>{{ subtag.name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-3 pt-3 border-top">
+                            <small class="text-muted">
+                                <i class="bi bi-collection me-1"></i>
+                                {{ maintag.experiences.count }} ervaringen
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Gevoelens bij onvervulde behoeften -->
+    <div class="category-section mb-5">
+        <div class="d-flex align-items-center mb-4">
+            <div class="bg-info bg-opacity-10 p-3 rounded me-3">
+                <i class="bi bi-emoji-frown-fill text-info display-6"></i>
+            </div>
+            <div>
+                <h2 class="h3 mb-1 text-info">Gevoelens bij Onvervulde Behoeften</h2>
+                <p class="text-muted mb-0">Gevoelens die ontstaan wanneer behoeften niet worden vervuld</p>
+            </div>
+            <span class="badge bg-info fs-6 ms-auto">{{ categories.feelings_unfulfilled.tags|length }} tags</span>
+        </div>
+
+        <div class="row">
+            {% for maintag in categories.feelings_unfulfilled.maintags %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-info border-opacity-25 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="bi bi-tag-fill text-info mt-1 me-2"></i>
+                            <h5 class="card-title mb-0">{{ maintag.name }}</h5>
+                        </div>
+                        
+                        {% if maintag.subtags.all %}
+                        <div class="subtags mt-3">
+                            <h6 class="text-muted small mb-2">
+                                <i class="bi bi-arrow-return-right me-1"></i>Subtags:
+                            </h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for subtag in maintag.subtags.all %}
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-tag me-1"></i>{{ subtag.name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-3 pt-3 border-top">
+                            <small class="text-muted">
+                                <i class="bi bi-collection me-1"></i>
+                                {{ maintag.experiences.count }} ervaringen
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Overige tags -->
+    {% if categories.other.tags %}
+    <div class="category-section mb-5">
+        <div class="d-flex align-items-center mb-4">
+            <div class="bg-secondary bg-opacity-10 p-3 rounded me-3">
+                <i class="bi bi-tags-fill text-secondary display-6"></i>
+            </div>
+            <div>
+                <h2 class="h3 mb-1 text-secondary">Overige Tags</h2>
+                <p class="text-muted mb-0">Additionele tags voor specifieke situaties</p>
+            </div>
+            <span class="badge bg-secondary fs-6 ms-auto">{{ categories.other.tags|length }} tags</span>
+        </div>
+
+        <div class="row">
+            {% for maintag in categories.other.maintags %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-secondary border-opacity-25 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="bi bi-tag-fill text-secondary mt-1 me-2"></i>
+                            <h5 class="card-title mb-0">{{ maintag.name }}</h5>
+                        </div>
+                        
+                        {% if maintag.subtags.all %}
+                        <div class="subtags mt-3">
+                            <h6 class="text-muted small mb-2">
+                                <i class="bi bi-arrow-return-right me-1"></i>Subtags:
+                            </h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for subtag in maintag.subtags.all %}
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-tag me-1"></i>{{ subtag.name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-3 pt-3 border-top">
+                            <small class="text-muted">
+                                <i class="bi bi-collection me-1"></i>
+                                {{ maintag.experiences.count }} ervaringen
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Lege state -->
+    {% if not categories.needs.tags and not categories.feelings_fulfilled.tags and not categories.feelings_unfulfilled.tags and not categories.other.tags %}
+    <div class="text-center py-5">
+        <i class="bi bi-tags display-1 text-muted"></i>
+        <h3 class="h4 text-muted mt-3">Nog geen tags beschikbaar</h3>
+        <p class="text-muted">Wees de eerste die een tag toevoegt!</p>
+        <a href="{% url 'create-tag' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle me-1"></i>
+            Eerste Tag Toevoegen
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Call to Action -->
+    <div class="text-center mt-5 pt-4 border-top">
+        <p class="text-muted mb-3">Mis je een tag?</p>
+        <a href="{% url 'create-tag' %}" class="btn btn-outline-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            Nieuwe Tag Toevoegen
+        </a>
+    </div>
+</div>
+{% endblock %}

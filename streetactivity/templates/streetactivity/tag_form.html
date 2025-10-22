@@ -1,6 +1,13 @@
- {% extends "admin/main.html" %}
- {% load static %}
- {% block title %}
-    Tag {% if form.instance.pk %}bewerken{% else %}aanmaken{% endif %}
- {% endblock title %}
-{% include "admin/form.html" %}
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+   Tag
+   {% if form.instance.pk %}
+      bewerken
+   {% else %}
+      aanmaken
+   {% endif %}
+{% endblock title %}
+{% block content %}
+   {% include "admin/form.html" %}
+{% endblock content %}

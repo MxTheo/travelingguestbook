@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import StreetActivity, Experience, Tag
-from .forms import StreetActivityForm
+from .forms import StreetActivityForm, ExperienceForm, TagForm
 
 class StreetActivityListView(ListView):
     '''View to list all street activities with filtering options.'''
@@ -18,7 +18,7 @@ class StreetActivityCreateView(CreateView):
     '''View to create a new street activity.'''
     model = StreetActivity
     form_class = StreetActivityForm
-    
+
     def get_success_url(self):
         return reverse_lazy('streetactivity-detail', kwargs={'pk': self.object.pk})
 
@@ -50,7 +50,7 @@ class ExperienceDetailView(DetailView):
 class ExperienceCreateView(CreateView):
     '''View to create a new experience.'''
     model = Experience
-    fields = ['report', 'fase', 'tags']
+    form_class = ExperienceForm
 
     def form_valid(self, form):
         activity_id = self.kwargs['pk']
@@ -59,12 +59,64 @@ class ExperienceCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('experience-detail', kwargs={'pk': self.object.pk})
-    
+
 class TagListView(ListView):
     '''View to list all tags.'''
     model = Tag
     context_object_name = 'tags'
-    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        """Extend context data to organize tags by category."""
+        context = super().get_context_data(**kwargs)
+
+        categories = {
+            'needs': {
+                'maintags': Tag.objects.filter(
+                    nvc_category='needs',
+                    maintag__isnull=True
+                ).prefetch_related('subtags', 'experiences'),
+                'standalone_tags': Tag.objects.filter(
+                    nvc_category='needs',
+                    maintag__isnull=True
+                ).prefetch_related('experiences'),
+                'tags': Tag.objects.filter(nvc_category='needs')
+            },
+            'feelings_fulfilled': {
+                'maintags': Tag.objects.filter(
+                    nvc_category='feelings_fulfilled',
+                    maintag__isnull=True
+                ).prefetch_related('subtags', 'experiences'),
+                'standalone_tags': Tag.objects.filter(
+                    nvc_category='feelings_fulfilled',
+                    maintag__isnull=True
+                ).prefetch_related('experiences'),
+                'tags': Tag.objects.filter(nvc_category='feelings_fulfilled')
+            },
+            'feelings_unfulfilled': {
+                'maintags': Tag.objects.filter(
+                    nvc_category='feelings_unfulfilled',
+                    maintag__isnull=True
+                ).prefetch_related('subtags', 'experiences'),
+                'standalone_tags': Tag.objects.filter(
+                    nvc_category='feelings_unfulfilled',
+                    maintag__isnull=True
+                ).prefetch_related('experiences'),
+                'tags': Tag.objects.filter(nvc_category='feelings_unfulfilled')
+            },
+            'other': {
+                'maintags': Tag.objects.filter(
+                    nvc_category='other',
+                    maintag__isnull=True
+                ).prefetch_related('subtags', 'experiences'),
+                'standalone_tags': Tag.objects.filter(
+                    nvc_category='other',
+                    maintag__isnull=True
+                ).prefetch_related('experiences'),
+                'tags': Tag.objects.filter(nvc_category='other')
+            }
+        }
+        context['categories'] = categories
+        return context
 
 class TagDetailView(DetailView):
     '''View to display details of a single tag.'''
@@ -74,7 +126,7 @@ class TagDetailView(DetailView):
 class TagCreateView(CreateView):
     '''View to create a new tag.'''
     model = Tag
-    fields = ['name']
+    form_class = TagForm
 
     def get_success_url(self):
         return reverse_lazy('tag-list')

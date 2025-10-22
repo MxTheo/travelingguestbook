@@ -56,10 +56,14 @@ class TagForm(forms.ModelForm):
     class Meta:
         '''Model form for the Tag model.'''
         model = Tag
-        fields = ['name']
+        fields = ['name', 'nvc_category', 'maintag']
         labels = {
             'name': 'Naam van de tag',
+            'nvc_category': 'Behoefte of gevoel',
+            'maintag': 'Hoofdtag',
         }
         help_texts = {
             'name': 'Voer de naam van de tag in.',
+            'nvc_category': 'Selecteer of dit een behoefte of gevoel is.',
+            'maintag': 'Kies een hoofdtag als dit een subtag is.',
         }

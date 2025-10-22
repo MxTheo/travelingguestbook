@@ -15,8 +15,8 @@ FASE_CHOICES = [
 ]
 NVC_CHOICES = [
     ('needs', 'behoeften'),
-    ('feelings fulfilled', 'gevoelens bij vervulde behoeften'),
-    ('feelings unfulfilled', 'gevoelens bij onvervulde behoeften'),
+    ('feelings_fulfilled', 'gevoelens bij vervulde behoeften'),
+    ('feelings_unfulfilled', 'gevoelens bij onvervulde behoeften'),
     ('other', 'anders'),
 ]
 
@@ -111,7 +111,7 @@ class Experience(models.Model):
 
 class Tag(models.Model):
     """A tag is a label that can be associated with an experience of a street activity."""
-    
+
     name = models.CharField(
         max_length=50, 
         unique=True, 
@@ -123,18 +123,14 @@ class Tag(models.Model):
         default='needs',
         verbose_name="Behoefte of gevoel"
     )
-    main_tag = models.ForeignKey(
+    maintag = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True,
-        related_name='sub_tags',
+        related_name='subtags',
         verbose_name="Hoofdtag",
         help_text="Selecteer een hoofdtag als dit een subtag is."
-    )
-    description = models.TextField(
-        blank=True,
-        verbose_name="Beschrijving van de tag"
     )
 
     class Meta:
@@ -143,34 +139,34 @@ class Tag(models.Model):
         verbose_name_plural = "Tags"
 
     def __str__(self):
-        return self.name
+        """Return the name of the tag"""
+        return str(self.name)
 
     def clean(self):
-        """Voorkom circulaire referenties"""
-        if self.main_tag and self.main_tag == self:
+        """Prohibit circular references and deep nesting of tags."""
+        if self.maintag and self.maintag == self:
             raise ValidationError({
-                'main_tag': 'Een tag kan niet zijn eigen hoofdtag zijn.'
+                'maintag': 'Een tag kan niet zijn eigen hoofdtag zijn.'
             })
-        if self.main_tag and self.main_tag.main_tag:
-            # Voorkom diepe nesting (optioneel, afhankelijk van je behoeften)
+        if self.maintag and self.maintag.maintag:
             raise ValidationError({
-                'main_tag': 'Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd.'
+                'maintag': 'Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd.'
             })
 
     @property
-    def is_main_tag(self):
-        """Check of dit een hoofdtag is"""
-        return self.main_tag is None
+    def is_maintag(self):
+        """Check if this tag is a main tag"""
+        return self.maintag is None
 
     @property
     def has_subtags(self):
-        """Check of deze tag subtags heeft"""
-        return self.sub_tags.exists()
+        """Check if this tag has subtags"""
+        return self.subtags.exists()
 
     def get_all_related_experiences(self):
         """Get all experiences related to this tag and its subtags"""
-        if self.is_main_tag:
-            subtags = self.sub_tags.all()
+        if self.is_maintag:
+            subtags = self.subtags.all()
             return Experience.objects.filter(
                 models.Q(tags=self) | models.Q(tags__in=subtags)
             ).distinct()

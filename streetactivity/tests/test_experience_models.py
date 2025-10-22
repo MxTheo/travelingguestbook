@@ -124,6 +124,21 @@ class TestTagModel:
         assert "tags" in response.context
         assert len(response.context["tags"]) == 3
 
+    def test_tag_listview_context_organization(self, client):
+        """Test that the Tag list view context organizes tags by category."""
+        needs_tag = TagFactory(nvc_category='needs')
+        feelings_fulfilled_tag = TagFactory(nvc_category='feelings_fulfilled')
+        feelings_unfulfilled_tag = TagFactory(nvc_category='feelings_unfulfilled')
+        other_tag = TagFactory(nvc_category='other')
+
+        response = client.get(reverse("tag-list"))
+        context = response.context
+
+        assert needs_tag in context['categories']['needs']['tags']
+        assert feelings_fulfilled_tag in context['categories']['feelings_fulfilled']['tags']
+        assert feelings_unfulfilled_tag in context['categories']['feelings_unfulfilled']['tags']
+        assert other_tag in context['categories']['other']['tags']
+
     def test_tag_detailview(self, client):
         """Test the Tag detail view to ensure it returns a 200 status code
         and contains the expected context."""
@@ -138,91 +153,91 @@ class TestTagModel:
 
     def test_tag_hierarchy(self):
         """Test the hierarchical relationship between main tags and subtags."""
-        main_tag = TagFactory(name="Main Tag")
-        sub_tag1 = TagFactory(name="Sub Tag 1", main_tag=main_tag)
-        sub_tag2 = TagFactory(name="Sub Tag 2", main_tag=main_tag)
+        maintag = TagFactory(name="Main Tag")
+        subtag1 = TagFactory(name="Sub Tag 1", maintag=maintag)
+        subtag2 = TagFactory(name="Sub Tag 2", maintag=maintag)
 
-        assert sub_tag1.main_tag == main_tag
-        assert sub_tag2.main_tag == main_tag
-        assert list(main_tag.sub_tags.all()) == [sub_tag1, sub_tag2]
+        assert subtag1.maintag == maintag
+        assert subtag2.maintag == maintag
+        assert list(maintag.subtags.all()) == [subtag1, subtag2]
 
-    def test_tag_is_main_tag_property(self):
-        """Test the is_main_tag property of the Tag model."""
-        main_tag = TagFactory(main_tag=None)
-        sub_tag = TagFactory(main_tag=main_tag)
+    def test_tag_is_maintag_property(self):
+        """Test the is_maintag property of the Tag model."""
+        maintag = TagFactory(maintag=None)
+        subtag = TagFactory(maintag=maintag)
 
-        assert main_tag.is_main_tag is True
-        assert sub_tag.is_main_tag is False
+        assert maintag.is_maintag is True
+        assert subtag.is_maintag is False
     
     def test_tag_has_subtags_property(self):
         """Test the has_subtags property of the Tag model."""
-        main_tag = TagFactory(main_tag=None)
-        sub_tag = TagFactory(main_tag=main_tag)
+        maintag = TagFactory(maintag=None)
+        subtag = TagFactory(maintag=maintag)
 
-        assert main_tag.has_subtags is True
-        assert sub_tag.has_subtags is False
+        assert maintag.has_subtags is True
+        assert subtag.has_subtags is False
 
     def test_tag_get_all_related_experiences_method(self):
         """Test the get_all_related_experiences method of the Tag model."""
-        main_tag = TagFactory()
-        sub_tag = TagFactory(main_tag=main_tag)
+        maintag = TagFactory()
+        subtag = TagFactory(maintag=maintag)
 
         exp1 = ExperienceFactory()
-        exp1.tags.add(main_tag)
+        exp1.tags.add(maintag)
 
         exp2 = ExperienceFactory()
-        exp2.tags.add(sub_tag)
+        exp2.tags.add(subtag)
 
-        related_experiences = main_tag.get_all_related_experiences()
+        related_experiences = maintag.get_all_related_experiences()
 
         assert exp1 in related_experiences
         assert exp2 in related_experiences
 
-    def test_tag_get_all_related_experiences_not_main_tag(self):
+    def test_tag_get_all_related_experiences_not_maintag(self):
         """Test the get_all_related_experiences method for a tag that is not a main tag."""
-        main_tag = TagFactory()
-        sub_tag = TagFactory(main_tag=main_tag)
+        maintag = TagFactory()
+        subtag = TagFactory(maintag=maintag)
 
         exp1 = ExperienceFactory()
-        exp1.tags.add(main_tag)
+        exp1.tags.add(maintag)
 
         exp2 = ExperienceFactory()
-        exp2.tags.add(sub_tag)
+        exp2.tags.add(subtag)
 
-        related_experiences = sub_tag.get_all_related_experiences()
+        related_experiences = subtag.get_all_related_experiences()
 
         assert exp2 in related_experiences
         assert exp1 not in related_experiences
 
     def test_tag_clean_method(self):
-        """Test that the main_tag to itself triggers ValidationError in the clean method."""
+        """Test that the maintag to itself triggers ValidationError in the clean method."""
         tag = TagFactory()
-        tag.main_tag = tag
+        tag.maintag = tag
 
         try:
             tag.clean()
         except ValidationError as e:
-            assert 'main_tag' in e.message_dict
-            assert e.message_dict['main_tag'] == ['Een tag kan niet zijn eigen hoofdtag zijn.']
+            assert 'maintag' in e.message_dict
+            assert e.message_dict['maintag'] == ['Een tag kan niet zijn eigen hoofdtag zijn.']
 
     def test_tag_valid_clean_method(self):
         """Test the clean method of the Tag model for valid data."""
-        main_tag = TagFactory(main_tag=None)
-        sub_tag = TagFactory(main_tag=main_tag)
+        maintag = TagFactory(maintag=None)
+        subtag = TagFactory(maintag=maintag)
 
-        assert sub_tag.clean() is None
+        assert subtag.clean() is None
 
     def test_tag_circular_reference_validation(self):
-        """Test that circular references in Tag main_tag are prevented."""
-        main_tag = TagFactory(main_tag=None)
-        sub_tag = TagFactory(main_tag=main_tag)
+        """Test that circular references in Tag maintag are prevented."""
+        maintag = TagFactory(maintag=None)
+        subtag = TagFactory(maintag=maintag)
 
-        main_tag.main_tag = sub_tag
+        maintag.maintag = subtag
 
         try:
-            main_tag.clean()
+            maintag.clean()
         except ValidationError as e:
-            assert 'main_tag' in e.message_dict
-            assert e.message_dict['main_tag'] == ['Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd.']
+            assert 'maintag' in e.message_dict
+            assert e.message_dict['maintag'] == ['Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd.']
 
 

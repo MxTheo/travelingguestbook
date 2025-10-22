@@ -65,12 +65,12 @@ class TagFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: f'Tag {n}')
     nvc_category = 'needs'
-    main_tag = None
+    maintag = None
 
 class SubTagFactory(TagFactory):
     """Mock for streetactivities Tag as subtag"""
-    main_tag = factory.LazyAttribute(
-        lambda o: TagFactory.create(main_tag=None)
+    maintag = factory.LazyAttribute(
+        lambda o: TagFactory.create(maintag=None)
     )
 
 class PersonaFactory(factory.django.DjangoModelFactory):
