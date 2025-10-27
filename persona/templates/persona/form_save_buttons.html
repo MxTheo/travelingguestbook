@@ -1,0 +1,13 @@
+<div class="mt-4 d-flex flex-column flex-md-row gap-2">
+    <button type="submit" class="btn btn-success order-1 order-md-0" name="save">
+        <i class="bi bi-check-circle me-1"></i>Toevoegen
+    </button>
+    
+    <button type="submit" class="btn btn-outline-primary order-2 order-md-1" name="add_another" value='True'>
+        <i class="bi bi-plus-circle me-1"></i>Opslaan en nieuwe toevoegen
+    </button>
+    
+    <a href="{% url 'persona-detail' pk=persona.pk %}" class="btn btn-outline-secondary order-0 order-md-2 ms-md-auto">
+        Annuleren
+    </a>
+</div>

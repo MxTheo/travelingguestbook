@@ -1,5 +1,5 @@
 from django.views import generic
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import Persona, Problem, Reaction
@@ -38,7 +38,11 @@ class ProblemCreateView(generic.CreateView):
         persona = get_object_or_404(Persona, pk=self.kwargs['persona_pk'])
         form.instance.persona = persona
         messages.success(self.request, 'Probleem succesvol toegevoegd!')
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        if self.request.POST.get('add_another'):
+            return redirect('create-problem', persona_pk=self.kwargs['persona_pk'])
+        return response
+
 
     def get_success_url(self):
         return reverse_lazy('persona-detail', kwargs={'pk': self.kwargs['persona_pk']})
@@ -67,7 +71,10 @@ class ReactionCreateView(generic.CreateView):
         persona = get_object_or_404(Persona, pk=self.kwargs['persona_pk'])
         form.instance.persona = persona
         messages.success(self.request, 'Reactie succesvol toegevoegd!')
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        if self.request.POST.get('add_another'):
+            return redirect('create-reaction', persona_pk=self.kwargs['persona_pk'])
+        return response
 
     def get_success_url(self):
         return reverse_lazy('persona-detail', kwargs={'pk': self.kwargs['persona_pk']})

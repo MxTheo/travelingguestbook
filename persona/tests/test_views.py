@@ -125,6 +125,27 @@ class TestProblemCreateView:
         assert response.context['form'].errors
         assert persona.problems.count() == 0
 
+    def test_problem_create_view_add_another(self, client):
+        """Test posting data with 'add_another' to problem create view."""
+        persona = PersonaFactory()
+        url = reverse('create-problem', kwargs={'persona_pk': persona.pk})
+
+        data = {
+            'text': 'First problem description',
+            'add_another': 'True',  # Simulate the add another button
+        }
+
+        response = client.post(url, data, follow=True)
+
+        assert response.status_code == 200  # Should render the form again
+        assert 'form' in response.context
+        assert response.context['persona'] == persona
+
+        # Check if problem was created
+        assert persona.problems.count() == 1
+        problem = persona.problems.first()
+        assert problem.text == 'First problem description'
+
 class TestReactionCreateView:
     """Tests for the ReactionCreateView."""
     def test_reaction_create_view_get(self, client):
@@ -174,6 +195,26 @@ class TestReactionCreateView:
         assert response.context['form'].errors
         assert persona.reactions.count() == 0
 
+    def test_reaction_create_view_add_another(self, client):
+        """Test posting data with 'add_another' to reaction create view."""
+        persona = PersonaFactory()
+        url = reverse('create-reaction', kwargs={'persona_pk': persona.pk})
+
+        data = {
+            'text': 'First reaction text',
+            'add_another': 'True',  # Simulate the add another button
+        }
+
+        response = client.post(url, data, follow=True)
+
+        assert response.status_code == 200  # Should render the form again
+        assert 'form' in response.context
+        assert response.context['persona'] == persona
+
+        # Check if reaction was created
+        assert persona.reactions.count() == 1
+        reaction = persona.reactions.first()
+        assert reaction.text == 'First reaction text'
 
 class TestReactionDeleteView:
     """Tests for the ReactionDeleteView."""

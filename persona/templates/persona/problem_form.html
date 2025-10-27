@@ -2,66 +2,56 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block title %}
-   Probleem
-   {% if form.instance.pk %}
-      bewerken
-   {% else %}
-      toevoegen
-   {% endif %}
+    Probleem
+    {% if form.instance.pk %}
+        bewerken
+    {% else %}
+        toevoegen
+    {% endif %}
 {% endblock title %}
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        Probleem toevoegen
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted mb-4">
-                        Voeg een probleem toe voor: <strong>{{ persona.title }}</strong>
-                    </p>
-                    
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                        
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-success" name="save">
-                                <i class="bi bi-check-circle me-1"></i>Probleem toevoegen
-                            </button>
-                            <a href="{% url 'persona-detail' pk=persona.pk %}" class="btn btn-secondary">
-                                Annuleren
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Toon recent toegevoegde problemen -->
-            {% if persona.problems.exists %}
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Recent toegevoegde problemen</h5>
-                </div>
-                <div class="card-body">
-                    <div class="list-group">
-                        {% for problem in persona.problems.all|slice:":5" %}
-                        <div class="list-group-item">
-                            <div class="d-flex w-100 justify-content-between">
-                                <p class="mb-1">{{ problem.text }}</p>
-                                <small class="text-muted">{{ problem.date_added|timesince }} geleden</small>
-                            </div>
-                        </div>
-                        {% endfor %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Probleem toevoegen
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-4">
+                            Voeg een probleem toe voor: <strong>{{ persona.title }}</strong>
+                        </p>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            {% include "persona/form_save_buttons.html" %}
+                        </form>
                     </div>
                 </div>
+                <!-- Toon recent toegevoegde problemen -->
+                {% if persona.problems.exists %}
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recent toegevoegde problemen</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                {% for problem in persona.problems.all|slice:":5" %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <p class="mb-1">{{ problem.text }}</p>
+                                            <small class="text-muted">{{ problem.date_added|timesince }} geleden</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

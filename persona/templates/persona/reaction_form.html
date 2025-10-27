@@ -29,14 +29,7 @@
                         {% csrf_token %}
                         {{ form|crispy }}
                         
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-success" name="save">
-                                <i class="bi bi-check-circle me-1"></i>Probleem toevoegen
-                            </button>
-                            <a href="{% url 'persona-detail' pk=persona.pk %}" class="btn btn-secondary">
-                                Annuleren
-                            </a>
-                        </div>
+                        {% include "persona/form_save_buttons.html" %}
                     </form>
                 </div>
             </div>
@@ -64,4 +57,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
