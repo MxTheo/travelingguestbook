@@ -14,10 +14,10 @@ FASE_CHOICES = [
     ('climax', 'climaxervaring'),
 ]
 NVC_CHOICES = [
-    ('needs', 'behoeften'),
-    ('feelings_fulfilled', 'gevoelens bij vervulde behoeften'),
-    ('feelings_unfulfilled', 'gevoelens bij onvervulde behoeften'),
-    ('other', 'anders'),
+    ('needs', 'Behoeften'),
+    ('feelings_fulfilled', 'Gevoelens bij vervulde behoeften'),
+    ('feelings_unfulfilled', 'Gevoelens bij onvervulde behoeften'),
+    ('other', 'Anders'),
 ]
 
 
@@ -36,6 +36,8 @@ class StreetActivity(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
+        verbose_name = "Straatactiviteit"
+        verbose_name_plural = "Straatactiviteiten"
         ordering = ['name']
 
     def __str__(self):
@@ -69,7 +71,7 @@ class Experience(models.Model):
         verbose_name="Fase van de ervaring"
     )
     from_practitioner = models.BooleanField(
-        default=False,
+        default=True,
         verbose_name="Is deze ervaring van een beoefenaar?"
     )
     tags = models.ManyToManyField(

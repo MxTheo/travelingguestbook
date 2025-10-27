@@ -1,4 +1,4 @@
-/* streetactivity_detail.css - MINIMALE custom CSS */
+/* streetactivity_detail.css - MINIMALE custom CSS met Bootstrap variabelen */
 
 .activity-detail-container {
     max-width: 1000px;
@@ -10,19 +10,19 @@
 }
 
 .hover-shadow:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0.5rem 1rem rgba(var(--bs-body-color-rgb), 0.15);
     transform: translateY(-2px);
     transition: all 0.2s ease-in-out;
 }
 
 /* Voor de link versie */
 .link-primary {
-    color: #0d6efd;
+    color: var(--bs-primary);
     font-weight: 500;
 }
 
 .link-primary:hover {
-    color: #0a58ca;
+    color: var(--bs-primary-dark);
     text-decoration: underline !important;
 }
 
@@ -30,6 +30,62 @@
 .card[onclick], 
 .card a {
     cursor: pointer;
+}
+
+.word-cloud {
+    text-align: center;
+    line-height: 2;
+    min-height: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.word-cloud-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 2px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.word-cloud-tag:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(var(--bs-body-color-rgb), 0.2);
+}
+
+
+.word-cloud-tag[data-category="needs"] {
+    background-color: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary-text-emphasis);
+    border: 1px solid var(--bs-primary-border-subtle);
+}
+
+.word-cloud-tag[data-category="feelings_fulfilled"] {
+    background-color: var(--bs-success-bg-subtle);
+    color: var(--bs-success-text-emphasis);
+    border: 1px solid var(--bs-success-border-subtle);
+}
+
+.word-cloud-tag[data-category="feelings_unfulfilled"] {
+    background-color: var(--bs-warning-bg-subtle);
+    color: var(--bs-warning-text-emphasis);
+    border: 1px solid var(--bs-warning-border-subtle);
+}
+
+.word-cloud-tag[data-category="other"] {
+    background-color: var(--bs-info-bg-subtle);
+    color: var(--bs-info-text-emphasis);
+    border: 1px solid var(--bs-info-border-subtle);
+}
+
+.donut-chart {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
 }
 
 /* Responsive aanpassingen */
@@ -40,5 +96,26 @@
     
     .core-question {
         font-size: 1.1rem !important;
+    }
+
+    .donut-chart {
+        width: 150px !important;
+        height: 150px !important;
+    }
+    
+    
+    .btn-group .btn {
+        font-size: 0.875rem;
+        padding: 0.375rem 0.5rem;
+    }
+    
+    .word-cloud {
+        min-height: 150px;
+        gap: 6px;
+    }
+    
+    .word-cloud-tag {
+        padding: 3px 6px;
+        font-size: 0.875rem;
     }
 }

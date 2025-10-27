@@ -58,6 +58,15 @@ class ExperienceFactory(factory.django.DjangoModelFactory):
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)
 
+    @factory.post_generation
+    def tags(self, create, extracted, **kwargs):
+        """Post generation hook to add tags to the experience."""
+        if not create:
+            return
+        if extracted:
+            for tag in extracted:
+                self.tags.add(tag)
+
 class TagFactory(factory.django.DjangoModelFactory):
     """Mock for streetactivities Tag"""
     class Meta:

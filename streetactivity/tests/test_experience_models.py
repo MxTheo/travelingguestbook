@@ -3,6 +3,7 @@ from streetactivity.models import Experience, Tag
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 
+
 class TestExperienceModel:
     """Tests for the Experience model."""
     def test_experience_str_method(self):
@@ -19,6 +20,15 @@ class TestExperienceModel:
         expected_str = f"{activity.name} - Ervaring {experience.id}"
         assert str(experience) == expected_str
 
+    def test_experience_createview_leads_for_form_from_passerby(self, client):
+        """Test the Experience create view for passerby to ensure it
+        returns a 200 status code and contains the expected form in context."""
+        activity = StreetActivityFactory()
+        create_url = reverse("create-experience-from-passerby", args=[activity.id])
+        response = client.get(create_url)
+        assert response.status_code == 200
+        assert "Ervaring als Voorbijganger" in response.content.decode()
+
     def test_experience_createview(self, client):
         """Test the Experience create view to ensure it returns a 200 status code
         and contains the expected form in context."""
@@ -34,14 +44,96 @@ class TestExperienceModel:
         assert response.status_code == 200
         assert Experience.objects.count() == 1
 
+    def test_experience_createview_from_practitioner(self, client):
+        """Test the Experience create view for practitioners to ensure it
+        returns a 200 status code and sets from_practitioner to True."""
+        activity = StreetActivityFactory()
+        create_url = reverse("create-experience-from-practitioner", args=[activity.id])
+        experience_data = ExperienceFactory.build().__dict__
+        for field in ["_state", "id", 'activity_id']:
+            experience_data.pop(field, None)
+        response = client.post(create_url, experience_data, follow=True)
+        assert response.status_code == 200
+        assert Experience.objects.count() == 1
+        experience = Experience.objects.first()
+        assert experience.from_practitioner
+
+    def test_experience_createview_from_passerby(self, client):
+        """Test the Experience create view for passerby to ensure it
+        returns a 200 status code and sets from_practitioner to False."""
+        activity = StreetActivityFactory()
+        create_url = reverse("create-experience-from-passerby", args=[activity.id])
+        experience_data = ExperienceFactory.build().__dict__
+        for field in ["_state", "id", 'activity_id']:
+            experience_data.pop(field, None)
+        response = client.post(create_url, experience_data, follow=True)
+        assert response.status_code == 200
+        assert Experience.objects.count() == 1
+        experience = Experience.objects.first()
+        assert not experience.from_practitioner
+
+    def test_createview_get_organized_tags(self, client):
+        """Test that the Experience create view context contains organized tags."""
+        activity = StreetActivityFactory()
+        TagFactory.create_batch(2, nvc_category='needs')
+        TagFactory.create_batch(2, nvc_category='feelings_fulfilled')
+        TagFactory.create_batch(2, nvc_category='feelings_unfulfilled')
+        TagFactory.create_batch(2, nvc_category='other')
+
+        create_url = reverse("create-experience", args=[activity.id])
+        response = client.get(create_url)
+
+        assert response.status_code == 200
+        organized_tags = response.context_data.get("organized_tags_list")
+        assert len(organized_tags[0]['main_tags']) == 2
+        assert len(organized_tags[1]['main_tags']) == 2
+        assert len(organized_tags[2]['main_tags']) == 2
+        assert len(organized_tags[3]['main_tags']) == 2
+
     def test_experience_listview(self, client):
         """Test the Experience list view to ensure it returns a 200 status code
         and contains the expected context."""
-        ExperienceFactory.create_batch(3)
-        response = client.get(reverse("experience-list"))
+        activity = StreetActivityFactory()
+        for _ in range(3):
+            ExperienceFactory(activity=activity)
+        response = client.get(reverse("experience-list-streetactivity", args=[activity.id]))
         assert response.status_code == 200
         assert "experiences" in response.context
         assert len(response.context["experiences"]) == 3
+
+    def test_experience_listview_by_streetactivity(self, client):
+        """Test the Experience list view filtered by StreetActivity to ensure it
+        returns a 200 status code and contains the expected context."""
+        activity = StreetActivityFactory()
+        ExperienceFactory.create_batch(2, activity=activity)
+        ExperienceFactory.create_batch(2)  # Experiences for other activities
+
+        list_url = reverse("experience-list-streetactivity", args=[activity.id])
+        response = client.get(list_url)
+
+        assert response.status_code == 200
+        assert "experiences" in response.context
+        assert len(response.context["experiences"]) == 2
+        for experience in response.context["experiences"]:
+            assert experience.activity == activity
+
+    def test_experience_listview_by_tag(self, client):
+        """Test the Experience list view filtered by Tag to ensure it
+        returns a 200 status code and contains the expected context."""
+        tag = TagFactory()
+        experience_with_tag = ExperienceFactory()
+        experience_with_tag.tags.add(tag)
+
+        ExperienceFactory()  # Experience without the tag
+
+        list_url = reverse("experience-list-streetactivity", args=[tag.id])
+        response = client.get(list_url)
+
+        assert response.status_code == 200
+        assert "experiences" in response.context
+        assert len(response.context["experiences"]) == 1
+        for experience in response.context["experiences"]:
+            assert tag in experience.tags.all()
 
     def test_experience_ordering(self):
         """Test that Experience instances are ordered by date in descending order."""
@@ -239,5 +331,3 @@ class TestTagModel:
         except ValidationError as e:
             assert 'maintag' in e.message_dict
             assert e.message_dict['maintag'] == ['Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd.']
-
-

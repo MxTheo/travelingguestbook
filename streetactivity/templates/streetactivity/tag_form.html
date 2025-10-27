@@ -9,5 +9,17 @@
    {% endif %}
 {% endblock title %}
 {% block content %}
+<div class="container mt-4">
+   <div class="d-flex justify-content-center align-items-center mb-4">
+      <h1 class="h3 mb-0 text-success-emphasis">
+         Tag
+         {% if form.instance.pk %}
+            bewerken
+         {% else %}
+            aanmaken
+         {% endif %}
+      </h1>
+   </div>
    {% include "admin/form.html" %}
+</div>
 {% endblock content %}

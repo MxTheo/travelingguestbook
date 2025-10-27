@@ -27,27 +27,52 @@ class StreetActivityForm(forms.ModelForm):
             'supplies': forms.Textarea(attrs={'rows': 3}),
         }
 
-class ExperienceForm(forms.ModelForm):
-    """Form for creating or updating an Experience."""
-
+# forms.py
+class BaseExperienceForm(forms.ModelForm):
+    """Base form for Experience with common fields."""
+    
     class Meta:
-        '''Model form for the Experience model.'''
         model = Experience
-        fields = ['report', 'fase', 'tags']
+        fields = ['fase', 'tags', 'report', 'external_link']
+        widgets = {
+            'report': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
+            'external_link': forms.URLInput(attrs={'class': 'form-control'}),
+            'fase': forms.RadioSelect(attrs={'class': 'form-check-input'}),
+            'tags': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+        }
+
+class PasserbyExperienceForm(BaseExperienceForm):
+    """Simplified form for passersby - category and tags first."""
+    
+    class Meta(BaseExperienceForm.Meta):
         labels = {
-            'fase': 'Fase van de ervaring',
-            'tags': 'Tags voor de ervaring',
-            'report': 'Beschrijving van de ervaring',
+            'fase': 'Hoe zou je deze ervaring omschrijven?',
+            'tags': 'Welke woorden passen bij je ervaring?',
+            'report': 'Wil je iets toevoegen? (optioneel)',
+            'external_link': 'Link naar meer informatie (optioneel)',
         }
         help_texts = {
-            'fase': 'Selecteer de fase waarin deze ervaring plaatsvond.',
-            'tags': 'Kies relevante tags voor deze ervaring.',
-            'report': 'Beschrijf je ervaring in detail.',
+            'fase': 'Kies het type ervaring dat het beste past',
+            'tags': 'Kies 3 tags die je ervaring weergeven',
+            'report': 'Een beschrijving van wat er gebeurde',
+            'external_link': '',
         }
-        widgets = {
-            'fase': forms.Select(),
-            'tags': forms.CheckboxSelectMultiple(),
-            'report': forms.Textarea(attrs={'rows': 4}),
+
+class PractitionerExperienceForm(BaseExperienceForm):
+    """Detailed form for practitioners - reflection first."""
+    
+    class Meta(BaseExperienceForm.Meta):
+        labels = {
+            'fase': 'Hoe zou je deze ervaring plaatsen?',
+            'tags': 'Welke thema\'s komen naar voren?',
+            'report': 'Jouw reflectie op deze ervaring',
+            'external_link': 'Link naar verdere reflectie (optioneel)',
+        }
+        help_texts = {
+            'fase': 'Bepaal de helderheid van jouw ervaring',
+            'tags': 'Kies tags die de kern van je ervaring raken',
+            'report': 'Deel wat je waarnam - in jezelf en om je heen',
+            'external_link': 'Link naar je blog of iets anders',
         }
 
 class TagForm(forms.ModelForm):

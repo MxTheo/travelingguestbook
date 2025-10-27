@@ -1,8 +1,141 @@
 {% extends "admin/main.html" %}
 {% load static %}
 {% block title %}
-Ervaringen
+    Ervaringen
 {% endblock title %}
 {% block content %}
-
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col">
+                {% if object_list %}
+                    {% with first_experience=object_list.0 %}
+                        {% if first_experience.activity %}
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h1 class="h3 mb-2">{{ first_experience.activity.name }}</h1>
+                                    <p class="text-muted mb-0">"{{ first_experience.activity.question }}"</p>
+                                </div>
+                                <a href="{% url 'streetactivity-detail' first_experience.activity.pk %}"
+                                   class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-arrow-left"></i> Terug
+                                </a>
+                            </div>
+                            <div class="text-muted small">
+                                <i class="bi bi-collection me-1"></i>
+                                {{ page_obj.paginator.count }} ervaringen
+                            </div>
+                        {% else %}
+                            <h1 class="h3 mb-2">Ervaringen met {{ view.kwargs.pk }}</h1>
+                            <div class="text-muted small">{{ page_obj.paginator.count }} ervaringen</div>
+                        {% endif %}
+                    {% endwith %}
+                {% else %}
+                    <h1 class="h3 mb-2">Geen ervaringen gevonden</h1>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Ervaringen Lijst -->
+        <div class="row">
+            <div class="col">
+                {% if object_list %}
+                    {% for experience in object_list %}
+                        <div class="card mb-3 border">
+                            <div class="card-body">
+                                <!-- Header -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-medium">
+                                                {% if experience.from_practitioner %}
+                                                    <i class="bi bi-rocket-takeoff-fill text-warning fs-5"></i> Beoefenaar
+                                                {% else %}
+                                                    <i class="bi bi-person-fill text-primary fs-5"></i> Voorbijganger
+                                                {% endif %}
+                                            </span>
+                                            <small class="text-muted">{{ experience.date_created|date:"d M Y" }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Content -->
+                                <div class="mb-3">
+                                    <p class="card-text mb-0">{{ experience.report|linebreaksbr }}</p>
+                                </div>
+                                <!-- Tags -->
+                                {% if experience.tags.all %}
+                                    <div class="mb-3">
+                                        {% for tag in experience.tags.all %}
+                                            <span class="badge bg-light text-dark border me-1 mb-1">{{ tag.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <!-- External Link -->
+                                {% if experience.external_link %}
+                                    <div class="mt-3 pt-2 border-top">
+                                        <a href="{{ experience.external_link }}"
+                                           target="_blank"
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-box-arrow-up-right me-1"></i> Lees meer
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                <div class="mt-1 justify-content-end d-flex">
+                                    <span class="badge {% if experience.fase == 'pioneer' %}bg-primary{% elif experience.fase == 'intermediate' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                        {{ experience.get_fase_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">← Vorige</a>
+                                    </li>
+                                {% endif %}
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ num }}</span>
+                                        </li>
+                                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Volgende →</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="text-center py-5">
+                        <i class="bi bi-chat-square-text display-4 text-muted mb-3"></i>
+                        <h3 class="h5 text-muted mb-2">Nog geen ervaringen</h3>
+                        <p class="text-muted mb-4">Deel als eerste je ervaring.</p>
+                        {% if first_experience.activity %}
+                            <div>
+                                <a href="{% url 'create-experience-from-passerby' first_experience.activity.pk %}"
+                                   class="btn btn-primary btn-sm me-2">
+                                    <i class="bi bi-person-plus me-1"></i>Voorbijganger
+                                </a>
+                                <a href="{% url 'create-experience-from-practitioner' first_experience.activity.pk %}"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-star me-1"></i>Beoefenaar
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock content %}

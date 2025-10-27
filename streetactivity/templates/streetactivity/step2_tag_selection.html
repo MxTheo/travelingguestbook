@@ -1,0 +1,75 @@
+<!-- Tags Selection - Stap 2 -->
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h5 class="card-title mb-0">
+            <span class="badge bg-primary me-2">2</span>
+            {{ form.tags.label }}
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <div class="form-text mb-3">{{ form.tags.help_text }}</div>
+            <!-- Tags by Category -->
+            <div class="row g-3">
+                {% for tag_group in organized_tags_list %}
+                    <div class="">
+                        <div class="card">
+                            <div class="card-header py-2">
+                                <h6 class="mb-0 small">
+                                    {% if tag_group.nvc_category == 'needs' %}
+                                        <i class="bi bi-heart text-danger"></i>
+                                    {% elif tag_group.nvc_category == 'feelings_fulfilled' %}
+                                        <i class="bi bi-emoji-smile text-primary"></i>
+                                    {% elif tag_group.nvc_category == 'feelings_unfulfilled' %}
+                                        <i class="bi bi-emoji-frown text-primary"></i>
+                                    {% else %}
+                                        <i class="bi bi-tag text-secondary"></i>
+                                    {% endif %}
+                                    {{ tag_group.category_name }}
+                                </h6>
+                            </div>
+                            <div class="card-body py-3">
+                                <div class="row g-2">
+                                    {% for main_tag_data in tag_group.main_tags %}
+                                        <div class="col-6 col-md-4">
+                                            <!-- Main tag in bold -->
+                                            <div class="form-check mb-2 text-start">
+                                                <input type="checkbox"
+                                                       name="tags"
+                                                       value="{{ main_tag_data.tag.id }}"
+                                                       id="tag_{{ main_tag_data.tag.id }}"
+                                                       class="form-check-input"
+                                                       {% if main_tag_data.tag.id in form.tags.value %}checked{% endif %}>
+                                                <label for="tag_{{ main_tag_data.tag.id }}"
+                                                       class="form-check-label small fw-bold">
+                                                    {{ main_tag_data.tag.name }}
+                                                </label>
+                                            </div>
+                                            <!-- Subtags indented -->
+                                            {% for subtag in main_tag_data.subtags %}
+                                                <div class="form-check ms-3 mb-1 text-start">
+                                                    <input type="checkbox"
+                                                           name="tags"
+                                                           value="{{ subtag.id }}"
+                                                           id="tag_{{ subtag.id }}"
+                                                           class="form-check-input"
+                                                           {% if subtag.id in form.tags.value %}checked{% endif %}>
+                                                    <label for="tag_{{ subtag.id }}" class="form-check-label small">{{ subtag.name }}</label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if form.tags.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.tags.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
