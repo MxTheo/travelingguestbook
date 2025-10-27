@@ -1,6 +1,5 @@
 # forms.py
 from django import forms
-from django.forms import inlineformset_factory
 from .models import Persona, Problem, Reaction
 
 class PersonaForm(forms.ModelForm):

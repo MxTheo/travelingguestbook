@@ -48,9 +48,9 @@
                         <h3 class="h5 mb-0">
                             <i class="bi bi-exclamation-triangle me-2"></i>Problemen
                         </h3>
-                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#problemModal">
+                        <a href="{% url 'create-problem' persona.pk %}" class="btn btn-success btn-sm">
                             <i class="bi bi-plus me-1"></i>Toevoegen
-                        </button>
+                        </a>
                     </div>
                     <div class="card-body">
                         {% if persona.problems.all %}
@@ -72,9 +72,9 @@
                             <div class="text-center py-4">
                                 <i class="bi bi-exclamation-triangle display-4 text-muted mb-3"></i>
                                 <p class="text-muted">Nog geen problemen toegevoegd.</p>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#problemModal">
+                                <a href="{% url 'create-problem' persona.pk %}" class="btn btn-success">
                                     <i class="bi bi-plus me-1"></i>Voeg eerste probleem toe
-                                </button>
+                                </a>
                             </div>
                         {% endif %}
                     </div>
@@ -88,9 +88,9 @@
                         <h3 class="h5 mb-0">
                             <i class="bi bi-chat-quote me-2"></i>Reacties
                         </h3>
-                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#reactionModal">
+                        <a href="{% url 'create-reaction' persona.pk %}" class="btn btn-success btn-sm">
                             <i class="bi bi-plus me-1"></i>Toevoegen
-                        </button>
+                        </a>
                     </div>
                     <div class="card-body">
                         {% if persona.reactions.all %}
@@ -112,9 +112,9 @@
                             <div class="text-center py-4">
                                 <i class="bi bi-chat-quote display-4 text-muted mb-3"></i>
                                 <p class="text-muted">Nog geen reacties toegevoegd.</p>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reactionModal">
+                                <a href="{% url 'create-reaction' persona.pk %}" class="btn btn-success">
                                     <i class="bi bi-plus me-1"></i>Voeg eerste reactie toe
-                                </button>
+                                </a>
                             </div>
                         {% endif %}
                     </div>
@@ -122,8 +122,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Include modals -->
-    {% include "persona/problem_form.html" %}
-    {% include "persona/reaction_form.html" %}
 {% endblock content %}

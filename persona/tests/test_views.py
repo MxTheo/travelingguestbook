@@ -174,6 +174,7 @@ class TestReactionCreateView:
         assert response.context['form'].errors
         assert persona.reactions.count() == 0
 
+
 class TestReactionDeleteView:
     """Tests for the ReactionDeleteView."""
     def test_reaction_delete_view_get(self, client):
