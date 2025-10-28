@@ -136,6 +136,7 @@ class ExperienceListViewStreetActivity(ExperienceListView):
         context["street_activity"] = StreetActivity.objects.get(pk=self.kwargs["pk"])
         return context
 
+
 class ExperienceDetailView(DetailView):
     """View to display details of a single experience."""
 
@@ -167,20 +168,20 @@ class ExperienceCreateView(CreateView):
     def get_context_data(self, **kwargs):
         """Extend context data with organized tags for selection."""
         context = super().get_context_data(**kwargs)
-        activity_id = self.kwargs['pk']
-        context['activity'] = get_object_or_404(StreetActivity, pk=activity_id)
+        activity_id = self.kwargs["pk"]
+        context["activity"] = get_object_or_404(StreetActivity, pk=activity_id)
 
         # Get organized tags as a list for template
         organized_data = self.get_organized_tags()
-        context['organized_tags_list'] = [
+        context["organized_tags_list"] = [
             {
-                'nvc_category': nvc_value,
-                'category_name': nvc_data['label'],
-                'main_tags': nvc_data['main_tags']
+                "nvc_category": nvc_value,
+                "category_name": nvc_data["label"],
+                "main_tags": nvc_data["main_tags"],
             }
             for nvc_value, nvc_data in organized_data.items()
         ]
-        
+
         return context
 
     def get_organized_tags(self):
@@ -195,10 +196,7 @@ class ExperienceCreateView(CreateView):
         for main_tag in main_tags:
             nvc_category = main_tag.nvc_category
 
-            main_tag_data = {
-                "tag": main_tag, 
-                "subtags": list(main_tag.subtags.all())
-            }
+            main_tag_data = {"tag": main_tag, "subtags": list(main_tag.subtags.all())}
 
             organized[nvc_category]["main_tags"].append(main_tag_data)
 
@@ -231,39 +229,43 @@ class TagListView(ListView):
 
         categories = {
             "needs": {
+                "name": "Behoeften",
+                "color": "success",
+                "icon": "heart-fill",
+                'description': 'Fundamentele menselijke behoeften die bijdragen aan welzijn',
                 "maintags": Tag.objects.filter(
                     nvc_category="needs", maintag__isnull=True
                 ).prefetch_related("subtags", "experiences"),
-                "standalone_tags": Tag.objects.filter(
-                    nvc_category="needs", maintag__isnull=True
-                ).prefetch_related("experiences"),
                 "tags": Tag.objects.filter(nvc_category="needs"),
             },
             "feelings_fulfilled": {
+                "name": "Gevoelens bij Vervulde Behoeften",
+                "color": "info",
+                "icon": "emoji-smile-fill",
+                'description': 'Emoties die ontstaan wanneer behoeften worden vervuld',
                 "maintags": Tag.objects.filter(
                     nvc_category="feelings_fulfilled", maintag__isnull=True
                 ).prefetch_related("subtags", "experiences"),
-                "standalone_tags": Tag.objects.filter(
-                    nvc_category="feelings_fulfilled", maintag__isnull=True
-                ).prefetch_related("experiences"),
                 "tags": Tag.objects.filter(nvc_category="feelings_fulfilled"),
             },
             "feelings_unfulfilled": {
+                "name": "Gevoelens bij Onvervulde Behoeften",
+                "color": "info",
+                "icon": "emoji-frown-fill",
+                'description': 'Emoties die ontstaan wanneer behoeften niet worden vervuld',
                 "maintags": Tag.objects.filter(
                     nvc_category="feelings_unfulfilled", maintag__isnull=True
                 ).prefetch_related("subtags", "experiences"),
-                "standalone_tags": Tag.objects.filter(
-                    nvc_category="feelings_unfulfilled", maintag__isnull=True
-                ).prefetch_related("experiences"),
                 "tags": Tag.objects.filter(nvc_category="feelings_unfulfilled"),
             },
             "other": {
+                "name": "Overige tags",
+                "color": "secondary",
+                "icon": "tag-fill",
+                'description': 'Tags die niet direct onder de andere categorieën vallen',
                 "maintags": Tag.objects.filter(
                     nvc_category="other", maintag__isnull=True
                 ).prefetch_related("subtags", "experiences"),
-                "standalone_tags": Tag.objects.filter(
-                    nvc_category="other", maintag__isnull=True
-                ).prefetch_related("experiences"),
                 "tags": Tag.objects.filter(nvc_category="other"),
             },
         }
