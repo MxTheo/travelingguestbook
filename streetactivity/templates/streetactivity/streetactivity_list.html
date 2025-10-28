@@ -19,19 +19,14 @@
                 </a>
             </div>
         </header>
-        <!-- Navigatie naar tags -->
-        <div class="mb-4 justify-content-end d-flex">
-            <a href="{% url 'tag-list' %}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-tags"></i> Bekijk alle tags
-            </a>
-        </div>
-
         <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
             <div class="d-flex gap-5 align-items-center">
                 <span class="text-secondary fw-medium">{{ activities.count }} activiteiten gevonden</span>
             </div>
+            <a href="{% url 'tag-list' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-tags"></i> Bekijk alle tags
+            </a>
         </div>
-
         <!-- Activiteiten grid -->
         <div class="activities-grid">
             {% for activity in activities %}
