@@ -45,8 +45,8 @@
                         {% for reaction in persona.reactions.all|slice:":5" %}
                         <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
-                                <p class="mb-1">{{ reaction.text }}</p>
-                                <small class="text-muted">{{ reaction.date_added|timesince }} geleden</small>
+                                <p class="mb-1">{{ reaction.description }}</p>
+                                <small class="text-muted">{{ reaction.date_created|timesince }} geleden</small>
                             </div>
                         </div>
                         {% endfor %}

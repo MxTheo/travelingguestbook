@@ -1,32 +1,102 @@
-# Bedank voor het contact (before Traveling Guestbook)
-# [bedanktvoorhetcontact.nl](www.bedanktvoorhetcontact.nl)
-## Social media for real-life interactions
+# Gemene Grond
 
-### Description
-The aim of this web-application is to facilitate interaction between you and strangers, for example people in the train. You can end the conversation by handing out a thank you.
+An open platform for practicing equanimity in public spaces.
 
-It is a web-application where people that received a code, can read the message left for them. They can also leave a message themselves.
+## About Gemene Grond
 
-There are the conversation enders. You can end a conversation by thanking the other person with a code. The hope is that others will also thank others with the same code. In that way, the physical item is passed on from person to person.
-The code is used to find the page where all the messages are left. Every time it is passed on, the person who gave it leaves a chatmessage to the receiver.
+Gemene Grond facilitates street activities to practice equanimity - the art of being open to what is, without judgment or expectation. The platform supports both practitioners and passers-by in sharing their experiences.
 
-For more Dutch information about how the application works, see [help](https://bedanktvoorhetcontact.nl/help).
+### Philosophy
 
-### Language
-The Web-Application is in Dutch. The code and back-end is in English.
+We see the street as a training ground for inner freedom. Not to make contact, but to be open to what is. The practitioner is like **soil** - everything that happens (smile, frown, silence) is **nutrient** for presence.
 
-### Domain model
-![Entity Relationship Diagram](architecture/domainModel.jpg)
+### Features
 
-#### Glossary
--  **User:** Users can create codes and start spreading them around. Messages can be left by anyone who have a code. You do not need an account for that.
-- **ChatRoom:** The code can be written on some physical thing. This physical item is used to thank the other for the conversation. Hopefully that other will also thank others with the same code for the conversation. (Have not renamed it yet in the backend)
-- **ChatMessage:** With the code, the giver leaves a message on the specific page for the receiver of the code to read. He can write about his experiences of the conversation.
+- **Street Activities**: Inviting or approaching strangers
+- **Experience Sharing**: Anonymous reflections with NVC-based tags
+- **Personas**: Insights into different types of passers-by
+- **Collective Understanding**: Recognizing patterns in how activities are experienced
 
-#### Flowchart for getting to the chat
-![Flowchart to chatroom detail](architecture/flowToChatRoomDetail.png)
-Most important functionality is to find the message left for them.
+## Technical Stack
 
-### Contributing
-You can fine the contribution guidelines here:
-[Contribution guidelines for this project](CONTRIBUTING.md)
+- **Backend**: Django 4.2+
+- **Frontend**: Bootstrap 5, Bootswatch themes
+- **Database**: SQLite (development) / PostgreSQL (production)
+
+## Quick Start
+
+```bash
+# Clone repository
+git clone https://github.com/username/gemene-grond.git
+cd gemene-grond
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# or
+venv\Scripts\activate  # Windows
+
+# Install requirements
+pip install -r requirements.txt
+
+# Run migrations
+python manage.py migrate
+
+# Load initial data (optional)
+python manage.py loaddata initial_tags
+python manage.py loaddata initial_streetactivities
+python manage.py loaddata initial_personas
+
+# Create superuser
+python manage.py createsuperuser
+
+# Run development server
+python manage.py runserver
+
+Visit http://localhost:8000 to see the application.
+```
+
+## Data Models
+
+![streetactivity_domainmodel](architecture/streetactivity_domainmodel.png)
+
+### Street Activities (StreetActivity)
+
+- Activities to engage with strangers
+- Methods: invite, approach, or both
+- Includes description and supplies
+
+### Experiences (Experience)
+
+- Reflections from practitioners and passers-by
+- Phases: pioneer, intermediate, or climax experience
+- NVC-based tagging system
+
+### Tags (Tag)
+
+- Based on Nonviolent Communication (NVC)
+- Categories: needs, fulfilled feelings, unfulfilled feelings
+- Hierarchical structure with main tags
+
+![persona_domainmodel](architecture/persona_domainmodel.png)
+
+### Personas (Persona)
+
+- Typologies of passers-by
+- With related problems and reactions
+
+## API Endpoints
+
+*In development*
+
+- /api/streetactivities/ - List and create street activities
+- /api/experiences/ - Share and browse experiences
+- /api/personas/ - Access persona information
+
+## Licence
+
+MIT License file - see [LICENSE](LICENSE.md) file
+
+## Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines

@@ -52,7 +52,7 @@
                                 </h4>
                                 <ul class="problems-list small mb-0">
                                     {% for problem in persona.problems.all|slice:":3" %}
-                                        <li>{{ problem.text }}</li>
+                                        <li>{{ problem.description }}</li>
                                     {% endfor %}
                                     {% if persona.problems.count > 3 %}
                                         <li class="text-muted">... en {{ persona.problems.count|add:"-3" }} meer</li>
@@ -65,7 +65,7 @@
                                 </h4>
                                 <ul class="reactions-list small mb-0">
                                     {% for reaction in persona.reactions.all|slice:":3" %}
-                                        <li>"{{ reaction.text }}"</li>
+                                        <li>"{{ reaction.description }}"</li>
                                     {% endfor %}
                                     {% if persona.reactions.count > 3 %}
                                         <li class="text-muted">... en {{ persona.reactions.count|add:"-3" }} meer</li>

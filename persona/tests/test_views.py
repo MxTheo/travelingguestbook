@@ -106,7 +106,7 @@ class TestProblemCreateView:
         # Check if problem was created
         assert persona.problems.count() == 1
         problem = persona.problems.first()
-        assert problem.text == 'Test problem description'
+        assert problem.description == 'Test problem description'
 
     def test_problem_create_view_post_invalid(self, client):
         """Test posting invalid data to problem create view."""
@@ -144,7 +144,7 @@ class TestProblemCreateView:
         # Check if problem was created
         assert persona.problems.count() == 1
         problem = persona.problems.first()
-        assert problem.text == 'First problem description'
+        assert problem.description == 'First problem description'
 
 class TestReactionCreateView:
     """Tests for the ReactionCreateView."""
@@ -176,7 +176,7 @@ class TestReactionCreateView:
         # Check if reaction was created
         assert persona.reactions.count() == 1
         reaction = persona.reactions.first()
-        assert reaction.text == 'Test reaction text'
+        assert reaction.description == 'Test reaction text'
 
     def test_reaction_create_view_post_invalid(self, client):
         """Test posting invalid data to reaction create view."""
@@ -214,7 +214,7 @@ class TestReactionCreateView:
         # Check if reaction was created
         assert persona.reactions.count() == 1
         reaction = persona.reactions.first()
-        assert reaction.text == 'First reaction text'
+        assert reaction.description == 'First reaction text'
 
 class TestReactionDeleteView:
     """Tests for the ReactionDeleteView."""

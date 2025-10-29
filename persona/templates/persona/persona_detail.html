@@ -59,7 +59,7 @@
                                     <li class="list-group-item">
                                         <div class="d-flex justify-content-between align-items-start">
                                             <div class="flex-grow-1 text-break">
-                                                {{ problem.text }}
+                                                {{ problem.description }}
                                             </div>
                                             <a href="{% url 'delete-problem' problem.pk %}" class="btn btn-outline-danger btn-sm ms-2" title="Verwijder probleem">
                                                 <i class="bi bi-trash3-fill"></i>
@@ -99,7 +99,7 @@
                                     <li class="list-group-item">
                                         <div class="d-flex justify-content-between align-items-start">
                                             <div class="flex-grow-1 fst-italic text-break">
-                                                "{{ reaction.text }}"
+                                                "{{ reaction.description }}"
                                             </div>
                                             <a href="{% url 'delete-reaction' reaction.pk %}" class="btn btn-outline-danger btn-sm ms-2" title="Verwijder reactie">
                                                 <i class="bi bi-trash3-fill"></i>

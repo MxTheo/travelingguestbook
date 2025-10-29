@@ -42,8 +42,8 @@
                                 {% for problem in persona.problems.all|slice:":5" %}
                                     <div class="list-group-item">
                                         <div class="d-flex w-100 justify-content-between">
-                                            <p class="mb-1">{{ problem.text }}</p>
-                                            <small class="text-muted">{{ problem.date_added|timesince }} geleden</small>
+                                            <p class="mb-1">{{ problem.description }}</p>
+                                            <small class="text-muted">{{ problem.date_created|timesince }} geleden</small>
                                         </div>
                                     </div>
                                 {% endfor %}

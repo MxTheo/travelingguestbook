@@ -17,22 +17,22 @@ class ProblemForm(forms.ModelForm):
     """Form for adding/editing a Problem of Persona."""
     class Meta:
         model = Problem
-        fields = ['text']
+        fields = ['description']
         widgets = {
-            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Beschrijf het probleem...'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Beschrijf het probleem...'}),
         }
         labels = {
-            'text': 'Probleem beschrijving',
+            'description': 'Probleem beschrijving',
         }
 
 class ReactionForm(forms.ModelForm):
     """Form for adding/editing a Reaction of Persona."""
     class Meta:
         model = Reaction
-        fields = ['text']
+        fields = ['description']
         widgets = {
-            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Typ de reactie...'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Typ de reactie...'}),
         }
         labels = {
-            'text': 'Reactie tekst',
+            'description': 'Reactie tekst',
         }

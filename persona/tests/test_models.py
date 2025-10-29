@@ -16,13 +16,13 @@ class TestModels:
     def test_problem_creation(self):
         """Test creation of Problem model"""
         problem = ProblemFactory()
-        assert problem.text.startswith('Problem text')
+        assert problem.description.startswith('Problem text')
         assert problem.persona is not None
     
     def test_reaction_creation(self):
         """Test creation of Reaction model"""
         reaction = ReactionFactory()
-        assert reaction.text.startswith('Reaction text')
+        assert reaction.description.startswith('Reaction text')
         assert reaction.persona is not None
     
     def test_persona_with_multiple_problems(self):
@@ -48,7 +48,7 @@ class TestProblemModel:
     def test_problem_creation(self):
         """Test creation of Problem model"""
         problem = ProblemFactory()
-        assert problem.text.startswith('Problem text')
+        assert problem.description.startswith('Problem text')
         assert problem.persona is not None
     
     def test_problem_str(self):
@@ -57,7 +57,7 @@ class TestProblemModel:
         assert 'Test problem' in str(problem)
 
     def test_problem_ordering(self):
-        """Test that problems are ordered by date_added descending"""
+        """Test that problems are ordered by date_created descending"""
         persona = PersonaFactory()
         older_problem = ProblemFactory(persona=persona)
         newer_problem = ProblemFactory(persona=persona)
@@ -71,7 +71,7 @@ class TestReactionModel:
     def test_reaction_creation(self):
         """Test creation of Reaction model"""
         reaction = ReactionFactory()
-        assert reaction.text.startswith('Reaction text')
+        assert reaction.description.startswith('Reaction text')
         assert reaction.persona is not None
     
     def test_reaction_str(self):
@@ -80,7 +80,7 @@ class TestReactionModel:
         assert 'Test reaction' in str(reaction)
 
     def test_reaction_ordering(self):
-        """Test that reactions are ordered by date_added descending"""
+        """Test that reactions are ordered by date_created   descending"""
         persona = PersonaFactory()
         older_reaction = ReactionFactory(persona=persona)
         newer_reaction = ReactionFactory(persona=persona)
