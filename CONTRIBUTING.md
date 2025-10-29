@@ -1,6 +1,4 @@
 
-## CONTRIBUTING.md
-
 # Contributing to Gemene Grond
 
 First off, thanks for taking the time to contribute!
