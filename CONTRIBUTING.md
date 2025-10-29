@@ -1,7 +1,6 @@
 
 ## CONTRIBUTING.md
 
-```markdown
 # Contributing to Gemene Grond
 
 First off, thanks for taking the time to contribute!
@@ -10,16 +9,34 @@ All types of contributions are encouraged and valued. Please make sure to read t
 
 ## Table of Contents
 
-- [Code of Conduct](#code-of-conduct)
-- [I Have a Question](#i-have-a-question)
-- [I Want To Contribute](#i-want-to-contribute)
-  - [Reporting Bugs](#reporting-bugs)
-  - [Suggesting Enhancements](#suggesting-enhancements)
-  - [Your First Code Contribution](#your-first-code-contribution)
-- [Development Setup](#development-setup)
-- [Data Models](#data-models)
-- [Styleguides](#styleguides)
-- [Join The Project Team](#join-the-project-team)
+- [Contributing to Gemene Grond](#contributing-to-gemene-grond)
+  - [Table of Contents](#table-of-contents)
+  - [Code of Conduct](#code-of-conduct)
+  - [I Have a Question](#i-have-a-question)
+  - [I Want To Contribute](#i-want-to-contribute)
+    - [Legal Notice](#legal-notice)
+    - [Reporting Bugs](#reporting-bugs)
+      - [Before Submitting a Bug Report](#before-submitting-a-bug-report)
+      - [Submitting a Bug Report](#submitting-a-bug-report)
+    - [Suggesting Enhancements](#suggesting-enhancements)
+      - [Before Submitting an Enhancement](#before-submitting-an-enhancement)
+      - [Submitting an Enhancement](#submitting-an-enhancement)
+    - [Your First Code Contribution](#your-first-code-contribution)
+      - [Development Setup](#development-setup)
+    - [Initial Data](#initial-data)
+  - [Data Models](#data-models)
+    - [Street Activities](#street-activities)
+    - [Experiences](#experiences)
+    - [Tags](#tags)
+    - [Personas](#personas)
+  - [Styleguides](#styleguides)
+    - [Python/Django Code](#pythondjango-code)
+    - [Commit Messages](#commit-messages)
+    - [Templates](#templates)
+    - [Pull Request Process](#pull-request-process)
+    - [PR Description Should Include:](#pr-description-should-include)
+  - [Join The Project Team](#join-the-project-team)
+  - [Questions?](#questions)
 
 ## Code of Conduct
 
