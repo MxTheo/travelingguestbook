@@ -1,0 +1,287 @@
+[
+  {
+    "title": "De Bezorgde Ouder / Maatschappelijk Werker",
+    "description": "Sarah (50+) is een maatschappelijk betrokken burger voor wie de sociale structuur heilig is. Ze gelooft in werk, gemeenschap en traditionele hulpverlening. Als ze iemand ziet die afwijkt van de norm, is haar eerste reflex: \"Hoe kan ik helpen?\" Zij ziet jouw bordje als een symptoom van een onderliggend probleem. Hun reactie is er een van zorg en het geven van goedbedoeld, maar ongevraagd, levensadvies. Ze willen je 'fixen' volgens hun eigen blauwdruk voor een goed leven. Ze ziet kwetsbaarheid niet als een kracht, maar als een probleem dat opgelost moet worden.",
+    "core_question": "Wat mankeert jou, en hoe kan ik je helpen?",
+    "problems": [
+      {
+        "description": "Ze interpreteert openheid en kwetsbaarheid verkeerd, namelijk als een teken van nood."
+      },
+      {
+        "description": "Ze voelt de behoefte om te \"fixen\" in plaats van te verbinden op gelijkwaardig niveau."
+      },
+      {
+        "description": "Ze projecteert haar eigen oplossingen (werk, geloof, vrijwilligerswerk) op een situatie die daar niet om vraagt."
+      },
+      {
+        "description": "Ze kan een gelijkwaardige uitwisseling blokkeren door de interactie te framen als een hulpvraag."
+      }
+    ],
+    "reactions": [
+      {
+        "description": "Ben je eenzaam?"
+      },
+      {
+        "description": "Heb je behoefte aan contact?"
+      },
+      {
+        "description": "Heb je geen vrienden? Je bent nog jong. Er moet toch iets voor je zijn."
+      },
+      {
+        "description": "Je moet maatje worden."
+      },
+      {
+        "description": "Ga werken. Je bent nog jong. Er moet toch iets voor je zijn."
+      },
+      {
+        "description": "Ik ga voor je bidden."
+      },
+      {
+        "description": "Je bent onzeker, dat je dit doet. Op zoek naar waarheid. (associatie met evangelisatie)"
+      },
+      {
+        "description": "Wat is je doel? Laten we het anders de stad noemen. Wanneer heb je bereikt dat het werkt in de stad?"
+      }
+    ]
+  },
+  {
+    "title": "De Argwanende Burger",
+    "description": "Adriana (30-65) is een nuchtere, op zichzelf gerichte stadsbewoner. Haar vertrouwen in de medemens is aangetast door een constante stroom van commerciële en ideologische boodschappen op straat. Haar default stand is wantrouwen: \"Wat wil je van me?\". Ze is snel in het afschermen van haar tijd en aandacht en zoekt naar de \"catch\" achter elke ongebruikelijke interactie. In een wereld van influencers, verkopers en evangelisten is iemand die een straatactiviteit doet per definitie verdacht. Ze is alert op elke aanwijzing van een verborgen agenda.",
+    "core_question": "Wat is je ware, verborgen motief?",
+    "problems": [
+      {
+        "description": "Zij gaat ervan uit dat elke initiatiefnemer op straat een verborgen (meestal commercieel of ideologisch) motief heeft."
+      },
+      {
+        "description": "Zij is gesloten voor spontane, onbaatzuchtige interactie."
+      },
+      {
+        "description": "Haar achterdocht kan demotiverend werken."
+      },
+      {
+        "description": "Zij heeft moeite met ambiguïteit en handelingen zonder een duidelijk, vooraf vastgesteld doel."
+      }
+    ],
+    "reactions": [
+      {
+        "description": "Waar hangt de camera? / Zit ik in een verborgen programma of zo?"
+      },
+      {
+        "description": "Wat wil je verkopen?"
+      },
+      {
+        "description": "Je probeert mij klem te zetten. (bij Street Epistemology)"
+      },
+      {
+        "description": "Er moet meer achter zitten. Dat blijft een beetje in de lucht hangen. Houd je er blijvende contacten aan over?"
+      },
+      {
+        "description": "Ik onderteken niks."
+      },
+      {
+        "description": "Ik ga niks kopen."
+      },
+      {
+        "description": "Waarom sta je hier? Is dat alles?"
+      },
+      {
+        "description": "Voordat je iets hebt gezegd: \"Geen interesse!\""
+      }
+    ]
+  },
+  {
+    "title": "De Moralist / Normbewaker",
+    "description": "Mark (50+) ziet zichzelf als een hoeder van de sociale orde en normen. Hij heeft duidelijke ideeën over wat \"gepast gedrag\" in de publieke ruimte is en wat niet. Productiviteit, efficiency en het beschermen van (zijn idee van) kwetsbaren staan hoog in zijn vaandel. Gedrag dat hierbuiten valt, wordt gezien als een bedreiging die gecorrigeerd moet worden. Straatactiviteiten vallen buiten zijn norm van 'productief', 'gepast' of 'veilig' is, en dat moet worden gecorrigeerd of bestraft.",
+    "core_question": "Past dit wel in onze maatschappij?",
+    "problems": [
+      {
+        "description": "Hij ziet spontaan sociaal contact niet als een waardevolle maatschappelijke bijdrage, maar als tijdverspilling of \"lanterfanten\"."
+      },
+      {
+        "description": "Hij heeft behoefte om zijn eigen normen op te leggen aan anderen in de openbare ruimte."
+      },
+      {
+        "description": "Hij interpreteert experimenteel contact vaak verkeerd, bijvoorbeeld als een gevaar voor kinderen of als ongewenste intimiteit."
+      },
+      {
+        "description": "Hij creëert een sfeer van sociale controle en oordeel, wat spontaniteit remt."
+      }
+    ],
+    "reactions": [
+      {
+        "description": "Ga werken! Je versplit je tijd. Dit is allemaal troep."
+      },
+      {
+        "description": "Schaam je je niet?"
+      },
+      {
+        "description": "Wat denk je wel niet? Kinderen aanspreken en praten over je relatieproblemen. Daar begrijpen kinderen toch helemaal niks van."
+      },
+      {
+        "description": "Ik knuffel alleen met mijn vrouw."
+      },
+      {
+        "description": "In Marokko zou je opgepakt worden. Het is gevaarlijk wat je hier doet. (bij Eye Gazing)"
+      },
+      {
+        "description": "Ik heb eelt aan mijn handen. Jij hebt eelt aan je reet."
+      }
+    ]
+  },
+  {
+    "title": "De Bemoedigende Glimlacher",
+    "description": "Bram (alle leeftijden) is een positieve, sympathieke voorbijganger. Hij is de passieve supporter. Hij herkent en waardeert de positieve intentie achter het initiatief. Zijn reactie is kort, oprecht en geeft een snelle energieboost. Zijn steun betuigt hij daarom in de vluchtigheid van een glimlach, een duim of een kort, oprecht compliment. Hij bevestigt dat je iets positiefs toevoegt aan de straat, ook al doet hij niet actief mee. Daarvoor is het wel nodig dat het gelijk duidelijk is wat je biedt, zoals \"Ik wil een knuffel. Wil je die delen?\". Hij stapt niet op je af.",
+    "core_question": "Kan ik even laten weten dat ik het waardeer?",
+    "problems": [
+      {
+        "description": "Hij is een passieve supporter; zijn steun is vluchtig en leidt niet tot een daadwerkelijke ontmoeting."
+      },
+      {
+        "description": "Hij heeft vaak haast of voelt een sociale drempel om zelf de interactie aan te gaan."
+      },
+      {
+        "description": "Zijn bemoediging, hoewel welkom, verandert niets aan de eenzaamheid van het staan met een bordje."
+      },
+      {
+        "description": "De interactie blijft oppervlakkig."
+      }
+    ],
+    "reactions": [
+      {
+        "description": "Goed bezig!"
+      },
+      {
+        "description": "Tof dat je dit doet, man."
+      },
+      {
+        "description": "Ik vind het moedig en een charmant initiatief."
+      },
+      {
+        "description": "Ik heb haast, maar ik vind het een goed idee!"
+      },
+      {
+        "description": "Een duim omhoog, een glimlach, een bemoedigende knik."
+      }
+    ]
+  },
+  {
+    "title": "De Nieuwsgierige Avonturier / Verbinder",
+    "description": "Vera (20-50) is een open-minded, filosofisch ingestelde zoeker. Zij wordt niet gedreven door achterdocht of medelijden, maar door nieuwsgierigheid en een open houding. Zij waardeert authenticiteit en is bereid zich open te stellen voor een korte, oprechte ontmoeting met een vreemde. Tijdens of na de interactie herkent ze de diepere maatschappelijke waarde en verbindt ze jouw actie met hun eigen filosofie over samenleving en contact.",
+    "core_question": "Wat gebeurt hier? Ik wil het meemaken en er deel van uitmaken!",
+    "problems": [
+      {
+        "description": "Haar eigen visie kan het gesprek domineren"
+      },
+      {
+        "description": "Zij is iemand die al gemakkelijk op je afstapt, omdat zij nieuwsgierig is. Daardoor is het niet gelijk duidelijk of je tekst wel duidelijk is."
+      },
+      {
+        "description": "Zij maakt zich zorgen over de individualisering van de samenleving, waar mensen meer afgesloten van elkaar raken"
+      }
+    ],
+    "reactions": [
+      {
+        "description": "Bij binnenkomst: Vertel. (bij Wil je luisteren?)"
+      },
+      {
+        "description": "Ik wil wel een knuffel."
+      },
+      {
+        "description": "Ik zag je en ik werd nieuwsgierig."
+      },
+      {
+        "description": "Tijdens de interactie: Je zoekt verbinding."
+      },
+      {
+        "description": "Vroeger was dat normaler. Dan kon je makkelijk contact maken met andere mensen. Nu is dat heel anders, meer individualistischer."
+      },
+      {
+        "description": "Dit geeft mij hoop. Dit vind ik ook een mooi moment. Dat mensen zo contact proberen te maken."
+      },
+      {
+        "description": "Ik vind het knap hoe makkelijk jij open bent."
+      },
+      {
+        "description": "Het is mooi dat je dit zo doet, zonder om geld te vragen of iets te verkopen. Het is gewoon simpel."
+      },
+      {
+        "description": "Ik zal een foto van je maken. Dan kan ik thuis checken op instagram. Je hebt wel een naam nodig. (actieve bemoediging)"
+      }
+    ]
+  },
+  {
+    "title": "De Grensverkennende Tiener",
+    "description": "Gio (13-19) en zijn vriendengroep gebruiken de openbare ruimte als hun sociale speeltuin. Zij zien iemand die straatactiviteiten doet niet als een zieltge of verdachte figuur, maar als een speelobject voor experimenten. Je bent de \"excentriekeling\" die een veilige ruimte biedt (omdat je niet boos wordt) om extreme grenzen af te tasten, te choqueren en sociale interacties uit te proberen zonder de normale consequenties van zijn eigen sociale kring. Hun drijfveer is niet contact, maar het testen van sociale grenzen, het uitdagen van autoriteit en het creëren van een gedeelde groepsbeleving.",
+    "core_question": "Hoe ver kan ik gaan? Kan ik hem van zijn stuk brengen?",
+    "problems": [
+      {
+        "description": "Zij zien de persoon niet, maar slechts een karikatuur (\"de rare man\") die uitnodigt tot provocatie."
+      },
+      {
+        "description": "Hun interacties zijn choquerend en gericht op het verstoren van de intentie van de activiteit."
+      },
+      {
+        "description": "Het is moeilijk om hun interactie om te buigen naar een oprechte, gelijkwaardige ontmoeting."
+      }
+    ],
+    "reactions": [
+      {
+        "description": "Hij is echt een rare man. Dat was echt raar."
+      },
+      {
+        "description": "Val je op kleine meisjes? 7 jaar? 10 jaar? 14 jaar? ... Wat is je body count? Heb je al seks gehad?"
+      },
+      {
+        "description": "Er lopen hier kinderen van 14 en 15. En dan sta jij hier met een bordje 'ik wil intimiteit'. Ik zag je de vorige keer wel knipogen naar haar."
+      },
+      {
+        "description": "Wat ga je hier staan met een bordje: Ik wil seks? Ben je gek?"
+      },
+      {
+        "description": "Nope! (en dan wegspringen bij een knuffel)"
+      },
+      {
+        "description": "Gicchelen, gekke bekken trekken bij eye gazing."
+      },
+      {
+        "description": "Kijken of ik ondertussen blind een sheggie kan rollen. (afleiding creëren)"
+      },
+      {
+        "description": "Hij wilt je masturberen? (provocerend tegen een vriend)"
+      },
+      {
+        "description": "Steen, papier, schaar! (om te beslissen wie het moet doen)"
+      }
+    ]
+  },
+  {
+    "title": "De Stadszwervende Contactzoeker",
+    "description": "Henk (56) is een vaste, wat stille verschijning op de Varkensmarkt. Hij staat open voor contact, maar initieert het nooit zelf. Zijn lichaamstaal nodigt niet actief uit, waardoor hij vaak over het hoofd wordt gezien. Eenmaal aangesproken, bloeit hij echter op en ontpopt hij zich tot een gedreven verteller. Hij heeft een duidelijke behoefte om zijn verhaal te doen, maar is minder gericht op een wederzijds gesprek. De grootste uitdaging is niet het beginnen, maar het beëindigen van het contact; het kan moeilijk zijn om zijn verhaal te stoppen en het gesprek af te ronden",
+    "core_question": "Hoe vind ik iemand die naar mij wil luisteren, zonder dat ik iets hoef?",
+    "problems": [
+      {
+        "description": "Initieert zelf geen contact."
+      },
+      {
+        "description": "Heeft een sterke behoefte om te delen, minder om te luisteren."
+      },
+      {
+        "description": "Monopolisert het gesprek eenmaal op gang."
+      }
+    ],
+    "reactions": [
+      {
+        "description": "Ik zweef maar wat rond in de stad als een halvegare. Ik ben hier wel anoniem. Ik vind het lastig om relaties te hebben."
+      },
+      {
+        "description": "Die mensen die evangeliseren staan hier altijd. Ik weet niet wat ik er van moet denken. Ja, God, God... en praat door over zijn onzekerheden in zijn geloof"
+      },
+      {
+        "description": "Ik ken dat wel van die tijd. Toen was ik nog …"
+      },
+      {
+        "description": "Ik heb wel behoefte aan een praatje. Thuis zit ik ook zo alleen. Ik vind dat wel lastig. Alleen zijn"
+      }
+    ]
+  }
+]
