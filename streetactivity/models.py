@@ -64,7 +64,7 @@ class Experience(models.Model):
         verbose_name="Gerelateerde activiteit",
     )
     report = models.TextField(
-        max_length=1000,
+        max_length=3500,
         verbose_name="Verslag van de ervaring",
         blank=True,
         help_text="Beschrijf de ervaring in maximaal 1000 karakters",
