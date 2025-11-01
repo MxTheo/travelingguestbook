@@ -1,0 +1,12 @@
+.persona-portrait {
+    display: flex;
+    justify-content: center;
+}
+
+.persona-portrait img {
+    border-radius: 30%;
+    width: 155px;
+    height: 155px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}

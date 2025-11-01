@@ -95,7 +95,7 @@ class TestProblemCreateView:
         url = reverse('create-problem', kwargs={'persona_pk': persona.pk})
 
         data = {
-            'text': 'Test problem description',
+            'description': 'Test problem description',
         }
 
         response = client.post(url, data)
@@ -115,7 +115,7 @@ class TestProblemCreateView:
 
         # Empty text should be invalid
         data = {
-            'text': '',  # Required field
+            'description': '',  # Required field
         }
 
         response = client.post(url, data)
@@ -131,7 +131,7 @@ class TestProblemCreateView:
         url = reverse('create-problem', kwargs={'persona_pk': persona.pk})
 
         data = {
-            'text': 'First problem description',
+            'description': 'First problem description',
             'add_another': 'True',  # Simulate the add another button
         }
 
@@ -165,7 +165,7 @@ class TestReactionCreateView:
         url = reverse('create-reaction', kwargs={'persona_pk': persona.pk})
 
         data = {
-            'text': 'Test reaction text',
+            'description': 'Test reaction text',
         }
 
         response = client.post(url, data)
@@ -185,7 +185,7 @@ class TestReactionCreateView:
 
         # Empty text should be invalid
         data = {
-            'text': '',  # Required field
+            'description': '',  # Required field
         }
 
         response = client.post(url, data)
@@ -201,7 +201,7 @@ class TestReactionCreateView:
         url = reverse('create-reaction', kwargs={'persona_pk': persona.pk})
 
         data = {
-            'text': 'First reaction text',
+            'description': 'First reaction text',
             'add_another': 'True',  # Simulate the add another button
         }
 

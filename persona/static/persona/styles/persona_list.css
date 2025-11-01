@@ -1,35 +1,46 @@
 .persona-card {
-    background-color: var(--bs-white);
-    border-radius: var(--bs-border-radius-lg);
-    box-shadow: var(--bs-box-shadow-sm);
-    margin-bottom: 2rem;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid var(--bs-border-color);
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s ease;
 }
 
 .persona-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--bs-box-shadow);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .persona-header {
     background-color: var(--bs-dark);
     color: white;
     padding: 1.5rem;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+}
+
+.persona-portrait {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+}
+
+.persona-portrait img {
+    border-radius: 30%;
+    width: 155px;
+    height: 155px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.persona-body {
+    padding: 1.25rem;
+    height: 100%;
 }
 
 .persona-title {
     font-size: 1.5rem;
     font-weight: 600;
     margin: 0;
-}
-
-.persona-body {
-    padding: 1.5rem;
 }
 
 .persona-core-question {

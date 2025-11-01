@@ -3,6 +3,7 @@ to be able to mock the objects in tests"""
 
 import factory
 from faker import Faker
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from streetactivity.models import StreetActivity, Experience, Tag
 from chatroomcreating.models import ChatRoom, ChatMessage
@@ -90,6 +91,7 @@ class PersonaFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: f'Test Persona {n}')
     core_question = factory.Sequence(lambda n: f'Core question {n}?')
     description = factory.Faker('paragraph', nb_sentences=3)
+    portrait = factory.LazyAttribute(lambda _: None)
 
 class ProblemFactory(factory.django.DjangoModelFactory):
     """Mock for persona Problem"""
@@ -97,7 +99,7 @@ class ProblemFactory(factory.django.DjangoModelFactory):
         model = Problem
 
     persona = factory.SubFactory(PersonaFactory)
-    text = factory.Sequence(lambda n: f'Problem text {n}')
+    description = factory.Sequence(lambda n: f'Problem text {n}')
 
 class ReactionFactory(factory.django.DjangoModelFactory):
     """Mock for persona Reaction"""
@@ -105,4 +107,4 @@ class ReactionFactory(factory.django.DjangoModelFactory):
         model = Reaction
 
     persona = factory.SubFactory(PersonaFactory)
-    text = factory.Sequence(lambda n: f'Reaction text {n}')
+    description = factory.Sequence(lambda n: f'Reaction text {n}')

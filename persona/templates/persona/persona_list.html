@@ -33,11 +33,17 @@
         <div class="row">
             {% for persona in personas %}
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
-                    <div class="persona-card h-100">
-                        <div class="persona-header">
+                    <div class="persona-card h-100 d-flex flex-column">
+                        <div class="persona-header mb-3 d-flex justify-content-center align-items-center">
                             <h2 class="persona-title h5 mb-0">{{ persona.title }}</h2>
                         </div>
-                        <div class="persona-body d-flex flex-column">
+                        <div class="persona-body ">
+                            <div class="persona-portrait mb-3">
+                                <img src="{{ persona.portrait_url }}" 
+                                     alt="{{ persona.title }}" 
+                                     class="img-fluid "
+                                     >
+                            </div>
                             <div class="persona-core-question mb-3">
                                 <small class="text-muted">Kernvraag:</small>
                                 <div class="fst-italic">{{ persona.core_question }}</div>

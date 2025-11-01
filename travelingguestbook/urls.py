@@ -25,7 +25,7 @@ urlpatterns = [
     path('straatactiviteiten/', include('streetactivity.urls')),
     path('uitwisseling/', include('chatroomcreating.urls')),
     path('persona/', include('persona.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

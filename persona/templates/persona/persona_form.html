@@ -1,5 +1,6 @@
 {% extends "admin/main.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block title %}{% if object %}Bewerk {{ object.title }}{% else %}Nieuwe Persona{% endif %}{% endblock %}
 {% block content %}
 <div class="container">
@@ -10,12 +11,12 @@
                     <h2 class="h4 mb-0">{% if object %}Bewerk {{ object.title }}{% else %}Nieuwe Persona{% endif %}</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
                         <div class="mb-4">
                             <h3 class="h5 mb-3">Persona Basis</h3>
-                            {{ form.as_p }}
+                            {{ form|crispy}}
                         </div>
                         
                         <div class="d-flex gap-2">

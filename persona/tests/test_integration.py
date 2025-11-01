@@ -10,14 +10,14 @@ class TestPersonaProblemReactionIntegration:
 
         # Add a problem
         problem_url = reverse('create-problem', kwargs={'persona_pk': persona.pk})
-        problem_data = {'text': 'Integration test problem'}
+        problem_data = {'description': 'Integration test problem'}
         response = client.post(problem_url, problem_data)
         assert response.status_code == 302
         assert persona.problems.count() == 1
 
         # Add a reaction
         reaction_url = reverse('create-reaction', kwargs={'persona_pk': persona.pk})
-        reaction_data = {'text': 'Integration test reaction'}
+        reaction_data = {'description': 'Integration test reaction'}
         response = client.post(reaction_url, reaction_data)
         assert response.status_code == 302
         assert persona.reactions.count() == 1

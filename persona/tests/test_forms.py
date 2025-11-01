@@ -1,3 +1,6 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
+from io import BytesIO
+from PIL import Image
 from persona.forms import PersonaForm
 
 class TestForms:
@@ -22,3 +25,26 @@ class TestForms:
         form = PersonaForm(data=form_data)
         assert not form.is_valid()
         assert 'title' in form.errors
+
+    def test_form_with_portrait(self):
+        """Test form with portrait file"""
+        image = Image.new('RGB', (100, 100), color='red')
+        image_file = BytesIO()
+        image.save(image_file, 'JPEG')
+        image_file.seek(0)
+
+        mock_image = SimpleUploadedFile(
+        "test.jpg", 
+        image_file.read(), 
+        content_type="image/jpeg"
+        )
+
+        form_data = {
+            'title': 'Test Persona',
+            'core_question': 'Test question?',
+            'description': 'Test description',
+        }
+        files = {'portrait': mock_image}
+        form = PersonaForm(data=form_data, files=files)
+
+        assert form.is_valid()
