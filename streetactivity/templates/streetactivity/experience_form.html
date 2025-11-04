@@ -38,12 +38,12 @@
                         </div>
                     {% endif %}
                     
-                    <!-- Category Selection - Stap 1 -->
-                    {% include "streetactivity/step1_category_selection.html" with form=form %}
+                    <!-- Reflection - Stap 1 -->
+                    {% include "streetactivity/step1_reflection.html" with form=form %}
                     <!-- Tag Selection - Stap 2 -->
                     {% include "streetactivity/step2_tag_selection.html" with form=form %}
-                    <!-- Reflection - Stap 3 -->
-                    {% include "streetactivity/step3_reflection.html" with form=form %}
+                    <!-- Category Selection - Stap 3 -->
+                    {% include "streetactivity/step3_category_selection.html" with form=form %}
                     <!-- Submit Buttons -->
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="{% url 'streetactivity-detail' activity.pk %}"
@@ -64,7 +64,7 @@
 // Character counter for report field
 document.addEventListener('DOMContentLoaded', function() {
     const reportField = document.getElementById('{{ form.report.id_for_label }}');
-    const maxLength = 1000;
+    const maxLength = 3500;
     
     if (reportField) {
         // Add character counter

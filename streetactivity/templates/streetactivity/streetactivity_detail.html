@@ -121,9 +121,8 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <i class="bi bi-pie-chart"></i> Hoe deze activiteit tot nu toe is ervaren
+                                <i class="bi bi-pie-chart"></i> Gevoel van zelfverzekerdheid
                             </h5>
-                            <p class="text-muted small mb-3">"Pioniers zijn de eerste, harde planten op de kale grond. Bij de overgang komen er al complexere planten. De climax is het stabiele, volwassen ecosysteem. Hoe ervaar jij deze activiteit?"</p>
                             <!-- Donut Chart Container -->
                             <div class="text-center">
                                 <div class="donut-chart mx-auto mb-3">
@@ -134,19 +133,19 @@
                                     <div class="col-auto">
                                         <div class="d-flex align-items-center">
                                             <span class="badge bg-primary me-2">&nbsp;</span>
-                                            <small>Pioniers</small>
+                                            <small>Onzeker</small>
                                         </div>
                                     </div>
                                     <div class="col-auto">
                                         <div class="d-flex align-items-center">
                                             <span class="badge bg-warning me-2">&nbsp;</span>
-                                            <small>Overgang</small>
+                                            <small>Tussenin</small>
                                         </div>
                                     </div>
                                     <div class="col-auto">
                                         <div class="d-flex align-items-center">
                                             <span class="badge bg-success me-2">&nbsp;</span>
-                                            <small>Climax</small>
+                                            <small>Zelfverzekerd</small>
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +182,7 @@
                                 {% endfor %}
                             </div>
                             <div class="mt-3">
-                                <p class="small text-muted">"Dit is het terrein dat deze activiteit verkent"</p>
+                                <p class="small text-muted">"Indruk van alle momenten"</p>
                             </div>
                             <div class="mt-3">
                                 <a href="{% url 'tag-list' %}" class="btn btn-outline-secondary btn-sm">
@@ -248,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
         experienceChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Pioniers', 'Overgang', 'Climax'],
+                labels: ['onzeker', 'tussenin', 'zelfverzekerd'],
                 datasets: [{
                     data: [data.pioneer, data.intermediate, data.climax],
                     backgroundColor: [

@@ -9,9 +9,9 @@ METHOD_CHOICES = [
     ("both", "Beide"),
 ]
 FASE_CHOICES = [
-    ("pioneer", "pionierservaring"),
-    ("intermediate", "overgangservaring"),
-    ("climax", "climaxervaring"),
+    ("pioneer", "onzeker"),
+    ("intermediate", "tussenin"),
+    ("climax", "zelfverzekerd"),
 ]
 NVC_CHOICES = [
     ("needs", "Behoeften"),
@@ -67,7 +67,7 @@ class Experience(models.Model):
         max_length=3500,
         verbose_name="Verslag van de ervaring",
         blank=True,
-        help_text="Beschrijf de ervaring in maximaal 1000 karakters",
+        help_text="Beschrijf de ervaring in maximaal 3500 karakters",
     )
     external_link = models.URLField(
         blank=True,
@@ -79,7 +79,7 @@ class Experience(models.Model):
         max_length=15,
         choices=FASE_CHOICES,
         default="pioneer",
-        verbose_name="Fase van de ervaring",
+        verbose_name="Zelfverzekerdheid",
     )
     from_practitioner = models.BooleanField(
         default=True, verbose_name="Is deze ervaring van een beoefenaar?"

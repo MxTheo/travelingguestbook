@@ -35,7 +35,7 @@ class BaseExperienceForm(forms.ModelForm):
         model = Experience
         fields = ['fase', 'tags', 'report', 'external_link']
         widgets = {
-            'report': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
+            'report': forms.Textarea(attrs={'rows': 4, 'class': 'form-control', 'placeholder': 'Omschrijf je innerlijke beleving...'}),
             'external_link': forms.URLInput(attrs={'class': 'form-control'}),
             'fase': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'tags': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
@@ -46,13 +46,12 @@ class PasserbyExperienceForm(BaseExperienceForm):
     
     class Meta(BaseExperienceForm.Meta):
         labels = {
-            'fase': 'Hoe zou je deze ervaring omschrijven?',
+            'fase': 'Hoe zelfverzekerd voelde je je?',
             'tags': 'Welke woorden passen bij je ervaring?',
             'report': 'Wil je iets toevoegen? (optioneel)',
             'external_link': 'Link naar meer informatie (optioneel)',
         }
         help_texts = {
-            'fase': 'Kies het type ervaring dat het beste past',
             'tags': 'Kies 3 tags die je ervaring weergeven',
             'report': 'Een beschrijving van wat er gebeurde',
             'external_link': '',
@@ -63,13 +62,12 @@ class PractitionerExperienceForm(BaseExperienceForm):
     
     class Meta(BaseExperienceForm.Meta):
         labels = {
-            'fase': 'Hoe zou je deze ervaring plaatsen?',
+            'fase': 'Hoe zelfverzekerd voelde je je?',
             'tags': 'Welke thema\'s komen naar voren?',
             'report': 'Jouw reflectie op deze ervaring',
             'external_link': 'Link naar verdere reflectie (optioneel)',
         }
         help_texts = {
-            'fase': 'Bepaal de helderheid van jouw ervaring',
             'tags': 'Kies tags die de kern van je ervaring raken',
             'report': 'Deel wat je waarnam - in jezelf en om je heen',
             'external_link': 'Link naar je blog of iets anders',

@@ -3,12 +3,8 @@
 <div class="card mb-4">
     <div class="card-header bg-light">
         <h5 class="card-title mb-0">
-            <span class="badge bg-primary me-2">1</span>
-            {% if form.initial.from_practitioner %}
-                Moeilijkheid van de interactie
-            {% else %}
-                Type ervaring
-            {% endif %}
+            <span class="badge bg-primary me-2">3</span>
+                Gevoel van zelfverzekerdheid
         </h5>
     </div>
     <div class="card-body">
@@ -35,20 +31,11 @@
                                         {% elif choice.0 == 'intermediate' %}
                                             <i class="bi bi-flower2 text-warning"></i>
                                         {% else %}
-                                            <i class="bi bi-flower3 text-success"></i>
+                                            <i class="bi bi-tree-fill text-success"></i>
                                         {% endif %}
                                         {{ choice.1 }}
                                     </h6>
                                 </label>
-                                <p class="card-text small text-muted mt-2">
-                                    {% if choice.0 == 'pioneer' %}
-                                        Onduidelijk - kale woestijngrond
-                                    {% elif choice.0 == 'intermediate' %}
-                                        Potentie - ontwikkeling, de eerste struiken
-                                    {% else %}
-                                        Makkelijk - volwassen ecosysteem
-                                    {% endif %}
-                                </p>
                             </div>
                         </div>
                     </div>
