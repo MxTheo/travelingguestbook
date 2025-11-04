@@ -51,7 +51,7 @@ class TestPersonaModel:
         """Test portrait_url property when no portrait is set"""
         persona = PersonaFactory(portrait=None)
         
-        assert persona.portrait_url == '/static/persona/images/default_portrait.jpg'
+        assert persona.portrait_url == '/static/persona/images/empty_portrait.jpg'
     
     def test_portrait_url_with_portrait(self):
         """Test portrait_url property when portrait is set"""

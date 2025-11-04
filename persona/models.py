@@ -36,7 +36,7 @@ class Persona(models.Model):
         """Returns the URL of the portrait image or a default image if none is set."""
         if self.portrait and hasattr(self.portrait, 'url'):
             return self.portrait.url
-        return '/static/persona/images/default_portrait.jpg'
+        return '/static/persona/images/empty_portrait.jpg'
 
 class Problem(models.Model):
     """Model representing a problem faced by passer-by."""
