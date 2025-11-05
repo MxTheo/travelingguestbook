@@ -28,49 +28,32 @@ class StreetActivityForm(forms.ModelForm):
         }
 
 # forms.py
-class BaseExperienceForm(forms.ModelForm):
+class ExperienceForm(forms.ModelForm):
     """Base form for Experience with common fields."""
-    
+
     class Meta:
         model = Experience
         fields = ['fase', 'tags', 'report', 'external_link']
         widgets = {
-            'report': forms.Textarea(attrs={'rows': 4, 'class': 'form-control', 'placeholder': 'Omschrijf je innerlijke beleving...'}),
+            'report': forms.Textarea(attrs={
+                'rows': 4,
+                'class': 'form-control',
+                'placeholder':
+                'Omschrijf je innerlijke beleving...'}),
             'external_link': forms.URLInput(attrs={'class': 'form-control'}),
             'fase': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'tags': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
         }
-
-class PasserbyExperienceForm(BaseExperienceForm):
-    """Simplified form for passersby - category and tags first."""
-    
-    class Meta(BaseExperienceForm.Meta):
         labels = {
             'fase': 'Hoe zelfverzekerd voelde je je?',
-            'tags': 'Welke woorden passen bij je ervaring?',
-            'report': 'Wil je iets toevoegen? (optioneel)',
+            'tags': 'Welke woorden passen bij je moment?',
+            'report': 'Wat voelde je? Wat ging er in je om?',
             'external_link': 'Link naar meer informatie (optioneel)',
         }
         help_texts = {
-            'tags': 'Kies 3 tags die je ervaring weergeven',
-            'report': 'Een beschrijving van wat er gebeurde',
-            'external_link': '',
-        }
-
-class PractitionerExperienceForm(BaseExperienceForm):
-    """Detailed form for practitioners - reflection first."""
-    
-    class Meta(BaseExperienceForm.Meta):
-        labels = {
-            'fase': 'Hoe zelfverzekerd voelde je je?',
-            'tags': 'Welke thema\'s komen naar voren?',
-            'report': 'Jouw reflectie op deze ervaring',
-            'external_link': 'Link naar verdere reflectie (optioneel)',
-        }
-        help_texts = {
-            'tags': 'Kies tags die de kern van je ervaring raken',
-            'report': 'Deel wat je waarnam - in jezelf en om je heen',
-            'external_link': 'Link naar je blog of iets anders',
+            'tags': 'Kies 3 kernwoorden om je moment te omschrijven',
+            'report': 'Beschrijf wat zich aandiende in maximaal 3500 karakters',
+            'external_link': 'Link naar een blog of iets anders',
         }
 
 class TagForm(forms.ModelForm):

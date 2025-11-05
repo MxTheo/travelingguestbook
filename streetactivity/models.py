@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 
 
 METHOD_CHOICES = [
@@ -65,9 +64,9 @@ class Experience(models.Model):
     )
     report = models.TextField(
         max_length=3500,
-        verbose_name="Verslag van de ervaring",
+        verbose_name="Wat voelde je? Wat ging er in je om?",
         blank=True,
-        help_text="Beschrijf de ervaring in maximaal 3500 karakters",
+        help_text="Beschrijf wat zich aandiende in maximaal 3500 karakters",
     )
     external_link = models.URLField(
         blank=True,
@@ -162,7 +161,7 @@ class Tag(models.Model):
         if self.maintag and self.maintag.maintag:
             raise ValidationError(
                 {
-                    "maintag": "Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd."
+                    "maintag": "Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd"
                 }
             )
 

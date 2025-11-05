@@ -10,9 +10,8 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from .models import StreetActivity, Experience, Tag
 from .forms import (
+    ExperienceForm,
     StreetActivityForm,
-    PractitionerExperienceForm,
-    PasserbyExperienceForm,
     TagForm,
 )
 from .models import NVC_CHOICES
@@ -61,7 +60,8 @@ class StreetActivityDetailView(DetailView):
         )
 
         def get_tag_data(queryset):
-            """Retrieve top tags with counts for a given queryset of experiences for the wordcloud."""
+            """Retrieve top tags with counts for a given queryset
+            of experiences for the wordcloud."""
             tags = (
                 Tag.objects.filter(experiences__in=queryset)
                 .annotate(count=Count("experiences"))
@@ -148,15 +148,7 @@ class ExperienceCreateView(CreateView):
     """Base view to create a new experience."""
 
     model = Experience
-
-    def get_form_class(self):
-        """Select form class based on URL to differentiate passerby and practitioner forms."""
-        # Bepaal of het een practitioner of passerby is op basis van de URL
-        if "beoefenaar/" in self.request.path:
-            self.form_class = PractitionerExperienceForm
-        else:
-            self.form_class = PasserbyExperienceForm
-        return self.form_class
+    form_class = ExperienceForm
 
     def get_initial(self):
         """Set initial values including from_practitioner"""

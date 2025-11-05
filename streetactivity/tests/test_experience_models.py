@@ -330,4 +330,4 @@ class TestTagModel:
             maintag.clean()
         except ValidationError as e:
             assert 'maintag' in e.message_dict
-            assert e.message_dict['maintag'] == ['Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd.']
+            assert e.message_dict['maintag'] == ['Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd']
