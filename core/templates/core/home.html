@@ -20,7 +20,6 @@
                     <a href="{% url 'persona-list' %}"
                        class="btn btn-outline-primary btn-lg px-4">
                         <i class="bi bi-people-fill me-2"></i>Ontdek Soorten Voorbijgangers</a>
-                </a>
             </div>
         </div>
         <div class="col-lg-6 text-center mt-4 mt-lg-0">
@@ -74,9 +73,7 @@
                                 </div>
                                 <h4 class="card-title mb-0">Alles is Ervaring</h4>
                             </div>
-                            <p class="card-text">
-                                Er zijn geen goede of slechte straatactiviteiten. Alleen verschillende soorten ervaringen.
-                            </p>
+                            <p class="card-text">Er zijn geen goede of slechte straatactiviteiten. Alleen verschillende soorten ervaringen.</p>
                             <p class="card-text">
                                 Elke ervaring is waardevol. Elke ervaring leert ons iets over onszelf en de wereld om ons heen.
                             </p>
@@ -221,6 +218,74 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Recente Belevingsmomenten Dashboard -->
+    <div class="row py-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold mb-2">Recente Belevingsmomenten</h2>
+                    <p class="text-muted mb-0">Lees hoe anderen straatactiviteiten ervaren en draag bij aan ons collectieve begrip</p>
+                </div>
+                <a href="#" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Deel jouw moment
+                </a>
+            </div>
+            <div class="row g-4">
+                {% for experience in recent_experiences %}
+                    <div class="col-lg-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <!-- Activiteit en type -->
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ experience.activity.name }}</span>
+                                    <span class="badge bg-light text-muted border fs-7">
+                                        {% if experience.from_practitioner %}
+                                            <i class="bi bi-person-raised-hand me-1"></i>Beoefenaar
+                                        {% else %}
+                                            <i class="bi bi-person-walking me-1"></i>Voorbijganger
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <!-- Ervaringsbeschrijving -->
+                                <div class="experience-content mb-3">
+                                    <p class="card-text fs-6 lh-base text-dark">"{{ experience.report|truncatewords:40 }}"</p>
+                                </div>
+                                <!-- Metadata -->
+                                <div class="d-flex justify-content-between align-items-center text-muted ">
+                                    <small>
+                                        <i class="bi bi-clock me-1"></i>
+                                        {{ experience.date_created|timesince }} geleden
+                                    </small>
+                                    <a href="{% url "streetactivity-detail" experience.activity.pk %}"
+                                       class="text-decoration-none">
+                                        Naar straatactiviteit <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="text-center py-5 bg-light rounded">
+                            <i class="bi bi-journal-text display-4 text-muted mb-3"></i>
+                            <h5 class="text-muted">Nog geen belevingsmomenten gedeeld</h5>
+                            <p class="text-muted mb-4">Wees de eerste die een ervaring deelt</p>
+                            <a href="#" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Deel eerste moment
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if recent_experiences %}
+                <div class="text-center mt-4">
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-journal-text me-2"></i>Bekijk alle belevingsmomenten
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
     <!-- Deel Je Ervaring -->

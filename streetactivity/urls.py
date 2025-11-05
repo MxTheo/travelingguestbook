@@ -18,12 +18,10 @@ urlpatterns = [
          views.StreetActivityDeleteView.as_view(),
          name="delete-streetactivity"),
 
+     path('ervaringen/', views.ExperienceListView.as_view(), name='experience-list'),
      path("<int:pk>/ervaringen/straatactiviteit/",
          views.ExperienceListViewStreetActivity.as_view(),
          name="experience-list-streetactivity"),
-     path("ervaring/<int:pk>/",
-         views.ExperienceDetailView.as_view(),
-         name="experience-detail"),
      path("<int:pk>/ervaring/nieuw/",
           views.ExperienceCreateView.as_view(),
           name="create-experience"),

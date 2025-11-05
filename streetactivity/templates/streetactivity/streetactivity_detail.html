@@ -76,7 +76,7 @@
                                        autocomplete="off"
                                        checked>
                                 <label class="btn btn-outline-primary" for="filterEveryone">
-                                    <i class="bi bi-people"></i> Iedereen
+                                    <i class="bi bi-people fs-6"></i> Iedereen
                                 </label>
                                 <input type="radio"
                                        class="btn-check"
@@ -84,7 +84,7 @@
                                        id="filterPractitioners"
                                        autocomplete="off">
                                 <label class="btn btn-outline-primary" for="filterPractitioners">
-                                    <i class="bi bi-rocket-takeoff"></i> Alleen Beoefenaars
+                                    <i class="bi bi-person-raised-hand fs-6"></i> Alleen Beoefenaars
                                 </label>
                                 <input type="radio"
                                        class="btn-check"
@@ -92,7 +92,7 @@
                                        id="filterPassersby"
                                        autocomplete="off">
                                 <label class="btn btn-outline-primary" for="filterPassersby">
-                                    <i class="bi bi-person"></i> Alleen Voorbijgangers
+                                    <i class="bi bi-person-walking fs-6"></i> Alleen Voorbijgangers
                                 </label>
                             </div>
                             <small class="text-muted ms-2" id="filterCount">Totaal: {{ experiences_count }} ervaringen</small>
@@ -101,11 +101,11 @@
                         <div class="d-flex gap-2">
                             <a href="{% url 'create-experience-from-practitioner' activity.pk %}"
                                class="btn btn-success btn-sm">
-                                <i class="bi bi-rocket-takeoff-fill"></i> Ervaring als Beoefenaar
+                                <i class="bi bi-person-raised-hand fs-6"></i> Ervaring als Beoefenaar
                             </a>
                             <a href="{% url 'create-experience-from-passerby' activity.pk %}"
                                class="btn btn-info btn-sm">
-                                <i class="bi bi-person-fill"></i> Ervaring als Voorbijganger
+                                <i class="bi bi-person-walking fs-6"></i> Ervaring als Voorbijganger
                             </a>
                             <a href="{% url 'experience-list-streetactivity' activity.pk %}"
                                class="btn btn-outline-secondary btn-sm">

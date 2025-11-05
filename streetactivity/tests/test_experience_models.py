@@ -9,7 +9,8 @@ class TestExperienceModel:
     def test_experience_str_method(self):
         """Test the __str__ method of the Experience model to ensure it returns
         the first 50 characters of the report followed by ellipsis."""
-        experience = ExperienceFactory(report="This is a test report for the experience model. It should be truncated.")
+        experience = ExperienceFactory(
+            report="This is a test report for the experience model. It should be truncated.")
         expected_str = "This is a test report for the experience model. It..."
         assert str(experience) == expected_str
 
@@ -144,18 +145,6 @@ class TestExperienceModel:
         experiences = Experience.objects.all()
         assert list(experiences) == [exp3, exp2, exp1]
 
-    def test_experience_detailview(self, client):
-        """Test the Experience detail view to ensure it returns a 200 status code
-        and contains the expected context."""
-        experience = ExperienceFactory()
-        detail_url = reverse("experience-detail", args=[experience.id])
-
-        response = client.get(detail_url)
-
-        assert response.status_code == 200
-        assert "experience" in response.context
-        assert response.context["experience"].id == experience.id
-
     def test_experience_short_report_property(self):
         """Test the short_report property of the Experience model."""
         long_report = "This is a long report that exceeds one hundred characters. "* 3
@@ -174,7 +163,8 @@ class TestExperienceModel:
 
     def test_experience_valid_clean_method(self):
         """Test the clean method of the Experience model for valid data."""
-        experience = ExperienceFactory(report="This is a valid report.", external_link="http://example.com")
+        experience = ExperienceFactory(
+            report="This is a valid report.", external_link="http://example.com")
         assert experience.clean() is None
 
     def test_experience_activity_relationship(self):
@@ -260,7 +250,7 @@ class TestTagModel:
 
         assert maintag.is_maintag is True
         assert subtag.is_maintag is False
-    
+
     def test_tag_has_subtags_property(self):
         """Test the has_subtags property of the Tag model."""
         maintag = TagFactory(maintag=None)

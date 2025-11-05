@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
+from streetactivity.models import Experience
 
 class MailtoMixin:
     """Mixin that provides mailto_url context for templates"""
@@ -12,7 +13,6 @@ class MailtoMixin:
         else:
             return "mailto:admin@example.com"
 
-    
     def get_context_data(self, **kwargs):
         """Adds mailto_url to the context"""
         context = super().get_context_data(**kwargs)
@@ -22,6 +22,12 @@ class MailtoMixin:
 class HomeView(TemplateView):
     """Renders the home page"""
     template_name = 'core/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        recent_experiences = Experience.objects.select_related('activity').all()[:4]
+        context['recent_experiences'] = recent_experiences
+        return context
 
 class HelpView(TemplateView):
     """Renders the help page"""
