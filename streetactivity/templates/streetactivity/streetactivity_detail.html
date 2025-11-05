@@ -10,11 +10,14 @@
     <div class="container py-4">
         <!-- Header sectie met titel en basisinfo -->
         <header class="mb-4">
-            <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h1 class="text-success-emphasis">{{ activity.name }}</h1>
                 </div>
                 <div>
+                    <a href="{% url 'streetactivity-list' %}" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-grid"></i> overzicht
+                    </a>
                     <a href="{% url 'delete-streetactivity' activity.pk %}"
                        class="btn btn-outline-danger me-2">
                         <i class="bi bi-trash"></i> Verwijder
@@ -154,10 +157,9 @@
                                 <p class="small text-muted mb-1">
                                     <strong id="totalExperiences">{{ experiences_count }}</strong> ervaringen gedeeld
                                 </p>
-                                <p class="small text-muted">"De verdeling van alle gedeelde momentopnames"</p>
                                 <div>
                                     <a href="{% url 'experience-list-streetactivity' activity.pk %}"
-                                       class="btn btn-outline-secondary btn-sm">
+                                       class="btn btn-outline-secondary btn-sm mt-2">
                                         <i class="bi bi-list-ul"></i> Bekijk alle ervaringen
                                     </a>
                                 </div>
@@ -190,7 +192,6 @@
                                     Overzicht beschikbare tags
                                 </a>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -200,7 +201,7 @@
         <!-- Navigatie knoppen -->
         <div class="action-buttons pt-3 border-top">
             <a href="{% url 'streetactivity-list' %}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Terug naar overzicht
+                <i class="bi bi-grid"></i> straatactiviteiten overzicht
             </a>
         </div>
     </div>

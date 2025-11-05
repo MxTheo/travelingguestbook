@@ -88,7 +88,7 @@
                                                 <i class="bi bi-clock me-1"></i>
                                                 {{ experience.date_created|timesince }} geleden
                                             </small>
-                                            <a href="{% url 'streetactivity-detail' experience.activity.pk %}"
+                                            <a href="{% url 'experience-list-streetactivity' experience.activity.pk %}"
                                                class="text-decoration-none text-primary">
                                                 Meer lezen <i class="bi bi-arrow-right ms-1"></i>
                                             </a>
