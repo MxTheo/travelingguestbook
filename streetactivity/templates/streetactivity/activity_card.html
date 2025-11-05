@@ -1,0 +1,46 @@
+<div class="activity-card card shadow-sm h-100">
+    <div class="card-body d-flex flex-column">
+        <!-- Header -->
+        <div class="card-header bg-white border-0 px-0 pt-0">
+            <h3 class="activity-name text-success-emphasis fs-5 mb-2">{{ activity.name }}</h3>
+        </div>
+        
+        <!-- Content -->
+        <div class="card-content flex-grow-1">
+            <!-- Kernvraag -->
+            <blockquote class="activity-question fs-6 lh-base mb-3 text-muted">
+                "{{ activity.question }}"
+            </blockquote>
+            
+            <!-- Beschrijving -->
+            <p class="activity-description lh-base mb-3 small">{{ activity.description|truncatewords:20 }}</p>
+            
+            <!-- Methode -->
+            <div class="activity-method">
+                <span class="badge bg-primary bg-opacity-10 text-primary fs-7">
+                    {{ activity.get_method_display }}
+                </span>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="card-footer bg-white border-0 px-0 pb-0 pt-3 mt-auto">
+            <div class="d-flex gap-2 mb-2">
+                <a href="{% url 'create-experience-from-practitioner' activity.pk %}" 
+                   class="btn btn-success btn-sm flex-fill">
+                    <i class="bi bi-person-standing me-1"></i>Ik deed dit
+                </a>
+                <a href="{% url 'create-experience-from-passerby' activity.pk %}" 
+                   class="btn btn-outline-success btn-sm flex-fill">
+                    <i class="bi bi-person-walking me-1"></i>Ik kwam langs
+                </a>
+            </div>
+            <div class="text-center">
+                <a href="{% url 'streetactivity-detail' activity.pk %}" 
+                   class="text-decoration-none fs-7 text-primary">
+                    <i class="bi bi-eye me-1"></i>Meer details
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
