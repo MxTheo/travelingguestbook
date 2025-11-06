@@ -37,12 +37,15 @@ class StreetActivityDetailView(DetailView):
         activity = self.object
 
         experiences = activity.experiences.all()
+        experiences_count = experiences.count()
 
-        context["experiences_count"] = experiences.count()
+        context["experiences_count"] = experiences_count
         context["practitioner_count"] = experiences.filter(
             from_practitioner=True
         ).count()
         context["passerby_count"] = experiences.filter(from_practitioner=False).count()
+        context["recent_experiences"] = experiences[:3]
+        context["experiences_left"] = experiences_count - 3
 
         def get_chart_data(queryset):
             fase_counts = queryset.values("fase").annotate(count=Count("fase"))

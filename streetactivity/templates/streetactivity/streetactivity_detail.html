@@ -8,131 +8,162 @@
 {% endblock stylesheet %}
 {% block content %}
     <div class="container py-4">
-        <!-- Header sectie met titel en basisinfo -->
-        <header class="mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <h1 class="text-success-emphasis">{{ activity.name }}</h1>
+        <!-- Header sectie met titel en CTA -->
+        <header class="mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="text-success-emphasis mb-3">{{ activity.name }}</h1>
+                    <p class="lead text-muted mb-4">{{ activity.question }}</p>
                 </div>
-                <div>
-                    <a href="{% url 'streetactivity-list' %}" class="btn btn-outline-secondary me-2">
-                        <i class="bi bi-grid"></i> overzicht
-                    </a>
-                    <a href="{% url 'delete-streetactivity' activity.pk %}"
-                       class="btn btn-outline-danger me-2">
-                        <i class="bi bi-trash"></i> Verwijder
-                    </a>
-                    <a href="{% url 'update-streetactivity' activity.pk %}"
-                       class="btn btn-outline-primary">
-                        <i class="bi bi-pencil-square"></i> Bewerk
-                    </a>
+                <div class="col-md-4">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-3">Deel je belevingsmoment</h5>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'create-experience-from-practitioner' activity.pk %}"
+                                   class="btn btn-light btn-lg">
+                                    <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
+                                </a>
+                                <a href="{% url 'create-experience-from-passerby' activity.pk %}"
+                                   class="btn btn-outline-light btn-lg">
+                                    <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
+                                </a>
+                            </div>
+                            <small class="mt-2 d-block opacity-75">
+                                <i class="bi bi-shield-check me-1"></i>Anoniem · 2 minuten
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
-        <!-- Kernvraag sectie -->
-        <section class="mb-4 p-3 bg-light rounded">
-            <h2 class="h4 mb-3">Uitnodiging</h2>
-            <blockquote class="core-question fs-5 text-success-emphasis mb-0">
-                "{{ activity.question }}"
-            </blockquote>
-        </section>
-        <!-- Beschrijving sectie -->
-        <section class="mb-4">
-            <h2 class="h4 text-primary mb-3">Stap-voor-stap handleiding</h2>
-            <div class="description-content fs-6 lh-base">{{ activity.description|linebreaks }}</div>
-        </section>
-        <!-- Praktische informatie -->
-        <div class="row mb-4">
-            <div class="col-md-6 mb-3">
-                <section class="card h-100">
-                    <div class="card-body">
-                        <h3 class="h5 card-title text-primary">
-                            <i class="bi bi-tools"></i> Benodigdheden
-                        </h3>
-                        <div class="supplies-content">{{ activity.supplies|linebreaks }}</div>
+        <!-- Snelle navigatie -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center p-3 bg-light rounded">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#instructies" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-journal-text me-1"></i>Handleiding
+                        </a>
+                        <a href="#collectief-begrip" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-graph-up me-1"></i>Collectief begrip
+                        </a>
+                        <a href="#momenten" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-chat-quote me-1"></i>Belevingsmomenten
+                        </a>
                     </div>
-                </section>
+                    <div>
+                        <a href="{% url 'streetactivity-list' %}"
+                           class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-grid me-1"></i>Alle activiteiten
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- ERVARINGSDASHBOARD SECTIE -->
-        <section class="experience-dashboard mb-5">
+        <!-- Instructies sectie -->
+        <section id="instructies" class="mb-5">
             <div class="row">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h2 class="h4 text-primary mb-0">
+                                <i class="bi bi-journal-text me-2"></i>Stap-voor-stap handleiding
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="description-content fs-6 lh-base">{{ activity.description|linebreaks }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h3 class="h5 text-primary mb-0">
+                                <i class="bi bi-tools me-2"></i>Benodigdheden
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="supplies-content">{{ activity.supplies|linebreaks }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Collectief begrip sectie -->
+        <section id="collectief-begrip" class="mb-5">
+            <div class="row mb-4">
                 <div class="col-12">
-                    <h2 class="h4 mb-4">Collectief Ervaringsbegrip</h2>
-                    <p class="text-muted mb-4">
-                        <i class="bi bi-info-circle"></i>
-                        Elk momentopname draagt bij aan het gedeelde begrip van deze straatactiviteit. Iedereen kan bijdragen om de straatactiviteit verder te ontwikkelen.
+                    <h2 class="h3 text-primary mb-3">Collectief Begrip</h2>
+                    <p class="text-muted lead">
+                        Samen bouwen we aan inzicht in deze straatactiviteit.
+                        Niet om te oordelen, maar om te begrijpen wat mensen ervaren.
                     </p>
                 </div>
             </div>
-            <!-- Actie Knoppen - Nieuwe Ervaringen -->
+            <!-- Filter knoppen -->
             <div class="row mb-4">
                 <div class="col-12">
-                    <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">
-                        <div class="d-flex flex-wrap gap-2 align-items-center">
-                            <span class="me-2">Ervaringen filteren:</span>
-                            <div class="btn-group" role="group">
-                                <input type="radio"
-                                       class="btn-check"
-                                       name="experienceFilter"
-                                       id="filterEveryone"
-                                       autocomplete="off"
-                                       checked>
-                                <label class="btn btn-outline-primary" for="filterEveryone">
-                                    <i class="bi bi-people fs-6"></i> Iedereen
-                                </label>
-                                <input type="radio"
-                                       class="btn-check"
-                                       name="experienceFilter"
-                                       id="filterPractitioners"
-                                       autocomplete="off">
-                                <label class="btn btn-outline-primary" for="filterPractitioners">
-                                    <i class="bi bi-person-raised-hand fs-6"></i> Alleen Beoefenaars
-                                </label>
-                                <input type="radio"
-                                       class="btn-check"
-                                       name="experienceFilter"
-                                       id="filterPassersby"
-                                       autocomplete="off">
-                                <label class="btn btn-outline-primary" for="filterPassersby">
-                                    <i class="bi bi-person-walking fs-6"></i> Alleen Voorbijgangers
-                                </label>
+                    <div class="card border-0 bg-light">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex flex-wrap gap-3 align-items-center">
+                                        <span class="fw-medium text-muted">Filter momenten:</span>
+                                        <div class="btn-group" role="group">
+                                            <input type="radio"
+                                                   class="btn-check"
+                                                   name="experienceFilter"
+                                                   id="filterEveryone"
+                                                   autocomplete="off"
+                                                   checked>
+                                            <label class="btn btn-outline-primary" for="filterEveryone">
+                                                <i class="bi bi-people"></i> Iedereen
+                                            </label>
+                                            <input type="radio"
+                                                   class="btn-check"
+                                                   name="experienceFilter"
+                                                   id="filterPractitioners"
+                                                   autocomplete="off">
+                                            <label class="btn btn-outline-primary" for="filterPractitioners">
+                                                <i class="bi bi-person-raised-hand fs-6"></i> Beoefenaars
+                                            </label>
+                                            <input type="radio"
+                                                   class="btn-check"
+                                                   name="experienceFilter"
+                                                   id="filterPassersby"
+                                                   autocomplete="off">
+                                            <label class="btn btn-outline-primary" for="filterPassersby">
+                                                <i class="bi bi-person-walking fs-6"></i> Voorbijgangers
+                                            </label>
+                                        </div>
+                                        <small class="text-muted" id="filterCount">Totaal: {{ experiences_count }} momenten</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                    <a href="{% url 'experience-list-streetactivity' activity.pk %}"
+                                       class="btn btn-primary btn-sm">
+                                        <i class="bi bi-list-ul me-1"></i>Alle momenten
+                                    </a>
+                                </div>
                             </div>
-                            <small class="text-muted ms-2" id="filterCount">Totaal: {{ experiences_count }} ervaringen</small>
-                        </div>
-                        <!-- Knoppen voor nieuwe ervaringen -->
-                        <div class="d-flex gap-2">
-                            <a href="{% url 'create-experience-from-practitioner' activity.pk %}"
-                               class="btn btn-success btn-sm">
-                                <i class="bi bi-person-raised-hand fs-6"></i> Ik deed dit
-                            </a>
-                            <a href="{% url 'create-experience-from-passerby' activity.pk %}"
-                               class="btn btn-info btn-sm">
-                                <i class="bi bi-person-walking fs-6"></i> Ik kwam langs
-                            </a>
-                            <a href="{% url 'experience-list-streetactivity' activity.pk %}"
-                               class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-list-ul"></i> Alle Ervaringen
-                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Cumulatieve Ervaringsstroom en Levende Tags -->
-            <div class="row mb-4">
+            <div class="row g-4">
+                <!-- Zelfverzekerdheid chart -->
                 <div class="col-md-6">
-                    <div class="card h-100">
+                    <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="bi bi-pie-chart"></i> Gevoel van zelfverzekerdheid
+                            <h5 class="card-title text-primary mb-4">
+                                <i class="bi bi-pie-chart me-2"></i>Mate van zekerheid
                             </h5>
-                            <!-- Donut Chart Container -->
                             <div class="text-center">
-                                <div class="donut-chart mx-auto mb-3">
+                                <div class="donut-chart mx-auto mb-4">
                                     <canvas id="experienceChart"></canvas>
                                 </div>
-                                <!-- Legend -->
-                                <div class="row g-2 justify-content-center">
+                                <div class="row g-3 justify-content-center">
                                     <div class="col-auto">
                                         <div class="d-flex align-items-center">
                                             <span class="badge bg-primary me-2">&nbsp;</span>
@@ -153,28 +184,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mt-3">
-                                <p class="small text-muted mb-1">
-                                    <strong id="totalExperiences">{{ experiences_count }}</strong> ervaringen gedeeld
-                                </p>
-                                <div>
-                                    <a href="{% url 'experience-list-streetactivity' activity.pk %}"
-                                       class="btn btn-outline-secondary btn-sm mt-2">
-                                        <i class="bi bi-list-ul"></i> Bekijk alle ervaringen
-                                    </a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- Levende Tags -->
+                <!-- Tags word cloud -->
                 <div class="col-md-6">
-                    <div class="card h-100">
+                    <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="bi bi-tags"></i> Waarom het zo is ervaren
+                            <h5 class="card-title text-primary mb-4">
+                                <i class="bi bi-tags me-2"></i>Wat mensen ervaren
                             </h5>
-                            <!-- Word Cloud Container -->
                             <div class="word-cloud" id="wordCloud">
                                 {% for tag in all_tags %}
                                     <span class="word-cloud-tag"
@@ -183,13 +202,9 @@
                                           data-category="{{ tag.nvc_category }}">{{ tag.name }}</span>
                                 {% endfor %}
                             </div>
-                            <div class="mt-3">
-                                <p class="small text-muted">"Indruk van alle momenten"</p>
-                            </div>
-                            <div class="mt-3">
-                                <a href="{% url 'tag-list' %}" class="btn btn-outline-secondary btn-sm">
-                                    <i class="bi bi-tags"></i>
-                                    Overzicht beschikbare tags
+                            <div class="text-center mt-3">
+                                <a href="{% url 'tag-list' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-tags me-1"></i>Alle tags bekijken
                                 </a>
                             </div>
                         </div>
@@ -197,134 +212,245 @@
                 </div>
             </div>
         </section>
-        <!-- EINDE ERVARINGSDASHBOARD SECTIE -->
-        <!-- Navigatie knoppen -->
-        <div class="action-buttons pt-3 border-top">
-            <a href="{% url 'streetactivity-list' %}" class="btn btn-secondary">
-                <i class="bi bi-grid"></i> straatactiviteiten overzicht
-            </a>
+        <!-- Recente belevingsmomenten -->
+        <section id="momenten" class="mb-5">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="h3 text-primary">Recente Belevingsmomenten</h2>
+                        <a href="{% url 'experience-list-streetactivity' activity.pk %}"
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-list-ul me-1"></i>Alle momenten
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4">
+                {% for experience in recent_experiences %}
+                    <div class="col-lg-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge bg-light text-muted border">
+                                        {% if experience.from_practitioner %}
+                                            <i class="bi bi-person-raised-hand me-1"></i>Beoefenaar
+                                        {% else %}
+                                            <i class="bi bi-person-walking me-1"></i>Voorbijganger
+                                        {% endif %}
+                                    </span>
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock me-1"></i>
+                                        {{ experience.date_created|timesince }} geleden
+                                    </small>
+                                </div>
+                                <p class="card-text">"{{ experience.report|truncatewords:30 }}"</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="text-center py-5 bg-light rounded">
+                            <i class="bi bi-chat-quote display-4 text-muted mb-3"></i>
+                            <h5 class="text-muted">Nog geen belevingsmomenten</h5>
+                            <p class="text-muted">Deel als eerste je moment met deze activiteit</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                <small class="text-muted">
+                    Nog {{ experiences_left }} belevingsmomenten
+                </small>
+            </div>
+        </section>
+        <!-- Secundaire CTA -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card bg-light border-0">
+                    <div class="card-body text-center py-5">
+                        <h3 class="h4 text-primary mb-3">Jouw moment telt</h3>
+                        <p class="text-muted mb-4">
+                            Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
+                            deze straatactiviteit beter te begrijpen.
+                        </p>
+                        <div class="d-flex gap-3 justify-content-center flex-wrap">
+                            <a href="{% url 'create-experience-from-practitioner' activity.pk %}"
+                               class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
+                            </a>
+                            <a href="{% url 'create-experience-from-passerby' activity.pk %}"
+                               class="btn btn-outline-primary btn-lg">
+                                <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock content %}
 {% block javascript %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('experienceChart').getContext('2d');
-    let experienceChart;
-    
-    // Gebruik Bootstrap CSS variabelen voor kleuren
-    const styles = getComputedStyle(document.documentElement);
-    const primaryColor = styles.getPropertyValue('--bs-primary') || '#0d6efd';
-    const warningColor = styles.getPropertyValue('--bs-warning') || '#ffc107';
-    const successColor = styles.getPropertyValue('--bs-success') || '#198754';
-    const secondaryColor = styles.getPropertyValue('--bs-secondary') || '#6c757d';
-    
-    // Data voor verschillende filters
-    const chartData = {
-        everyone: {{ chart_data_everyone|safe }},
-        practitioners: {{ chart_data_practitioners|safe }},
-        passersby: {{ chart_data_passersby|safe }}
-    };
-    
-    const tagData = {
-        everyone: {{ tag_data_everyone|safe }},
-        practitioners: {{ tag_data_practitioners|safe }},
-        passersby: {{ tag_data_passersby|safe }}
-    };
-    
-    const countData = {
-        everyone: {{ experiences_count }},
-        practitioners: {{ practitioner_count }},
-        passersby: {{ passerby_count }}
-    };
-    
-    // Initialiseer chart
-    function initChart(data) {
-        if (experienceChart) {
-            experienceChart.destroy();
-        }
-        
-        experienceChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['onzeker', 'tussenin', 'zelfverzekerd'],
-                datasets: [{
-                    data: [data.pioneer, data.intermediate, data.climax],
-                    backgroundColor: [
-                        primaryColor,
-                        warningColor, 
-                        successColor
-                    ],
-                    borderWidth: 2,
-                    borderColor: styles.getPropertyValue('--bs-body-bg') || '#fff'
-                }]
-            },
-            options: {
-                cutout: '60%',
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: false
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('experienceChart').getContext('2d');
+            let experienceChart;
+            
+            // Gebruik Bootstrap CSS variabelen voor kleuren
+            const styles = getComputedStyle(document.documentElement);
+            const primaryColor = styles.getPropertyValue('--bs-primary') || '#0d6efd';
+            const warningColor = styles.getPropertyValue('--bs-warning') || '#ffc107';
+            const successColor = styles.getPropertyValue('--bs-success') || '#198754';
+            const secondaryColor = styles.getPropertyValue('--bs-secondary') || '#6c757d';
+            const primaryEmphasisColor = styles.getPropertyValue('--bs-primary-emphasis') || '#0d6efd';
+            const warningEmphasisColor = styles.getPropertyValue('--bs-warning-emphasis') || '#ffc107';
+            const successEmphasisColor = styles.getPropertyValue('--bs-success-emphasis') || '#198754';
+            const secondaryEmphasisColor = styles.getPropertyValue('--bs-secondary-emphasis') || '#6c757d';
+            
+            // Data voor verschillende filters
+            const chartData = {
+                everyone: {{ chart_data_everyone|safe }},
+                practitioners: {{ chart_data_practitioners|safe }},
+                passersby: {{ chart_data_passersby|safe }}
+            };
+            
+            const tagData = {
+                everyone: {{ tag_data_everyone|safe }},
+                practitioners: {{ tag_data_practitioners|safe }},
+                passersby: {{ tag_data_passersby|safe }}
+            };
+            
+            const countData = {
+                everyone: {{ experiences_count }},
+                practitioners: {{ practitioner_count }},
+                passersby: {{ passerby_count }}
+            };
+            
+            // Initialiseer chart
+            function initChart(data) {
+                if (experienceChart) {
+                    experienceChart.destroy();
+                }
+                
+                experienceChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Onzeker', 'Tussenin', 'Zelfverzekerd'],
+                        datasets: [{
+                            data: [data.pioneer, data.intermediate, data.climax],
+                            backgroundColor: [
+                                primaryColor,
+                                warningColor, 
+                                successColor
+                            ],
+                            borderWidth: 2,
+                            borderColor: styles.getPropertyValue('--bs-body-bg') || '#fff'
+                        }]
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = Math.round((context.raw / total) * 100);
-                                return `${context.label}: ${context.raw} (${percentage}%)`;
+                    options: {
+                        cutout: '60%',
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? Math.round((context.raw / total) * 100) : 0;
+                                        return `${context.label}: ${context.raw} (${percentage}%)`;
+                                    }
+                                }
                             }
                         }
                     }
+                });
+            }
+            
+            function updateWordCloud(tags) {
+                const wordCloud = document.getElementById('wordCloud');
+                wordCloud.innerHTML = '';
+                
+                if (tags.length === 0) {
+                    wordCloud.innerHTML = '<p class="text-muted text-center">Nog geen tags gedeeld</p>';
+                    return;
+                }
+                
+                // Sorteer tags op count (hoogste eerst) voor betere leesbaarheid
+                const sortedTags = [...tags].sort((a, b) => b.count - a.count);
+                
+                for (const tag of sortedTags) {
+                    const span = document.createElement('span');
+                    span.className = 'word-cloud-tag d-inline-block m-1';
+                    span.textContent = tag.name;
+                    span.setAttribute('data-tag-id', tag.id);
+                    span.setAttribute('data-count', tag.count);
+                    span.setAttribute('data-category', tag.nvc_category);
+                    
+                    // Dynamische grootte gebaseerd op count - groter bereik voor betere leesbaarheid
+                    const baseSize = 16; // Verhoogd van 14
+                    const size = baseSize + (tag.count * 3); // Verhoogd van 2
+                    span.style.fontSize = `${Math.min(size, 28)}px`; // Verhoogd van 24
+                    
+                    // Betere opacity voor contrast
+                    span.style.opacity = 0.8 + (tag.count * 0.15); // Verhoogd van 0.6 + 0.1
+                    
+                    // Dikkere font weight voor betere leesbaarheid
+                    span.style.fontWeight = '500';
+                    
+                    // Padding voor betere klikbaarheid en leesbaarheid
+                    span.style.padding = '2px 6px';
+                    span.style.borderRadius = '4px';
+                    
+                    // Kleur gebaseerd op category met betere contrast
+                    const categoryColors = {
+                        'needs': primaryColor,
+                        'feelings_fulfilled': successColor,
+                        'feelings_unfulfilled': warningColor,
+                        'other': secondaryColor
+                    };
+                    
+                    const tagColor = categoryColors[tag.nvc_category] || secondaryColor;
+                    span.style.color = tagColor;
+                    span.style.backgroundColor = `${tagColor}15`; // Licht achtergrondkleur
+                    
+                    // Hover effect voor betere interactie
+                    span.style.transition = 'all 0.2s ease';
+                    span.style.cursor = 'pointer';
+                    
+                    span.addEventListener('mouseenter', function() {
+                        this.style.transform = 'scale(1.05)';
+                        this.style.backgroundColor = `${tagColor}25`;
+                    });
+                    
+                    span.addEventListener('mouseleave', function() {
+                        this.style.transform = 'scale(1)';
+                        this.style.backgroundColor = `${tagColor}15`;
+                    });
+                    
+                    wordCloud.appendChild(span);
                 }
             }
+
+            // Filter handlers met for...of
+            const filterRadios = document.querySelectorAll('input[name="experienceFilter"]');
+            for (const radio of filterRadios) {
+                radio.addEventListener('change', function() {
+                    const filterType = this.id.replace('filter', '').toLowerCase();
+                    
+                    // Update chart
+                    initChart(chartData[filterType]);
+                    
+                    // Update word cloud
+                    updateWordCloud(tagData[filterType]);
+                    
+                    // Update count
+                    document.getElementById('filterCount').textContent = `Totaal: ${countData[filterType]} ervaringen`;
+                });
+            }
+                // Laad initiële data
+                initChart(chartData.everyone);
+                updateWordCloud(tagData.everyone);
         });
-    }
-    
-    // Update woordwolk
-    function updateWordCloud(tags) {
-        const wordCloud = document.getElementById('wordCloud');
-        wordCloud.innerHTML = '';
-        
-        tags.forEach(tag => {
-            const span = document.createElement('span');
-            span.className = 'word-cloud-tag';
-            span.textContent = tag.name;
-            span.setAttribute('data-tag-id', tag.id);
-            span.setAttribute('data-count', tag.count);
-            span.setAttribute('data-category', tag.nvc_category);
-            
-            // Dynamische grootte gebaseerd op count
-            const baseSize = 14;
-            const size = baseSize + (tag.count * 2);
-            span.style.fontSize = `${Math.min(size, 24)}px`;
-            span.style.opacity = 0.7 + (tag.count * 0.1);
-            
-            wordCloud.appendChild(span);
-        });
-    }
-    
-    // Filter handlers
-    document.querySelectorAll('input[name="experienceFilter"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            const filterType = this.id.replace('filter', '').toLowerCase();
-            
-            // Update chart
-            initChart(chartData[filterType]);
-            
-            // Update word cloud
-            updateWordCloud(tagData[filterType]);
-            
-            // Update count
-            document.getElementById('filterCount').textContent = `Totaal: ${countData[filterType]} ervaringen`;
-            document.getElementById('totalExperiences').textContent = countData[filterType];
-        });
-    });
-    
-    // Laad initiële data
-    initChart(chartData.everyone);
-    updateWordCloud(tagData.everyone);
-});
     </script>
 {% endblock javascript %}

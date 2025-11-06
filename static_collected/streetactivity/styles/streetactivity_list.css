@@ -14,17 +14,17 @@
 }
 
 .activity-card {
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease-in-out;
     height: 100%;
 }
 
 .activity-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
 }
 
 .activity-question {
     font-style: italic;
-    border-left: 3px solid var(--bs-primary);
+    border-left: 3px solid var(--bs-success);
     padding-left: 1rem;
     margin: 0;
 }

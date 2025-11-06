@@ -61,40 +61,44 @@
 {% endblock content %}
 {% block javascript %}
     <script>
-// Character counter for report field
-document.addEventListener('DOMContentLoaded', function() {
-    const reportField = document.getElementById('{{ form.report.id_for_label }}');
-    const maxLength = 3500;
-    
-    if (reportField) {
-        // Add character counter
-        const counter = document.createElement('div');
-        counter.className = 'form-text text-end';
-        reportField.parentNode.appendChild(counter);
-        
-        function updateCounter() {
-            const remaining = maxLength - reportField.value.length;
-            counter.textContent = `${reportField.value.length}/${maxLength} karakters`;
-            counter.className = `form-text text-end ${remaining < 50 ? 'text-warning' : 'text-muted'}`;
-        }
-        
-        reportField.addEventListener('input', updateCounter);
-        updateCounter();
-    }
-    
-    // Enhanced radio card selection
-    document.querySelectorAll('.card input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            // Remove border-primary from all cards in this group
-            this.closest('.row').querySelectorAll('.card').forEach(card => {
-                card.classList.remove('border-primary');
-                card.classList.add('border-light');
-            });
-            // Add border-primary to selected card
-            this.closest('.card').classList.add('border-primary');
-            this.closest('.card').classList.remove('border-light');
+        // Character counter for report field
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportField = document.getElementById('{{ form.report.id_for_label }}');
+            const maxLength = 3500;
+            
+            if (reportField) {
+                // Add character counter
+                const counter = document.createElement('div');
+                counter.className = 'form-text text-end';
+                reportField.parentNode.appendChild(counter);
+                
+                function updateCounter() {
+                    const remaining = maxLength - reportField.value.length;
+                    counter.textContent = `${reportField.value.length}/${maxLength} karakters`;
+                    counter.className = `form-text text-end ${remaining < 50 ? 'text-warning' : 'text-muted'}`;
+                }
+                
+                reportField.addEventListener('input', updateCounter);
+                updateCounter();
+            }
+            
+            // Enhanced radio card selection
+            const radioCards = document.querySelectorAll('.card input[type="radio"]');
+            for (const radio of radioCards) {
+                radio.addEventListener('change', function() {
+                    // Remove border-primary from all cards in this group
+                    const allCards = this.closest('.row').querySelectorAll('.card');
+                    for (const card of allCards) {
+                        card.classList.remove('border-primary');
+                        card.classList.add('border-light');
+                    }
+                    
+                    // Add border-primary to selected card
+                    const selectedCard = this.closest('.card');
+                    selectedCard.classList.add('border-primary');
+                    selectedCard.classList.remove('border-light');
+                });
+            }
         });
-    });
-});
     </script>
 {% endblock javascript %}
