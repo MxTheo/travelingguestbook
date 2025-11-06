@@ -235,3 +235,10 @@ class TestStreetActivityDetailView:
         tag_data_everyone = context["tag_data_everyone"]
         tag_counts = {tag['name']: tag['count'] for tag in tag_data_everyone}
         assert tag_counts == {"Tag1": 2, "Tag2": 2}
+
+    def test_negative_experiences_left(self, client):
+        """Test if that when there are no experiences, then the experiences_left results in 0 and not -3"""
+        activity = StreetActivityFactory()
+        response = client.get(reverse("streetactivity-detail", args=[activity.id]))
+        context = response.context
+        assert context['experiences_left'] == 0

@@ -45,7 +45,7 @@ class StreetActivityDetailView(DetailView):
         ).count()
         context["passerby_count"] = experiences.filter(from_practitioner=False).count()
         context["recent_experiences"] = experiences[:3]
-        context["experiences_left"] = experiences_count - 3
+        context["experiences_left"] = max(0, experiences_count - 3)
 
         def get_chart_data(queryset):
             fase_counts = queryset.values("fase").annotate(count=Count("fase"))
