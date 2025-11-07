@@ -117,12 +117,6 @@ class Experience(models.Model):
                 }
             )
 
-    @property
-    def short_report(self):
-        """Property for short summary of the report"""
-        return self.report[:100] + "..." if len(self.report) > 100 else self.report
-
-
 class Tag(models.Model):
     """A tag is a label that can be associated with an experience of a street activity."""
 

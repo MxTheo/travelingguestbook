@@ -26,8 +26,10 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         """Add recent experiences and randam activities to the home page"""
         context = super().get_context_data(**kwargs)
-        context['recent_experiences'] = Experience.objects.select_related('activity').all()[:4]
-        context['featured_activities'] = StreetActivity.objects.order_by('?')[:6]
+        featured_activities = StreetActivity.objects.order_by('?')
+        context['recent_experiences'] = Experience.objects.select_related('activity').all()[:3]
+        context['featured_activities'] = featured_activities[:4]
+        context['activities_remaining'] = max(0, featured_activities.count() - 4)
         return context
 
 class HelpView(TemplateView):

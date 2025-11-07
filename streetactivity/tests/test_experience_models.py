@@ -145,13 +145,6 @@ class TestExperienceModel:
         experiences = Experience.objects.all()
         assert list(experiences) == [exp3, exp2, exp1]
 
-    def test_experience_short_report_property(self):
-        """Test the short_report property of the Experience model."""
-        long_report = "This is a long report that exceeds one hundred characters. "* 3
-        experience = ExperienceFactory(report=long_report)
-        expected_short = long_report[:100] + '...'
-        assert experience.short_report == expected_short
-
     def test_experience_clean_method(self):
         """Test the clean method of the Experience model for validation."""
         experience = ExperienceFactory(report="", external_link="http://example.com")

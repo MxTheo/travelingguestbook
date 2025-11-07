@@ -1,5 +1,5 @@
 from django.urls import reverse
-from streetactivity.models import StreetActivity, Tag, Experience
+from streetactivity.models import StreetActivity, Tag
 from travelingguestbook.factories import ExperienceFactory, StreetActivityFactory
 
 class TestStreetActivityModel:
@@ -152,6 +152,9 @@ class TestStreetActivityDetailView:
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
 
+        assert "Detail Test Activiteit" in response.text
+        assert "Dit is een test beschrijving" in response.text
+
     def test_detail_view_context_data(self, client):
         """Test that the correct context data is provided in the detail view"""
         activity = StreetActivityFactory()
@@ -193,10 +196,10 @@ class TestStreetActivityDetailView:
         assert context["chart_data_everyone"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
         assert context["chart_data_practitioners"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
         assert context["chart_data_passersby"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
-        assert context["tag_data_everyone"] == []
-        assert context["tag_data_practitioners"] == []
-        assert context["tag_data_passersby"] == []
-        assert list(context["all_tags"]) == []
+        assert not context["tag_data_everyone"]
+        assert not context["tag_data_practitioners"]
+        assert not context["tag_data_passersby"]
+        assert not list(context["all_tags"])
 
     def test_detail_view_with_experiences(self, client):
         """Test that the detail view correctly calculates statistics with experiences present"""
@@ -236,9 +239,10 @@ class TestStreetActivityDetailView:
         tag_counts = {tag['name']: tag['count'] for tag in tag_data_everyone}
         assert tag_counts == {"Tag1": 2, "Tag2": 2}
 
-    def test_negative_experiences_left(self, client):
-        """Test if that when there are no experiences, then the experiences_left results in 0 and not -3"""
+    def test_negative_experiences_remaining(self, client):
+        """Test if that when there are no experiences,
+        then the experiences_remaining results in 0 and not -3"""
         activity = StreetActivityFactory()
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
-        assert context['experiences_left'] == 0
+        assert context['experiences_remaining'] == 0
