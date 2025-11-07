@@ -9,12 +9,12 @@
 {% endblock stylesheet %}
 {% block content %}
     <div class="container py-5">
-        <header class="row align-items-center mb-5">
+        <header class="row align-items-center mb-4">
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-start mb-4">
                     <div>
                         <i class="bi bi-person-walking display-1 text-success-emphasis mb-3"></i>
-                        <h1 class="display-4 text-success-emphasis mb-3">Soorten voorbijgangers</h1>
+                        <h1 class="display-4 text-success-emphasis mb-3">Fictieve voorbijgangers</h1>
                     </div>
                     <a href="{% url 'create-persona' %}" class="btn btn-success btn-lg">
                         <i class="bi bi-plus-circle me-2"></i>
@@ -23,11 +23,20 @@
                 </div>
                 <p class="lead mb-4">
                     Op straat kom je verschillende soorten mensen tegen. Sommigen zijn enthousiast en open,
-                    anderen zijn wat argwanend of hebben hun eigen zorgen. Deze voorbeelden helpen niet om mensen in hokjes te stoppen, maar om de diversiteit aan reacties te begrijpen die je kunt tegenkomen.
+                    anderen zijn wat argwanend of hebben hun eigen zorgen. Deze verzonnen voorbeelden helpen niet om mensen in hokjes te stoppen, maar om de diversiteit aan reacties te begrijpen die je kunt tegenkomen.
                 </p>
                 <p>
                     Je kunt alle voorbeelden aanpassen, verbeteren of nieuwe toevoegen.
                 </p>
+            <!-- Alert -->
+            <div class="alert alert-warning">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div class="small">
+                        <strong>Fictief:</strong> Deze mensen zijn geen echte mensen. Ze zijn verzonnen. De foto's zijn van <a href="https://www.pixabay.com" target="_blank">pixabay</a> uit het publieke domein.
+                    </div>
+                </div>
+            </div>
             </div>
         </header>
         <div class="row">
