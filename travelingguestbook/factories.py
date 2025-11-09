@@ -3,9 +3,8 @@ to be able to mock the objects in tests"""
 
 import factory
 from faker import Faker
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
-from streetactivity.models import StreetActivity, Experience, Tag
+from streetactivity.models import StreetActivity, Experience
 from chatroomcreating.models import ChatRoom, ChatMessage
 from persona.models import Persona, Problem, Reaction
 
@@ -53,35 +52,11 @@ class ExperienceFactory(factory.django.DjangoModelFactory):
         model = Experience
     activity      = factory.SubFactory(StreetActivityFactory)
     report        = factory.LazyFunction(fake.text)
-    external_link = factory.LazyFunction(fake.url)
     fase          = 'pioneer'
     from_practitioner = False
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)
-
-    @factory.post_generation
-    def tags(self, create, extracted, **kwargs):
-        """Post generation hook to add tags to the experience."""
-        if not create:
-            return
-        if extracted:
-            for tag in extracted:
-                self.tags.add(tag)
-
-class TagFactory(factory.django.DjangoModelFactory):
-    """Mock for streetactivities Tag"""
-    class Meta:
-        model = Tag
-
-    name = factory.Sequence(lambda n: f'Tag {n}')
-    nvc_category = 'needs'
-    maintag = None
-
-class SubTagFactory(TagFactory):
-    """Mock for streetactivities Tag as subtag"""
-    maintag = factory.LazyAttribute(
-        lambda o: TagFactory.create(maintag=None)
-    )
+    keywords      = factory.LazyFunction(lambda: ', '.join([fake.word() for _ in range(3)]))
 
 class PersonaFactory(factory.django.DjangoModelFactory):
     """Mock for persona Persona"""

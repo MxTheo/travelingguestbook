@@ -1,0 +1,8 @@
+{% if experience.keywords %}
+    <div class="border-top pt-2 mt-3">
+        <small class="text-muted">Kernwoorden:</small>
+        {% for keyword in experience.keywords.split %}
+            <span class="badge bg-primary bg-opacity-10 text-primary ms-1">{{ keyword.strip }}</span>
+        {% endfor %}
+    </div>
+{% endif %}

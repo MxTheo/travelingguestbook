@@ -31,13 +31,4 @@ urlpatterns = [
      path("<int:pk>/ervaring/nieuw/voorbijganger/",
           views.ExperienceCreateView.as_view(),
           name="create-experience-from-passerby"),
-     path("tags/",
-         views.TagListView.as_view(),
-         name="tag-list"),
-     path("tag/nieuw/",
-           views.TagCreateView.as_view(),
-           name="create-tag"),
-     path("tag/<int:pk>/",
-          views.TagDetailView.as_view(),
-          name="tag-detail"),
 ]

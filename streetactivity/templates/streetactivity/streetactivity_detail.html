@@ -45,7 +45,8 @@
                         <a href="#instructies" class="btn btn-outline-primary btn-sm">
                             <i class="bi bi-journal-text me-1"></i>Handleiding
                         </a>
-                        <a href="#gemeenschappelijk-begrip" class="btn btn-outline-primary btn-sm">
+                        <a href="#gemeenschappelijk-begrip"
+                           class="btn btn-outline-primary btn-sm">
                             <i class="bi bi-graph-up me-1"></i>gemeenschappelijk begrip
                         </a>
                         <a href="#momenten" class="btn btn-outline-primary btn-sm">
@@ -187,25 +188,26 @@
                         </div>
                     </div>
                 </div>
-                <!-- Tags word cloud -->
+                <!-- Keywords -->
                 <div class="col-md-6">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title text-primary mb-4">
-                                <i class="bi bi-tags me-2"></i>Wat mensen ervaren
+                                <i class="bi bi-heart me-2"></i>Sleutelwoorden
                             </h5>
-                            <div class="word-cloud" id="wordCloud">
-                                {% for tag in all_tags %}
-                                    <span class="word-cloud-tag"
-                                          data-tag-id="{{ tag.id }}"
-                                          data-count="{{ tag.count }}"
-                                          data-category="{{ tag.nvc_category }}">{{ tag.name }}</span>
+                            <div class="text-center">
+                                {% for word, count in word_counts %}
+                                    {% if count >= 5 %}
+                                        <span class="badge bg-primary text-white fs-6 m-1">{{ word }} ({{ count }}x)</span>
+                                    {% elif count >= 3 %}
+                                        <span class="badge bg-primary bg-opacity-75 text-white fs-7 m-1">{{ word }} ({{ count }}x)</span>
+                                    {% else %}
+                                        <span class="badge bg-light text-dark fs-8 m-1">{{ word }} ({{ count }}x)</span>
+                                    {% endif %}
                                 {% endfor %}
-                            </div>
-                            <div class="text-center mt-3">
-                                <a href="{% url 'tag-list' %}" class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-tags me-1"></i>Alle tags bekijken
-                                </a>
+                                <div class="mt-3">
+                                    <small class="text-muted">Uit {{ experiences_count }} gedeelde momenten</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -228,7 +230,8 @@
             <div class="row g-4">
                 {% for experience in recent_experiences %}
                     <div class="col-lg-6">
-                        <a href="{% url 'experience-list-streetactivity' activity.pk %}" class="text-decoration-none">
+                        <a href="{% url 'experience-list-streetactivity' activity.pk %}"
+                           class="text-decoration-none">
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
@@ -245,6 +248,7 @@
                                         </small>
                                     </div>
                                     <p class="card-text">"{{ experience.report|truncatewords:30 }}"</p>
+                                    {% include "streetactivity/keywords_footer.html" with experience=experience %}
                                 </div>
                             </div>
                         </a>
@@ -258,9 +262,7 @@
                         </div>
                     </div>
                 {% endfor %}
-                <small class="text-muted">
-                    ... en {{ experiences_remaining }} meer
-                </small>
+                <small class="text-muted">... en {{ experiences_remaining }} meer</small>
             </div>
         </section>
         <!-- Secundaire CTA -->
@@ -314,12 +316,6 @@
                 passersby: {{ chart_data_passersby|safe }}
             };
             
-            const tagData = {
-                everyone: {{ tag_data_everyone|safe }},
-                practitioners: {{ tag_data_practitioners|safe }},
-                passersby: {{ tag_data_passersby|safe }}
-            };
-            
             const countData = {
                 everyone: {{ experiences_count }},
                 practitioners: {{ practitioner_count }},
@@ -369,71 +365,6 @@
                 });
             }
             
-            function updateWordCloud(tags) {
-                const wordCloud = document.getElementById('wordCloud');
-                wordCloud.innerHTML = '';
-                
-                if (tags.length === 0) {
-                    wordCloud.innerHTML = '<p class="text-muted text-center">Nog geen tags gedeeld</p>';
-                    return;
-                }
-                
-                // Sorteer tags op count (hoogste eerst) voor betere leesbaarheid
-                const sortedTags = [...tags].sort((a, b) => b.count - a.count);
-                
-                for (const tag of sortedTags) {
-                    const span = document.createElement('span');
-                    span.className = 'word-cloud-tag d-inline-block m-1';
-                    span.textContent = tag.name;
-                    span.setAttribute('data-tag-id', tag.id);
-                    span.setAttribute('data-count', tag.count);
-                    span.setAttribute('data-category', tag.nvc_category);
-                    
-                    // Dynamische grootte gebaseerd op count - groter bereik voor betere leesbaarheid
-                    const baseSize = 16; // Verhoogd van 14
-                    const size = baseSize + (tag.count * 3); // Verhoogd van 2
-                    span.style.fontSize = `${Math.min(size, 28)}px`; // Verhoogd van 24
-                    
-                    // Betere opacity voor contrast
-                    span.style.opacity = 0.8 + (tag.count * 0.15); // Verhoogd van 0.6 + 0.1
-                    
-                    // Dikkere font weight voor betere leesbaarheid
-                    span.style.fontWeight = '500';
-                    
-                    // Padding voor betere klikbaarheid en leesbaarheid
-                    span.style.padding = '2px 6px';
-                    span.style.borderRadius = '4px';
-                    
-                    // Kleur gebaseerd op category met betere contrast
-                    const categoryColors = {
-                        'needs': primaryColor,
-                        'feelings_fulfilled': successColor,
-                        'feelings_unfulfilled': warningColor,
-                        'other': secondaryColor
-                    };
-                    
-                    const tagColor = categoryColors[tag.nvc_category] || secondaryColor;
-                    span.style.color = tagColor;
-                    span.style.backgroundColor = `${tagColor}15`; // Licht achtergrondkleur
-                    
-                    // Hover effect voor betere interactie
-                    span.style.transition = 'all 0.2s ease';
-                    span.style.cursor = 'pointer';
-                    
-                    span.addEventListener('mouseenter', function() {
-                        this.style.transform = 'scale(1.05)';
-                        this.style.backgroundColor = `${tagColor}25`;
-                    });
-                    
-                    span.addEventListener('mouseleave', function() {
-                        this.style.transform = 'scale(1)';
-                        this.style.backgroundColor = `${tagColor}15`;
-                    });
-                    
-                    wordCloud.appendChild(span);
-                }
-            }
-
             // Filter handlers met for...of
             const filterRadios = document.querySelectorAll('input[name="experienceFilter"]');
             for (const radio of filterRadios) {
@@ -442,17 +373,13 @@
                     
                     // Update chart
                     initChart(chartData[filterType]);
-                    
-                    // Update word cloud
-                    updateWordCloud(tagData[filterType]);
-                    
+
                     // Update count
                     document.getElementById('filterCount').textContent = `Totaal: ${countData[filterType]} ervaringen`;
                 });
             }
                 // Laad initiële data
                 initChart(chartData.everyone);
-                updateWordCloud(tagData.everyone);
         });
     </script>
 {% endblock javascript %}

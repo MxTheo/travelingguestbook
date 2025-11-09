@@ -61,29 +61,13 @@
                                 <div class="mb-3">
                                     <p class="card-text mb-0">{{ experience.report|linebreaksbr }}</p>
                                 </div>
-                                <!-- Tags -->
-                                {% if experience.tags.all %}
-                                    <div class="mb-3">
-                                        {% for tag in experience.tags.all %}
-                                            <span class="badge bg-light text-dark border me-1 mb-1">{{ tag.name }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                <!-- External Link -->
-                                {% if experience.external_link %}
-                                    <div class="mt-3 pt-2 border-top">
-                                        <a href="{{ experience.external_link }}"
-                                           target="_blank"
-                                           class="btn btn-outline-primary btn-sm">
-                                            <i class="bi bi-box-arrow-up-right me-1"></i> Lees meer
-                                        </a>
-                                    </div>
-                                {% endif %}
                                 <div class="mt-1 justify-content-end d-flex">
                                     <span class="badge {% if experience.fase == 'pioneer' %}bg-primary{% elif experience.fase == 'intermediate' %}bg-warning text-dark{% else %}bg-success{% endif %}">
                                         {{ experience.get_fase_display }}
                                     </span>
                                 </div>
+                                    {% include "streetactivity/keywords_footer.html" with experience=experience %}
+
                             </div>
                         </div>
                     {% endfor %}

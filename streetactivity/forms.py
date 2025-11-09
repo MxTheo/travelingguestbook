@@ -1,5 +1,5 @@
 from django import forms
-from .models import StreetActivity, Experience, Tag
+from .models import StreetActivity, Experience
 
 class StreetActivityForm(forms.ModelForm):
     """Form for creating or updating a StreetActivity."""
@@ -33,43 +33,26 @@ class ExperienceForm(forms.ModelForm):
 
     class Meta:
         model = Experience
-        fields = ['fase', 'tags', 'report', 'external_link']
+        fields = ['fase', 'report', 'keywords']
         widgets = {
             'report': forms.Textarea(attrs={
                 'rows': 4,
                 'class': 'form-control',
                 'placeholder':
                 'Omschrijf je innerlijke beleving...'}),
-            'external_link': forms.URLInput(attrs={'class': 'form-control'}),
             'fase': forms.RadioSelect(attrs={'class': 'form-check-input'}),
-            'tags': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+            'keywords': forms.Textarea(attrs={
+                'rows': 1,
+                'class': 'form-control',
+                'placeholder':
+                "Energiek, ongeduldig, vertrouwen..."}),
         }
         labels = {
             'fase': 'Hoe zelfverzekerd voelde je je?',
-            'tags': 'Welke woorden passen bij je moment?',
             'report': 'Wat voelde je? Wat ging er in je om?',
-            'external_link': 'Link naar meer informatie (optioneel)',
+            'keywords': "3 woorden die je moment samenvatten, gescheiden door komma's",
         }
         help_texts = {
-            'tags': 'Kies 3 kernwoorden om je moment te omschrijven',
             'report': 'Beschrijf wat zich aandiende in maximaal 3500 karakters',
-            'external_link': 'Link naar een blog of iets anders',
-        }
-
-class TagForm(forms.ModelForm):
-    """Form for creating or updating a Tag."""
-
-    class Meta:
-        '''Model form for the Tag model.'''
-        model = Tag
-        fields = ['name', 'nvc_category', 'maintag']
-        labels = {
-            'name': 'Naam van de tag',
-            'nvc_category': 'Behoefte of gevoel',
-            'maintag': 'Hoofdtag',
-        }
-        help_texts = {
-            'name': 'Voer de naam van de tag in.',
-            'nvc_category': 'Selecteer of dit een behoefte of gevoel is.',
-            'maintag': 'Kies een hoofdtag als dit een subtag is.',
+            'keywords': 'Voorbeelden: Energiek, ongeduldig, kalm, vertrouwen'
         }

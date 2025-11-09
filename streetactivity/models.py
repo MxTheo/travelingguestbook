@@ -12,13 +12,6 @@ FASE_CHOICES = [
     ("intermediate", "tussenin"),
     ("climax", "zelfverzekerd"),
 ]
-NVC_CHOICES = [
-    ("needs", "Behoeften"),
-    ("feelings_fulfilled", "Gevoelens bij vervulde behoeften"),
-    ("feelings_unfulfilled", "Gevoelens bij onvervulde behoeften"),
-    ("other", "Anders"),
-]
-
 
 class StreetActivity(models.Model):
     """A street activity is an activity that can be done on the street to engage with strangers."""
@@ -68,12 +61,6 @@ class Experience(models.Model):
         blank=True,
         help_text="Beschrijf wat zich aandiende in maximaal 3500 karakters",
     )
-    external_link = models.URLField(
-        blank=True,
-        null=True,
-        verbose_name="Externe link naar meer informatie",
-        help_text="Link naar een blog of andere informatie (optioneel)",
-    )
     fase = models.CharField(
         max_length=15,
         choices=FASE_CHOICES,
@@ -83,13 +70,13 @@ class Experience(models.Model):
     from_practitioner = models.BooleanField(
         default=True, verbose_name="Is deze ervaring van een beoefenaar?"
     )
-    tags = models.ManyToManyField(
-        "Tag",
-        related_name="experiences",
-        blank=True,
-        verbose_name="Tags voor deze ervaring",
-    )
 
+    keywords = models.CharField(
+        max_length=200, 
+        blank=True,
+        verbose_name="Kernwoorden",
+        help_text="3 woorden die je moment samenvatten, gescheiden door komma's")
+    
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
@@ -107,74 +94,3 @@ class Experience(models.Model):
         if self.report:
             return f"{self.report[:50]}..."
         return f"{self.activity.name} - Ervaring {self.id}"
-
-    def clean(self):
-        """Validation logic"""
-        if self.external_link and not self.report.strip():
-            raise ValidationError(
-                {
-                    "report": "Vul een verslag in wanneer een externe link wordt toegevoegd."
-                }
-            )
-
-class Tag(models.Model):
-    """A tag is a label that can be associated with an experience of a street activity."""
-
-    name = models.CharField(max_length=50, unique=True, verbose_name="Naam van de tag")
-    nvc_category = models.CharField(
-        max_length=25,
-        choices=NVC_CHOICES,
-        default="needs",
-        verbose_name="Behoefte of gevoel",
-    )
-    maintag = models.ForeignKey(
-        "self",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="subtags",
-        verbose_name="Hoofdtag",
-        help_text="Selecteer een hoofdtag als dit een subtag is.",
-    )
-
-    class Meta:
-        ordering = ["nvc_category", "name"]
-        verbose_name = "Tag"
-        verbose_name_plural = "Tags"
-
-    def __str__(self):
-        """Return the name of the tag"""
-        return str(self.name)
-
-    def clean(self):
-        """Prohibit circular references and deep nesting of tags."""
-        if self.maintag and self.maintag == self:
-            raise ValidationError(
-                {"maintag": "Een tag kan niet zijn eigen hoofdtag zijn."}
-            )
-        if self.maintag and self.maintag.maintag:
-            raise ValidationError(
-                {
-                    "maintag": "Alleen tags zonder hoofdtag kunnen als hoofdtag worden geselecteerd"
-                }
-            )
-
-    @property
-    def is_maintag(self):
-        """Check if this tag is a main tag"""
-        return self.maintag is None
-
-    @property
-    def has_subtags(self):
-        """Check if this tag has subtags"""
-        return self.subtags.exists()
-
-    def get_all_related_experiences(self):
-        """Get all experiences related to this tag and its subtags"""
-        if self.is_maintag:
-            subtags = self.subtags.all()
-            return Experience.objects.filter(
-                models.Q(tags=self) | models.Q(tags__in=subtags)
-            ).distinct()
-        else:
-            return Experience.objects.filter(tags=self).distinct()

@@ -1,5 +1,6 @@
 from django.urls import reverse
-from streetactivity.models import StreetActivity, Tag
+from streetactivity.models import StreetActivity
+from streetactivity.views import StreetActivityDetailView
 from travelingguestbook.factories import ExperienceFactory, StreetActivityFactory
 
 class TestStreetActivityModel:
@@ -178,10 +179,6 @@ class TestStreetActivityDetailView:
         assert "chart_data_everyone" in context
         assert "chart_data_practitioners" in context
         assert "chart_data_passersby" in context
-        assert "tag_data_everyone" in context
-        assert "tag_data_practitioners" in context
-        assert "tag_data_passersby" in context
-        assert "all_tags" in context
 
     def test_detail_view_no_experiences(self, client):
         """Test that the detail view handles activities with no experiences gracefully"""
@@ -196,34 +193,24 @@ class TestStreetActivityDetailView:
         assert context["chart_data_everyone"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
         assert context["chart_data_practitioners"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
         assert context["chart_data_passersby"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
-        assert not context["tag_data_everyone"]
-        assert not context["tag_data_practitioners"]
-        assert not context["tag_data_passersby"]
-        assert not list(context["all_tags"])
 
     def test_detail_view_with_experiences(self, client):
         """Test that the detail view correctly calculates statistics with experiences present"""
 
         activity = StreetActivityFactory()
 
-        tag1 = Tag.objects.create(name="Tag1", nvc_category="Category1")
-        tag2 = Tag.objects.create(name="Tag2", nvc_category="Category2")
-
         ExperienceFactory(
             activity=activity,
             from_practitioner=True,
-            fase='pioneer',
-            tags=[tag1])
+            fase='pioneer')
         ExperienceFactory(
             activity=activity,
             from_practitioner=False,
-            fase='intermediate',
-            tags=[tag1, tag2])
+            fase='intermediate')
         ExperienceFactory(
             activity=activity,
             from_practitioner=True,
-            fase='climax',
-            tags=[tag2])
+            fase='climax')
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
@@ -235,10 +222,6 @@ class TestStreetActivityDetailView:
         assert context["chart_data_practitioners"] == {'pioneer': 1, 'intermediate': 0, 'climax': 1}
         assert context["chart_data_passersby"] == {'pioneer': 0, 'intermediate': 1, 'climax': 0}
 
-        tag_data_everyone = context["tag_data_everyone"]
-        tag_counts = {tag['name']: tag['count'] for tag in tag_data_everyone}
-        assert tag_counts == {"Tag1": 2, "Tag2": 2}
-
     def test_negative_experiences_remaining(self, client):
         """Test if that when there are no experiences,
         then the experiences_remaining results in 0 and not -3"""
@@ -246,3 +229,15 @@ class TestStreetActivityDetailView:
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
         assert context['experiences_remaining'] == 0
+
+    def test_analyze_keywords(self):
+        """Test that analyze keywords return a counter"""
+        activity = StreetActivityFactory()
+        experience_list = []
+        for _ in range(3):
+            experience_list.append(ExperienceFactory(activity=activity, keywords="energiek, ongeduldig, vertrouwen"))
+        activity_detail = StreetActivityDetailView(activity=activity)
+        keyword_list = activity_detail.analyse_keywords(experience_list)
+        assert keyword_list[0][1] == 3
+        assert keyword_list[1][1] == 3
+        assert keyword_list[2][1] == 3

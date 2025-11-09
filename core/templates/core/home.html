@@ -51,7 +51,7 @@
                             <h2 class="fw-bold mb-3">Recente Belevingsmomenten</h2>
                             <p class="opacity-75 mb-0 fs-5">
                                 Elk moment draagt bij aan ons gedeelde begrip van de straat.
-                                <strong>Niet om te oordelen, maar om samen te begrijpen.</strong> <a href="#samenbegrijpen" class="font-monospace ms-2" >Lees verder <i class="bi bi-arrow-right"></i></a>
+                                <strong>Niet om te oordelen, maar om samen te begrijpen.</strong> <a href="#samenbegrijpen" class="font-monospace ms-2">Lees verder <i class="bi bi-arrow-right"></i></a>
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
@@ -88,6 +88,13 @@
                                                 <i class="bi bi-clock me-1"></i>
                                                 {{ experience.date_created|timesince }} geleden
                                             </small>
+                                            <div>
+                                                {% if experience.keywords %}
+                                                    {% for keyword in experience.keywords.split|slice:":2" %}
+                                                        <small class="text-success-emphasis me-1">#{{ keyword.strip }}</small>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
                                             <a href="{% url 'experience-list-streetactivity' experience.activity.pk %}"
                                                class="text-decoration-none text-primary">
                                                 Meer lezen <i class="bi bi-arrow-right ms-1"></i>
@@ -222,87 +229,87 @@
             </div>
         </div>
         <!-- Hoe Momenten Samen Een Verhaal Vormen -->
-            <div id="samenbegrijpen" class="row py-5 bg-light rounded-3 my-5">
-                <div class="col-lg-10 mx-auto">
-                    <div class="text-center mb-4">
-                        <h2 class="fw-bold mb-3">Samen Begrijpen</h2>
-                        <p class="lead">
-                            Wanneer we onze ervaringen delen, bouwen we gezamenlijk aan begrip. Niet om te analyseren, maar om te herkennen.
+        <div id="samenbegrijpen" class="row py-5 bg-light rounded-3 my-5">
+            <div class="col-lg-10 mx-auto">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold mb-3">Samen Begrijpen</h2>
+                    <p class="lead">
+                        Wanneer we onze ervaringen delen, bouwen we gezamenlijk aan begrip. Niet om te analyseren, maar om te herkennen.
+                    </p>
+                </div>
+                <div class="row align-items-center mb-5">
+                    <div class="col-md-6">
+                        <p class="fs-5">
+                            Jouw beschrijving van wat je ervaart - onzekerheid, verbinding, rust -
+                            helpt anderen het karakter van deze beoefening te begrijpen.
+                        </p>
+                        <p>
+                            Zo ontstaat er langzaam een gedeeld beeld van wat deze activiteit teweeg kan brengen:
+                            is het vooral uitdagend of juist verbindend?
                         </p>
                     </div>
-                    <div class="row align-items-center mb-5">
-                        <div class="col-md-6">
-                            <p class="fs-5">
-                                Jouw beschrijving van wat je ervaart - onzekerheid, verbinding, rust -
-                                helpt anderen het karakter van deze beoefening te begrijpen.
-                            </p>
-                            <p>
-                                Zo ontstaat er langzaam een gedeeld beeld van wat deze activiteit teweeg kan brengen:
-                                is het vooral uitdagend of juist verbindend?
-                            </p>
-                        </div>
-                        <div class="col-md-6 text-center">
-                            <div class="p-4 border rounded bg-white">
-                                <i class="bi bi-collection display-4 text-success mb-3"></i>
-                                <p class="small text-muted mb-0">
-                                    "Ik had intense gesprekken"
-                                    <br>
-                                    in plaats van
-                                    <br>
-                                    "Deze activiteit was intensief"
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-4">
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0">
-                                <div class="card-body text-center p-4">
-                                    <i class="bi bi-journal-text display-6 text-info mb-3"></i>
-                                    <h5>Momenten Beschrijven</h5>
-                                    <p class="text-muted">
-                                        Jouw beschrijving van wat je ervaart - onzekerheid, verbinding, rust -
-                                        helpt anderen het doen van een straatactiviteit te begrijpen.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0">
-                                <div class="card-body text-center p-4">
-                                    <i class="bi bi-pie-chart display-6 text-success mb-3"></i>
-                                    <h5>Patronen Herkennen</h5>
-                                    <p class="text-muted">
-                                        Zo ontstaat er langzaam een gedeeld beeld van wat een straatactiviteit teweeg kan brengen: is het vooral uitdagend of juist verbindend?
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0">
-                                <div class="card-body text-center p-4">
-                                    <i class="bi bi-eye display-6 text-warning mb-3"></i>
-                                    <h5>Helder Zicht</h5>
-                                    <p class="text-muted">
-                                        Dit inzicht helpt nieuwe beoefenaars om te weten wat ze kunnen verwachten,
-                                        zonder vooroordelen over goed of fout.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-5">
-                        <div class="p-3 bg-primary bg-opacity-10 rounded">
-                            <p class="mb-0 text-primary">
-                                <i class="bi bi-info-circle me-2"></i>
-                                <strong>Jouw bijdrage aan onze gemeenschap:</strong> Door te delen wat jij meemaakt, zowel als beoefenaar als <strong>voorbijganger</strong>,
-                                help je anderen een realistisch beeld te vormen. Je deelt niet voor een onderzoeker,
-                                maar voor <strong>medemensen</strong>.
+                    <div class="col-md-6 text-center">
+                        <div class="p-4 border rounded bg-white">
+                            <i class="bi bi-collection display-4 text-success mb-3"></i>
+                            <p class="small text-muted mb-0">
+                                "Ik had intense gesprekken"
+                                <br>
+                                in plaats van
+                                <br>
+                                "Deze activiteit was intensief"
                             </p>
                         </div>
                     </div>
                 </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center p-4">
+                                <i class="bi bi-journal-text display-6 text-info mb-3"></i>
+                                <h5>Momenten Beschrijven</h5>
+                                <p class="text-muted">
+                                    Jouw beschrijving van wat je ervaart - onzekerheid, verbinding, rust -
+                                    helpt anderen het doen van een straatactiviteit te begrijpen.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center p-4">
+                                <i class="bi bi-pie-chart display-6 text-success mb-3"></i>
+                                <h5>Patronen Herkennen</h5>
+                                <p class="text-muted">
+                                    Zo ontstaat er langzaam een gedeeld beeld van wat een straatactiviteit teweeg kan brengen: is het vooral uitdagend of juist verbindend?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center p-4">
+                                <i class="bi bi-eye display-6 text-warning mb-3"></i>
+                                <h5>Helder Zicht</h5>
+                                <p class="text-muted">
+                                    Dit inzicht helpt nieuwe beoefenaars om te weten wat ze kunnen verwachten,
+                                    zonder vooroordelen over goed of fout.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-5">
+                    <div class="p-3 bg-primary bg-opacity-10 rounded">
+                        <p class="mb-0 text-primary">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Jouw bijdrage aan onze gemeenschap:</strong> Door te delen wat jij meemaakt, zowel als beoefenaar als <strong>voorbijganger</strong>,
+                            help je anderen een realistisch beeld te vormen. Je deelt niet voor een onderzoeker,
+                            maar voor <strong>medemensen</strong>.
+                        </p>
+                    </div>
+                </div>
             </div>
+        </div>
         <!-- Onze Diepere Missie -->
         <div class="row py-5" id="missie">
             <div class="col-lg-8 mx-auto">
