@@ -3,7 +3,25 @@
 {% block title %}
     Gemene Grond - Oefen in openheid op straat
 {% endblock title %}
+{% block stylesheet %}
+    <link href="{% static "core/styles/home.css" %}" rel="stylesheet">
+{% endblock stylesheet %}
 {% block content %}
+    <nav class="navbar navbar-expand navbar-light bg-light border-bottom sticky-top">
+        <div class="container">
+            <div class="navbar-nav mx-auto">
+                <a class="nav-link px-3 fs-6" href="#de-oefening">
+                    <i class="bi bi-moisture me-1"></i>Wat?
+                </a>
+                <a class="nav-link px-3 fs-6" href="#samenbegrijpen">
+                    <i class="bi bi-pie-chart me-1"></i>Hoe?
+                </a>
+                <a class="nav-link px-3 fs-6" href="#missie">
+                    <i class="bi bi-flower2 me-1"></i>Waarom?
+                </a>
+            </div>
+        </div>
+    </nav>
     <div class="container py-5">
         <!-- Hero Sectie -->
         <div class="row align-items-center py-5">
@@ -18,9 +36,9 @@
                        class="btn btn-primary btn-lg px-4 me-md-2">
                         <i class="bi bi-plus-circle me-2"></i>Deel je belevingsmoment
                     </a>
-                    <a href="{% url 'persona-list' %}"
+                    <a href="#recentebelevingsmomenten"
                        class="btn btn-outline-primary btn-lg px-4">
-                        <i class="bi bi-person-walking me-2"></i>Ontdek voorbijgangers
+                        <i class="bi bi-people-fill me-2"></i>Recente belevingsmomenten
                     </a>
                 </div>
                 <div class="mt-3">
@@ -42,7 +60,8 @@
             </div>
         </div>
         <!-- Recente Belevingsmomenten Dashboard -->
-        <div class="row py-5 bg-primary rounded-3 mx-0">
+        <div class="row py-5 bg-primary rounded-3 mx-0"
+             id="recentebelevingsmomenten">
             <div class="col-12">
                 <div class="container">
                     <!-- Header met betere mobile layout -->
@@ -177,7 +196,7 @@
             </div>
         </div>
         <!-- De Bodem Filosofie -->
-        <div id="de-oefening" class="row py-5">
+        <div id="de-oefening" class="row py-5 wathoewaarom">
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-5">
                     <h2 class="fw-bold mb-3">De Kunst van het Zijn op Straat</h2>
@@ -229,7 +248,7 @@
             </div>
         </div>
         <!-- Hoe Momenten Samen Een Verhaal Vormen -->
-        <div id="samenbegrijpen" class="row py-5 bg-light rounded-3 my-5">
+        <div id="samenbegrijpen" class="row py-5 bg-light rounded-3 my-5 wathoewaarom">
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-4">
                     <h2 class="fw-bold mb-3">Samen Begrijpen</h2>
@@ -311,7 +330,7 @@
             </div>
         </div>
         <!-- Onze Diepere Missie -->
-        <div class="row py-5" id="missie">
+        <div class="row py-5 wathoewaarom" id="missie">
             <div class="col-lg-8 mx-auto">
                 <div class="text-center mb-5">
                     <h2 class="fw-bold mb-3">Wat We Werkelijk Willen Ontkiemen</h2>

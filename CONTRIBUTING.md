@@ -31,7 +31,7 @@ All types of contributions are encouraged and valued. Please make sure to read t
     - [Commit Messages](#commit-messages)
     - [Templates](#templates)
     - [Pull Request Process](#pull-request-process)
-    - [PR Description Should Include:](#pr-description-should-include)
+    - [PR Description Should Include](#pr-description-should-include)
   - [Join The Project Team](#join-the-project-team)
   - [Questions?](#questions)
 
@@ -180,7 +180,7 @@ To create your own fixtures:
 - Ensure all tests pass
 - Submit a pull request
 
-### PR Description Should Include:
+### PR Description Should Include
 
 - What and why changed
 - Test results

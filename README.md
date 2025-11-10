@@ -79,7 +79,7 @@ Visit http://localhost:8000 to see the application.
 
 ## API Endpoints
 
-*In development*
+### In development
 
 - /api/streetactivities/ - List and create street activities
 - /api/experiences/ - Share and browse experiences
