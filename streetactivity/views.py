@@ -46,10 +46,10 @@ class StreetActivityDetailView(DetailView):
         context["experiences_remaining"] = max(0, experiences_count - 3)
 
         def get_chart_data(queryset):
-            fase_counts = queryset.values("fase").annotate(count=Count("fase"))
+            confidence_level_counts = queryset.values("confidence_level").annotate(count=Count("confidence_level"))
             data = {"pioneer": 0, "intermediate": 0, "climax": 0}
-            for item in fase_counts:
-                data[item["fase"]] = item["count"]
+            for item in confidence_level_counts:
+                data[item["confidence_level"]] = item["count"]
             return data
 
         context["chart_data_everyone"] = get_chart_data(experiences)

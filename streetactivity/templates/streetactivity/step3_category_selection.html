@@ -1,5 +1,5 @@
 
-<!-- Fase Selection - Stap 1 -->
+<!-- Confidence Level Selection - Stap 1 -->
 <div class="card mb-4">
     <div class="card-header bg-light">
         <h5 class="card-title mb-0">
@@ -9,21 +9,21 @@
     </div>
     <div class="card-body">
         <div class="mb-3">
-            <label class="form-label fw-bold">{{ form.fase.label }}</label>
-            <div class="form-text mb-3">{{ form.fase.help_text }}</div>
-            <!-- Fase Cards -->
+            <label class="form-label fw-bold">{{ form.confidence_level.label }}</label>
+            <div class="form-text mb-3">{{ form.confidence_level.help_text }}</div>
+            <!-- Confidence Level Cards -->
             <div class="row g-3">
-                {% for choice in form.fase.field.choices %}
+                {% for choice in form.confidence_level.field.choices %}
                     <div class="col-md-4">
-                        <div class="card h-100 border-2 {% if form.fase.value == choice.0 %}border-primary{% else %}border-light{% endif %}">
+                        <div class="card h-100 border-2 {% if form.confidence_level.value == choice.0 %}border-primary{% else %}border-light{% endif %}">
                             <div class="card-body text-center">
                                 <input type="radio"
-                                       name="fase"
+                                       name="confidence_level"
                                        value="{{ choice.0 }}"
-                                       id="fase_{{ forloop.counter }}"
+                                       id="confidence_level_{{ forloop.counter }}"
                                        class="form-check-input"
-                                       {% if form.fase.value == choice.0 %}checked{% endif %}>
-                                <label for="fase_{{ forloop.counter }}"
+                                       {% if form.confidence_level.value == choice.0 %}checked{% endif %}>
+                                <label for="confidence_level_{{ forloop.counter }}"
                                        class="form-check-label stretched-link">
                                     <h6 class="card-title">
                                         {% if choice.0 == 'pioneer' %}
@@ -41,9 +41,9 @@
                     </div>
                 {% endfor %}
             </div>
-            {% if form.fase.errors %}
+            {% if form.confidence_level.errors %}
                 <div class="invalid-feedback d-block">
-                    {% for error in form.fase.errors %}{{ error }}{% endfor %}
+                    {% for error in form.confidence_level.errors %}{{ error }}{% endfor %}
                 </div>
             {% endif %}
         </div>

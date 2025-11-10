@@ -202,15 +202,15 @@ class TestStreetActivityDetailView:
         ExperienceFactory(
             activity=activity,
             from_practitioner=True,
-            fase='pioneer')
+            confidence_level='pioneer')
         ExperienceFactory(
             activity=activity,
             from_practitioner=False,
-            fase='intermediate')
+            confidence_level='intermediate')
         ExperienceFactory(
             activity=activity,
             from_practitioner=True,
-            fase='climax')
+            confidence_level='climax')
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context

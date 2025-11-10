@@ -33,14 +33,14 @@ class ExperienceForm(forms.ModelForm):
 
     class Meta:
         model = Experience
-        fields = ['fase', 'report', 'keywords']
+        fields = ['confidence_level', 'report', 'keywords']
         widgets = {
             'report': forms.Textarea(attrs={
                 'rows': 4,
                 'class': 'form-control',
                 'placeholder':
                 'Omschrijf je innerlijke beleving...'}),
-            'fase': forms.RadioSelect(attrs={'class': 'form-check-input'}),
+            'confidence_level': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'keywords': forms.Textarea(attrs={
                 'rows': 1,
                 'class': 'form-control',
@@ -48,7 +48,7 @@ class ExperienceForm(forms.ModelForm):
                 "Energiek, ongeduldig, vertrouwen..."}),
         }
         labels = {
-            'fase': 'Hoe zelfverzekerd voelde je je?',
+            'confidence_level': 'Hoe zelfverzekerd voelde je je?',
             'report': 'Wat voelde je? Wat ging er in je om?',
             'keywords': "3 woorden die je moment samenvatten, gescheiden door komma's",
         }

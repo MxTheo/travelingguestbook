@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 
 
 METHOD_CHOICES = [
@@ -7,7 +6,7 @@ METHOD_CHOICES = [
     ("approach", "Aanspreken"),
     ("both", "Beide"),
 ]
-FASE_CHOICES = [
+CONFIDENCE_LEVEL_CHOICES = [
     ("pioneer", "onzeker"),
     ("intermediate", "tussenin"),
     ("climax", "zelfverzekerd"),
@@ -61,9 +60,9 @@ class Experience(models.Model):
         blank=True,
         help_text="Beschrijf wat zich aandiende in maximaal 3500 karakters",
     )
-    fase = models.CharField(
+    confidence_level = models.CharField(
         max_length=15,
-        choices=FASE_CHOICES,
+        choices=CONFIDENCE_LEVEL_CHOICES,
         default="pioneer",
         verbose_name="Zelfverzekerdheid",
     )
@@ -86,7 +85,7 @@ class Experience(models.Model):
         verbose_name_plural = "Ervaringen"
         indexes = [
             models.Index(fields=["-date_created"]),
-            models.Index(fields=["fase"]),
+            models.Index(fields=["confidence_level"]),
             models.Index(fields=["from_practitioner"]),
         ]
 

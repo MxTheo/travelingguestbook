@@ -62,8 +62,8 @@
                                     <p class="card-text mb-0">{{ experience.report|linebreaksbr }}</p>
                                 </div>
                                 <div class="mt-1 justify-content-end d-flex">
-                                    <span class="badge {% if experience.fase == 'pioneer' %}bg-primary{% elif experience.fase == 'intermediate' %}bg-warning text-dark{% else %}bg-success{% endif %}">
-                                        {{ experience.get_fase_display }}
+                                    <span class="badge {% if experience.confidence_level == 'pioneer' %}bg-primary{% elif experience.confidence_level == 'intermediate' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                        {{ experience.get_confidence_level_display }}
                                     </span>
                                 </div>
                                     {% include "streetactivity/keywords_footer.html" with experience=experience %}

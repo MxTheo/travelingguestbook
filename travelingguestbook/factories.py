@@ -52,7 +52,7 @@ class ExperienceFactory(factory.django.DjangoModelFactory):
         model = Experience
     activity      = factory.SubFactory(StreetActivityFactory)
     report        = factory.LazyFunction(fake.text)
-    fase          = 'pioneer'
+    confidence_level          = 'pioneer'
     from_practitioner = False
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)

@@ -13,7 +13,7 @@ We see the street as a training ground for inner freedom. Not to make contact, b
 ### Features
 
 - **Street Activities**: Inviting or approaching strangers
-- **Experience Sharing**: Anonymous reflections with NVC-based tags
+- **Moment Sharing**: Anonymous reflections
 - **Personas**: Insights into different types of passers-by
 - **Collective Understanding**: Recognizing patterns in how activities are experienced
 
@@ -21,14 +21,14 @@ We see the street as a training ground for inner freedom. Not to make contact, b
 
 - **Backend**: Django 4.2+
 - **Frontend**: Bootstrap 5, Bootswatch themes
-- **Database**: SQLite (development) / PostgreSQL (production)
+- **Database**: SQLite
 
 ## Quick Start
 
 ```bash
 # Clone repository
-git clone https://github.com/username/gemene-grond.git
-cd gemene-grond
+git clone https://github.com/mxtheo/travellingguestbook.git
+cd travellingguestbook
 
 # Create virtual environment
 python -m venv venv
@@ -43,9 +43,7 @@ pip install -r requirements.txt
 python manage.py migrate
 
 # Load initial data (optional)
-python manage.py loaddata initial_tags
-python manage.py loaddata initial_streetactivities
-python manage.py loaddata initial_personas
+python manage.py load_personas
 
 # Create superuser
 python manage.py createsuperuser
@@ -66,17 +64,11 @@ Visit http://localhost:8000 to see the application.
 - Methods: invite, approach, or both
 - Includes description and supplies
 
-### Experiences (Experience)
+### Moments (Experience)
 
 - Reflections from practitioners and passers-by
-- Phases: pioneer, intermediate, or climax experience
-- NVC-based tagging system
-
-### Tags (Tag)
-
-- Based on Nonviolent Communication (NVC)
-- Categories: needs, fulfilled feelings, unfulfilled feelings
-- Hierarchical structure with main tags
+- Keywords summarizing the shared moment
+- Confidence level
 
 ![persona_domainmodel](architecture/persona_domainmodel.png)
 
