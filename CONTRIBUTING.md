@@ -25,7 +25,6 @@ All types of contributions are encouraged and valued. Please make sure to read t
   - [Data Models](#data-models)
     - [Street Activities](#street-activities)
     - [Experiences](#experiences)
-    - [Tags](#tags)
     - [Personas](#personas)
   - [Styleguides](#styleguides)
     - [Python/Django Code](#pythondjango-code)
@@ -143,14 +142,8 @@ To create your own fixtures:
 ### Experiences
 
 - Reflections from practitioners (from_practitioner=True) or passers-by (False)
-- Phases: pioneer (challenging), intermediate (intense), climax (peaceful)
-- Use NVC tags to describe needs and feelings
-
-### Tags
-
-- Based on Nonviolent Communication principles
-- Categories: needs, fulfilled feelings, unfulfilled feelings
-- Hierarchical structure for better organization
+- Confidence Level: insecure (pioneer), inbetween (intermediate), confident (climax)
+- Keywords given by user to summarize the moment
 
 ### Personas
 
@@ -164,7 +157,7 @@ To create your own fixtures:
 - Follow PEP 8 and Django coding style
 - Use descriptive variable names
 - Document complex logic
-- Write tests for new features
+- Write unittests (Pytest) for new features
 
 ### Commit Messages
 
@@ -190,7 +183,6 @@ To create your own fixtures:
 ### PR Description Should Include:
 
 - What and why changed
-- Screenshots for UI changes
 - Test results
 - Related issue numbers
 

@@ -46,7 +46,7 @@ class StreetActivity(models.Model):
 
 
 class Experience(models.Model):
-    """An experience is a report of someone who has done a street activity."""
+    """An experience is a report of a moment of someone who has done a street activity."""
 
     activity = models.ForeignKey(
         "StreetActivity",
