@@ -1,3 +1,11 @@
 .wathoewaarom {
     scroll-margin-top: 60px;
 }
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}

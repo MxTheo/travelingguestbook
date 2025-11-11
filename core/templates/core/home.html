@@ -86,7 +86,7 @@
                                 <div class="card h-100 border-0 shadow-sm">
                                     <div class="card-body p-4">
                                         <!-- Activiteit en type -->
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start mb-3 gap-2">
                                             <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ experience.activity.name }}</span>
                                             <span class="badge bg-light text-muted border fs-7">
                                                 {% if experience.from_practitioner %}
@@ -101,7 +101,7 @@
                                             <p class="card-text fs-6 lh-base text-dark">"{{ experience.report|truncatewords:30 }}"</p>
                                         </div>
                                         <!-- Metadata -->
-                                        <div class="d-flex justify-content-between align-items-center text-muted fs-7">
+                                        <div class="d-flex  flex-column flex-sm-row justify-content-between align-items-center text-muted fs-7 gap-2">
                                             <small>
                                                 <i class="bi bi-clock me-1"></i>
                                                 {{ experience.date_created|timesince }} geleden
@@ -114,7 +114,7 @@
                                                 {% endif %}
                                             </div>
                                             <a href="{% url 'experience-list-streetactivity' experience.activity.pk %}"
-                                               class="text-decoration-none text-primary">
+                                               class="text-decoration-none text-primary ms-md-auto">
                                                 Meer lezen <i class="bi bi-arrow-right ms-1"></i>
                                             </a>
                                         </div>

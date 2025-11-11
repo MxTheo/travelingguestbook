@@ -50,7 +50,7 @@
                                 </div>
                                 <!-- Content -->
                                 <div class="mb-3">
-                                    <p class="card-text mb-0">{{ experience.report|linebreaksbr }}</p>
+                                    <p class="card-text mb-0 text-start ms-4">{{ experience.report|linebreaksbr }}</p>
                                 </div>
                                 <div class="mt-1 justify-content-end d-flex">
                                     <span class="badge {% if experience.confidence_level == 'pioneer' %}bg-primary{% elif experience.confidence_level == 'intermediate' %}bg-warning text-dark{% else %}bg-success{% endif %}">
