@@ -4,7 +4,7 @@
     Ervaringen
 {% endblock title %}
 {% block stylesheet %}
-<link href="{% static "streetactivity/styles/experience_list.css" %}" rel="stylesheet">
+    <link href="{% static "streetactivity/styles/experience_list.css" %}" rel="stylesheet">
 {% endblock stylesheet %}
 {% block content %}
     <div class="container mt-4">
@@ -12,27 +12,15 @@
         <div class="row mb-4">
             <div class="col">
                 {% if object_list %}
-                    {% with first_experience=object_list.0 %}
-                        {% if first_experience.activity %}
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h1 class="h3 mb-2">{{ first_experience.activity.name }}</h1>
-                                    <p class="text-muted mb-0">"{{ first_experience.activity.question }}"</p>
-                                </div>
-                                <a href="{% url 'streetactivity-detail' first_experience.activity.pk %}"
-                                   class="btn btn-outline-secondary btn-sm">
-                                    <i class="bi bi-arrow-left"></i> Details activitieit
-                                </a>
-                            </div>
-                            <div class="text-muted small">
-                                <i class="bi bi-collection me-1"></i>
-                                {{ page_obj.paginator.count }} ervaringen
-                            </div>
-                        {% else %}
-                            <h1 class="h3 mb-2">Ervaringen met {{ view.kwargs.pk }}</h1>
-                            <div class="text-muted small">{{ page_obj.paginator.count }} ervaringen</div>
-                        {% endif %}
-                    {% endwith %}
+                    {% include "streetactivity/streetactivity_header.html" with activity=object_list.0.activity %}
+                    <div class="justify-content-between d-flex">
+                        
+                        <div class="text-muted small ms-5 pt-2">
+                            <i class="bi bi-collection me-1"></i>
+                            {{ page_obj.paginator.count }} ervaringen
+                        </div>
+                        <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Details activiteit</a>
+                    </div>
                 {% else %}
                     <h1 class="h3 mb-2">Geen ervaringen gevonden</h1>
                 {% endif %}
@@ -69,8 +57,7 @@
                                         {{ experience.get_confidence_level_display }}
                                     </span>
                                 </div>
-                                    {% include "streetactivity/keywords_footer.html" with experience=experience %}
-
+                                {% include "streetactivity/keywords_footer.html" with experience=experience %}
                             </div>
                         </div>
                     {% endfor %}
