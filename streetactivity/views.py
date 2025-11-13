@@ -1,3 +1,5 @@
+from collections import Counter
+from django.contrib import messages
 from django.views.generic import (
     ListView,
     DetailView,
@@ -5,7 +7,6 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from collections import Counter
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -155,7 +156,12 @@ class ExperienceCreateView(CreateView):
     def form_valid(self, form):
         activity_id = self.kwargs["pk"]
         form.instance.activity_id = activity_id
-        
+
+        messages.add_message(self.request, messages.SUCCESS, 
+                             "Bedankt voor het delen van jouw moment! " \
+                             "Dit helpt anderen deze activiteit te begrijpen. " \
+                             "Zie ook 'Alle momenten'")
+
         if "beoefenaar" in self.request.path:
             form.instance.from_practitioner = True
         else:

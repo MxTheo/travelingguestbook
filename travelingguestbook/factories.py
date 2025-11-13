@@ -9,6 +9,14 @@ from persona.models import Persona, Problem, Reaction
 
 fake = Faker()
 
+class UserFactory(factory.django.DjangoModelFactory):
+    '''Mock for django.contrib.auth User'''
+    class Meta:
+        model = User
+    username = factory.LazyFunction(fake.unique.name)
+    email    = factory.LazyFunction(fake.unique.email)
+    password = factory.LazyFunction(fake.unique.password)
+
 class StreetActivityFactory(factory.django.DjangoModelFactory):
     '''Mock for streetactivities StreetActivity'''
     class Meta:
