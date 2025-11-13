@@ -155,6 +155,7 @@ class ExperienceCreateView(CreateView):
     def form_valid(self, form):
         activity_id = self.kwargs["pk"]
         form.instance.activity_id = activity_id
+        
         if "beoefenaar" in self.request.path:
             form.instance.from_practitioner = True
         else:

@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'core',
     'streetactivity',
     'persona',
-    'chatroomcreating',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'

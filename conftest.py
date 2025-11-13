@@ -7,9 +7,6 @@ from travelingguestbook.factories import StreetActivityFactory
 
 fake = Faker()
 
-register(factories.UserFactory)
-register(factories.ChatRoomFactory)
-register(factories.ChatMessageFactory)
 register(factories.StreetActivityFactory)
 
 @pytest.fixture(autouse=True)
