@@ -11,7 +11,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from rest_framework import viewsets
-from .serializers import StreetActivitySerializer
+from .serializers import StreetActivitySerializer, ExperienceSerializer
 from .models import StreetActivity, Experience
 from .forms import (
     ExperienceForm,
@@ -117,7 +117,6 @@ class ExperienceListView(ListView):
     context_object_name = "experiences"
     paginate_by = 10
 
-
 class ExperienceListViewStreetActivity(ExperienceListView):
     """View to list experiences related to a specific street activity."""
 
@@ -132,13 +131,11 @@ class ExperienceListViewStreetActivity(ExperienceListView):
         context["street_activity"] = StreetActivity.objects.get(pk=self.kwargs["pk"])
         return context
 
-
 class ExperienceDetailView(DetailView):
     """View to display details of a single experience."""
 
     model = Experience
     context_object_name = "experience"
-
 
 class ExperienceCreateView(CreateView):
     """Base view to create a new experience."""
@@ -179,3 +176,8 @@ class ExperienceCreateView(CreateView):
         return reverse_lazy(
             "streetactivity-detail", kwargs={"pk": self.object.activity.pk}
         )
+
+class ExperienceViewSet(viewsets.ModelViewSet):
+    """API endpoint that provides full CRUD for Experience"""
+    queryset = Experience.objects.all()
+    serializer_class = ExperienceSerializer

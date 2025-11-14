@@ -3,7 +3,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r"streetactiviteiten", views.StreetActivityViewSet, basename="streetactiviteiten")
+router.register(r"streetactivity", views.StreetActivityViewSet, basename="streetactiviteiten")
+router.register(r"experience", views.ExperienceViewSet, basename="momenten")
 
 urlpatterns = [
     path("api/", include(router.urls)),
