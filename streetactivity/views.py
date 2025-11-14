@@ -10,6 +10,8 @@ from django.views.generic import (
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from rest_framework import viewsets
+from .serializers import StreetActivitySerializer
 from .models import StreetActivity, Experience
 from .forms import (
     ExperienceForm,
@@ -101,6 +103,11 @@ class StreetActivityDeleteView(DeleteView):
     model = StreetActivity
     template_name = "admin/confirm_delete.html"
     success_url = reverse_lazy("streetactivity-list")
+
+class StreetActivityViewSet(viewsets.ModelViewSet):
+    """API endpoint that allows streetactivity to be viewed or edited"""
+    queryset = StreetActivity.objects.all()
+    serializer_class = StreetActivitySerializer
 
 
 class ExperienceListView(ListView):
