@@ -7,6 +7,9 @@
     <link href="{% static "streetactivity/styles/experience_list.css" %}" rel="stylesheet">
 {% endblock stylesheet %}
 {% block content %}
+    <div class="container mt-3">
+        {% include "admin/messages_feed.html" %}
+    </div>
     <div class="container mt-4">
         <!-- Header -->
         <div class="row mb-4">
@@ -45,6 +48,10 @@
                                                 {% endif %}
                                             </span>
                                             <small class="text-muted">{{ experience.date_created|date:"d M Y" }}</small>
+                                            <div>
+                                                <a href="{% url "update-experience" pk=experience.pk %}" class="btn btn-sm btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
+                                                <a href="{% url "delete-experience" pk=experience.pk %}" class="btn btn-sm  btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

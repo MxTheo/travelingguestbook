@@ -37,4 +37,8 @@ urlpatterns = [
      path("<int:pk>/ervaring/nieuw/voorbijganger/",
           views.ExperienceCreateView.as_view(),
           name="create-experience-from-passerby"),
+     path("verwijder/ervaring/<int:pk>", 
+          views.ExperienceDeleteView.as_view(), name="delete-experience"),
+     path('bewerk/ervaring/<int:pk>', 
+          views.ExperienceUpdateView.as_view(), name='update-experience'),
 ]

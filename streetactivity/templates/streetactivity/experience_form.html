@@ -15,7 +15,7 @@
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <h1 class="display-5 mb-3">
-                        {% if form.initial.from_practitioner %}
+                        {% if form.initial.from_practitioner or object.from_practitioner %}
                             <i class="bi bi-person-raised-hand text-warning"></i> Ervaring als Beoefenaar
                         {% else %}
                             <i class="bi bi-person-walking text-info"></i> Ervaring als Voorbijganger
@@ -46,10 +46,10 @@
                     {% include "streetactivity/step3_category_selection.html" with form=form %}
                     <!-- Submit Buttons -->
                     <div class="d-flex justify-content-between align-items-center">
-                        <a href="{% url 'streetactivity-detail' activity.pk %}"
+                        <button  onclick="history.back()"
                            class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-left"></i> Terug
-                        </a>
+                        </button>
                         <button type="submit" class="btn btn-primary btn-lg">
                             <i class="bi bi-send me-1"></i> Verzenden
                         </button>

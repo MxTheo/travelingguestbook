@@ -116,3 +116,45 @@ class TestExperienceModel:
 
         assert experience.activity == activity
         assert experience in activity.experiences.all()
+
+    def test_delete_view(self, client):
+        """Test the Experience delete view to ensure it returns a 200 status code
+        and contains the expected context."""
+        experience = ExperienceFactory()
+
+        delete_experience_url = reverse("delete-experience", args=[experience.id])
+
+        response = client.post(delete_experience_url)
+
+        assert response.status_code == 302
+        assert not Experience.objects.filter(id=experience.id).exists()
+        assert Experience.objects.count() == 0
+
+    def test_update_view(self, client):
+        """Test the Experience update view to ensure it returns a 200 status code
+        and contains the expected form in context."""
+        experience = ExperienceFactory()
+        update_url = reverse("update-experience", args=[experience.id])
+
+        updated_data = {
+            "report": "Updated Moment",
+            "activity": experience.activity,
+            "confidence_level": experience.confidence_level,
+            "keywords": experience.keywords,
+        }
+
+        response = client.post(update_url, updated_data, follow=True)
+
+        assert response.status_code == 200
+
+        experience.refresh_from_db()
+        assert experience.report == "Updated Moment"
+
+    def test_updateview_practitioner(self, client):
+        """Given an experience from a practitioner, test that the form shows Ervaring als Beoefenaar"""
+        experience = ExperienceFactory(from_practitioner=True)
+        update_url = reverse("update-experience", args=[experience.id])
+
+        response = client.get(update_url)
+
+        assert "Ervaring als Beoefenaar" in response.content.decode()
