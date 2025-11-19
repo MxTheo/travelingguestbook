@@ -48,7 +48,8 @@ class StreetActivityDetailView(DetailView):
         context["experiences_remaining"] = max(0, experiences_count - 3)
 
         def get_chart_data(queryset):
-            confidence_level_counts = queryset.values("confidence_level").annotate(count=Count("confidence_level"))
+            confidence_level_counts = queryset.values("confidence_level").annotate(
+                count=Count("confidence_level"))
             data = {"pioneer": 0, "intermediate": 0, "climax": 0}
             for item in confidence_level_counts:
                 data[item["confidence_level"]] = item["count"]
@@ -157,7 +158,7 @@ class ExperienceCreateView(CreateView):
         activity_id = self.kwargs["pk"]
         form.instance.activity_id = activity_id
 
-        messages.add_message(self.request, messages.SUCCESS, 
+        messages.add_message(self.request, messages.SUCCESS,
                              "Bedankt voor het delen van jouw moment! " \
                              "Dit helpt anderen deze activiteit te begrijpen. " \
                              "Zie ook 'Alle momenten'")

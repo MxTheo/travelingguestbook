@@ -19,6 +19,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOGIN_REDIRECT_URL  = "home"
 LOGOUT_REDIRECT_URL = "home"
+LOGIN_URL = "login"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'streetactivity',
     'persona',
     'rest_framework',
+    'usermanagement',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'

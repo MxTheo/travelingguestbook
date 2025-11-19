@@ -1,0 +1,13 @@
+{% extends "admin/main.html" %}
+{% block title %}Register{% endblock title %}
+{% block content %}
+{% load crispy_forms_tags %}
+    <div class="container mt-4">
+        <form method="post" action="">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Register" />
+        </form>
+        <p class="mt-2">Heb je al een account? <a href="{% url "login" %}">Login</a></p>
+    </div>
+{% endblock content %}

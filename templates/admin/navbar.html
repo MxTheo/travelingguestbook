@@ -1,34 +1,63 @@
 <header>
-<nav class="navbar navbar-expand-sm navbar-dark bg-primary text-center mb-0 pb-0">
-  <div class="container-fluid mb-2">
-    <a class="navbar-brand fs-4" href={% url "home" %}>
-      Gemene Grond
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="mainmenu">
-      <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url "home" %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url "contact" %}">Contact</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url "help" %}">Hulp</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url "about" %}">Over</a>
-        </li>
-         {% if user.is_authenticated %}
-        <li><form method='post' action='{% url "logout" %}'>{% csrf_token %}
-              <button class="dropdown-item" type="submit">Logout</button>
-            </form></li>
-            {% endif %}
-      </ul>
+  <nav class="navbar navbar-expand-sm navbar-dark bg-primary text-center mb-0 pb-0">
+    <div class="container-fluid mb-2">
+      <a class="navbar-brand fs-4" href={% url "home" %}>Gemene Grond</a>
+      <button class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#mainmenu"
+              aria-controls="mainmenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainmenu">
+        <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "home" %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "contact" %}">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "help" %}">Hulp</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "about" %}">Over</a>
+          </li>
+          {% if user.is_authenticated %}
+            <div class="dropdown nav-item">
+              <a class="nav-link dropdown-toggle"
+                 href="#"
+                 role="button"
+                 id="dropdownMenuLink"
+                 data-bs-toggle="dropdown"
+                 aria-expanded="false">{{ user.username }}</a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+                <li class="nav-item">
+                  <form method='post' action='{% url "logout" %}'>
+                    {% csrf_token %}
+                    <button class="dropdown-item" type="submit">Logout</button>
+                  </form>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url "password_change" %}">Change password</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url "user" user.username %}">Details</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url "password_reset" %}">Reset wachtwoord</a>
+                </li>
+              </ul>
+            </div>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url "login" %}">Login</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 </header>

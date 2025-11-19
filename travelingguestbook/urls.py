@@ -19,11 +19,15 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 
+import usermanagement
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('straatactiviteiten/', include('streetactivity.urls')),
     path('persona/', include('persona.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('speler/', include('usermanagement.urls')),
 ]
 
 if settings.DEBUG:
