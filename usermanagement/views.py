@@ -1,9 +1,12 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
-from .forms import RegisterForm
+from django.views import View
+from .forms import RegisterForm, UserForm, ProfileForm
 
 
 class Register(CreateView):
@@ -26,3 +29,24 @@ class UserDetail(DetailView):
     model          = User
     slug_field     = "username"
     slug_url_kwarg = "username"
+
+class ProfileUpdateView(LoginRequiredMixin, View):
+    """View for user to update its profile"""
+    template_name = "auth/user_form.html"
+
+    def get(self, request, *args, **kwargs):
+        """Display both User and ProfileForm"""
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+        return render(request, self.template_name, {"user_form": user_form, "profile_form": profile_form})
+
+    def post(self, request, *args, **kwargs):
+        """POST for both user and profileform"""
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, "Bewerken van je profiel is geslaagd!")
+            return redirect("home")
+        return render(request, self.template_name, {"user_form": user_form, "profile_form": profile_form})

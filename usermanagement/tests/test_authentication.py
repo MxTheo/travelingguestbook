@@ -1,8 +1,8 @@
 from django.urls import reverse
 from django.contrib import auth
-from usermanagement.forms import RegisterForm
 from travelingguestbook.helpers_test import helper_test_page_rendering
 from travelingguestbook.factories import UserFactory
+from usermanagement.forms import RegisterForm
 from usermanagement.models import Profile
 
 class TestRegister():
@@ -60,3 +60,58 @@ class TestProfile():
         user.save()
         profile = Profile.objects.get(user=user)
         assert profile.lvl == 1
+
+class TestUserUpdateView():
+    """Tests for user that updates its account"""
+    def test_login_required_redirects(self, client):
+        """Anonymous users should be redirected to login when accessing the update page."""
+        url = reverse('update-account')
+        resp = client.get(url)
+        assert resp.status_code in (302, 301)
+        assert '/login' in resp['Location']
+
+    def test_get_shows_both_forms(self, auto_login_user):
+        """Logged in user sees both user and profile form fields."""
+        client, user = auto_login_user()
+        resp = client.get(reverse('update-account'))
+        content = resp.content.decode()
+        assert 'email' in content
+        assert 'lvl' in content
+
+    def test_post_valid_updates_user_and_profile(self, auto_login_user):
+        """Submitting valid data updates User and Profile and redirects."""
+        client, user = auto_login_user()
+        url = reverse('update-account')
+
+        new_email = 'updated@example.com'
+        new_lvl = 2
+
+        data = {
+            'username': user.username,
+            'email': new_email,
+            'lvl': new_lvl,
+        }
+
+        resp = client.post(url, data)
+        # successful save should redirect
+        assert resp.status_code in (302, 301)
+
+        user.refresh_from_db()
+        profile = Profile.objects.get(user=user)
+        assert user.email == new_email
+        assert profile.lvl == new_lvl
+
+    def test_post_invalid_shows_errors(self, auto_login_user):
+        """Submitting invalid data redisplays the form with errors."""
+        client, user = auto_login_user()
+        url = reverse('update-account')
+
+        data = {
+            'username': user.username,
+            'email': 'invalid-email',  # not a valid email -> form should be invalid
+            'lvl': user.profile.lvl,
+        }
+
+        resp = client.post(url, data)
+        assert resp.status_code == 200
+        assert 'edit je account' in resp.content.decode().lower()
