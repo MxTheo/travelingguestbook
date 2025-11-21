@@ -2,6 +2,8 @@ from django.urls import reverse
 from django.contrib import auth
 from usermanagement.forms import RegisterForm
 from travelingguestbook.helpers_test import helper_test_page_rendering
+from travelingguestbook.factories import UserFactory
+from usermanagement.models import Profile
 
 class TestRegister():
     '''Tests for registering a new user'''
@@ -42,3 +44,19 @@ class TestRegister():
         client.post(self.register_url, self.data_correct)
         user = auth.get_user(client)
         assert user.is_authenticated
+
+class TestProfile():
+    """Tests for the profile of a user"""
+    def test_if_profile_is_created(self):
+        '''Test if a profile is created when a new user is created'''
+        user    = UserFactory()
+        profile = Profile.objects.get(user=user)
+        assert str(profile) == f"Profile of '{user.username}'"
+
+    def test_if_profile_is_edited(self):
+        """Test if a profile lvl is changed, when the user is saved"""
+        user = UserFactory()
+        user.profile.lvl = 1
+        user.save()
+        profile = Profile.objects.get(user=user)
+        assert profile.lvl == 1
