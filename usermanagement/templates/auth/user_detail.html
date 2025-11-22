@@ -1,13 +1,102 @@
 {% extends "admin/main.html" %}
+{% load static %}
 {% block title %}
-{{ user.username }}
+    {{ user.username }} - Profiel
 {% endblock title %}
+
+{% block stylesheet %}
+    <link href="{% static "usermanagement/styles/user_detail.css" %}" rel="stylesheet">
+{% endblock stylesheet %}
+
 {% block content %}
-<div class="container mt-5">
-    <ul class="list-group">
-        <li class="list-group-item"><strong>Lvl</strong> {{user.profile.lvl}}</li>
-        <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
-        <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
-    </ul>
+<div class="container mt-4">
+    <!-- Profiel Header -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <img src="{{ user.profile.profile_image_url }}" 
+                         alt="{{ user.username }}"
+                         class="img-fluid rounded-circle mb-3 border profile_image" height="150px" width="150px">
+                    <h4 class="card-title">{{ user.username }}</h4>
+                    <div class="badge bg-primary fs-6 mb-2">Level {{ user.profile.lvl }}</div>
+                    <p class="text-muted small">
+                        Sinds {{ user.profile.date_created|date:"d F Y" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <!-- Basis Informatie -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-circle me-2"></i>Basis Informatie
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Gebruikersnaam:</strong></p>
+                            <p class="text-muted">{{ user.username }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Email:</strong></p>
+                            <p class="text-muted">{{ user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} <!-- Achievements Section (voorbeeld voor toekomstige uitbreiding) -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-trophy me-2"></i>Prestaties
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3" id="achievements-container">
+                        <!-- Hier komen achievements dynamisch -->
+                        <div class="col-12 text-center text-muted">
+                            <p>Nog geen prestaties behaald</p>
+                        </div>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+            <!-- Awards Section (voorbeeld voor toekomstige uitbreiding) -->
+            {% comment %} <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-award me-2"></i>Onderscheidingen
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3" id="awards-container">
+                        <!-- Hier komen awards dynamisch -->
+                        <div class="col-12 text-center text-muted">
+                            <p>Nog geen onderscheidingen ontvangen</p>
+                        </div>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+        </div>
+    </div>
+
+    <!-- Actie Knoppen -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex gap-2 justify-content-end">
+                {% if user == request.user %}
+                <a href="{% url 'update-account' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-pencil-square me-1"></i>Profiel Bewerken
+                </a>
+                {% endif %}
+                <!-- Toekomstige knoppen kunnen hier worden toegevoegd -->
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}

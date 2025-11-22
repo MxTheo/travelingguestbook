@@ -41,12 +41,25 @@ class ProfileUpdateView(LoginRequiredMixin, View):
         return render(request, self.template_name, {"user_form": user_form, "profile_form": profile_form})
 
     def post(self, request, *args, **kwargs):
-        """POST for both user and profileform"""
+        """Handle POST for both user and profile form, allow saving profile image even if user form invalid"""
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
+
+        saved_any = False
+
+        # Save user form if valid
+        if user_form.is_valid():
             user_form.save()
+            saved_any = True
+
+        # Save profile form (including uploaded image) if valid
+        if profile_form.is_valid():
             profile_form.save()
+            saved_any = True
+
+        if saved_any:
             messages.success(request, "Bewerken van je profiel is geslaagd!")
-            return redirect("home")
+            return redirect("user", username=request.user.username)
+
+        # If neither form was valid, re-render with errors
         return render(request, self.template_name, {"user_form": user_form, "profile_form": profile_form})

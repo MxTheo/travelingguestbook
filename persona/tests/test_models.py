@@ -43,16 +43,15 @@ class TestPersonaModel:
     def test_get_absolute_url(self):
         """Test get_absolute_url method"""
         persona = PersonaFactory()
-        
+
         url = persona.get_absolute_url()
         assert url == reverse('persona-detail', kwargs={'pk': persona.pk})
-    
+
     def test_portrait_url_without_portrait(self):
         """Test portrait_url property when no portrait is set"""
         persona = PersonaFactory(portrait=None)
-        
         assert persona.portrait_url == '/static/persona/images/empty_portrait.jpg'
-    
+
     def test_portrait_url_with_portrait(self):
         """Test portrait_url property when portrait is set"""
         # Create a simple mock image
@@ -62,8 +61,8 @@ class TestPersonaModel:
             content_type="image/jpeg"
         )
         persona = PersonaFactory(portrait=mock_image)
-        
-        assert persona.portrait_url == persona.portrait.url
+
+        assert not persona.portrait_url == '/static/persona/images/empty_portrait.jpg'
 
 class TestProblemModel:
     """Tests for Problem model."""

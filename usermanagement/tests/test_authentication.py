@@ -4,6 +4,7 @@ from travelingguestbook.helpers_test import helper_test_page_rendering
 from travelingguestbook.factories import UserFactory
 from usermanagement.forms import RegisterForm
 from usermanagement.models import Profile
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class TestRegister():
     '''Tests for registering a new user'''
@@ -115,3 +116,40 @@ class TestUserUpdateView():
         resp = client.post(url, data)
         assert resp.status_code == 200
         assert 'edit je account' in resp.content.decode().lower()
+
+class TestProfileImage():
+    """Tests that the user can set a profile image"""
+    def test_profile_image_url_without_profile_image(self):
+        """Test profile_image_url property when no profile_image is set"""
+        user = UserFactory()
+        
+        assert user.profile.profile_image_url == '/static/persona/images/empty_portrait.jpg'
+    
+    def test_profile_image_url_with_profile_image(self, auto_login_user):
+        """Test profile_image_url property when profile_image is set"""
+        mock_image = SimpleUploadedFile(
+            "test.jpg", 
+            b"file_content", 
+            content_type="image/jpeg"
+        )
+        _, user = auto_login_user()
+        user.profile.profile_image = mock_image
+        user.save()
+        profile = Profile.objects.get(user=user)
+
+        assert not profile.profile_image_url == '/static/persona/images/empty_portrait.jpg'
+
+    def test_update_profile_with_profile_image(self, auto_login_user):
+        """Test that the default profile image is not shown when user updates its profile image"""
+        client, _ = auto_login_user()
+        mock_image = SimpleUploadedFile(
+            "test.jpg", 
+            b"file_content", 
+            content_type="image/jpeg"
+        )
+        url = reverse('update-account')
+        data = {
+            'profile_image': mock_image,
+        }
+        response = client.post(url, data, follow=True)
+        assert 'profileimage' in response.content.decode()

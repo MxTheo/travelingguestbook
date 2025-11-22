@@ -29,4 +29,4 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model  = Profile
-        fields = ["lvl"]
+        fields = ["profile_image"]
