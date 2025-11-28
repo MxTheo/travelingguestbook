@@ -3,10 +3,11 @@
 Account edit
 {% endblock title %}
 {% block content %}
+{% include "admin/messages_feed.html" %}
 <div class="container mt-4">
-    <h3>Edit je account</h3>
+    <h3>Bewerk je account</h3>
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         {% load crispy_forms_tags %}
         {{ user_form|crispy }}

@@ -1,9 +1,24 @@
+import pytest
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.storage import default_storage
 from travelingguestbook.factories import PersonaFactory, ProblemFactory, ReactionFactory
 
 class TestPersonaModel:
     """Tests for persona models using factories."""
+    @pytest.fixture(autouse=True)
+    def setup_method(self, temporary_media_root):
+        """Run before each test method"""
+        self.media_root = temporary_media_root
+        self.test_images = []
+
+    def teardown_method(self):
+        """Run after each test method"""
+        for image_path in self.test_images:
+            if default_storage.exists(image_path):
+                default_storage.delete(image_path)
+
+
 
     def test_persona_creation(self):
         """Test creation of Persona model"""

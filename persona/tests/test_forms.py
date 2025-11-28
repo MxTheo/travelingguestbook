@@ -1,50 +1,64 @@
-from django.core.files.uploadedfile import SimpleUploadedFile
+import pytest
 from io import BytesIO
 from PIL import Image
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.storage import default_storage
 from persona.forms import PersonaForm
+
 
 class TestForms:
     """Tests for persona forms using factories."""
+
+    @pytest.fixture(autouse=True)
+    def setup_method(self, temporary_media_root):
+        """Run before each test method"""
+        self.media_root = temporary_media_root
+        self.test_images = []
+
+    def teardown_method(self):
+        """Run after each test method"""
+        for image_path in self.test_images:
+            if default_storage.exists(image_path):
+                default_storage.delete(image_path)
+
     def test_persona_form_valid(self):
         """Test valid data for PersonaForm"""
         form_data = {
-            'title': 'Test Persona Form',
-            'core_question': 'Test question?',
-            'description': 'Test description for form',
+            "title": "Test Persona Form",
+            "core_question": "Test question?",
+            "description": "Test description for form",
         }
         form = PersonaForm(data=form_data)
         assert form.is_valid()
-    
+
     def test_persona_form_invalid(self):
         """Test invalid data for PersonaForm"""
         form_data = {
-            'title': '',  # Required field
-            'core_question': 'Test question?',
-            'description': 'Test description',
+            "title": "",  # Required field
+            "core_question": "Test question?",
+            "description": "Test description",
         }
         form = PersonaForm(data=form_data)
         assert not form.is_valid()
-        assert 'title' in form.errors
+        assert "title" in form.errors
 
     def test_form_with_portrait(self):
         """Test form with portrait file"""
-        image = Image.new('RGB', (100, 100), color='red')
+        image = Image.new("RGB", (100, 100), color="red")
         image_file = BytesIO()
-        image.save(image_file, 'JPEG')
+        image.save(image_file, "JPEG")
         image_file.seek(0)
 
         mock_image = SimpleUploadedFile(
-        "test.jpg", 
-        image_file.read(), 
-        content_type="image/jpeg"
+            "test.jpg", image_file.read(), content_type="image/jpeg"
         )
 
         form_data = {
-            'title': 'Test Persona',
-            'core_question': 'Test question?',
-            'description': 'Test description',
+            "title": "Test Persona",
+            "core_question": "Test question?",
+            "description": "Test description",
         }
-        files = {'portrait': mock_image}
+        files = {"portrait": mock_image}
         form = PersonaForm(data=form_data, files=files)
 
         assert form.is_valid()

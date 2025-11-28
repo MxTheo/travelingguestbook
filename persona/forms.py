@@ -6,6 +6,7 @@ class PersonaForm(forms.ModelForm):
     """Form for adding/editing a Persona."""
 
     class Meta:
+        "Anonymous users can edit the title, core_question, description and portrait"
         model = Persona
         fields = ["title", "core_question", "description", "portrait"]
         widgets = {
@@ -23,6 +24,7 @@ class ProblemForm(forms.ModelForm):
     """Form for adding/editing a Problem of Persona."""
 
     class Meta:
+        "Anonymous users can edit the description of a problem"
         model = Problem
         fields = ["description"]
         widgets = {
@@ -43,6 +45,7 @@ class ReactionForm(forms.ModelForm):
     """Form for adding/editing a Reaction of Persona."""
 
     class Meta:
+        "Anonymous users can edit the description of a reaction"
         model = Reaction
         fields = ["description"]
         widgets = {

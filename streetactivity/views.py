@@ -17,6 +17,7 @@ from .forms import (
     ExperienceForm,
     StreetActivityForm,
 )
+from usermanagement.views import add_xp, update_lvl
 
 class StreetActivityListView(ListView):
     """View to list all street activities with filtering options."""
@@ -167,6 +168,12 @@ class ExperienceCreateView(CreateView):
             form.instance.from_practitioner = True
         else:
             form.instance.from_practitioner = False
+        
+        if not self.request.user.is_anonymous:
+            profile = self.request.user.profile
+            add_xp(profile, form.instance.confidence_level)
+            update_lvl(profile)
+
         return super().form_valid(form)
 
     def get_success_url(self):

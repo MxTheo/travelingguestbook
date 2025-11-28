@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User
-from django.db import models
 import uuid
 import os
+from django.contrib.auth.models import User
+from django.db import models
 
 def profile_image_path(instance, filename):
     """Upload path voor persona portretten"""
@@ -12,7 +12,6 @@ def profile_image_path(instance, filename):
 class Profile(models.Model):
     """Profile to extend the user and store more information"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    lvl = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     profile_image = models.ImageField(
         upload_to=profile_image_path,
@@ -20,6 +19,16 @@ class Profile(models.Model):
         null=True,
         verbose_name="Profiel foto"
     )
+
+    # lvl and experiences
+    lvl = models.IntegerField(default=1)
+    xp_next_lvl = models.IntegerField(
+        verbose_name="De benodigde xp voor het volgende level", default=75)
+    xp = models.IntegerField(
+        verbose_name="De behaalde xp", default=0)
+    xp_start = models.IntegerField(
+        verbose_name="De xp waarmee is gestart in dit level", default=0)
+
 
     @property
     def profile_image_url(self):

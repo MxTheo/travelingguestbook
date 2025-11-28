@@ -6,8 +6,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from django.views import View
+from streetactivity.models import CONFIDENCE_LEVEL_CHOICES
 from .forms import RegisterForm, UserForm, ProfileForm
 
+AMOUNT_XP = {
+    CONFIDENCE_LEVEL_CHOICES[0][0]: 75,
+    CONFIDENCE_LEVEL_CHOICES[1][0]: 50,
+    CONFIDENCE_LEVEL_CHOICES[2][0]: 25,
+
+}
 
 class Register(CreateView):
     """The sign up functionality"""
@@ -38,28 +45,53 @@ class ProfileUpdateView(LoginRequiredMixin, View):
         """Display both User and ProfileForm"""
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
-        return render(request, self.template_name, {"user_form": user_form, "profile_form": profile_form})
+        return render(request, self.template_name, {
+            "user_form": user_form,
+            "profile_form": profile_form})
 
     def post(self, request, *args, **kwargs):
-        """Handle POST for both user and profile form, allow saving profile image even if user form invalid"""
+        """Handle POST for both user and profile form,
+        allowing partial success with appropriate messages."""
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
 
-        saved_any = False
+        # Check if both forms are valid
+        user_valid = user_form.is_valid()
+        profile_valid = profile_form.is_valid()
 
-        # Save user form if valid
-        if user_form.is_valid():
+        if user_valid and profile_valid:
+            # Both forms valid, save both
             user_form.save()
-            saved_any = True
-
-        # Save profile form (including uploaded image) if valid
-        if profile_form.is_valid():
             profile_form.save()
-            saved_any = True
-
-        if saved_any:
             messages.success(request, "Bewerken van je profiel is geslaagd!")
             return redirect("user", username=request.user.username)
 
-        # If neither form was valid, re-render with errors
-        return render(request, self.template_name, {"user_form": user_form, "profile_form": profile_form})
+        elif user_valid and not profile_valid:
+            # User form valid, profile form invalid - save user but show profile errors
+            user_form.save()
+            messages.warning(request, "Profielgegevens zijn niet opgeslagen vanwege fouten.")
+
+        elif not user_valid and profile_valid:
+            # Profile form valid, user form invalid - save profile but show user errors
+            profile_form.save()
+            messages.warning(request, "Gebruikersgegevens zijn niet opgeslagen vanwege fouten.")
+
+        # If neither form was valid, or we have partial success, re-render with errors
+        return render(request, self.template_name, {
+            "user_form": user_form,
+            "profile_form": profile_form})
+
+def add_xp(profile, confidence_level):
+    """Given the confidence lvl and the user profile, 
+    add the amount of xp specific to that confidence lvl to the user profile"""
+    profile.xp += AMOUNT_XP[confidence_level]
+    profile.save()
+
+def update_lvl(profile):
+    """Given the user profile,
+    update the lvl and xp_start, xp_next_lvl if xp exceeds the treshold for next lvl"""
+    while profile.xp >= profile.xp_next_lvl:
+        profile.lvl += 1
+        profile.xp_start = profile.xp_next_lvl
+        profile.xp_next_lvl = int(75*pow(profile.lvl,1.5))
+    profile.save()
