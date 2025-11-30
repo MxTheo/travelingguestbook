@@ -33,7 +33,8 @@
                  id="dropdownMenuLink"
                  data-bs-toggle="dropdown"
                  aria-expanded="false">{{ user.username }}</a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+              <ul class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="dropdownMenuLink">
                 <li class="nav-item">
                   <form method='post' action='{% url "logout" %}'>
                     {% csrf_token %}
@@ -49,9 +50,11 @@
               </ul>
             </div>
           {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url "login" %}">Login</a>
-            </li>
+            {% if request.path != '/' %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url "login" %}">Login</a>
+              </li>
+            {% endif %}
           {% endif %}
         </ul>
       </div>
