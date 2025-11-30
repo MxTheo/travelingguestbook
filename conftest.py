@@ -1,9 +1,9 @@
 import uuid
-import pytest
 import tempfile
+import pytest
 from pytest_factoryboy import register
-from travelingguestbook import factories
 from django.core.files.storage import default_storage
+from travelingguestbook import factories
 
 register(factories.StreetActivityFactory)
 register(factories.ExperienceFactory)
@@ -12,10 +12,16 @@ register(factories.ProblemFactory)
 register(factories.ReactionFactory)
 
 
+@pytest.fixture()
+def temporary_media_root(settings):
+    """Use temporary directory for media files during tests"""
+    with tempfile.TemporaryDirectory() as temp_dir:
+        settings.MEDIA_ROOT = temp_dir
+        yield temp_dir
+
 @pytest.fixture(autouse=True)
 def enable_db_access_for_all_tests(db):
     '''This function saves us from typing @pytest.mark.django_db before every test function'''
-
 
 @pytest.fixture(name='create_user')
 def create_user(django_user_model):
@@ -29,7 +35,6 @@ def create_user(django_user_model):
         return django_user_model.objects.create_user(**kwargs)
     return make_user
 
-
 @pytest.fixture
 def auto_login_user(client, create_user):
     '''Custom login fixtur according to https://djangostars.com/blog/django-pytest-testing/,
@@ -40,22 +45,3 @@ def auto_login_user(client, create_user):
         client.login(username=user.username, password='strong-test-pass')
         return client, user
     return make_auto_login
-
-@pytest.fixture
-def cleanup_images():
-    """Fixture to track and cleanup test images"""
-    test_images = []
-    
-    yield test_images
-    
-    # Cleanup after test
-    for image_path in test_images:
-        if default_storage.exists(image_path):
-            default_storage.delete(image_path)
-
-@pytest.fixture
-def temporary_media_root(settings):
-    """Use temporary directory for media files during tests"""
-    with tempfile.TemporaryDirectory() as temp_dir:
-        settings.MEDIA_ROOT = temp_dir
-        yield temp_dir

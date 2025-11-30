@@ -28,6 +28,8 @@ class Profile(models.Model):
         verbose_name="De behaalde xp", default=0)
     xp_start = models.IntegerField(
         verbose_name="De xp waarmee is gestart in dit level", default=0)
+    xp_percentage_of_progress = models.IntegerField(
+        verbose_name="Percentage van de xp voortgang tijdens dit lvl", default=0)
 
 
     @property

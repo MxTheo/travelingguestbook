@@ -1,0 +1,15 @@
+<div class="container mt-4">
+    <div class="mb-4">
+        <div class="row justify-content-around">
+            <div class="col">
+                Level {{ profile.lvl }}
+            </div>
+            <div class="col">
+                {{ profile.xp }} / {{ profile.xp_next_lvl }} XP
+            </div>
+        </div>
+        <div class="progress bg-primary rounded-4">
+            <div class="progress-bar-striped bg-success" role="progressbar" style="width: {{ profile.xp_percentage_of_progress }}%;" aria-valuenow="{{ profile.xp_percentage_of_progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+</div>

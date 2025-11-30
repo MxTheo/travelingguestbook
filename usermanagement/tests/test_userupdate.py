@@ -1,29 +1,14 @@
 import io
-import pytest
 from unittest.mock import patch
 from PIL import Image
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.files.storage import default_storage
 from travelingguestbook.factories import UserFactory
 from usermanagement.models import Profile
 from usermanagement.forms import ProfileForm
 
-
 class TestUserUpdateView:
     """Tests for user that updates its account"""
-    @pytest.fixture(autouse=True)
-    def setup_method(self, temporary_media_root):
-        """Run before each test method"""
-        self.media_root = temporary_media_root
-        self.test_images = []
-
-    def teardown_method(self):
-        """Run after each test method"""
-        for image_path in self.test_images:
-            if default_storage.exists(image_path):
-                default_storage.delete(image_path)
-
     def test_login_required_redirects(self, client):
         """Anonymous users should be redirected to login when accessing the update page."""
         url = reverse("update-account")
@@ -70,7 +55,7 @@ class TestUserUpdateView:
         content = resp.content.decode()
         assert "Vul een echt e‑mailadres in" in content
 
-    def test_update_profile_with_valid_profile_image(self, auto_login_user):
+    def test_update_profile_with_valid_profile_image(self, auto_login_user, temporary_media_root):
         """Test that a valid profile image is saved correctly"""
         client, user = auto_login_user()
         buffer = create_test_image()
@@ -91,7 +76,7 @@ class TestUserUpdateView:
         user.profile.refresh_from_db()
         assert user.profile.profile_image.name != ""
 
-    def test_update_profile_with_invalid_profile_image(self, auto_login_user):
+    def test_update_profile_with_invalid_profile_image(self, auto_login_user, temporary_media_root):
         """Test that invalid profile image shows error message"""
         client, user = auto_login_user()
 
@@ -116,8 +101,9 @@ class TestUserUpdateView:
         user.profile.refresh_from_db()
         assert user.profile.profile_image.name == ""
 
-    def test_update_user_form_valid_profile_form_invalid(self, auto_login_user):
-        """Test that valid user form updates but invalid profile form shows warning"""
+    def test_update_user_form_valid_profile_form_invalid(self, auto_login_user, temporary_media_root):
+        """Test that valid user form updates,
+          but invalid profile form shows warning"""
         client, _ = auto_login_user()
 
         mock_image = SimpleUploadedFile(
@@ -136,18 +122,6 @@ class TestUserUpdateView:
 
 class TestImageUrl:
     """Tests that the image_url is correctly set for profile image"""
-    @pytest.fixture(autouse=True)
-    def setup_method(self, temporary_media_root):
-        """Run before each test method"""
-        self.media_root = temporary_media_root
-        self.test_images = []
-
-    def teardown_method(self):
-        """Run after each test method"""
-        for image_path in self.test_images:
-            if default_storage.exists(image_path):
-                default_storage.delete(image_path)
-
     def test_profile_image_url_without_profile_image(self):
         """Test profile_image_url property when no profile_image is set"""
         user = UserFactory()
@@ -156,7 +130,7 @@ class TestImageUrl:
             == "/static/persona/images/empty_portrait.jpg"
         )
 
-    def test_profile_image_url_with_profile_image(self, auto_login_user):
+    def test_profile_image_url_with_profile_image(self, auto_login_user, temporary_media_root):
         """Test profile_image_url property when profile_image is set"""
         mock_image = SimpleUploadedFile(
             "test.jpg", b"file_content", content_type="image/jpeg"
@@ -173,19 +147,7 @@ class TestImageUrl:
 
 class TestProfileForm:
     """Tests that the user can set a profile image in the profile form"""
-    @pytest.fixture(autouse=True)
-    def setup_method(self, temporary_media_root):
-        """Run before each test method"""
-        self.media_root = temporary_media_root
-        self.test_images = []
-
-    def teardown_method(self):
-        """Run after each test method"""
-        for image_path in self.test_images:
-            if default_storage.exists(image_path):
-                default_storage.delete(image_path)
-
-    def test_valid_profile_image(self):
+    def test_valid_profile_image(self, temporary_media_root):
         """Test form with valid image"""
         buffer = create_test_image()
         valid_image = SimpleUploadedFile(
@@ -195,7 +157,7 @@ class TestProfileForm:
         form = ProfileForm(files={"profile_image": valid_image})
         assert form.is_valid()
 
-    def test_invalid_image(self):
+    def test_invalid_image(self, temporary_media_root):
         """Test form with invalid image content"""
         invalid_image = SimpleUploadedFile(
             "invalid.jpg", b"not_really_an_image", content_type="image/jpeg"
@@ -205,7 +167,7 @@ class TestProfileForm:
         assert not form.is_valid()
         assert "Upload een geldige afbeelding" in str(form.errors)
 
-    def test_image_too_large(self):
+    def test_image_too_large(self, temporary_media_root):
         """Test form validation when image is too large - simplified version"""
 
         buffer = create_test_image()
@@ -218,7 +180,7 @@ class TestProfileForm:
             assert not form.is_valid()
             assert "Afbeelding mag niet groter zijn dan 5MB" in str(form.errors)
 
-    def test_invalid_extension(self):
+    def test_invalid_extension(self, temporary_media_root):
         """Test ongeldige extensie"""
         buffer = create_test_image()
         image = SimpleUploadedFile("test.pdf", buffer.read(), "image/jpeg")
@@ -226,7 +188,7 @@ class TestProfileForm:
         assert not form.is_valid()
         assert 'Ongeldige bestandsextensie' in str(form.errors)
 
-    def test_valid_different_image_types(self):
+    def test_valid_different_image_types(self, temporary_media_root):
         """Test all valid image types"""
         valid_types = [
             ("test.jpg", "image/jpeg", "JPEG"),
@@ -244,20 +206,18 @@ class TestProfileForm:
             form = ProfileForm(files={"profile_image": image})
             assert form.is_valid(), f"Failed for {filename} with {content_type}"
 
-    def test_no_image_provided(self):
+    def test_no_image_provided(self, temporary_media_root):
         """Test form when no image is provided (should be valid for updates if not required)"""
         form = ProfileForm(data={})
         assert form.is_valid() or "profile_image" in form.errors
 
-def create_test_image(img_format="JPEG", size=(100, 100), size_kb=100):
+def create_test_image(img_format="JPEG", size=(100, 100)):
     """Helper om test afbeeldingen te maken"""
     image = Image.new("RGB", size, color="red")
     buffer = io.BytesIO()
 
     if img_format.upper() == "JPEG":
         quality = 95
-        if size_kb > 100:
-            quality = 10
         image.save(buffer, format=img_format, quality=quality)
     else:
         image.save(buffer, format=img_format)

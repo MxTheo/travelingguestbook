@@ -87,3 +87,43 @@ class TestLvl:
         assert profile.xp_next_lvl == 212
         assert profile.xp == 100
         assert profile.xp_start == 75
+
+class TestProgress:
+    def test_progress_in_between(self, auto_login_user):
+        """Given a user of lvl 1 who describes 1 experiences of inbetween confidence (50xp),
+        tests the progress percentage is updated"""
+        client, user = auto_login_user()
+        activity = StreetActivityFactory()
+        experience = ExperienceFactory()
+        data_experience = {
+            "report": experience.report,
+            "confidence_level": "intermediate",
+            "from_practitioner": True,
+            "keywords": experience.keywords,
+        }
+        url = reverse("create-experience", args=[activity.id])
+
+        client.post(url, data_experience, follow=True)
+
+        profile = Profile.objects.get(user=user)
+        assert profile.xp_percentage_of_progress == 66
+        
+    def test_progress_lvl_up(self, auto_login_user):
+        """Given a user of lvl 1 describing 2 experiences of inbetween confidence (50xp),
+        tests if they lvl up"""
+        client, user = auto_login_user()
+        activity = StreetActivityFactory()
+        experience = ExperienceFactory()
+        data_experience = {
+            "report": experience.report,
+            "confidence_level": "intermediate",
+            "from_practitioner": True,
+            "keywords": experience.keywords,
+        }
+        url = reverse("create-experience", args=[activity.id])
+
+        client.post(url, data_experience, follow=True)
+        client.post(url, data_experience, follow=True)
+
+        profile = Profile.objects.get(user=user)
+        assert profile.xp_percentage_of_progress == 18

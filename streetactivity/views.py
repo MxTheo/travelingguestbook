@@ -11,13 +11,13 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from rest_framework import viewsets
+from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
 from .serializers import StreetActivitySerializer, ExperienceSerializer
 from .models import StreetActivity, Experience
 from .forms import (
     ExperienceForm,
     StreetActivityForm,
 )
-from usermanagement.views import add_xp, update_lvl
 
 class StreetActivityListView(ListView):
     """View to list all street activities with filtering options."""
@@ -173,6 +173,8 @@ class ExperienceCreateView(CreateView):
             profile = self.request.user.profile
             add_xp(profile, form.instance.confidence_level)
             update_lvl(profile)
+            calc_xp_percentage(profile)
+            profile.save()
 
         return super().form_valid(form)
 

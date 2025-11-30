@@ -83,9 +83,8 @@ class ProfileUpdateView(LoginRequiredMixin, View):
 
 def add_xp(profile, confidence_level):
     """Given the confidence lvl and the user profile, 
-    add the amount of xp specific to that confidence lvl to the user profile"""
+    add the amount of xp specific to that confidence lvl to the user profile and update the percentage_xp"""
     profile.xp += AMOUNT_XP[confidence_level]
-    profile.save()
 
 def update_lvl(profile):
     """Given the user profile,
@@ -94,4 +93,11 @@ def update_lvl(profile):
         profile.lvl += 1
         profile.xp_start = profile.xp_next_lvl
         profile.xp_next_lvl = int(75*pow(profile.lvl,1.5))
-    profile.save()
+
+def calc_xp_percentage(profile):
+    """Given the total xp, the xp at the start of the level and the xp treshold for the new level,
+    calculate the percentage of the xp the user acquired during this level,
+    so that it can be used in the progress bar"""
+    xp_acquired_in_this_lvl = profile.xp - profile.xp_start
+    total_xp_needed_for_next_lvl = profile.xp_next_lvl   - profile.xp_start
+    profile.xp_percentage_of_progress = xp_acquired_in_this_lvl/total_xp_needed_for_next_lvl*100

@@ -1,25 +1,9 @@
-import pytest
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.files.storage import default_storage
 from travelingguestbook.factories import PersonaFactory, ProblemFactory, ReactionFactory
 
 class TestPersonaModel:
     """Tests for persona models using factories."""
-    @pytest.fixture(autouse=True)
-    def setup_method(self, temporary_media_root):
-        """Run before each test method"""
-        self.media_root = temporary_media_root
-        self.test_images = []
-
-    def teardown_method(self):
-        """Run after each test method"""
-        for image_path in self.test_images:
-            if default_storage.exists(image_path):
-                default_storage.delete(image_path)
-
-
-
     def test_persona_creation(self):
         """Test creation of Persona model"""
         persona = PersonaFactory()
@@ -43,7 +27,7 @@ class TestPersonaModel:
         problems = ProblemFactory.create_batch(5, persona=persona)
 
         assert persona.problems.count() == 5
-        for i, problem in enumerate(persona.problems.all()):
+        for _, problem in enumerate(persona.problems.all()):
             assert problem in problems
 
     def test_persona_with_multiple_reactions(self):
@@ -52,7 +36,7 @@ class TestPersonaModel:
         reactions = ReactionFactory.create_batch(5, persona=persona)
 
         assert persona.reactions.count() == 5
-        for i, reaction in enumerate(persona.reactions.all()):
+        for _, reaction in enumerate(persona.reactions.all()):
             assert reaction in reactions
 
     def test_get_absolute_url(self):
@@ -67,7 +51,7 @@ class TestPersonaModel:
         persona = PersonaFactory(portrait=None)
         assert persona.portrait_url == '/static/persona/images/empty_portrait.jpg'
 
-    def test_portrait_url_with_portrait(self):
+    def test_portrait_url_with_portrait(self, temporary_media_root):
         """Test portrait_url property when portrait is set"""
         # Create a simple mock image
         mock_image = SimpleUploadedFile(

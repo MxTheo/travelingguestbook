@@ -8,19 +8,6 @@ from persona.forms import PersonaForm
 
 class TestForms:
     """Tests for persona forms using factories."""
-
-    @pytest.fixture(autouse=True)
-    def setup_method(self, temporary_media_root):
-        """Run before each test method"""
-        self.media_root = temporary_media_root
-        self.test_images = []
-
-    def teardown_method(self):
-        """Run after each test method"""
-        for image_path in self.test_images:
-            if default_storage.exists(image_path):
-                default_storage.delete(image_path)
-
     def test_persona_form_valid(self):
         """Test valid data for PersonaForm"""
         form_data = {
@@ -42,7 +29,7 @@ class TestForms:
         assert not form.is_valid()
         assert "title" in form.errors
 
-    def test_form_with_portrait(self):
+    def test_form_with_portrait(self, temporary_media_root):
         """Test form with portrait file"""
         image = Image.new("RGB", (100, 100), color="red")
         image_file = BytesIO()
