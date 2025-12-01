@@ -180,7 +180,7 @@ class ExperienceCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "streetactivity-detail", kwargs={"pk": self.object.activity.pk}
+            "experience-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
 
 class ExperienceUpdateView(UpdateView):
