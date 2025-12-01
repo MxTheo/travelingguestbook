@@ -6,4 +6,5 @@ urlpatterns = [
     path('contact/', views.ContactView.as_view(), name='contact'),
     path('overons/', views.AboutView.as_view(), name='about'),
     path('help/', views.HelpView.as_view(), name='help'),
+    path('cookie-consent/', views.save_cookie_consent, name='cookie-consent'),
 ]

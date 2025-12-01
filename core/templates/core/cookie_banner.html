@@ -1,0 +1,52 @@
+{% load static %}
+<div id="cookie-consent"
+     class="cc-banner"
+     role="dialog"
+     aria-live="polite"
+     aria-label="Cookie toestemming"
+     hidden>
+    <div class="cc-inner">
+        <div class="cc-text">
+            Deze site gebruikt cookies. Functionele cookies zijn noodzakelijk. Voor analyse of marketing vragen we je toestemming.
+        </div>
+        <div class="cc-actions">
+            <button id="cc-manage" class="btn btn-link">Instellingen</button>
+            <button id="cc-reject" class="btn btn-outline-secondary">Weiger niet‑essentiële</button>
+            <button id="cc-accept-all" class="btn btn-primary">Accepteer alles</button>
+            <button id="cc-revoke"
+                    class="btn btn-link text-danger"
+                    title="Toestemming intrekken">Verwijder toestemming</button>
+        </div>
+    </div>
+    <div id="cc-panel" class="cc-panel" hidden>
+        <h3>Cookie‑instellingen</h3>
+        <form id="cc-form" aria-label="Cookie voorkeuren">
+            <label>
+                <input type="checkbox" name="necessary" disabled checked>
+                Noodzakelijk
+            </label>
+            <br>
+            <label>
+                <input type="checkbox" name="functional">
+                Functioneel
+            </label>
+            <br>
+            <label>
+                <input type="checkbox" name="analytics">
+                Analyse
+            </label>
+            <br>
+            <label>
+                <input type="checkbox" name="marketing">
+                Marketing
+            </label>
+            <br>
+            <div class="cc-panel-actions">
+                <button id="cc-save" type="button" class="btn btn-primary">Opslaan</button>
+                <button id="cc-cancel" type="button" class="btn btn-link">Annuleer</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="module" src="{% static 'js/cookie-consent.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/cookie-consent.css' %}">

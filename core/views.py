@@ -1,6 +1,10 @@
 from django.views.generic import TemplateView
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 from django.contrib.auth.models import User
+import json
 from streetactivity.models import Experience, StreetActivity
+from .models import CookieConsentLog
 
 class MailtoMixin:
     """Mixin that provides mailto_url context for templates"""
@@ -43,3 +47,21 @@ class ContactView(MailtoMixin, TemplateView):
 class AboutView(TemplateView):
     """Renders the about page with dynamic mailto_url"""
     template_name = 'core/about.html'
+
+@require_POST
+def save_cookie_consent(request):
+    """Saves the user's cookie consent and logs it in the database"""
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except Exception:
+        return JsonResponse({'ok': False}, status=400)
+    CookieConsentLog.objects.create(
+        user = request.user if request.user.is_authenticated else None,
+        consent = data,
+        ip = request.META.get('REMOTE_ADDR'),
+        user_agent = request.META.get('HTTP_USER_AGENT', '')[:1000]
+    )
+    resp = JsonResponse({'ok': True})
+    resp.set_cookie('site_cookie_consent_v1', json.dumps(data), max_age=365*24*3600, path='/', samesite='Lax', secure=True)
+    return resp
+
