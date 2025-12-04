@@ -6,6 +6,7 @@ from faker import Faker
 from django.contrib.auth.models import User
 from streetactivity.models import StreetActivity, Experience
 from persona.models import Persona, Problem, Reaction
+from streetpartner.models import PartnershipRequest, StreetPartnership
 
 fake = Faker()
 
@@ -66,3 +67,20 @@ class ReactionFactory(factory.django.DjangoModelFactory):
 
     persona = factory.SubFactory(PersonaFactory)
     description = factory.Sequence(lambda n: f'Reaction text {n}')
+
+class PartnershipRequestFactory(factory.django.DjangoModelFactory):
+    """Mock for request of a partnership"""
+    class Meta:
+        model = PartnershipRequest
+    from_user = factory.SubFactory(UserFactory)
+    to_user = factory.SubFactory(UserFactory)
+    message = factory.LazyFunction(fake.text)
+    status = 'pending'
+
+class StreetPartnershipFactory(factory.django.DjangoModelFactory):
+    """Mock for Streetpartnership"""
+    class Meta:
+        model = StreetPartnership
+    user1 = factory.SubFactory(UserFactory)
+    user2 = factory.SubFactory(UserFactory)
+    partnership_request = factory.SubFactory(PartnershipRequestFactory)

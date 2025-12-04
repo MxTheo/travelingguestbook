@@ -1,5 +1,7 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from streetpartner.models import StreetPartnership
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -75,7 +77,7 @@ class Experience(models.Model):
         blank=True,
         verbose_name="Kernwoorden",
         help_text="3 woorden die je moment samenvatten, gescheiden door komma's")
-    
+
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 

@@ -35,7 +35,6 @@ CSRF_TRUSTED_ORIGINS = ['https://www.bedanktvoorhetcontact.nl']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
@@ -51,6 +50,7 @@ INSTALLED_APPS = [
     'persona',
     'rest_framework',
     'usermanagement',
+    'streetpartner',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'

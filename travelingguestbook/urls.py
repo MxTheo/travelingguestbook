@@ -28,6 +28,7 @@ urlpatterns = [
     path('persona/', include('persona.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('speler/', include('usermanagement.urls')),
+    path('straatpartner/', include('streetpartner.urls')),
 ]
 
 if settings.DEBUG:

@@ -27,6 +27,7 @@ EditorConfig==0.12.4
 exceptiongroup==1.2.1
 factory-boy==3.3.0
 Faker==25.8.0
+freezegun==1.5.5
 gunicorn==22.0.0
 html-tag-names==0.1.2
 html-void-elements==0.1.0
