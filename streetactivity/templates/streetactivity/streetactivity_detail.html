@@ -86,7 +86,7 @@
                                         <div class="btn-group" role="group">
                                             <input type="radio"
                                                    class="btn-check"
-                                                   name="experienceFilter"
+                                                   name="momentFilter"
                                                    id="filterEveryone"
                                                    autocomplete="off"
                                                    checked>
@@ -95,7 +95,7 @@
                                             </label>
                                             <input type="radio"
                                                    class="btn-check"
-                                                   name="experienceFilter"
+                                                   name="momentFilter"
                                                    id="filterPractitioners"
                                                    autocomplete="off">
                                             <label class="btn btn-outline-primary" for="filterPractitioners">
@@ -103,18 +103,18 @@
                                             </label>
                                             <input type="radio"
                                                    class="btn-check"
-                                                   name="experienceFilter"
+                                                   name="momentFilter"
                                                    id="filterPassersby"
                                                    autocomplete="off">
                                             <label class="btn btn-outline-primary" for="filterPassersby">
                                                 <i class="bi bi-person-walking fs-6"></i> Voorbijgangers
                                             </label>
                                         </div>
-                                        <small class="text-muted" id="filterCount">Totaal: {{ experiences_count }} momenten</small>
+                                        <small class="text-muted" id="filterCount">Totaal: {{ moments_count }} momenten</small>
                                     </div>
                                 </div>
                                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                                    <a href="{% url 'experience-list-streetactivity' activity.pk %}"
+                                    <a href="{% url 'moment-list-streetactivity' activity.pk %}"
                                        class="btn btn-primary btn-sm">
                                         <i class="bi bi-list-ul me-1"></i>Alle momenten
                                     </a>
@@ -134,7 +134,7 @@
                             </h5>
                             <div class="text-center">
                                 <div class="donut-chart mx-auto mb-4">
-                                    <canvas id="experienceChart"></canvas>
+                                    <canvas id="momentChart"></canvas>
                                 </div>
                                 <div class="row g-3 justify-content-center">
                                     <div class="col-auto">
@@ -178,7 +178,7 @@
                                     {% endif %}
                                 {% endfor %}
                                 <div class="mt-3">
-                                    <small class="text-muted">Uit {{ experiences_count }} gedeelde momenten</small>
+                                    <small class="text-muted">Uit {{ moments_count }} gedeelde momenten</small>
                                 </div>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="h3 text-primary">Recente Belevingsmomenten</h2>
-                        <a href="{% url 'experience-list-streetactivity' activity.pk %}"
+                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
                            class="btn btn-outline-primary">
                             <i class="bi bi-list-ul me-1"></i>Alle momenten
                         </a>
@@ -200,15 +200,15 @@
                 </div>
             </div>
             <div class="row g-4">
-                {% for experience in recent_experiences %}
+                {% for moment in recent_moments %}
                     <div class="col-lg-6">
-                        <a href="{% url 'experience-list-streetactivity' activity.pk %}"
+                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
                            class="text-decoration-none">
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
                                         <span class="badge bg-light text-muted border">
-                                            {% if experience.from_practitioner %}
+                                            {% if moment.from_practitioner %}
                                                 <i class="bi bi-person-raised-hand me-1"></i>Beoefenaar
                                             {% else %}
                                                 <i class="bi bi-person-walking me-1"></i>Voorbijganger
@@ -216,11 +216,11 @@
                                         </span>
                                         <small class="text-muted">
                                             <i class="bi bi-clock me-1"></i>
-                                            {{ experience.date_created|timesince }} geleden
+                                            {{ moment.date_created|timesince }} geleden
                                         </small>
                                     </div>
-                                    <p class="card-text">"{{ experience.report|truncatewords:30 }}"</p>
-                                    {% include "streetactivity/keywords_footer.html" with experience=experience %}
+                                    <p class="card-text">"{{ moment.report|truncatewords:30 }}"</p>
+                                    {% include "streetactivity/keywords_footer.html" with moment=moment %}
                                 </div>
                             </div>
                         </a>
@@ -234,7 +234,7 @@
                         </div>
                     </div>
                 {% endfor %}
-                <small class="text-muted">... en {{ experiences_remaining }} meer</small>
+                <small class="text-muted">... en {{ moments_remaining }} meer</small>
             </div>
         </section>
         <!-- Secundaire CTA -->
@@ -248,11 +248,11 @@
                             deze straatactiviteit beter te begrijpen.
                         </p>
                         <div class="d-flex gap-3 justify-content-center flex-wrap">
-                            <a href="{% url 'create-experience-from-practitioner' activity.pk %}"
+                            <a href="{% url 'create-moment-from-practitioner' activity.pk %}"
                                class="btn btn-primary btn-lg">
                                 <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
                             </a>
-                            <a href="{% url 'create-experience-from-passerby' activity.pk %}"
+                            <a href="{% url 'create-moment-from-passerby' activity.pk %}"
                                class="btn btn-outline-primary btn-lg">
                                 <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
                             </a>
@@ -267,8 +267,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('experienceChart').getContext('2d');
-            let experienceChart;
+            const ctx = document.getElementById('momentChart').getContext('2d');
+            let momentChart;
             
             // Gebruik Bootstrap CSS variabelen voor kleuren
             const styles = getComputedStyle(document.documentElement);
@@ -289,18 +289,18 @@
             };
             
             const countData = {
-                everyone: {{ experiences_count }},
+                everyone: {{ moments_count }},
                 practitioners: {{ practitioner_count }},
                 passersby: {{ passerby_count }}
             };
             
             // Initialiseer chart
             function initChart(data) {
-                if (experienceChart) {
-                    experienceChart.destroy();
+                if (momentChart) {
+                    momentChart.destroy();
                 }
                 
-                experienceChart = new Chart(ctx, {
+                momentChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
                         labels: ['Onzeker', 'Tussenin', 'Zelfverzekerd'],
@@ -338,7 +338,7 @@
             }
             
             // Filter handlers met for...of
-            const filterRadios = document.querySelectorAll('input[name="experienceFilter"]');
+            const filterRadios = document.querySelectorAll('input[name="momentFilter"]');
             for (const radio of filterRadios) {
                 radio.addEventListener('change', function() {
                     const filterType = this.id.replace('filter', '').toLowerCase();

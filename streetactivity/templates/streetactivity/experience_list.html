@@ -4,7 +4,7 @@
     Ervaringen
 {% endblock title %}
 {% block stylesheet %}
-    <link href="{% static "streetactivity/styles/experience_list.css" %}" rel="stylesheet">
+    <link href="{% static "streetactivity/styles/moment_list.css" %}" rel="stylesheet">
 {% endblock stylesheet %}
 {% block content %}
     <div class="container mt-3">
@@ -33,7 +33,7 @@
         <div class="row">
             <div class="col">
                 {% if object_list %}
-                    {% for experience in object_list %}
+                    {% for moment in object_list %}
                         <div class="card mb-3 border">
                             <div class="card-body">
                                 <!-- Header -->
@@ -41,30 +41,30 @@
                                     <div class="flex-grow-1 ms-3">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <span class="fw-medium">
-                                                {% if experience.from_practitioner %}
+                                                {% if moment.from_practitioner %}
                                                     <i class="bi bi-person-raised-hand text-warning fs-5"></i> Beoefenaar
                                                 {% else %}
                                                     <i class="bi bi-person-walking text-primary fs-5"></i> Voorbijganger
                                                 {% endif %}
                                             </span>
-                                            <small class="text-muted">{{ experience.date_created|date:"d M Y" }}</small>
+                                            <small class="text-muted">{{ moment.date_created|date:"d M Y" }}</small>
                                             <div>
-                                                <a href="{% url "update-experience" pk=experience.pk %}" class="btn btn-sm btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
-                                                <a href="{% url "delete-experience" pk=experience.pk %}" class="btn btn-sm  btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                                <a href="{% url "update-moment" pk=moment.pk %}" class="btn btn-sm btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
+                                                <a href="{% url "delete-moment" pk=moment.pk %}" class="btn btn-sm  btn-outline-danger"><i class="bi bi-trash"></i></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Content -->
                                 <div class="mb-3">
-                                    <p class="card-text mb-0 text-start ms-4">{{ experience.report|linebreaksbr }}</p>
+                                    <p class="card-text mb-0 text-start ms-4">{{ moment.report|linebreaksbr }}</p>
                                 </div>
                                 <div class="mt-1 justify-content-end d-flex">
-                                    <span class="badge {% if experience.confidence_level == 'pioneer' %}bg-primary{% elif experience.confidence_level == 'intermediate' %}bg-warning text-dark{% else %}bg-success{% endif %}">
-                                        {{ experience.get_confidence_level_display }}
+                                    <span class="badge {% if moment.confidence_level == 'pioneer' %}bg-primary{% elif moment.confidence_level == 'intermediate' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                        {{ moment.get_confidence_level_display }}
                                     </span>
                                 </div>
-                                {% include "streetactivity/keywords_footer.html" with experience=experience %}
+                                {% include "streetactivity/keywords_footer.html" with moment=moment %}
                             </div>
                         </div>
                     {% endfor %}
@@ -102,13 +102,13 @@
                         <i class="bi bi-chat-square-text display-4 text-muted mb-3"></i>
                         <h3 class="h5 text-muted mb-2">Nog geen ervaringen</h3>
                         <p class="text-muted mb-4">Deel als eerste je ervaring.</p>
-                        {% if first_experience.activity %}
+                        {% if first_moment.activity %}
                             <div>
-                                <a href="{% url 'create-experience-from-passerby' first_experience.activity.pk %}"
+                                <a href="{% url 'create-moment-from-passerby' first_moment.activity.pk %}"
                                    class="btn btn-primary btn-sm me-2">
                                     <i class="bi bi-person-plus me-1"></i>Voorbijganger
                                 </a>
-                                <a href="{% url 'create-experience-from-practitioner' first_experience.activity.pk %}"
+                                <a href="{% url 'create-moment-from-practitioner' first_moment.activity.pk %}"
                                    class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-star me-1"></i>Beoefenaar
                                 </a>

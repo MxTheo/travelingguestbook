@@ -81,15 +81,15 @@
                     </div>
                     <!-- Belevingsmomenten grid -->
                     <div class="row g-4">
-                        {% for experience in recent_experiences %}
+                        {% for moment in recent_moments %}
                             <div class="col-lg-6">
                                 <div class="card h-100 border-0 shadow-sm">
                                     <div class="card-body p-4">
                                         <!-- Activiteit en type -->
                                         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start mb-3 gap-2">
-                                            <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ experience.activity.name }}</span>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ moment.activity.name }}</span>
                                             <span class="badge bg-light text-muted border fs-7">
-                                                {% if experience.from_practitioner %}
+                                                {% if moment.from_practitioner %}
                                                     <i class="bi bi-person-standing me-1"></i>Beoefenaar
                                                 {% else %}
                                                     <i class="bi bi-person-walking me-1"></i>Voorbijganger
@@ -97,23 +97,23 @@
                                             </span>
                                         </div>
                                         <!-- Belevingsbeschrijving -->
-                                        <div class="experience-content mb-3">
-                                            <p class="card-text fs-6 lh-base text-dark">"{{ experience.report|truncatewords:30 }}"</p>
+                                        <div class="moment-content mb-3">
+                                            <p class="card-text fs-6 lh-base text-dark">"{{ moment.report|truncatewords:30 }}"</p>
                                         </div>
                                         <!-- Metadata -->
                                         <div class="d-flex  flex-column flex-sm-row justify-content-between align-items-center text-muted fs-7 gap-2">
                                             <small>
                                                 <i class="bi bi-clock me-1"></i>
-                                                {{ experience.date_created|timesince }} geleden
+                                                {{ moment.date_created|timesince }} geleden
                                             </small>
                                             <div>
-                                                {% if experience.keywords %}
-                                                    {% for keyword in experience.keywords.split|slice:":2" %}
+                                                {% if moment.keywords %}
+                                                    {% for keyword in moment.keywords.split|slice:":2" %}
                                                         <small class="text-success-emphasis me-1">#{{ keyword.strip }}</small>
                                                     {% endfor %}
                                                 {% endif %}
                                             </div>
-                                            <a href="{% url 'experience-list-streetactivity' experience.activity.pk %}"
+                                            <a href="{% url 'moment-list-streetactivity' moment.activity.pk %}"
                                                class="text-decoration-none text-primary ms-md-auto">
                                                 Meer lezen <i class="bi bi-arrow-right ms-1"></i>
                                             </a>

@@ -1,6 +1,6 @@
-{% if experience.keywords %}
+{% if moment.keywords %}
     <div class="border-top pt-2 mt-3">
-        {% for keyword in experience.keywords.split %}
+        {% for keyword in moment.keywords.split %}
             <span class="badge bg-primary bg-opacity-10 text-primary ms-1">{{ keyword.strip }}</span>
         {% endfor %}
     </div>

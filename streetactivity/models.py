@@ -45,13 +45,13 @@ class StreetActivity(models.Model):
         return str(self.name)
 
 
-class Experience(models.Model):
-    """An experience is a report of a moment of someone who has done a street activity."""
+class Moment(models.Model):
+    """An moment is a report of a moment of someone who has done a street activity."""
 
     activity = models.ForeignKey(
         "StreetActivity",
         on_delete=models.CASCADE,
-        related_name="experiences",
+        related_name="moments",
         verbose_name="Gerelateerde activiteit",
     )
     report = models.TextField(
@@ -81,8 +81,8 @@ class Experience(models.Model):
 
     class Meta:
         ordering = ["-date_created"]
-        verbose_name = "Ervaring"
-        verbose_name_plural = "Ervaringen"
+        verbose_name = "Moment"
+        verbose_name_plural = "Momenten"
         indexes = [
             models.Index(fields=["-date_created"]),
             models.Index(fields=["confidence_level"]),
@@ -92,4 +92,4 @@ class Experience(models.Model):
     def __str__(self):
         if self.report:
             return f"{self.report[:50]}..."
-        return f"{self.activity.name} - Ervaring {self.id}"
+        return f"{self.activity.name} - Moment {self.id}"

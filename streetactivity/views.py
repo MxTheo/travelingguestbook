@@ -12,10 +12,10 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
-from .serializers import StreetActivitySerializer, ExperienceSerializer
-from .models import StreetActivity, Experience
+from .serializers import StreetActivitySerializer, MomentSerializer
+from .models import StreetActivity, Moment
 from .forms import (
-    ExperienceForm,
+    MomentForm,
     StreetActivityForm,
 )
 
@@ -33,20 +33,20 @@ class StreetActivityDetailView(DetailView):
     context_object_name = "activity"
 
     def get_context_data(self, **kwargs):
-        """Extend context data with experience statistics for charts"""
+        """Extend context data with moment statistics for charts"""
         context = super().get_context_data(**kwargs)
         activity = self.object
 
-        experiences = activity.experiences.all()
-        experiences_count = experiences.count()
+        moments = activity.moments.all()
+        moments_count = moments.count()
 
-        context["experiences_count"] = experiences_count
-        context["practitioner_count"] = experiences.filter(
+        context["moments_count"] = moments_count
+        context["practitioner_count"] = moments.filter(
             from_practitioner=True
         ).count()
-        context["passerby_count"] = experiences.filter(from_practitioner=False).count()
-        context["recent_experiences"] = experiences[:3]
-        context["experiences_remaining"] = max(0, experiences_count - 3)
+        context["passerby_count"] = moments.filter(from_practitioner=False).count()
+        context["recent_moments"] = moments[:3]
+        context["moments_remaining"] = max(0, moments_count - 3)
 
         def get_chart_data(queryset):
             confidence_level_counts = queryset.values("confidence_level").annotate(
@@ -56,25 +56,25 @@ class StreetActivityDetailView(DetailView):
                 data[item["confidence_level"]] = item["count"]
             return data
 
-        context["chart_data_everyone"] = get_chart_data(experiences)
+        context["chart_data_everyone"] = get_chart_data(moments)
         context["chart_data_practitioners"] = get_chart_data(
-            experiences.filter(from_practitioner=True)
+            moments.filter(from_practitioner=True)
         )
         context["chart_data_passersby"] = get_chart_data(
-            experiences.filter(from_practitioner=False)
+            moments.filter(from_practitioner=False)
         )
 
-        context["word_counts"] = self.analyse_keywords(experiences)
+        context["word_counts"] = self.analyse_keywords(moments)
 
         return context
 
-    def analyse_keywords(self, experiences):
-        """Given the experiences of the streetactivity,
+    def analyse_keywords(self, moments):
+        """Given the moments of the streetactivity,
         count every keyword and return the 10 most common keywords in a list tuple"""
         all_keywords = []
-        for experience in experiences:
-            if experience.keywords:
-                words = [w.strip().lower() for w in experience.keywords.split(',')]
+        for moment in moments:
+            if moment.keywords:
+                words = [w.strip().lower() for w in moment.keywords.split(',')]
                 all_keywords.extend(words)
         return Counter(all_keywords).most_common(10)
 
@@ -109,19 +109,19 @@ class StreetActivityViewSet(viewsets.ModelViewSet):
     serializer_class = StreetActivitySerializer
 
 
-class ExperienceListView(ListView):
-    """View to list all experiences."""
-    model = Experience
-    context_object_name = "experiences"
+class MomentListView(ListView):
+    """View to list all moments."""
+    model = Moment
+    context_object_name = "moments"
     paginate_by = 10
 
-class ExperienceListViewStreetActivity(ExperienceListView):
-    """View to list experiences related to a specific street activity."""
+class MomentListViewStreetActivity(MomentListView):
+    """View to list moments related to a specific street activity."""
 
     def get_queryset(self):
-        """Filter experiences by street activity ID from URL."""
+        """Filter moments by street activity ID from URL."""
         activity_id = self.kwargs["pk"]
-        return Experience.objects.filter(activity_id=activity_id)
+        return Moment.objects.filter(activity_id=activity_id)
 
     def get_context_data(self, **kwargs):
         """Add street activity to context for header."""
@@ -129,17 +129,17 @@ class ExperienceListViewStreetActivity(ExperienceListView):
         context["street_activity"] = StreetActivity.objects.get(pk=self.kwargs["pk"])
         return context
 
-class ExperienceDetailView(DetailView):
-    """View to display details of a single experience."""
+class MomentDetailView(DetailView):
+    """View to display details of a single moment."""
 
-    model = Experience
-    context_object_name = "experience"
+    model = Moment
+    context_object_name = "moment"
 
-class ExperienceCreateView(CreateView):
-    """Base view to create a new experience."""
+class MomentCreateView(CreateView):
+    """Base view to create a new moment."""
 
-    model = Experience
-    form_class = ExperienceForm
+    model = Moment
+    form_class = MomentForm
 
     def get_initial(self):
         """Set initial values including from_practitioner"""
@@ -180,13 +180,13 @@ class ExperienceCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "experience-list-streetactivity", kwargs={"pk": self.object.activity.pk}
+            "moment-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
 
-class ExperienceUpdateView(UpdateView):
-    """View to update an experience"""
-    model = Experience
-    form_class = ExperienceForm
+class MomentUpdateView(UpdateView):
+    """View to update an moment"""
+    model = Moment
+    form_class = MomentForm
 
     def get_context_data(self, **kwargs):
         """Extend context data"""
@@ -200,12 +200,12 @@ class ExperienceUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "experience-list-streetactivity", kwargs={"pk": self.object.activity.pk}
+            "moment-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
 
-class ExperienceDeleteView(DeleteView):
-    """View to delete an experience"""
-    model = Experience
+class MomentDeleteView(DeleteView):
+    """View to delete an moment"""
+    model = Moment
     template_name = "admin/confirm_delete.html"
 
     def form_valid(self, form):
@@ -214,10 +214,10 @@ class ExperienceDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "experience-list-streetactivity", kwargs={"pk": self.object.activity.pk}
+            "moment-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
 
-class ExperienceViewSet(viewsets.ModelViewSet):
-    """API endpoint that provides full CRUD for Experience"""
-    queryset = Experience.objects.all()
-    serializer_class = ExperienceSerializer
+class MomentViewSet(viewsets.ModelViewSet):
+    """API endpoint that provides full CRUD for Moment"""
+    queryset = Moment.objects.all()
+    serializer_class = MomentSerializer

@@ -4,7 +4,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r"streetactivity", views.StreetActivityViewSet, basename="streetactiviteiten")
-router.register(r"experience", views.ExperienceViewSet, basename="momenten")
+router.register(r"moment", views.MomentViewSet, basename="momenten")
 
 urlpatterns = [
     path("api/", include(router.urls)),
@@ -24,21 +24,21 @@ urlpatterns = [
          views.StreetActivityDeleteView.as_view(),
          name="delete-streetactivity"),
 
-     path('ervaringen/', views.ExperienceListView.as_view(), name='experience-list'),
+     path('ervaringen/', views.MomentListView.as_view(), name='moment-list'),
      path("<int:pk>/ervaringen/straatactiviteit/",
-         views.ExperienceListViewStreetActivity.as_view(),
-         name="experience-list-streetactivity"),
+         views.MomentListViewStreetActivity.as_view(),
+         name="moment-list-streetactivity"),
      path("<int:pk>/ervaring/nieuw/",
-          views.ExperienceCreateView.as_view(),
-          name="create-experience"),
+          views.MomentCreateView.as_view(),
+          name="create-moment"),
      path("<int:pk>/ervaring/nieuw/beoefenaar/",
-          views.ExperienceCreateView.as_view(),
-          name="create-experience-from-practitioner"),
+          views.MomentCreateView.as_view(),
+          name="create-moment-from-practitioner"),
      path("<int:pk>/ervaring/nieuw/voorbijganger/",
-          views.ExperienceCreateView.as_view(),
-          name="create-experience-from-passerby"),
+          views.MomentCreateView.as_view(),
+          name="create-moment-from-passerby"),
      path("verwijder/ervaring/<int:pk>", 
-          views.ExperienceDeleteView.as_view(), name="delete-experience"),
+          views.MomentDeleteView.as_view(), name="delete-moment"),
      path('bewerk/ervaring/<int:pk>', 
-          views.ExperienceUpdateView.as_view(), name='update-experience'),
+          views.MomentUpdateView.as_view(), name='update-moment'),
 ]

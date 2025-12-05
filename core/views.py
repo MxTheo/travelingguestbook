@@ -3,7 +3,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 import json
-from streetactivity.models import Experience, StreetActivity
+from streetactivity.models import Moment, StreetActivity
 from .models import CookieConsentLog
 
 class MailtoMixin:
@@ -28,10 +28,10 @@ class HomeView(TemplateView):
     template_name = 'core/home.html'
 
     def get_context_data(self, **kwargs):
-        """Add recent experiences and randam activities to the home page"""
+        """Add recent moments and randam activities to the home page"""
         context = super().get_context_data(**kwargs)
         featured_activities = StreetActivity.objects.order_by('?')
-        context['recent_experiences'] = Experience.objects.select_related('activity').all()[:3]
+        context['recent_moments'] = Moment.objects.select_related('activity').all()[:3]
         context['featured_activities'] = featured_activities[:4]
         context['activities_remaining'] = max(0, featured_activities.count() - 4)
         return context

@@ -1,5 +1,5 @@
 from django import forms
-from .models import StreetActivity, Experience
+from .models import StreetActivity, Moment
 
 class StreetActivityForm(forms.ModelForm):
     """Form for creating or updating a StreetActivity."""
@@ -28,11 +28,11 @@ class StreetActivityForm(forms.ModelForm):
         }
 
 # forms.py
-class ExperienceForm(forms.ModelForm):
-    """Base form for Experience with common fields."""
+class MomentForm(forms.ModelForm):
+    """Base form for Moment with common fields."""
 
     class Meta:
-        model = Experience
+        model = Moment
         fields = ['confidence_level', 'report', 'keywords']
         widgets = {
             'report': forms.Textarea(attrs={

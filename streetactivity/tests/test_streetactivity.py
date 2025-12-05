@@ -1,7 +1,7 @@
 from django.urls import reverse
 from streetactivity.models import StreetActivity
 from streetactivity.views import StreetActivityDetailView
-from travelingguestbook.factories import ExperienceFactory, StreetActivityFactory
+from travelingguestbook.factories import MomentFactory, StreetActivityFactory
 
 class TestStreetActivityModel:
     """Tests for the StreetActivity model."""
@@ -166,48 +166,48 @@ class TestStreetActivityDetailView:
         assert "activity" in context
         assert context["activity"] == activity
 
-    def test_detail_view_experience_statistics(self, client):
-        """Test that experience statistics are correctly calculated and included in context"""
+    def test_detail_view_moment_statistics(self, client):
+        """Test that moment statistics are correctly calculated and included in context"""
         activity = StreetActivityFactory()
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
 
-        assert "experiences_count" in context
+        assert "moments_count" in context
         assert "practitioner_count" in context
         assert "passerby_count" in context
         assert "chart_data_everyone" in context
         assert "chart_data_practitioners" in context
         assert "chart_data_passersby" in context
 
-    def test_detail_view_no_experiences(self, client):
-        """Test that the detail view handles activities with no experiences gracefully"""
+    def test_detail_view_no_moments(self, client):
+        """Test that the detail view handles activities with no moments gracefully"""
         activity = StreetActivityFactory()
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
 
-        assert context["experiences_count"] == 0
+        assert context["moments_count"] == 0
         assert context["practitioner_count"] == 0
         assert context["passerby_count"] == 0
         assert context["chart_data_everyone"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
         assert context["chart_data_practitioners"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
         assert context["chart_data_passersby"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
 
-    def test_detail_view_with_experiences(self, client):
-        """Test that the detail view correctly calculates statistics with experiences present"""
+    def test_detail_view_with_moments(self, client):
+        """Test that the detail view correctly calculates statistics with moments present"""
 
         activity = StreetActivityFactory()
 
-        ExperienceFactory(
+        MomentFactory(
             activity=activity,
             from_practitioner=True,
             confidence_level='pioneer')
-        ExperienceFactory(
+        MomentFactory(
             activity=activity,
             from_practitioner=False,
             confidence_level='intermediate')
-        ExperienceFactory(
+        MomentFactory(
             activity=activity,
             from_practitioner=True,
             confidence_level='climax')
@@ -215,29 +215,29 @@ class TestStreetActivityDetailView:
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
 
-        assert context["experiences_count"] == 3
+        assert context["moments_count"] == 3
         assert context["practitioner_count"] == 2
         assert context["passerby_count"] == 1
         assert context["chart_data_everyone"] == {'pioneer': 1, 'intermediate': 1, 'climax': 1}
         assert context["chart_data_practitioners"] == {'pioneer': 1, 'intermediate': 0, 'climax': 1}
         assert context["chart_data_passersby"] == {'pioneer': 0, 'intermediate': 1, 'climax': 0}
 
-    def test_negative_experiences_remaining(self, client):
-        """Test if that when there are no experiences,
-        then the experiences_remaining results in 0 and not -3"""
+    def test_negative_moments_remaining(self, client):
+        """Test if that when there are no moments,
+        then the moments_remaining results in 0 and not -3"""
         activity = StreetActivityFactory()
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
-        assert context['experiences_remaining'] == 0
+        assert context['moments_remaining'] == 0
 
     def test_analyze_keywords(self):
         """Test that analyze keywords return a counter"""
         activity = StreetActivityFactory()
-        experience_list = []
+        moment_list = []
         for _ in range(3):
-            experience_list.append(ExperienceFactory(activity=activity, keywords="energiek, ongeduldig, vertrouwen"))
+            moment_list.append(MomentFactory(activity=activity, keywords="energiek, ongeduldig, vertrouwen"))
         activity_detail = StreetActivityDetailView(activity=activity)
-        keyword_list = activity_detail.analyse_keywords(experience_list)
+        keyword_list = activity_detail.analyse_keywords(moment_list)
         assert keyword_list[0][1] == 3
         assert keyword_list[1][1] == 3
         assert keyword_list[2][1] == 3

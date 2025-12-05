@@ -1,5 +1,5 @@
 from django.urls import reverse
-from travelingguestbook.factories import StreetActivityFactory, ExperienceFactory
+from travelingguestbook.factories import StreetActivityFactory, MomentFactory
 
 class TestHome:
     """Tests for the HomeView"""
@@ -20,10 +20,10 @@ class TestHome:
         response = client.get(reverse('home'))
         assert len(response.context['featured_activities']) == 4
 
-    def test_if_experiences_are_shown(self, client):
-        """Test that when there are 6 experiences, that there are 3 shown on the homepage"""
+    def test_if_moments_are_shown(self, client):
+        """Test that when there are 6 moments, that there are 3 shown on the homepage"""
         for i in range(7):
-            ExperienceFactory(report=f"moment{i}")
+            MomentFactory(report=f"moment{i}")
         response = client.get(reverse('home'))
         for i in range(4):
             assert f"moment{i}" not in response.text

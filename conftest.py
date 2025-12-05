@@ -2,11 +2,10 @@ import uuid
 import tempfile
 import pytest
 from pytest_factoryboy import register
-from django.core.files.storage import default_storage
 from travelingguestbook import factories
 
 register(factories.StreetActivityFactory)
-register(factories.ExperienceFactory)
+register(factories.MomentFactory)
 register(factories.PersonaFactory)
 register(factories.ProblemFactory)
 register(factories.ReactionFactory)
