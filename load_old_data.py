@@ -1,54 +1,43 @@
-#!/usr/bin/env python
+# aangepast load_old_data.py
 import json
-import sqlite3
-from datetime import datetime
+from django.utils.dateparse import parse_datetime
+from streetactivity.models import Moment, StreetActivity
 
-# Pas deze paden aan
-JSON_FILE = 'moments_data.json'
-DB_FILE = '/home/theo/Documents/travelingguestbook/db.sqlite3'  # Pas dit aan
-
-def load_to_sqlite():
-    # Laad JSON data
-    with open(JSON_FILE, 'r') as f:
+def load_old_moments():
+    """Import old moments from a JSON-file"""
+    with open('moments_data.json', 'r') as f:
         moments_data = json.load(f)
-    
-    # Maak database verbinding
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
     
     for data in moments_data:
         try:
-            # SQL query om data in te voeren
-            query = """
-            INSERT INTO streetactivity_moment 
-            (id, report, confidence_level, from_practitioner, keywords, 
-             date_created, date_modified, activity_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """
+            # In je JSON heet het veld "activity", maar het is een ID
+            activity_id = data['activity']
+            activity = StreetActivity.objects.get(id=activity_id)
             
-            # Prepare values
-            values = (
-                data['id'],
-                data['report'],
-                data['confidence_level'],
-                data['from_practitioner'],
-                data.get('keywords', ''),
-                data['date_created'],
-                data['date_modified'],
-                data['activity']
+            # Maak nieuw Moment
+            moment = Moment(
+                activity=activity,
+                report=data['report'],
+                confidence_level=data['confidence_level'],
+                from_practitioner=data['from_practitioner'],
+                keywords=data['keywords']
             )
             
-            cursor.execute(query, values)
-            print(f"✓ Geladen: {data['id']}")
+            # Behoud de originele datums
+            if 'date_created' in data:
+                moment.date_created = parse_datetime(data['date_created'])
+            if 'date_modified' in data:
+                moment.date_modified = parse_datetime(data['date_modified'])
             
-        except sqlite3.IntegrityError as e:
-            print(f"✗ Duplicaat of constraint error voor {data.get('id', '?')}: {e}")
+            # Sla op zonder auto_now te triggeren
+            moment.save(force_insert=True, force_update=False)
+            
+            print(f"✓ Geladen: {moment.id}")
+            
+        except StreetActivity.DoesNotExist:
+            print(f"✗ Activiteit {data['activity']} niet gevonden voor moment {data.get('id', '?')}")
         except Exception as e:
-            print(f"✗ Fout: {e}")
-    
-    conn.commit()
-    conn.close()
-    print(f"\n✅ Klaar! {len(moments_data)} momenten geladen.")
+            print(f"✗ Fout bij moment {data.get('id', '?')}: {str(e)}")
 
 if __name__ == '__main__':
-    load_to_sqlite()
+    load_old_moments()
