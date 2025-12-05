@@ -1,0 +1,36 @@
+.cc-banner {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 1rem;
+    z-index: 2000;
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+}
+
+.cc-inner {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.cc-text {
+    flex: 1 1 60%;
+    text-align: left;
+}
+
+.cc-actions {
+    display: flex;
+    gap: .5rem;
+}
+
+.cc-panel {
+    margin-top: .75rem;
+    padding-top: .5rem;
+    border-top: 1px solid #eee;
+}
