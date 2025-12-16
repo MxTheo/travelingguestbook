@@ -1,0 +1,19 @@
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h5 class="card-title mb-0">
+            <span class="badge bg-primary me-2">3</span>
+               <label for="{{ form.activity.id_for_label }}"> {{ form.activity.label }} </label>
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            {{ form.activity }}
+            <div class="form-text">{{ form.activity.help_text }}</div>
+            {% if form.activity.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.activity.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

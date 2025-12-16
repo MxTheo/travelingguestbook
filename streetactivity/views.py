@@ -162,8 +162,7 @@ class MomentCreateView(CreateView):
 
         messages.add_message(self.request, messages.SUCCESS,
                              "Bedankt voor het delen van jouw moment! " \
-                             "Dit helpt anderen deze activiteit te begrijpen. " \
-                             "Zie ook 'Alle momenten'")
+                             "Dit helpt anderen deze activiteit te begrijpen. ")
 
         if "beoefenaar" in self.request.path:
             form.instance.from_practitioner = True

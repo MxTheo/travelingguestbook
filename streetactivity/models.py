@@ -1,5 +1,5 @@
-from django.db import models
 import uuid
+from django.db import models
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -79,10 +79,10 @@ class Moment(models.Model):
     )
 
     keywords = models.CharField(
-        max_length=200, 
+        max_length=200,
         blank=True,
         verbose_name="Kernwoorden",
-        help_text="3 woorden die je moment samenvatten, gescheiden door komma's")
+        help_text="3 woorden, gescheiden door komma's")
     order = models.PositiveIntegerField(
         default=0,
         verbose_name="Volgorde",
@@ -110,7 +110,8 @@ class Moment(models.Model):
     def save(self, *args, **kwargs):
         """Auto-increment order within the same experience"""
         if not self.order:
-            last_moment = Moment.objects.filter(experience=self.experience).order_by('-order').first()
+            last_moment = Moment.objects.filter(
+                experience=self.experience).order_by('-order').first()
             self.order = (last_moment.order + 1) if last_moment else 1
         super().save(*args, **kwargs)
 
@@ -134,17 +135,17 @@ class Experience(models.Model):
 
     def __str__(self):
         return f"Ervaring {self.date_created.strftime('%d-%m-%Y %H:%M')}"
-    
+
     def get_moments_count(self):
         """Count the moments in this experience collection"""
         return self.moments.count()
-    
+
     def get_moment_summary(self):
         """Makes a simple summary of the moments"""
         moments = self.moments.all().order_by('date_created')
         if not moments:
             return []
-        
+
         summary = []
         for moment in moments:
             summary.append({

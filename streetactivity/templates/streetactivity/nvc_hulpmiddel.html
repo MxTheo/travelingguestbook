@@ -1,11 +1,3 @@
-<div class="card mb-4">
-    <div class="card-header bg-light">
-        <h5 class="card-title mb-0">
-            <span class="badge bg-primary me-2">1</span>
-            Beschrijf een belevingsmoment
-        </h5>
-    </div>
-    <div class="card-body">
         <!-- Hulpmiddel voor geweldloze communicatie -->
         <div class="mb-3">
             <button class="btn btn-outline-secondary btn-sm mb-2"
@@ -190,22 +182,3 @@
                 </div>
             </div>
         </div>
-        <!-- Bestaande formulier inhoud -->
-        <div class="mb-3">
-            <label for="{{ form.report.id_for_label }}" class="form-label fw-bold">{{ form.report.label }}</label>
-            <div class="alert alert-primary">
-                <small>
-                    <i class="bi bi-lightbulb"></i>
-                    Richt je op je innerlijke beleving, in plaats van de reacties van voorbijgangers. Wat deden de reacties met jou? Zie de gevoelens hierboven voor inspiratie.
-                </small>
-            </div>
-            {{ form.report }}
-            <div class="form-text">{{ form.report.help_text }}</div>
-            {% if form.report.errors %}
-                <div class="invalid-feedback d-block">
-                    {% for error in form.report.errors %}{{ error }}{% endfor %}
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</div>

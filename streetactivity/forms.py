@@ -53,13 +53,13 @@ class MomentForm(forms.ModelForm):
         }
         labels = {
             'confidence_level': 'Hoe zelfverzekerd voelde je je?',
-            'report': 'Wat voelde je? Wat ging er in je om?',
-            'keywords': "3 woorden die je moment samenvatten, gescheiden door komma's",
-            'activity': "Wat deed je?",
+            'report': 'Wat was de reden? Wat deed dat met je?',
+            'keywords': "3 woorden uit wat je net hebt geschreven, gescheiden door komma's",
+            'activity': "Wat heb je gedaan?",
         }
         help_texts = {
-            'report': 'Beschrijf wat zich aandiende in maximaal 3500 karakters',
-            'keywords': 'Voorbeelden: Energiek, ongeduldig, kalm, vertrouwen'
+            'report': 'Vertel iets over je (on)zekerheid in maximaal 3500 karakters',
+            'keywords': "3 woorden, gescheiden door komma's",
         }
 
 class ExperienceForm(forms.ModelForm):

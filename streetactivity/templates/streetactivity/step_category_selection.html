@@ -3,13 +3,12 @@
 <div class="card mb-4">
     <div class="card-header bg-light">
         <h5 class="card-title mb-0">
-            <span class="badge bg-primary me-2">3</span>
-                Gevoel van zelfverzekerdheid
+            <span class="badge bg-primary me-2">1</span>
+                {{ form.confidence_level.label }}
         </h5>
     </div>
     <div class="card-body">
         <div class="mb-3">
-            <label class="form-label fw-bold">{{ form.confidence_level.label }}</label>
             <div class="form-text mb-3">{{ form.confidence_level.help_text }}</div>
             <!-- Confidence Level Cards -->
             <div class="row g-3">
