@@ -13,10 +13,11 @@ from django.urls import reverse_lazy
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
 from .serializers import StreetActivitySerializer, MomentSerializer
-from .models import StreetActivity, Moment
+from .models import StreetActivity, Moment, Experience
 from .forms import (
     MomentForm,
     StreetActivityForm,
+    ExperienceForm,
 )
 
 class StreetActivityListView(ListView):
@@ -221,3 +222,52 @@ class MomentViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Moment"""
     queryset = Moment.objects.all()
     serializer_class = MomentSerializer
+
+class ExperienceCreateView(CreateView):
+    """View to create a new experience."""
+
+    model = Experience
+    form_class = ExperienceForm
+
+    def form_valid(self, form):
+        """Sets the user"""
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        # Redirect naar een moment toevoegen voor deze ervaring
+        # PLACEHOLDER: later koppelen aan create-moment-from-practitioner
+        return reverse_lazy('create-moment-from-practitioner', 
+                          kwargs={'pk': 0})  # placeholder
+
+
+class ExperienceDetailView(DetailView):
+    """Detailview of experience with its related moments"""
+    model = Experience
+    context_object_name = "experience"
+
+    def get_context_data(self, **kwargs):
+        """Extend context data with related moments"""
+        context = super().get_context_data(**kwargs)
+        experience = self.object
+        context["moments"] = experience.moments.all()
+        return context
+
+class CompleteExperienceView(UpdateView):
+    """View to mark an experience as complete."""
+    model = Experience
+    fields = []
+
+    def form_valid(self, form):
+        form.instance.is_complete = True
+        messages.add_message(self.request, messages.SUCCESS,
+                             "Je ervaring is gemarkeerd als voltooid!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("experience-detail", kwargs={"pk": self.object.pk})
+    
+class ExperienceViewSet(viewsets.ModelViewSet):
+    """API endpoint that provides full CRUD for Experience"""
+    queryset = Experience.objects.all()
+    serializer_class = ExperienceForm

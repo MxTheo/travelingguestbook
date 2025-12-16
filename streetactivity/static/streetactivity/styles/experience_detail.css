@@ -1,0 +1,10 @@
+.card-body .d-flex.overflow-auto::-webkit-scrollbar {
+    height: 4px;
+}
+.card-body .d-flex.overflow-auto::-webkit-scrollbar-track {
+    background: var(--bs-light);
+}
+.card-body .d-flex.overflow-auto::-webkit-scrollbar-thumb {
+    background: var(--bs-secondary);
+    border-radius: 2px;
+}

@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -48,6 +48,14 @@ class StreetActivity(models.Model):
 class Moment(models.Model):
     """An moment is a report of a moment of someone who has done a street activity."""
 
+    experience = models.ForeignKey(
+        "Experience",
+        on_delete=models.CASCADE,
+        related_name="moments",
+        verbose_name="Gerelateerde ervaring",
+        null=True,
+        blank=True,
+    )
     activity = models.ForeignKey(
         "StreetActivity",
         on_delete=models.CASCADE,
@@ -75,15 +83,20 @@ class Moment(models.Model):
         blank=True,
         verbose_name="Kernwoorden",
         help_text="3 woorden die je moment samenvatten, gescheiden door komma's")
-    
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Volgorde",
+        help_text="Volgorde van het moment binnen de ervaring"
+    )
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-date_created"]
+        ordering = ["order", "-date_created"]
         verbose_name = "Moment"
         verbose_name_plural = "Momenten"
         indexes = [
+            models.Index(fields=["order"]),
             models.Index(fields=["-date_created"]),
             models.Index(fields=["confidence_level"]),
             models.Index(fields=["from_practitioner"]),
@@ -93,3 +106,50 @@ class Moment(models.Model):
         if self.report:
             return f"{self.report[:50]}..."
         return f"{self.activity.name} - Moment {self.id}"
+
+    def save(self, *args, **kwargs):
+        """Auto-increment order within the same experience"""
+        if not self.order:
+            last_moment = Moment.objects.filter(experience=self.experience).order_by('-order').first()
+            self.order = (last_moment.order + 1) if last_moment else 1
+        super().save(*args, **kwargs)
+
+class Experience(models.Model):
+    """An experience is a collection of moments"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        "auth.User",
+        on_delete=models.CASCADE,
+        related_name="experiences",
+        verbose_name="Speler",
+    )
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+    is_complete = models.BooleanField(default=False, verbose_name="Is voltooid?")
+
+    class Meta:
+        ordering = ["-date_created"]
+        verbose_name = "Ervaring"
+        verbose_name_plural = "Ervaringen"
+
+    def __str__(self):
+        return f"Ervaring {self.date_created.strftime('%d-%m-%Y %H:%M')}"
+    
+    def get_moments_count(self):
+        """Count the moments in this experience collection"""
+        return self.moments.count()
+    
+    def get_moment_summary(self):
+        """Makes a simple summary of the moments"""
+        moments = self.moments.all().order_by('date_created')
+        if not moments:
+            return []
+        
+        summary = []
+        for moment in moments:
+            summary.append({
+                'confidence': moment.confidence_level,
+                'activity_name': moment.activity.name,
+                'order': len(summary) + 1
+            })
+        return summary

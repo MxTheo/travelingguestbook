@@ -1,8 +1,8 @@
 from django import forms
-from .models import StreetActivity, Moment
+from .models import StreetActivity, Moment, Experience
 
 class StreetActivityForm(forms.ModelForm):
-    """Form for creating or updating a StreetActivity."""
+    """Form for a StreetActivity."""
 
     class Meta:
         '''Model form for the StreetActivity model.'''
@@ -33,14 +33,18 @@ class MomentForm(forms.ModelForm):
 
     class Meta:
         model = Moment
-        fields = ['confidence_level', 'report', 'keywords']
+        fields = ['activity', 'confidence_level', 'report', 'keywords']
         widgets = {
+            'activity': forms.Select(attrs={
+                'class': 'form-select',
+                'required': 'required'
+            }),
+            'confidence_level': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'report': forms.Textarea(attrs={
                 'rows': 4,
                 'class': 'form-control',
                 'placeholder':
                 'Omschrijf je innerlijke beleving...'}),
-            'confidence_level': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'keywords': forms.Textarea(attrs={
                 'rows': 1,
                 'class': 'form-control',
@@ -51,8 +55,16 @@ class MomentForm(forms.ModelForm):
             'confidence_level': 'Hoe zelfverzekerd voelde je je?',
             'report': 'Wat voelde je? Wat ging er in je om?',
             'keywords': "3 woorden die je moment samenvatten, gescheiden door komma's",
+            'activity': "Wat deed je?",
         }
         help_texts = {
             'report': 'Beschrijf wat zich aandiende in maximaal 3500 karakters',
             'keywords': 'Voorbeelden: Energiek, ongeduldig, kalm, vertrouwen'
         }
+
+class ExperienceForm(forms.ModelForm):
+    """Form to create an experience with moments"""
+    class Meta:
+        """No fiels as experience is just a container for moments"""
+        model = Experience
+        fields = []

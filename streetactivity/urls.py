@@ -41,4 +41,11 @@ urlpatterns = [
           views.MomentDeleteView.as_view(), name="delete-moment"),
      path('bewerk/ervaring/<int:pk>', 
           views.MomentUpdateView.as_view(), name='update-moment'),
+
+    path('ervaring/start/', 
+         views.ExperienceCreateView.as_view(), 
+         name='create-experience'),
+    path('ervaring/<uuid:pk>/', 
+         views.ExperienceDetailView.as_view(), 
+         name='experience-detail'),
 ]
