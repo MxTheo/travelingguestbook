@@ -47,6 +47,8 @@ class ExperienceFactory(factory.django.DjangoModelFactory):
     """
     class Meta:
         model = Experience
+        skip_postgeneration_save = True  # Avoid deprecation warning
+
     user = factory.SubFactory(UserFactory)
     date_created = factory.LazyFunction(fake.date)
     moments = factory.RelatedFactoryList(

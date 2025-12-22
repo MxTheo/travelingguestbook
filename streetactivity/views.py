@@ -317,20 +317,6 @@ class ExperienceDetailView(DetailView):
         context['moments_json'] = json.dumps(moment_data)
         return context
 
-class CompleteExperienceView(UpdateView):
-    """View to mark an experience as complete."""
-    model = Experience
-    fields = []
-
-    def form_valid(self, form):
-        form.instance.is_complete = True
-        messages.add_message(self.request, messages.SUCCESS,
-                             "Je ervaring is gemarkeerd als voltooid!")
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy("experience-detail", kwargs={"pk": self.object.pk})
-    
 class ExperienceViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Experience"""
     queryset = Experience.objects.all()

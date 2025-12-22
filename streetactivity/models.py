@@ -136,17 +136,3 @@ class Experience(models.Model):
     def __str__(self):
         return f"Ervaring {self.date_created.strftime('%d-%m-%Y %H:%M')}"
 
-    def get_moment_summary(self):
-        """Makes a simple summary of the moments"""
-        moments = self.moments.all().order_by('date_created')
-        if not moments:
-            return []
-
-        summary = []
-        for moment in moments:
-            summary.append({
-                'confidence': moment.confidence_level,
-                'activity_name': moment.activity.name,
-                'order': len(summary) + 1
-            })
-        return summary

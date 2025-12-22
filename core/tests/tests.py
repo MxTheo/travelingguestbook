@@ -1,5 +1,6 @@
 from django.urls import reverse
 from travelingguestbook.factories import StreetActivityFactory, MomentFactory
+from core.models import CookieConsentLog
 
 class TestHome:
     """Tests for the HomeView"""
