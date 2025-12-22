@@ -33,7 +33,6 @@ class MomentFactory(factory.django.DjangoModelFactory):
     '''Mock for streetactivities Moment'''
     class Meta:
         model = Moment
-    experience = factory.SubFactory(ExperienceFactory)
     activity      = factory.SubFactory(StreetActivityFactory)
     report        = factory.LazyFunction(fake.text)
     confidence_level          = 'pioneer'
@@ -55,6 +54,10 @@ class ExperienceFactory(factory.django.DjangoModelFactory):
         factory_related_name='experience',
         size=3
     )
+
+class MomentWithExperienceFactory(MomentFactory):
+    """Mock for streetactivities Moment with Experience"""
+    experience = factory.SubFactory(ExperienceFactory)
 
 class PersonaFactory(factory.django.DjangoModelFactory):
     """Mock for persona Persona"""

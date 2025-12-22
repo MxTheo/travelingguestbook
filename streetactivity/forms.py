@@ -33,12 +33,8 @@ class MomentForm(forms.ModelForm):
 
     class Meta:
         model = Moment
-        fields = ['activity', 'confidence_level', 'report', 'keywords']
+        fields = ['confidence_level', 'report', 'keywords']
         widgets = {
-            'activity': forms.Select(attrs={
-                'class': 'form-select',
-                'required': 'required'
-            }),
             'confidence_level': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'report': forms.Textarea(attrs={
                 'rows': 4,
@@ -55,12 +51,21 @@ class MomentForm(forms.ModelForm):
             'confidence_level': 'Hoe zelfverzekerd voelde je je?',
             'report': 'Wat was de reden? Wat deed dat met je?',
             'keywords': "3 woorden uit wat je net hebt geschreven, gescheiden door komma's",
-            'activity': "Wat heb je gedaan?",
         }
         help_texts = {
             'report': 'Vertel iets over je (on)zekerheid in maximaal 3500 karakters',
             'keywords': "3 woorden, gescheiden door komma's",
         }
+
+class AddMomentToExperienceForm(MomentForm):
+    """Form to add a moment to an experience."""
+    class Meta(MomentForm.Meta):
+        fields = MomentForm.Meta.fields + ['activity']
+        labels = MomentForm.Meta.labels.copy()
+        labels.update({
+            'activity': 'Wat heb je gedaan?',
+        })
+        help_texts = MomentForm.Meta.help_texts.copy()
 
 class ExperienceForm(forms.ModelForm):
     """Form to create an experience with moments"""

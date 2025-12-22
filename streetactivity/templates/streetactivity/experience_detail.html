@@ -1,160 +1,251 @@
 {% extends "admin/main.html" %}
 {% load static %}
 {% block stylesheet %}
-    <link href={% static "streetactivity/styles/experience_detial.css" %} rel='stylesheet' type="text/css">
+    <link href="{% static "streetactivity/styles/experience_detail.css" %}" rel='stylesheet' type="text/css">
 {% endblock stylesheet %}
 {% block content %}
-<div class="container py-4">
-    <!-- Simple Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1">
-                <i class="bi bi-journal-text text-primary"></i> Ervaring
-            </h1>
-            <p class="text-muted mb-0">
-                {{ experience.date_created|date:"d-m-Y H:i" }}
-            </p>
+    <div class="container py-4">
+        <!-- Simple Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1">
+                    <i class="bi bi-journal-text text-primary"></i> Ervaring
+                </h1>
+                <p class="text-muted mb-0">{{ experience.date_created|date:"d-m-Y H:i" }}</p>
+            </div>
+            <div>
+                <!-- PLACEHOLDER: Later knop om moment toe te voegen -->
+                <a href="{% url "add-moment-to-experience" experience.pk %}"
+                   class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle me-1"></i>Moment Toevoegen
+                </a>
+            </div>
         </div>
-        <div>
-            <!-- PLACEHOLDER: Later knop om moment toe te voegen -->
-            <span class="badge bg-secondary">Voeg moment toe (later)</span>
-        </div>
-    </div>
-    
-    <!-- Timeline Visualization -->
-    {% if moments %}
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body">
-            <!-- Simple dots timeline -->
-            <div class="d-flex align-items-center justify-content-center mb-4">
-                <div class="d-flex align-items-center overflow-auto pb-2" style="min-height: 80px;">
-                    {% for moment in moments %}
-                    <div class="text-center mx-2" style="min-width: 70px;">
-                        <!-- Confidence dot -->
-                        <div class="mb-2">
-                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
-                                 style="width: 40px; height: 40px; 
-                                        {% if moment.confidence_level == 'pioneer' %}
-                                            background-color: var(--bs-danger);
-                                        {% elif moment.confidence_level == 'intermediate' %}
-                                            background-color: var(--bs-warning);
-                                        {% else %}
-                                            background-color: var(--bs-success);
-                                        {% endif %}">
-                                <span class="text-white fw-bold">{{ forloop.counter }}</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Activity name -->
-                        <div class="small">
-                            {{ moment.activity.name|truncatechars:12 }}
-                        </div>
-                    </div>
-                    
-                    {% if not forloop.last %}
-                    <!-- Connecting line -->
-                    <div style="width: 30px; height: 2px; background-color: var(--bs-border-color);"></div>
-                    {% endif %}
-                    {% endfor %}
+        <!-- Confidence Chart -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="confidenceChart"></canvas>
                 </div>
             </div>
         </div>
-    </div>
-    {% endif %}
-    
-    <!-- Moments List -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-light">
-            <div class="d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">Momenten ({{ moments|length }})</h6>
+        <!-- Moments List -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Momenten ({{ moments|length }})</h6>
+                    {% if moments %}
+                        <span class="badge bg-primary">
+                            {% for moment in moments %}
+                                {% if moment.confidence_level == 'pioneer' %}
+                                    <span class="text-danger">●</span>
+                                {% elif moment.confidence_level == 'intermediate' %}
+                                    <span class="text-warning">●</span>
+                                {% else %}
+                                    <span class="text-success">●</span>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
                 {% if moments %}
-                <span class="badge bg-primary">
                     {% for moment in moments %}
-                        {% if moment.confidence_level == 'pioneer' %}
-                            <span class="text-danger">●</span>
-                        {% elif moment.confidence_level == 'intermediate' %}
-                            <span class="text-warning">●</span>
-                        {% else %}
-                            <span class="text-success">●</span>
-                        {% endif %}
+                        <div class="border-start border-3 {% if moment.confidence_level == 'pioneer' %}border-danger {% elif moment.confidence_level == 'intermediate' %}border-warning {% else %}border-success{% endif %} ps-3 mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
+                            <!-- Moment header -->
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <span class="badge {% if moment.confidence_level == 'pioneer' %}bg-danger {% elif moment.confidence_level == 'intermediate' %}bg-warning {% else %}bg-success{% endif %}">
+                                        {{ moment.get_confidence_level_display }}
+                                    </span>
+                                    <span class="ms-2 small text-muted">{{ moment.activity.name }}</span>
+                                </div>
+                                <div class="small text-muted">#{{ forloop.counter }}</div>
+                            </div>
+                            <!-- Report -->
+                            {% if moment.report %}
+                                <div class="mb-2">
+                                    <p class="mb-0 small">{{ moment.report|truncatechars:200 }}</p>
+                                </div>
+                            {% endif %}
+                            <!-- Keywords -->
+                            {% if moment.keywords %}
+                                <div class="mt-2">
+                                    <span class="small text-muted">{{ moment.keywords }}</span>
+                                </div>
+                            {% endif %}
+                            <!-- Time -->
+                            <div class="mt-2">
+                                <small class="text-muted">{{ moment.date_created|date:"H:i" }}</small>
+                            </div>
+                        </div>
                     {% endfor %}
-                </span>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-3">Nog geen momenten toegevoegd.</p>
+                        <!-- PLACEHOLDER: Later link om eerste moment toe te voegen -->
+                        <div class="alert alert-secondary">
+                            <small>
+                                <i class="bi bi-info-circle"></i>
+                                Voeg je eerste moment toe via het menu (later beschikbaar)
+                            </small>
+                        </div>
+                    </div>
                 {% endif %}
             </div>
         </div>
-        
-        <div class="card-body">
-            {% if moments %}
-                {% for moment in moments %}
-                <div class="border-start border-3 
-                            {% if moment.confidence_level == 'pioneer' %}border-danger
-                            {% elif moment.confidence_level == 'intermediate' %}border-warning
-                            {% else %}border-success{% endif %} 
-                            ps-3 mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
-                    
-                    <!-- Moment header -->
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div>
-                            <span class="badge 
-                                {% if moment.confidence_level == 'pioneer' %}bg-danger
-                                {% elif moment.confidence_level == 'intermediate' %}bg-warning
-                                {% else %}bg-success{% endif %}">
-                                {{ moment.confidence_level|title }}
-                            </span>
-                            <span class="ms-2 small text-muted">{{ moment.activity.name }}</span>
-                        </div>
-                        <div class="small text-muted">
-                            #{{ forloop.counter }}
-                        </div>
-                    </div>
-                    
-                    <!-- Report -->
-                    {% if moment.report %}
-                    <div class="mb-2">
-                        <p class="mb-0 small">{{ moment.report|truncatechars:200 }}</p>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Keywords -->
-                    {% if moment.keywords %}
-                    <div class="mt-2">
-                        <span class="small text-muted">{{ moment.keywords }}</span>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Time -->
-                    <div class="mt-2">
-                        <small class="text-muted">
-                            {{ moment.date_created|date:"H:i" }}
-                        </small>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="text-center py-4">
-                    <p class="text-muted mb-3">Nog geen momenten toegevoegd.</p>
-                    <!-- PLACEHOLDER: Later link om eerste moment toe te voegen -->
-                    <div class="alert alert-secondary">
-                        <small>
-                            <i class="bi bi-info-circle"></i>
-                            Voeg je eerste moment toe via het menu (later beschikbaar)
-                        </small>
-                    </div>
-                </div>
-            {% endif %}
+        <!-- Actions -->
+        <div class="mt-4">
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'create-experience' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle"></i> Nieuwe Ervaring
+                </a>
+                <a href="{% url 'streetactivity-list' %}"
+                   class="btn btn-outline-secondary">
+                    <i class="bi bi-house"></i> Home
+                </a>
+            </div>
         </div>
     </div>
-    
-    <!-- Actions -->
-    <div class="mt-4">
-        <div class="d-flex justify-content-between">
-            <a href="{% url 'create-experience' %}" class="btn btn-outline-primary">
-                <i class="bi bi-plus-circle"></i> Nieuwe Ervaring
-            </a>
-            <a href="{% url 'streetactivity-list' %}" class="btn btn-outline-secondary">
-                <i class="bi bi-house"></i> Home
-            </a>
-        </div>
-    </div>
-</div>
 {% endblock %}
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+      // helper to read CSS vars
+    const cssVar = (name, fallback='') => {
+        const v = getComputedStyle(document.documentElement).getPropertyValue(name);
+        return (v && v.trim()) || fallback;
+    };
+    const colors = {
+        primary: cssVar('--bs-primary', 'rgba(54,162,235,0.95)'),
+        danger: cssVar('--bs-danger', 'rgba(220,53,69,0.9)'),
+        warning: cssVar('--bs-warning', 'rgba(255,193,7,0.95)'),
+        success: cssVar('--bs-success', 'rgba(25,135,84,0.95)'),
+        secondary: cssVar('--bs-secondary', 'rgba(108,117,125,0.9)'),
+        dark: cssVar('--bs-dark', 'rgba(33,37,41,0.9)'),
+    };
+        
+    // Data voorbereiden vanuit Django context
+    const moments = {{ moments_json|safe }};
+    
+    if (!moments || moments.length === 0) {
+        document.querySelector('.chart-container').innerHTML = 
+            '<p class="text-center text-muted">Geen momenten om weer te geven</p>';
+        return;
+    }
+    
+    // Labels (activiteit namen) voor x-as
+    const labels = moments.map(moment => moment.activity.name);
+    
+    // Data points of y-axis
+    const confidenceData = moments.map(moment => {
+        // Convert confidence_level to numeric value
+        switch(moment.confidence_level) {
+            case 'pioneer':
+                return 0;  // onzeker
+            case 'intermediate':
+                return 1;  // tussenin
+            case 'climax':
+                return 2;  // zelfverzekerd
+            default:
+                return 0;
+        }
+    });
+    const reportSnippets = moments.map(moment => moment.report_snippet || '');
+    
+    // Colors for each datapoint
+    const pointColors = moments.map(moment => {
+        switch(moment.confidence_level) {
+            case 'pioneer':
+                return colors.danger;  // Bootstrap danger
+            case 'intermediate':
+                return colors.warning;  // Bootstrap warning
+            case 'climax':
+                return colors.success;  // Bootstrap success
+            default:
+                return colors.secondary;  // Bootstrap secondary
+        }
+    });
+    
+    // Canvas element
+    const ctx = document.getElementById('confidenceChart').getContext('2d');
+    
+    // Chart configuration
+    const confidenceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Zelfverzekerdheid',
+                data: confidenceData,
+                borderColor: colors.primary,
+                backgroundColor: colors.dark,
+                pointBackgroundColor: pointColors,
+                pointBorderColor: pointColors,
+                pointRadius: 8,
+                pointHoverRadius: 10,
+                pointBorderWidth: 2,
+                pointHitRadius: 15, 
+                fill: false,
+                tension: 0.3  // Maakt de lijn vloeiend
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 2,
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(value) {
+                            // Converteer numerieke waarde terug naar label
+                            switch(value) {
+                                case 0:
+                                    return 'Onzeker';
+                                case 1:
+                                    return 'Tussenin';
+                                case 2:
+                                    return 'Zelfverzekerd';
+                                default:
+                                    return '';
+                            }
+                        }
+                    },
+                    grid: {
+                        drawBorder: true
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            return reportSnippets[index] || '';
+                        },
+                    }
+                }
+            },
+            clip: false
+        }
+    });
+});
+    </script>
+{% endblock javascript %}

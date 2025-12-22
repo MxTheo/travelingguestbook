@@ -1,0 +1,52 @@
+.card-body .d-flex.overflow-auto::-webkit-scrollbar {
+    height: 4px;
+}
+.card-body .d-flex.overflow-auto::-webkit-scrollbar-track {
+    background: var(--bs-light);
+}
+.card-body .d-flex.overflow-auto::-webkit-scrollbar-thumb {
+    background: var(--bs-secondary);
+    border-radius: 2px;
+}
+
+.moment-dot {
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: all .12s ease;
+}
+
+/* Pioneer: laagste (kleinste) */
+.moment-dot.pioneer {
+  width: 30px;
+  height: 30px;
+  background-color: var(--bs-danger);
+  transform: translateY(20px);
+}
+
+/* Intermediate: middel */
+.moment-dot.intermediate {
+  width: 30px;
+  height: 30px;
+  background-color: var(--bs-warning);
+  transform: translateY(0);
+}
+
+/* Climax / else: hoogste (grootste) */
+.moment-dot.climax {
+  width: 30px;
+  height: 30px;
+  background-color: var(--bs-success);
+  transform: translateY(-20px);
+}
+
+/* Kleine aanpassing zodat de connecting line blijft centreren */
+.d-flex.align-items-center.overflow-auto .moment-dot { margin-bottom: 0.25rem; }
+
+/* reduce dot sizes and give chart some spacing */
+#experienceChart { max-height: 180px; }
+@media (min-width: 992px) {
+  #experienceChart { height: 140px; }
+}

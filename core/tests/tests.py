@@ -25,7 +25,7 @@ class TestHome:
         for i in range(7):
             MomentFactory(report=f"moment{i}")
         response = client.get(reverse('home'))
-        for i in range(4):
-            assert f"moment{i}" not in response.text
-        for i in range(4, 7):
+        for i in range(3):
             assert f"moment{i}" in response.text
+        for i in range(3, 7):
+            assert f"moment{i}" not in response.text

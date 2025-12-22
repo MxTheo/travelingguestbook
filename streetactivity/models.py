@@ -136,10 +136,6 @@ class Experience(models.Model):
     def __str__(self):
         return f"Ervaring {self.date_created.strftime('%d-%m-%Y %H:%M')}"
 
-    def get_moments_count(self):
-        """Count the moments in this experience collection"""
-        return self.moments.count()
-
     def get_moment_summary(self):
         """Makes a simple summary of the moments"""
         moments = self.moments.all().order_by('date_created')

@@ -1,4 +1,5 @@
 from collections import Counter
+import json
 from django.contrib import messages
 from django.views.generic import (
     ListView,
@@ -18,6 +19,7 @@ from .forms import (
     MomentForm,
     StreetActivityForm,
     ExperienceForm,
+    AddMomentToExperienceForm,
 )
 
 class StreetActivityListView(ListView):
@@ -142,32 +144,43 @@ class MomentCreateView(CreateView):
     model = Moment
     form_class = MomentForm
 
+    def dispatch(self, request, *args, **kwargs):
+        """Determine activity ID from URL parameters."""
+        if "pk" in self.kwargs:
+            self.activity = get_object_or_404(StreetActivity, pk=self.kwargs["pk"])
+        return super().dispatch(request, *args, **kwargs)
+
     def get_initial(self):
         """Set initial values including from_practitioner"""
         initial = super().get_initial()
-        # Bepaal of het een practitioner of passerby is op basis van de URL
-        initial["from_practitioner"] = "beoefenaar" in self.request.path
+        if "voorbijganger" in self.request.path:
+            initial["from_practitioner"] = False
+        else:
+            initial["from_practitioner"] = True
+        
+        if "pk" in self.kwargs:
+            initial["activity"] = self.activity
         return initial
 
     def get_context_data(self, **kwargs):
         """Extend context data"""
         context = super().get_context_data(**kwargs)
-        activity_id = self.kwargs["pk"]
-        context["activity"] = get_object_or_404(StreetActivity, pk=activity_id)
+        if "pk" in self.kwargs:
+            context["activity"] = self.activity
         return context
 
     def form_valid(self, form):
-        activity_id = self.kwargs["pk"]
-        form.instance.activity_id = activity_id
+        if "pk" in self.kwargs:
+            form.instance.activity = self.activity
 
         messages.add_message(self.request, messages.SUCCESS,
                              "Bedankt voor het delen van jouw moment! " \
                              "Dit helpt anderen deze activiteit te begrijpen. ")
 
-        if "beoefenaar" in self.request.path:
-            form.instance.from_practitioner = True
-        else:
+        if "voorbijganger" in self.request.path:
             form.instance.from_practitioner = False
+        else:
+            form.instance.from_practitioner = True
         
         if not self.request.user.is_anonymous:
             profile = self.request.user.profile
@@ -182,6 +195,43 @@ class MomentCreateView(CreateView):
         return reverse_lazy(
             "moment-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
+    
+
+class AddMomentToExperienceView(MomentCreateView):
+    """View to add a moment to an experience."""
+
+    form_class = AddMomentToExperienceForm
+    context_object_name = "experience"
+
+    def dispatch(self, request, *args, **kwargs):
+        """Determine experience ID from URL parameters."""
+        exp_id = self.kwargs.get("experience_id")
+        self.experience = get_object_or_404(Experience, pk=exp_id)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        """Set initial values including experience from URL"""
+        initial = super().get_initial()
+        initial['experience'] = self.experience
+        return initial
+
+    def get_context_data(self, **kwargs):
+        """Extend context data with experience"""
+        context = super().get_context_data(**kwargs)
+        context['experience'] = self.experience
+        return context
+
+    def form_valid(self, form):
+        """Link the moment to the experience"""
+        form.instance.experience = self.experience
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Redirect back to the experience form after adding moment"""
+        return reverse_lazy('experience-detail',
+                            kwargs={'pk': self.experience.pk})
+
+
 
 class MomentUpdateView(UpdateView):
     """View to update an moment"""
@@ -236,8 +286,7 @@ class ExperienceCreateView(CreateView):
     def get_success_url(self):
         # Redirect naar een moment toevoegen voor deze ervaring
         # PLACEHOLDER: later koppelen aan create-moment-from-practitioner
-        return reverse_lazy('create-moment-from-practitioner', 
-                          kwargs={'pk': 0})  # placeholder
+        return reverse_lazy('add-moment-to-experience', kwargs={'experience_id': self.object.pk})  # placeholder
 
 
 class ExperienceDetailView(DetailView):
@@ -246,10 +295,26 @@ class ExperienceDetailView(DetailView):
     context_object_name = "experience"
 
     def get_context_data(self, **kwargs):
-        """Extend context data with related moments"""
         context = super().get_context_data(**kwargs)
-        experience = self.object
-        context["moments"] = experience.moments.all()
+        moments = list(self.object.moments.order_by('date_created').select_related('activity'))
+
+        moment_data = []
+        for moment in moments:
+            moment_data.append({
+                'id': moment.id,
+                'activity': {
+                    'name': moment.activity.name,
+                    'id': moment.activity.id
+                },
+                'confidence_level': moment.confidence_level,
+                'report': moment.report,
+                'report_snippet': moment.report[:25] + '...' if moment.report and len(moment.report) > 25 else moment.report,
+                'order': moment.order,
+                'from_practitioner': moment.from_practitioner
+            })
+
+        context["moments"] = moments
+        context['moments_json'] = json.dumps(moment_data)
         return context
 
 class CompleteExperienceView(UpdateView):

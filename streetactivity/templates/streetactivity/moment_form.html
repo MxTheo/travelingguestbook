@@ -15,10 +15,14 @@
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <h1 class="display-5 mb-3">
-                        {% if form.initial.from_practitioner or object.from_practitioner %}
-                            <i class="bi bi-person-raised-hand text-warning"></i> Moment als Beoefenaar
+                        {% if form.initial.experience %}
+                            Moment toevoegen aan Ervaring
                         {% else %}
-                            <i class="bi bi-person-walking text-info"></i> Moment als Voorbijganger
+                            {% if form.initial.from_practitioner or object.from_practitioner %}
+                                <i class="bi bi-person-raised-hand text-warning"></i> Moment als Beoefenaar
+                            {% else %}
+                                <i class="bi bi-person-walking text-info"></i> Moment als Voorbijganger
+                            {% endif %}
                         {% endif %}
                     </h1>
                     <p class="lead text-muted">"{{ activity.name }}"</p>
@@ -41,7 +45,7 @@
                     {% include "streetactivity/step_category_selection.html" with form=form %}
                     <!-- Reflection - Stap 2 -->
                     {% include "streetactivity/step_reflection.html" with form=form %}
-                    {% if object.activity %}
+                    {% if not object.activity %}
                         <!-- Straatactivity - Stap 3 -->
                         {% include "streetactivity/step_activity.html" with form=form %}
                     {% endif %}
