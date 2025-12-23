@@ -73,9 +73,10 @@ class TestMomentModel:
         moment = Moment.objects.first()
         assert not moment.from_practitioner
 
-    def test_add_moment_to_experience(self, client):
+    def test_add_moment_to_experience(self, auto_login_user):
         """Given an experience,
         test that a moment can be added to that experience"""
+        client, _ = auto_login_user()
         experience = ExperienceFactory()
         create_url = reverse("add-moment-to-experience", args=[experience.id])
         activity = StreetActivityFactory()
@@ -90,9 +91,10 @@ class TestMomentModel:
         assert experience.moments.count() == 4
         assert Moment.objects.count() == 4
 
-    def test_add_second_moment_to_experience_ordering(self, client):
+    def test_add_second_moment_to_experience_ordering(self, auto_login_user):
         """Given an experience with one moment,
         test that adding a second moment auto-increments the order"""
+        client, _ = auto_login_user()
         experience = ExperienceFactory()
         moment_at_end = experience.moments.last()
         create_url = reverse("add-moment-to-experience", args=[experience.id])

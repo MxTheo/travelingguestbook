@@ -83,27 +83,23 @@
                     {% endfor %}
                 {% else %}
                     <div class="text-center py-4">
-                        <p class="text-muted mb-3">Nog geen momenten toegevoegd.</p>
+                        <p class="text-muted mb-3">Nog geen momenten van zelfverzekerdheid toegevoegd.</p>
                         <!-- PLACEHOLDER: Later link om eerste moment toe te voegen -->
+                        <a href="{% url "add-moment-to-experience" experience.pk %}" class="text-decoration-none">
                         <div class="alert alert-secondary">
-                            <small>
-                                <i class="bi bi-info-circle"></i>
-                                Voeg je eerste moment toe via het menu (later beschikbaar)
-                            </small>
-                        </div>
+                                <i class="bi bi-plus-circle"></i>
+                                Beschrijf je eerste moment van (on)zekerheid
+                            </div>
+                        </a>
                     </div>
                 {% endif %}
             </div>
         </div>
         <!-- Actions -->
         <div class="mt-4">
-            <div class="d-flex justify-content-between">
-                <a href="{% url 'create-experience' %}" class="btn btn-outline-primary">
-                    <i class="bi bi-plus-circle"></i> Nieuwe Ervaring
-                </a>
-                <a href="{% url 'streetactivity-list' %}"
-                   class="btn btn-outline-secondary">
-                    <i class="bi bi-house"></i> Home
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'user' user.username %}" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Klaar
                 </a>
             </div>
         </div>
@@ -132,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!moments || moments.length === 0) {
         document.querySelector('.chart-container').innerHTML = 
-            '<p class="text-center text-muted">Geen momenten om weer te geven</p>';
+            '<p class="text-center text-muted">Hoe is je gevoel van (on)zekerheid verlopen tijdens deze ervaring?</p>';
         return;
     }
     

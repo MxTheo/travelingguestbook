@@ -62,7 +62,7 @@ urlpatterns = [
     ),
     path(
         "ervaring/start/",
-        views.ExperienceCreateView.as_view(),
+        views.create_experience,
         name="create-experience",
     ),
     path(

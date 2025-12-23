@@ -9,8 +9,9 @@ from django.views.generic import (
     DeleteView,
 )
 from django.db.models import Count
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
 from .serializers import StreetActivitySerializer, MomentSerializer
@@ -272,22 +273,11 @@ class MomentViewSet(viewsets.ModelViewSet):
     queryset = Moment.objects.all()
     serializer_class = MomentSerializer
 
-class ExperienceCreateView(CreateView):
-    """View to create a new experience."""
-
-    model = Experience
-    form_class = ExperienceForm
-
-    def form_valid(self, form):
-        """Sets the user"""
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-    
-    def get_success_url(self):
-        # Redirect naar een moment toevoegen voor deze ervaring
-        # PLACEHOLDER: later koppelen aan create-moment-from-practitioner
-        return reverse_lazy('add-moment-to-experience', kwargs={'experience_id': self.object.pk})  # placeholder
-
+@login_required(login_url='login')
+def create_experience(request):
+    """Create a new experience for the logged in user and redirect to its detail view."""
+    experience = Experience.objects.create(user=request.user)
+    return redirect('experience-detail', pk=experience.pk)
 
 class ExperienceDetailView(DetailView):
     """Detailview of experience with its related moments"""
