@@ -30,6 +30,11 @@ We see the street as a training ground for inner freedom. Not to make contact, b
 git clone https://github.com/mxtheo/travellingguestbook.git
 cd travellingguestbook
 
+#Create environment variables
+create the file .env with contents
+SECRET_KEY=your_secret_key_here
+DEBUG=True
+
 # Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
