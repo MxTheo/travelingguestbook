@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
 from .serializers import StreetActivitySerializer, MomentSerializer
-from .models import StreetActivity, Moment, Experience
+from .models import StreetActivity, Moment, Experience, ConfidenceLevel
 from .forms import (
     MomentForm,
     StreetActivityForm,
@@ -55,9 +55,18 @@ class StreetActivityDetailView(DetailView):
         def get_chart_data(queryset):
             confidence_level_counts = queryset.values("confidence_level").annotate(
                 count=Count("confidence_level"))
-            data = {"pioneer": 0, "intermediate": 0, "climax": 0}
+            data = {"onzeker": 0, "tussenin": 0, "zelfverzekerd": 0}
+
+            confidence_mapping = {
+                ConfidenceLevel.ONZEKER: "onzeker",
+                ConfidenceLevel.TUSSENIN: "tussenin",
+                ConfidenceLevel.ZELFVERZEKERD: "zelfverzekerd"
+            }
             for item in confidence_level_counts:
-                data[item["confidence_level"]] = item["count"]
+                confidence_value = item["confidence_level"]
+                if confidence_value in confidence_mapping:
+                    key = confidence_mapping[confidence_value]
+                    data[key] = item["count"]
             return data
 
         context["chart_data_everyone"] = get_chart_data(moments)
@@ -168,6 +177,7 @@ class MomentCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         if "pk" in self.kwargs:
             context["activity"] = self.activity
+        context['ConfidenceLevel'] = ConfidenceLevel
         return context
 
     def form_valid(self, form):
@@ -243,6 +253,7 @@ class MomentUpdateView(UpdateView):
         """Extend context data"""
         context = super().get_context_data(**kwargs)
         context["activity"] = self.object.activity
+        context['ConfidenceLevel'] = ConfidenceLevel
         return context
 
     def form_valid(self, form):

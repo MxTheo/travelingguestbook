@@ -6,13 +6,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from django.views import View
-from streetactivity.models import CONFIDENCE_LEVEL_CHOICES
+from streetactivity.models import ConfidenceLevel
 from .forms import RegisterForm, UserForm, ProfileForm
 
 AMOUNT_XP = {
-    CONFIDENCE_LEVEL_CHOICES[0][0]: 75,
-    CONFIDENCE_LEVEL_CHOICES[1][0]: 50,
-    CONFIDENCE_LEVEL_CHOICES[2][0]: 25,
+    ConfidenceLevel.ONZEKER: 75,
+    ConfidenceLevel.TUSSENIN: 50,
+    ConfidenceLevel.ZELFVERZEKERD: 25,
 
 }
 

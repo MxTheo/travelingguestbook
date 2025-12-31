@@ -27,7 +27,6 @@ class StreetActivityForm(forms.ModelForm):
             'supplies': forms.Textarea(attrs={'rows': 3}),
         }
 
-# forms.py
 class MomentForm(forms.ModelForm):
     """Base form for Moment with common fields."""
 

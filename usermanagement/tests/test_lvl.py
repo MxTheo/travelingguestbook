@@ -32,7 +32,7 @@ class TestLvl:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "pioneer",
+            "confidence_level": 0,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
@@ -51,7 +51,7 @@ class TestLvl:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "pioneer",
+            "confidence_level": 0,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
@@ -73,7 +73,7 @@ class TestLvl:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "intermediate",
+            "confidence_level": 1,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
@@ -97,7 +97,7 @@ class TestProgress:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "intermediate",
+            "confidence_level": 1,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
@@ -116,7 +116,7 @@ class TestProgress:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "intermediate",
+            "confidence_level": 1,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
