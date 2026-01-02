@@ -36,6 +36,13 @@ class UserDetail(DetailView):
     model          = User
     slug_field     = "username"
     slug_url_kwarg = "username"
+    
+    def get_context_data(self, **kwargs):
+        """Adds the experience list to the context data"""
+        context = super().get_context_data(**kwargs)
+        experience_list = self.request.user.experiences.all().order_by('-date_created')
+        context['experiences'] = experience_list
+        return context
 
 class ProfileUpdateView(LoginRequiredMixin, View):
     """View for user to update its profile"""
