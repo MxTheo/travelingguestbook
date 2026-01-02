@@ -6,11 +6,6 @@ METHOD_CHOICES = [
     ("approach", "Aanspreken"),
     ("both", "Beide"),
 ]
-CONFIDENCE_LEVEL_CHOICES = [
-    ("pioneer", "onzeker"),
-    ("intermediate", "tussenin"),
-    ("climax", "zelfverzekerd"),
-]
 
 class StreetActivity(models.Model):
     """A street activity is an activity that can be done on the street to engage with strangers."""
@@ -44,6 +39,10 @@ class StreetActivity(models.Model):
     def __str__(self):
         return str(self.name)
 
+class ConfidenceLevel(models.IntegerChoices):
+    ONZEKER       = 0, "onzeker"
+    TUSSENIN      = 1, "tussenin"
+    ZELFVERZEKERD = 2, "zelverzekerd"
 
 class Moment(models.Model):
     """An moment is a report of a moment of someone who has done a street activity."""
@@ -68,10 +67,9 @@ class Moment(models.Model):
         blank=True,
         help_text="Beschrijf wat zich aandiende in maximaal 3500 karakters",
     )
-    confidence_level = models.CharField(
-        max_length=15,
-        choices=CONFIDENCE_LEVEL_CHOICES,
-        default="pioneer",
+    confidence_level = models.IntegerField(
+        choices=ConfidenceLevel.choices,
+        default=ConfidenceLevel.ONZEKER,
         verbose_name="Zelfverzekerdheid",
     )
     from_practitioner = models.BooleanField(

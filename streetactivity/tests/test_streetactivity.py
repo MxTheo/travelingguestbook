@@ -190,9 +190,9 @@ class TestStreetActivityDetailView:
         assert context["moments_count"] == 0
         assert context["practitioner_count"] == 0
         assert context["passerby_count"] == 0
-        assert context["chart_data_everyone"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
-        assert context["chart_data_practitioners"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
-        assert context["chart_data_passersby"] == {'pioneer': 0, 'intermediate': 0, 'climax': 0}
+        assert context["chart_data_everyone"] == {'onzeker': 0, 'tussenin': 0, 'zelfverzekerd': 0}
+        assert context["chart_data_practitioners"] == {'onzeker': 0, 'tussenin': 0, 'zelfverzekerd': 0}
+        assert context["chart_data_passersby"] == {'onzeker': 0, 'tussenin': 0, 'zelfverzekerd': 0}
 
     def test_detail_view_with_moments(self, client):
         """Test that the detail view correctly calculates statistics with moments present"""
@@ -202,15 +202,15 @@ class TestStreetActivityDetailView:
         MomentFactory(
             activity=activity,
             from_practitioner=True,
-            confidence_level='pioneer')
+            confidence_level=0)
         MomentFactory(
             activity=activity,
             from_practitioner=False,
-            confidence_level='intermediate')
+            confidence_level=1)
         MomentFactory(
             activity=activity,
             from_practitioner=True,
-            confidence_level='climax')
+            confidence_level=2)
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
@@ -218,9 +218,9 @@ class TestStreetActivityDetailView:
         assert context["moments_count"] == 3
         assert context["practitioner_count"] == 2
         assert context["passerby_count"] == 1
-        assert context["chart_data_everyone"] == {'pioneer': 1, 'intermediate': 1, 'climax': 1}
-        assert context["chart_data_practitioners"] == {'pioneer': 1, 'intermediate': 0, 'climax': 1}
-        assert context["chart_data_passersby"] == {'pioneer': 0, 'intermediate': 1, 'climax': 0}
+        assert context["chart_data_everyone"] == {'onzeker': 1, 'tussenin': 1, 'zelfverzekerd': 1}
+        assert context["chart_data_practitioners"] == {'onzeker': 1, 'tussenin': 0, 'zelfverzekerd': 1}
+        assert context["chart_data_passersby"] == {'onzeker': 0, 'tussenin': 1, 'zelfverzekerd': 0}
 
     def test_negative_moments_remaining(self, client):
         """Test if that when there are no moments,

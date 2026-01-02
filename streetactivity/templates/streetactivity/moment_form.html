@@ -25,7 +25,9 @@
                             {% endif %}
                         {% endif %}
                     </h1>
-                    <p class="lead text-muted">"{{ activity.name }}"</p>
+                    {% if activity %}
+                        <p class="lead text-muted">"{{ activity.name }}"</p>
+                    {% endif %}
                     <div class="alert alert-light border">
                         <small class="text-muted">
                             <i class="bi bi-info-circle"></i>
@@ -45,7 +47,7 @@
                     {% include "streetactivity/step_category_selection.html" with form=form %}
                     <!-- Reflection - Stap 2 -->
                     {% include "streetactivity/step_reflection.html" with form=form %}
-                    {% if not object.activity %}
+                    {% if not activity %}
                         <!-- Straatactivity - Stap 3 -->
                         {% include "streetactivity/step_activity.html" with form=form %}
                     {% endif %}

@@ -12,27 +12,27 @@
             <div class="form-text mb-3">{{ form.confidence_level.help_text }}</div>
             <!-- Confidence Level Cards -->
             <div class="row g-3">
-                {% for choice in form.confidence_level.field.choices %}
+                {% for value, label in form.confidence_level.field.choices %}
                     <div class="col-md-4">
-                        <div class="card h-100 border-2 {% if form.confidence_level.value == choice.0 %}border-primary{% else %}border-light{% endif %}">
+                        <div class="card h-100 border-2 {% if form.confidence_level.value == value %}border-primary{% else %}border-light{% endif %}">
                             <div class="card-body text-center">
                                 <input type="radio"
                                        name="confidence_level"
-                                       value="{{ choice.0 }}"
+                                       value="{{ value }}"
                                        id="confidence_level_{{ forloop.counter }}"
                                        class="form-check-input"
-                                       {% if form.confidence_level.value == choice.0 %}checked{% endif %}>
+                                       {% if form.confidence_level.value == value %}checked{% endif %}>
                                 <label for="confidence_level_{{ forloop.counter }}"
                                        class="form-check-label stretched-link">
                                     <h6 class="card-title">
-                                        {% if choice.0 == 'pioneer' %}
+                                        {% if value == ConfidenceLevel.ONZEKER %}
                                             <i class="bi bi-flower1 text-primary"></i>
-                                        {% elif choice.0 == 'intermediate' %}
+                                        {% elif value == ConfidenceLevel.TUSSENIN %}
                                             <i class="bi bi-flower2 text-warning"></i>
                                         {% else %}
                                             <i class="bi bi-tree-fill text-success"></i>
                                         {% endif %}
-                                        {{ choice.1 }}
+                                        {{ label }}
                                     </h6>
                                 </label>
                             </div>
