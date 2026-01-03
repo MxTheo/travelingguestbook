@@ -4,7 +4,12 @@
   "description": "### Description The aim of this web-application is to facilitate interaction between you and strangers, for example people in the train. You can end the conversation by handing out a thank you.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:persona": "jest persona/tests/",
+    "test:streetactivity": "jest streetactivity/tests/",
+    "test:badges": "jest --coverage && jest-coverage-badges"
   },
   "repository": {
     "type": "git",
@@ -19,12 +24,11 @@
   "homepage": "https://github.com/MxTheo/travelingguestbook#readme",
   "devDependencies": {
     "jest": "^30.0.5",
-    "jest-environment-jsdom": "^30.0.5"
+    "jest-coverage-badges": "^1.0.0",
+    "jest-environment-jsdom": "^30.0.5",
+    "identity-obj-proxy": "^3.0.0"
   },
   "dependencies": {
     "libsodium-wrappers": "^0.7.15"
-  },
-  "jest": {
-    "testEnvironment": "jsdom"
   }
 }

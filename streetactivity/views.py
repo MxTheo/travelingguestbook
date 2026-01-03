@@ -318,6 +318,17 @@ class ExperienceDetailView(DetailView):
         context['moments_json'] = json.dumps(moment_data)
         return context
 
+class ExperienceDeleteView(DeleteView):
+    """View to delete an experience"""
+    model = Experience
+    template_name = "admin/confirm_delete.html"
+    success_url = reverse_lazy("user")
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "user", kwargs={"username": self.object.user.username}
+        )
+
 class ExperienceViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Experience"""
     queryset = Experience.objects.all()

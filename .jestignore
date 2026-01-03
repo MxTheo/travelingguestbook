@@ -1,0 +1,10 @@
+node_modules/
+.venv/
+venv/
+env/
+static/
+media/
+migrations/
+__pycache__/
+*.django.js
+*.tpl.js

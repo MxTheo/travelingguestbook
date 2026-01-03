@@ -125,8 +125,7 @@
         };
 
         // Data voorbereiden vanuit Django context
-        const moments = {{ moments_json| safe
-    }};
+        const moments = {{ moments_json| safe }};
 
     if (!moments || moments.length === 0) {
         document.querySelector('.chart-container').innerHTML =

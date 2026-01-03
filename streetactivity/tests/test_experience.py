@@ -27,3 +27,16 @@ class TestExperience:
         assert Experience.objects.count() == 1
         experience = Experience.objects.first()
         assert experience.user == user
+
+    def test_experience_delete(self, auto_login_user):
+        """Test the Experience delete view to ensure it deletes the experience
+        and redirects to the expected URL."""
+        client, user = auto_login_user()
+        experience = ExperienceFactory(user=user)
+        delete_url = reverse("delete-experience", kwargs={"pk": experience.id})
+
+        response = client.post(delete_url, follow=True)
+
+        assert response.status_code == 200
+        assert Experience.objects.count() == 0
+        assert response.redirect_chain[0][0] == reverse("user", kwargs={"username": user.username})

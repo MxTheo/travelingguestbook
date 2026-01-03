@@ -75,4 +75,5 @@ urlpatterns = [
         views.AddMomentToExperienceView.as_view(),
         name="add-moment-to-experience",
     ),
+    path("verwijder/ervaring/<uuid:pk>", views.ExperienceDeleteView.as_view(), name="delete-experience",),
 ]
