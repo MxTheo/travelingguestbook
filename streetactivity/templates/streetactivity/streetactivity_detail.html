@@ -265,6 +265,7 @@
 {% endblock content %}
 {% block javascript %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static "streetactivity/js/colors.js" %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('momentChart').getContext('2d');
@@ -272,14 +273,7 @@
             
             // Gebruik Bootstrap CSS variabelen voor kleuren
             const styles = getComputedStyle(document.documentElement);
-            const primaryColor = styles.getPropertyValue('--bs-primary') || '#0d6efd';
-            const warningColor = styles.getPropertyValue('--bs-warning') || '#ffc107';
-            const successColor = styles.getPropertyValue('--bs-success') || '#198754';
-            const secondaryColor = styles.getPropertyValue('--bs-secondary') || '#6c757d';
-            const primaryEmphasisColor = styles.getPropertyValue('--bs-primary-emphasis') || '#0d6efd';
-            const warningEmphasisColor = styles.getPropertyValue('--bs-warning-emphasis') || '#ffc107';
-            const successEmphasisColor = styles.getPropertyValue('--bs-success-emphasis') || '#198754';
-            const secondaryEmphasisColor = styles.getPropertyValue('--bs-secondary-emphasis') || '#6c757d';
+            const colors = MyColors.getBootstrapColors();
             
             // Data voor verschillende filters
             const chartData = {
@@ -307,9 +301,9 @@
                         datasets: [{
                             data: [data.onzeker, data.tussenin, data.zelfverzekerd],
                             backgroundColor: [
-                                primaryColor,
-                                warningColor, 
-                                successColor
+                                colors.primary,
+                                colors.warning, 
+                                colors.success
                             ],
                             borderWidth: 2,
                             borderColor: styles.getPropertyValue('--bs-body-bg') || '#fff'

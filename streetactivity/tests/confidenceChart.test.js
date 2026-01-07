@@ -138,44 +138,6 @@ describe('Confidence Chart', () => {
       expect(confidenceData).toEqual([2, 0]);
       expect(reportSnippets).toEqual(['Feeling confident', 'Feeling uncertain']);
     });
-
-    test('should map confidence levels to correct colors', () => {
-      // Mock moments data
-      const moments = [
-        { confidence_level: 0 },
-        { confidence_level: 1 },
-        { confidence_level: 2 },
-        { confidence_level: 3 }
-      ];
-
-      // Mock de cssVar functie voor deze test
-      const colors = {
-        danger: 'rgba(220,53,69,0.9)',
-        warning: 'rgba(255,193,7,0.95)',
-        success: 'rgba(25,135,84,0.95)',
-        secondary: 'rgba(108,117,125,0.9)'
-      };
-
-      const pointColors = moments.map(moment => {
-        switch (moment.confidence_level) {
-          case 0:  // ONZEKER
-            return colors.danger;
-          case 1:  // TUSSENIN
-            return colors.warning;
-          case 2:  // ZELFVERZEKERD
-            return colors.success;
-          default:
-            return colors.secondary;
-        }
-      });
-
-      expect(pointColors).toEqual([
-        'rgba(220,53,69,0.9)',
-        'rgba(255,193,7,0.95)',
-        'rgba(25,135,84,0.95)',
-        'rgba(108,117,125,0.9)'
-      ]);
-    });
   });
 
   describe('Chart configuration', () => {

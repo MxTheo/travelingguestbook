@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import login
@@ -36,12 +37,23 @@ class UserDetail(DetailView):
     model          = User
     slug_field     = "username"
     slug_url_kwarg = "username"
-    
+
     def get_context_data(self, **kwargs):
-        """Adds the experience list to the context data"""
+        """Adds the experience list,
+        and its data for the sparkline,
+        to the context data"""
         context = super().get_context_data(**kwargs)
         experience_list = self.request.user.experiences.all().order_by('-date_created')
+        experience_data = []
+        for exp in experience_list:
+            moments = exp.moments.all()
+            confidence_levels = [m.confidence_level for m in moments]
+            experience_data.append({
+                'id': str(exp.id),
+                'confidence_levels': confidence_levels,
+            })
         context['experiences'] = experience_list
+        context['experience_data_json'] = json.dumps(experience_data)
         return context
 
 class ProfileUpdateView(LoginRequiredMixin, View):
@@ -90,7 +102,7 @@ class ProfileUpdateView(LoginRequiredMixin, View):
 
 def add_xp(profile, confidence_level):
     """Given the confidence lvl and the user profile, 
-    add the amount of xp specific to that confidence lvl to the user profile and update the percentage_xp"""
+    add the amount of xp specific to that confidence lvl to the user profile"""
     profile.xp += AMOUNT_XP[confidence_level]
 
 def update_lvl(profile):

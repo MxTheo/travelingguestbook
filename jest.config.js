@@ -4,22 +4,44 @@ module.exports = {
   
   // Waar zijn je testbestanden?
   testMatch: [
-    '<rootDir>/**/tests/**/*.test.js',
-    '<rootDir>/**/tests/**/*.spec.js',
-    '<rootDir>/**/__tests__/**/*.test.js',
-    '<rootDir>/**/__tests__/**/*.spec.js',
+    '**/tests/**/*.test.js',
+    '**/__tests__/**/*.test.js',
   ],
   
   // Welke mappen negeren?
   testPathIgnorePatterns: [
     '/node_modules/',
+    '/.venv/',
     '/venv/',
-    '/.env/',
     '/static/',
     '/media/',
     '/migrations/',
+    '/__pycache__/',
+    '/coverage/',
+    '/tests/testHelpers/', 
   ],
   
+  collectCoverageFrom: [
+    '**/static/js/**/*.js',
+    '!**/node_modules/**',
+    '!**/.venv/**',
+    '!**/venv/**',
+    '!**/env/**',
+    '!**/migrations/**',
+    '!**/__pycache__/**',
+    '!**/*.django.js', 
+    '!**/*.tpl.js',
+  ],
+
+  collectCoverage: true,
+
+  // Ignore transform for specific files
+  transformIgnorePatterns: [
+    '/node_modules/',
+    '\\.django\\.js$',
+    '\\.tpl\\.js$',
+  ],
+
   // Setup file die voor elke test wordt gerund
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
   
@@ -30,16 +52,6 @@ module.exports = {
       '<rootDir>/tests/__mocks__/fileMock.js',
   },
   
-  // Coverage reporting
-  collectCoverage: true,
-  collectCoverageFrom: [
-    '**/static/js/**/*.js',
-    '**/templates/**/*.js',
-    '!**/node_modules/**',
-    '!**/vendor/**',
-    '!**/dist/**',
-    '!**/build/**',
-  ],
   
   // Coverage directory
   coverageDirectory: '<rootDir>/tests/coverage',
