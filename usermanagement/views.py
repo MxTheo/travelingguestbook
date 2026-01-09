@@ -28,7 +28,7 @@ class Register(CreateView):
         """After the user input is valid, it logs in and redirects towards its dashboard"""
         user = form.save()
         login(self.request, user)
-        return redirect(self.success_url)
+        return redirect(self.success_url)  # type: ignore[reportArgumentType]
 
 class UserDetail(DetailView):
     """Generic display view to get to the profile of the user:
@@ -43,7 +43,7 @@ class UserDetail(DetailView):
         and its data for the sparkline,
         to the context data"""
         context = super().get_context_data(**kwargs)
-        experience_list = self.request.user.experiences.all().order_by('-date_created')
+        experience_list = self.request.user.experiences.all().order_by('-date_created')  # type: ignore[reportAttributeAccessIssue]
         experience_data = []
         for exp in experience_list:
             moments = exp.moments.all()

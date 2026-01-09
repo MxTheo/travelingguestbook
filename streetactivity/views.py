@@ -1,5 +1,6 @@
 from collections import Counter
 import json
+from typing import Optional
 from django.contrib import messages
 from django.views.generic import (
     ListView,
@@ -7,11 +8,11 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
+    TemplateView,
 )
 from django.db.models import Count
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
@@ -23,6 +24,8 @@ from .forms import (
     ExperienceForm,
     AddMomentToExperienceForm,
 )
+
+CONFIRM_DELETE_TEMPLATE = "admin/confirm_delete.html"
 
 class StreetActivityListView(ListView):
     """View to list all street activities with filtering options."""
@@ -99,7 +102,8 @@ class StreetActivityCreateView(CreateView):
     form_class = StreetActivityForm
 
     def get_success_url(self):
-        return reverse_lazy("streetactivity-detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy("streetactivity-detail",
+                            kwargs={"pk": self.object.pk})  # type: ignore[reportOptionalMemberAccess]
 
 class StreetActivityUpdateView(UpdateView):
     """View to update an existing street activity."""
@@ -114,7 +118,7 @@ class StreetActivityDeleteView(DeleteView):
     """View to delete a street activity."""
 
     model = StreetActivity
-    template_name = "admin/confirm_delete.html"
+    template_name = CONFIRM_DELETE_TEMPLATE
     success_url = reverse_lazy("streetactivity-list")
 
 class StreetActivityViewSet(viewsets.ModelViewSet):
@@ -153,6 +157,7 @@ class MomentCreateView(CreateView):
 
     model = Moment
     form_class = MomentForm
+    activity: Optional[StreetActivity] = None
 
     def dispatch(self, request, *args, **kwargs):
         """Determine activity ID from URL parameters."""
@@ -194,7 +199,7 @@ class MomentCreateView(CreateView):
             form.instance.from_practitioner = True
 
         if not self.request.user.is_anonymous:
-            profile = self.request.user.profile
+            profile = self.request.user.profile  # type: ignore[reportAttributeAccessIssue]
             add_xp(profile, form.instance.confidence_level)
             update_lvl(profile)
             calc_xp_percentage(profile)
@@ -204,7 +209,8 @@ class MomentCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "moment-list-streetactivity", kwargs={"pk": self.object.activity.pk}
+            "moment-list-streetactivity",
+            kwargs={"pk": self.object.activity.pk}  # type: ignore[reportOptionalMemberAccess]
         )
 
 class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
@@ -212,36 +218,37 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
 
     form_class = AddMomentToExperienceForm
     context_object_name = "experience"
+    experience_id: Optional[int] = None
 
     def dispatch(self, request, *args, **kwargs):
-        """Determine experience ID from URL parameters."""
-        exp_id = self.kwargs.get("experience_id")
-        self.experience = get_object_or_404(Experience, pk=exp_id)
+        """Determine experience ID from URL parameters. If not present, create a new experience."""
+        self.experience_id = self.kwargs.get("experience_id", None)
+        if not self.experience_id:
+            messages.info(self.request,
+                     """Voeg nu je eerste moment toe aan de ervaring. 
+                     Hoe zelfverzekerd voelde jij je toen je begon?""")
         return super().dispatch(request, *args, **kwargs)
-
-    def get_initial(self):
-        """Set initial values including experience from URL"""
-        initial = super().get_initial()
-        initial['experience'] = self.experience
-        return initial
 
     def get_context_data(self, **kwargs):
         """Extend context data with experience"""
         context = super().get_context_data(**kwargs)
-        context['experience'] = self.experience
+        context['from_experience'] = True
         return context
 
     def form_valid(self, form):
         """Link the moment to the experience"""
-        form.instance.experience = self.experience
+        if self.experience_id:
+            experience = get_object_or_404(Experience, pk=self.experience_id)
+        else:
+            experience = Experience.objects.create(user=self.request.user)
+            self.experience_id = experience.id
+        form.instance.experience = experience
         return super().form_valid(form)
 
     def get_success_url(self):
         """Redirect back to the experience form after adding moment"""
         return reverse_lazy('experience-detail',
-                            kwargs={'pk': self.experience.pk})
-
-
+                            kwargs={'pk': self.experience_id})
 
 class MomentUpdateView(UpdateView):
     """View to update an moment"""
@@ -267,7 +274,7 @@ class MomentUpdateView(UpdateView):
 class MomentDeleteView(DeleteView):
     """View to delete an moment"""
     model = Moment
-    template_name = "admin/confirm_delete.html"
+    template_name = CONFIRM_DELETE_TEMPLATE
 
     def form_valid(self, form):
         messages.add_message(self.request, messages.WARNING, "Het moment is verwijderd.")
@@ -283,26 +290,9 @@ class MomentViewSet(viewsets.ModelViewSet):
     queryset = Moment.objects.all()
     serializer_class = MomentSerializer
 
-@login_required(login_url='login')
-def create_experience(request):
-    """Create a new experience for the logged in user and redirect to its detail view."""
-    experience = Experience.objects.create(user=request.user)
-    return redirect('experience-detail', pk=experience.pk)
-
-class ExperienceCreateView(CreateView, LoginRequiredMixin):
-    """View to create a new experience."""
-    model = Experience
-    form_class = ExperienceForm
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        response = super().form_valid(form)
-        messages.info(self.request, 
-                     "Ervaring aangemaakt. Voeg nu je eerste moment toe.")
-        return response
-
-    def get_success_url(self):
-        return reverse_lazy("add-moment-to-experience", kwargs={"experience_id": self.object.pk})
+class StartExperienceView(LoginRequiredMixin, TemplateView):
+    """Navigates to the start experience page"""
+    template_name = "streetactivity/start_experience.html"
 
 class ExperienceDetailView(DetailView):
     """Detailview of experience with its related moments"""
@@ -340,7 +330,7 @@ class ExperienceDetailView(DetailView):
 class ExperienceDeleteView(DeleteView):
     """View to delete an experience"""
     model = Experience
-    template_name = "admin/confirm_delete.html"
+    template_name = CONFIRM_DELETE_TEMPLATE
     success_url = reverse_lazy("user")
 
     def get_success_url(self):

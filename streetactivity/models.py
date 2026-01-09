@@ -103,7 +103,7 @@ class Moment(models.Model):
     def __str__(self):
         if self.report:
             return f"{self.report[:50]}..."
-        return f"{self.activity.name} - Moment {self.id}"
+        return f"{self.activity.name} - Moment {self.id}"  # type: ignore[reportAttributeAccessIssue]
 
     def save(self, *args, **kwargs):
         """Auto-increment order within the same experience"""

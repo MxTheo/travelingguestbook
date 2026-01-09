@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.contrib import auth
 from travelingguestbook.helpers_test import helper_test_page_rendering
-from travelingguestbook.factories import UserFactory
+from travelingguestbook.factories import UserFactory, ExperienceFactory
 from usermanagement.forms import RegisterForm
 from usermanagement.models import Profile
 
@@ -61,3 +61,20 @@ class TestProfile():
         user.save()
         profile = Profile.objects.get(user=user)
         assert profile.lvl == 1
+
+class TestUserDetailView():
+    def test_user_detail_view(self, auto_login_user):
+        '''Test if the user detail view is rendered correctly'''
+        client, user = auto_login_user()
+        detail_url = reverse('user', kwargs={'username': user.username})
+        response = client.get(detail_url)
+        assert response.status_code == 200
+
+    def test_user_detail_with_experiences(self, auto_login_user):
+        '''Test if the user detail view is rendered correctly,
+        when the user has experiences'''
+        client, user = auto_login_user()
+        ExperienceFactory.create_batch(3, user=user)
+        detail_url = reverse('user', kwargs={'username': user.username})
+        response = client.get(detail_url)
+        assert response.status_code == 200

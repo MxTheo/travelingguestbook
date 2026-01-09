@@ -71,4 +71,4 @@ class ExperienceForm(forms.ModelForm):
     class Meta:
         """No fields as experience is just a container for moments"""
         model = Experience
-        fields = []
+        fields: list[str] = []

@@ -62,8 +62,8 @@ urlpatterns = [
     ),
     path(
         "ervaring/start/",
-        views.ExperienceCreateView.as_view(),
-        name="create-experience",
+        views.StartExperienceView.as_view(),
+        name="start-experience",
     ),
     path(
         "ervaring/<uuid:pk>/",
@@ -75,5 +75,13 @@ urlpatterns = [
         views.AddMomentToExperienceView.as_view(),
         name="add-moment-to-experience",
     ),
-    path("verwijder/ervaring/<uuid:pk>", views.ExperienceDeleteView.as_view(), name="delete-experience",),
+        path(
+        "ervaring/moment/nieuw/",
+        views.AddMomentToExperienceView.as_view(),
+        name="add-first-moment-to-experience",
+    ),
+    path(
+        "verwijder/ervaring/<uuid:pk>",
+        views.ExperienceDeleteView.as_view(),
+        name="delete-experience",),
 ]

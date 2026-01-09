@@ -17,9 +17,9 @@ class MailtoMixin:
         else:
             return "mailto:admin@example.com"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):  # type: ignore[override]
         """Adds mailto_url to the context"""
-        context = super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)  # type: ignore[reportAttributeAccessIssue]
         context['mailto_url'] = self.get_mailto_url()
         return context
 

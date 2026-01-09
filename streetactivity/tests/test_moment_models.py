@@ -36,9 +36,7 @@ class TestMomentModel:
         activity = StreetActivityFactory()
         create_url = reverse("create-moment", args=[activity.id])
 
-        moment_data = MomentFactory.build().__dict__
-        for field in ["_state", "id", 'activity_id', 'experience_id']:
-            moment_data.pop(field, None)
+        moment_data = create_moment_data(activity)
 
         response = client.post(create_url, moment_data, follow=True)
 
@@ -50,28 +48,24 @@ class TestMomentModel:
         returns a 200 status code and sets from_practitioner to True."""
         activity = StreetActivityFactory()
         create_url = reverse("create-moment-from-practitioner", args=[activity.id])
-        moment_data = MomentFactory.build().__dict__
-        for field in ["_state", "id", 'activity_id', 'experience_id']:
-            moment_data.pop(field, None)
+        moment_data = create_moment_data(activity)
         response = client.post(create_url, moment_data, follow=True)
         assert response.status_code == 200
         assert Moment.objects.count() == 1
-        moment = Moment.objects.first()
-        assert moment.from_practitioner
+        moment = Moment.objects.first()  # type: ignore[reportOptionalMemberAccess]
+        assert moment.from_practitioner  # type: ignore[reportOptionalMemberAccess]
 
     def test_moment_createview_from_passerby(self, client):
         """Test the Moment create view for passerby to ensure it
         returns a 200 status code and sets from_practitioner to False."""
         activity = StreetActivityFactory()
         create_url = reverse("create-moment-from-passerby", args=[activity.id])
-        moment_data = MomentFactory.build().__dict__
-        for field in ["_state", "id", 'activity_id', 'experience_id']:
-            moment_data.pop(field, None)
+        moment_data = create_moment_data(activity)
         response = client.post(create_url, moment_data, follow=True)
         assert response.status_code == 200
         assert Moment.objects.count() == 1
-        moment = Moment.objects.first()
-        assert not moment.from_practitioner
+        moment = Moment.objects.first()  # type: ignore[reportOptionalMemberAccess]
+        assert not moment.from_practitioner  # type: ignore[reportOptionalMemberAccess]
 
     def test_add_moment_to_experience(self, auto_login_user):
         """Given an experience,
@@ -79,11 +73,7 @@ class TestMomentModel:
         client, _ = auto_login_user()
         experience = ExperienceFactory()
         create_url = reverse("add-moment-to-experience", args=[experience.id])
-        activity = StreetActivityFactory()
-        moment_data = MomentFactory.build().__dict__
-        for field in ["_state", "id", 'activity_id', 'experience_id']:
-            moment_data.pop(field, None)
-        moment_data['activity'] = activity.id
+        moment_data = create_moment_data()
 
         response = client.post(create_url, moment_data, follow=True)
 
@@ -98,11 +88,7 @@ class TestMomentModel:
         experience = ExperienceFactory()
         moment_at_end = experience.moments.last()
         create_url = reverse("add-moment-to-experience", args=[experience.id])
-        activity = StreetActivityFactory()
-        moment_data = MomentFactory.build().__dict__
-        for field in ["_state", "id", 'activity_id', 'experience_id']:
-            moment_data.pop(field, None)
-        moment_data['activity'] = activity.id
+        moment_data = create_moment_data()
 
         response = client.post(create_url, moment_data, follow=True)
 
@@ -119,8 +105,6 @@ class TestMomentModel:
         create_url = reverse("add-moment-to-experience", args=[experience.id])
 
         response = client.get(create_url)
-        content = response.content.decode()
-        activity_id_str = str(existing_moment.activity.id)
         assert response.status_code == 200
         assert str(existing_moment.activity) in response.content.decode()
 
@@ -209,3 +193,13 @@ class TestMomentModel:
         response = client.get(update_url)
 
         assert "Moment als Beoefenaar" in response.content.decode()
+
+def create_moment_data(activity=None):
+    """Helper function to create moment data for tests."""
+    if not activity:
+        activity = StreetActivityFactory()
+    moment_data = MomentFactory.build().__dict__
+    for field in ["_state", "id", 'activity_id', 'experience_id']:
+        moment_data.pop(field, None)
+    moment_data['activity'] = activity.id
+    return moment_data

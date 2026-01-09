@@ -31,7 +31,7 @@ class TestForms:
 
     def test_form_with_portrait(self, temporary_media_root):
         """Test form with portrait file"""
-        image = Image.new("RGB", (100, 100), color="red")
+        image = Image.new("RGB", (100, 100), color=(255, 0, 0))  # type: ignore[reportArgumentType]
         image_file = BytesIO()
         image.save(image_file, "JPEG")
         image_file.seek(0)
@@ -46,6 +46,6 @@ class TestForms:
             "description": "Test description",
         }
         files = {"portrait": mock_image}
-        form = PersonaForm(data=form_data, files=files)
+        form = PersonaForm(data=form_data, files=files)  # type: ignore[reportArgumentType]
 
         assert form.is_valid()

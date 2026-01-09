@@ -18,11 +18,11 @@ def test_save_cookie_consent_anonymous(client):
     assert resp.json() == {"ok": True}
 
     assert CookieConsentLog.objects.count() == 1
-    log = CookieConsentLog.objects.first()
-    assert log.user is None
-    assert log.consent == payload
-    assert log.ip  # should be set (e.g. "127.0.0.1")
-    assert "pytest-agent" in (log.user_agent or "")
+    log = CookieConsentLog.objects.first()  # type: ignore[reportOptionalMemberAccess]
+    assert log.user is None  # type: ignore[reportOptionalMemberAccess]
+    assert log.consent == payload  # type: ignore[reportOptionalMemberAccess]
+    assert log.ip  # type: ignore[reportOptionalMemberAccess]
+    assert "pytest-agent" in (log.user_agent or "")  # type: ignore[reportOptionalMemberAccess]
 
     cookie = resp.cookies.get("site_cookie_consent_v1")
     assert cookie is not None
@@ -44,8 +44,8 @@ def test_save_cookie_consent_authenticated(client):
 
     assert resp.status_code == 200
     assert CookieConsentLog.objects.filter(user=user).exists()
-    log = CookieConsentLog.objects.filter(user=user).first()
-    assert log.consent == payload
+    log = CookieConsentLog.objects.filter(user=user).first()  # type: ignore[reportOptionalMemberAccess]
+    assert log.consent == payload  # type: ignore[reportOptionalMemberAccess]
 
 
 def test_save_cookie_consent_invalid_json_returns_400(client):
