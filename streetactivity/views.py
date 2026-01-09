@@ -12,6 +12,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
 from .serializers import StreetActivitySerializer, MomentSerializer
@@ -121,7 +122,6 @@ class StreetActivityViewSet(viewsets.ModelViewSet):
     queryset = StreetActivity.objects.all()
     serializer_class = StreetActivitySerializer
 
-
 class MomentListView(ListView):
     """View to list all moments."""
     model = Moment
@@ -167,7 +167,7 @@ class MomentCreateView(CreateView):
             initial["from_practitioner"] = False
         else:
             initial["from_practitioner"] = True
-        
+
         if "pk" in self.kwargs:
             initial["activity"] = self.activity
         return initial
@@ -192,7 +192,7 @@ class MomentCreateView(CreateView):
             form.instance.from_practitioner = False
         else:
             form.instance.from_practitioner = True
-        
+
         if not self.request.user.is_anonymous:
             profile = self.request.user.profile
             add_xp(profile, form.instance.confidence_level)
@@ -206,9 +206,8 @@ class MomentCreateView(CreateView):
         return reverse_lazy(
             "moment-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
-    
 
-class AddMomentToExperienceView(MomentCreateView):
+class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
     """View to add a moment to an experience."""
 
     form_class = AddMomentToExperienceForm
@@ -290,6 +289,21 @@ def create_experience(request):
     experience = Experience.objects.create(user=request.user)
     return redirect('experience-detail', pk=experience.pk)
 
+class ExperienceCreateView(CreateView, LoginRequiredMixin):
+    """View to create a new experience."""
+    model = Experience
+    form_class = ExperienceForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        response = super().form_valid(form)
+        messages.info(self.request, 
+                     "Ervaring aangemaakt. Voeg nu je eerste moment toe.")
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("add-moment-to-experience", kwargs={"experience_id": self.object.pk})
+
 class ExperienceDetailView(DetailView):
     """Detailview of experience with its related moments"""
     model = Experience
@@ -297,8 +311,12 @@ class ExperienceDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        moments = list(self.object.moments.order_by('date_created').select_related('activity'))
+        context = self.add_moment_data_to_context(context)
+        return context
 
+    def add_moment_data_to_context(self, context):
+        """Adds a list of moments and moment data in JSON format to context"""
+        moments = list(self.object.moments.order_by('date_created').select_related('activity'))
         moment_data = []
         for moment in moments:
             moment_data.append({
@@ -309,7 +327,8 @@ class ExperienceDetailView(DetailView):
                 },
                 'confidence_level': moment.confidence_level,
                 'report': moment.report,
-                'report_snippet': moment.report[:25] + '...' if moment.report and len(moment.report) > 25 else moment.report,
+                'report_snippet': moment.report[:25] + '...' 
+                if moment.report and len(moment.report) > 25 else moment.report,
                 'order': moment.order,
                 'from_practitioner': moment.from_practitioner
             })

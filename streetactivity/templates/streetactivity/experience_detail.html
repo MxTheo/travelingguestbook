@@ -5,7 +5,6 @@
 {% endblock stylesheet %}
 {% block content %}
     <div class="container py-4">
-        <!-- Simple Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h1 class="h3 mb-1">
@@ -14,7 +13,6 @@
                 <p class="text-muted mb-0">{{ experience.date_created|date:"d-m-Y H:i" }}</p>
             </div>
             <div>
-                <!-- PLACEHOLDER: Later knop om moment toe te voegen -->
                 <a href="{% url "add-moment-to-experience" experience.pk %}"
                    class="btn btn-outline-primary">
                     <i class="bi bi-plus-circle me-1"></i>Moment Toevoegen
@@ -84,7 +82,6 @@
                 {% else %}
                     <div class="text-center py-4">
                         <p class="text-muted mb-3">Nog geen momenten van zelfverzekerdheid toegevoegd.</p>
-                        <!-- PLACEHOLDER: Later link om eerste moment toe te voegen -->
                         <a href="{% url "add-moment-to-experience" experience.pk %}"
                            class="text-decoration-none">
                             <div class="alert alert-secondary">

@@ -124,7 +124,6 @@ class Experience(models.Model):
     )
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
-    is_complete = models.BooleanField(default=False, verbose_name="Is voltooid?")
 
     class Meta:
         ordering = ["-date_created"]
@@ -133,4 +132,3 @@ class Experience(models.Model):
 
     def __str__(self):
         return f"Ervaring {self.date_created.strftime('%d-%m-%Y %H:%M')}"
-

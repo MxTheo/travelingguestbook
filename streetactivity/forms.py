@@ -69,6 +69,6 @@ class AddMomentToExperienceForm(MomentForm):
 class ExperienceForm(forms.ModelForm):
     """Form to create an experience with moments"""
     class Meta:
-        """No fiels as experience is just a container for moments"""
+        """No fields as experience is just a container for moments"""
         model = Experience
         fields = []
