@@ -67,46 +67,16 @@ class TestMomentModel:
         moment = Moment.objects.first()  # type: ignore[reportOptionalMemberAccess]
         assert not moment.from_practitioner  # type: ignore[reportOptionalMemberAccess]
 
-    def test_add_moment_to_experience(self, auto_login_user):
-        """Given an experience,
-        test that a moment can be added to that experience"""
-        client, _ = auto_login_user()
-        experience = ExperienceFactory()
-        create_url = reverse("add-moment-to-experience", args=[experience.id])
-        moment_data = create_moment_data()
-
-        response = client.post(create_url, moment_data, follow=True)
-
-        assert response.status_code == 200
-        assert experience.moments.count() == 4
-        assert Moment.objects.count() == 4
-
-    def test_add_second_moment_to_experience_ordering(self, auto_login_user):
-        """Given an experience with one moment,
-        test that adding a second moment auto-increments the order"""
-        client, _ = auto_login_user()
-        experience = ExperienceFactory()
-        moment_at_end = experience.moments.last()
-        create_url = reverse("add-moment-to-experience", args=[experience.id])
-        moment_data = create_moment_data()
-
-        response = client.post(create_url, moment_data, follow=True)
-
-        assert response.status_code == 200
-        assert experience.moments.count() == 4
-        second_moment = experience.moments.order_by('order').last()
-        assert second_moment.order == moment_at_end.order + 1
-
     def test_add_moment_to_experience_with_same_activity_prefilled(self, client):
         """Given an experience,
         test that adding a moment with the same activity pre-fills the form"""
         experience = ExperienceFactory()
-        existing_moment = experience.moments.last()
+        moment = MomentFactory(experience=experience)
         create_url = reverse("add-moment-to-experience", args=[experience.id])
 
         response = client.get(create_url)
         assert response.status_code == 200
-        assert str(existing_moment.activity) in response.content.decode()
+        assert str(moment.activity) in response.content.decode()
 
     def test_moment_listview(self, client):
         """Test the Moment list view to ensure it returns a 200 status code
@@ -199,7 +169,7 @@ def create_moment_data(activity=None):
     if not activity:
         activity = StreetActivityFactory()
     moment_data = MomentFactory.build().__dict__
-    for field in ["_state", "id", 'activity_id', 'experience_id']:
+    for field in ["_state", "id", 'activity_id', 'experience_id', 'from_practitioner', 'date_created', 'date_modified', 'order']:
         moment_data.pop(field, None)
     moment_data['activity'] = activity.id
     return moment_data

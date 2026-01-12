@@ -1,7 +1,9 @@
 from collections import Counter
 import json
 from typing import Optional
+from django.db import transaction
 from django.contrib import messages
+from django.views import View
 from django.views.generic import (
     ListView,
     DetailView,
@@ -11,8 +13,8 @@ from django.views.generic import (
     TemplateView,
 )
 from django.db.models import Count
-from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
@@ -218,16 +220,26 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
 
     form_class = AddMomentToExperienceForm
     context_object_name = "experience"
-    experience_id: Optional[int] = None
+    experience_id: Optional[str] = None
 
     def dispatch(self, request, *args, **kwargs):
         """Determine experience ID from URL parameters. If not present, create a new experience."""
         self.experience_id = self.kwargs.get("experience_id", None)
-        if not self.experience_id:
+        if self.experience_id:
+            request.session['experience_id'] = str(self.experience_id)
+        else:
             messages.info(self.request,
                      """Voeg nu je eerste moment toe aan de ervaring. 
                      Hoe zelfverzekerd voelde jij je toen je begon?""")
         return super().dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        """Set initial values from session moment_data if available"""
+        initial = super().get_initial()
+        moment_data = self.request.session.get('moment_data')
+        if moment_data:
+            initial.update(moment_data)
+        return initial
 
     def get_context_data(self, **kwargs):
         """Extend context data with experience"""
@@ -236,19 +248,102 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
         return context
 
     def form_valid(self, form):
-        """Link the moment to the experience"""
-        if self.experience_id:
-            experience = get_object_or_404(Experience, pk=self.experience_id)
-        else:
-            experience = Experience.objects.create(user=self.request.user)
-            self.experience_id = experience.id
-        form.instance.experience = experience
-        return super().form_valid(form)
+        """Save form data in session instead of DB,
+        then redirect to activity selection page"""
+        self.request.session['moment_data'] = form.cleaned_data
+        return redirect(reverse('select-activity-for-moment'))
 
     def get_success_url(self):
         """Redirect back to the experience form after adding moment"""
         return reverse_lazy('experience-detail',
                             kwargs={'pk': self.experience_id})
+
+class SelectActivityForMomentView(LoginRequiredMixin, ListView):
+    """View to select street activity for a moment being created"""
+    model = StreetActivity
+    template_name = "streetactivity/select_activity_for_moment.html"
+    context_object_name = "activities"
+
+    def post(self, request, *args, **kwargs):
+        """Handle activity selection and redirect to assign activity to moment"""
+        activity_id = request.POST.get('activity_id')
+        if not activity_id:
+            messages.error(request, "Please select an activity.")
+            return redirect('select-activity-for-moment')
+
+        # Save selected activity in session
+        request.session['selected_activity_id'] = int(activity_id)
+        return redirect('assign-activity-to-moment')
+
+class AssignActivityToMomentView(LoginRequiredMixin, View):
+    """View to assign street activity to the moment being created"""
+    def get(self, request, *args, **kwargs):
+        """Assign activity to moment using session data and create moment"""
+        moment_data = request.session.get('moment_data')
+        selected_activity_id = request.session.get('selected_activity_id')
+        experience_id = request.session.get('experience_id')
+
+        redirect_response = self.redirect_to_moment_form_if_missing_data(moment_data, selected_activity_id, experience_id)
+        if redirect_response:
+            return redirect_response
+
+        experience, experience_id = self.get_or_create_experience(experience_id, request.user)
+
+        activity = get_object_or_404(StreetActivity, pk=selected_activity_id)
+
+        self.create_moment(moment_data, experience, activity)
+
+        self.clear_session_data(request)
+
+        messages.success(request, "Moment successfully added to your experience.")
+        return redirect('experience-detail', pk=experience_id)
+
+    def redirect_to_moment_form_if_missing_data(self, moment_data, selected_activity_id, experience_id):
+        """If required session data is missing, redirect to the appropiate moment form"""
+        if not moment_data or not selected_activity_id:
+            if experience_id:
+                url = reverse('add-moment-to-experience', kwargs={'experience_id': experience_id})
+            else:
+                url = reverse('add-first-moment-to-experience')
+            messages.error(self.request, "Incomplete data, please fill the moment form again.")
+            return redirect(url)
+        return None
+
+    def get_or_create_experience(self, experience_id, user):
+        """Returns a tuple of experience instance and experience_id as string,
+        by retrieving existing experience by ID or creating a new one"""
+        if experience_id:
+            try:
+                experience = Experience.objects.get(pk=experience_id)
+                return experience, str(experience_id)
+            except Experience.DoesNotExist:
+                pass
+        experience = Experience.objects.create(user=user)
+        return experience, str(experience.id)
+
+    def create_moment(self, moment_data, experience, activity):
+        """Given all the data for moment,
+        save and return a created moment"""
+        with transaction.atomic():
+            moment = Moment(
+                experience=experience,
+                activity=activity,
+                report=moment_data.get('report', ''),
+                confidence_level=moment_data.get('confidence_level', 0),
+                from_practitioner=moment_data.get('from_practitioner', True),
+                keywords=moment_data.get('keywords', ''),
+                order=0,  # Will be set automatically in save()
+            )
+            moment.save()
+        return moment
+
+    def clear_session_data(self, request):
+        """
+        Remove moment-related data from the session.
+        """
+        for key in ['moment_data', 'selected_activity_id', 'experience_id']:
+            if key in request.session:
+                del request.session[key]
 
 class MomentUpdateView(UpdateView):
     """View to update an moment"""

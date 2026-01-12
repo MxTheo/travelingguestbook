@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from pkg_resources import require
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -60,6 +61,8 @@ class Moment(models.Model):
         on_delete=models.CASCADE,
         related_name="moments",
         verbose_name="Gerelateerde activiteit",
+        null=True,
+        blank=True,
     )
     report = models.TextField(
         max_length=3500,

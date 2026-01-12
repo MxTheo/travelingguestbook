@@ -1,0 +1,21 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}Selecteer Activiteit voor Moment{% endblock title %}
+{% block content %}
+<h2>Select an Activity</h2>
+<form method="post">
+    {% csrf_token %}
+    <ul>
+        {% for activity in activities %}
+            <li>
+                <label>
+                    <input type="radio" name="activity_id" value="{{ activity.id }}">
+                    {{ activity.name }}
+                </label>
+                <a href="{% url 'streetactivity-detail' activity.id %}">Details</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <button type="submit">Select Activity</button>
+</form>
+{% endblock content %}

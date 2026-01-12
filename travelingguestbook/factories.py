@@ -51,11 +51,7 @@ class ExperienceFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     date_created = factory.LazyFunction(fake.date)
-    moments = factory.RelatedFactoryList(
-        MomentFactory,
-        factory_related_name='experience',
-        size=3
-    )
+
 
 class MomentWithExperienceFactory(MomentFactory):
     """Mock for streetactivities Moment with Experience"""
