@@ -25,11 +25,19 @@
                         </a>
                     </div>
                     <div>
-                        <a href="{% url "update-streetactivity" activity.pk %}" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
-                        <a href="{% url 'streetactivity-list' %}"
-                           class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-grid me-1"></i>Alle activiteiten
-                        </a>
+                        {% if not request.session.from_experience %}
+                            <a href="{% url "update-streetactivity" activity.pk %}"
+                               class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
+                            <a href="{% url 'streetactivity-list' %}"
+                               class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-grid me-1"></i>Alle activiteiten
+                            </a>
+                        {% else %}
+                            <a href="{% url "select-activity-for-moment" %}"
+                               class="btn btn-outline-dark btn-sm">
+                                <i class="bi bi-arrow-left me-1"></i>Terug
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -113,12 +121,14 @@
                                         <small class="text-muted" id="filterCount">Totaal: {{ moments_count }} momenten</small>
                                     </div>
                                 </div>
-                                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                                    <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                                       class="btn btn-primary btn-sm">
-                                        <i class="bi bi-list-ul me-1"></i>Alle momenten
-                                    </a>
-                                </div>
+                                {% if not request.session.from_experience %}
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                                           class="btn btn-primary btn-sm">
+                                            <i class="bi bi-list-ul me-1"></i>Alle momenten
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -192,18 +202,22 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="h3 text-primary">Recente Belevingsmomenten</h2>
-                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                           class="btn btn-outline-primary">
-                            <i class="bi bi-list-ul me-1"></i>Alle momenten
-                        </a>
+                        {% if not request.session.from_experience %}
+                            <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-list-ul me-1"></i>Alle momenten
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             <div class="row g-4">
                 {% for moment in recent_moments %}
                     <div class="col-lg-6">
-                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                           class="text-decoration-none">
+                        {% if not request.session.from_experience %}
+                            <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                               class="text-decoration-none">
+                            {% endif %}
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
@@ -219,11 +233,11 @@
                                             {{ moment.date_created|timesince }} geleden
                                         </small>
                                     </div>
-                                    <p class="card-text">"{{ moment.report|truncatewords:30 }}"</p>
+                                    <p class="card-text">"{{ moment.report | truncatewords:65 }}"</p>
                                     {% include "streetactivity/keywords_footer.html" with moment=moment %}
                                 </div>
                             </div>
-                        </a>
+                            {% if not request.session.from_experience %}</a>{% endif %}
                     </div>
                 {% empty %}
                     <div class="col-12">
@@ -243,20 +257,32 @@
                 <div class="card bg-light border-0">
                     <div class="card-body text-center py-5">
                         <h3 class="h4 text-primary mb-3">Jouw moment telt</h3>
-                        <p class="text-muted mb-4">
-                            Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
-                            deze straatactiviteit beter te begrijpen.
-                        </p>
-                        <div class="d-flex gap-3 justify-content-center flex-wrap">
-                            <a href="{% url 'create-moment-from-practitioner' activity.pk %}"
-                               class="btn btn-primary btn-lg">
-                                <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
-                            </a>
-                            <a href="{% url 'create-moment-from-passerby' activity.pk %}"
-                               class="btn btn-outline-primary btn-lg">
-                                <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
-                            </a>
-                        </div>
+                        {% if not request.session.from_experience %}
+                            <p class="text-muted mb-4">
+                                Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
+                                deze straatactiviteit beter te begrijpen.
+                            </p>
+                            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                <a href="{% url 'create-moment-from-practitioner' activity.pk %}"
+                                   class="btn btn-primary btn-lg">
+                                    <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
+                                </a>
+                                <a href="{% url 'create-moment-from-passerby' activity.pk %}"
+                                   class="btn btn-outline-primary btn-lg">
+                                    <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
+                                </a>
+                            </div>
+                        {% else %}
+                            <p class="text-muted mb-4">
+                                jouw beleving helpt ons
+                                deze straatactiviteit beter te begrijpen.
+                            </p>
+                            <form method="post" action="{% url "assign-activity-to-moment" %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="activity_id" value="{{ activity.id }}">
+                                <button type="submit" class="btn btn-primary btn-lg">Selecteer deze activiteit</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>

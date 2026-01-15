@@ -201,19 +201,31 @@ class MomentCreateView(CreateView):
             form.instance.from_practitioner = True
 
         if not self.request.user.is_anonymous:
-            profile = self.request.user.profile  # type: ignore[reportAttributeAccessIssue]
-            add_xp(profile, form.instance.confidence_level)
-            update_lvl(profile)
-            calc_xp_percentage(profile)
-            profile.save()
+            process_xp_and_level(self.request, form.instance.confidence_level)
 
         return super().form_valid(form)
+
+    # def form_invalid(self, form):
+    #     """
+    #     Recreate the form with POST data to preserve all values
+    #     """
+    #     form = MomentForm(self.request.POST)
+    #     return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
         return reverse_lazy(
             "moment-list-streetactivity",
             kwargs={"pk": self.object.activity.pk}  # type: ignore[reportOptionalMemberAccess]
         )
+
+def process_xp_and_level(request, confidence_level):
+    """Given a request and confidence level,
+    process XP and level update for the user profile."""
+    profile = request.user.profile  # type: ignore[reportAttributeAccessIssue]
+    add_xp(profile, int(confidence_level))
+    update_lvl(profile)
+    calc_xp_percentage(profile)
+    profile.save()
 
 class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
     """View to add a moment to an experience."""
@@ -231,6 +243,7 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
             messages.info(self.request,
                      """Voeg nu je eerste moment toe aan de ervaring. 
                      Hoe zelfverzekerd voelde jij je toen je begon?""")
+        request.session['from_experience'] = True
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
@@ -244,12 +257,13 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
     def get_context_data(self, **kwargs):
         """Extend context data with experience"""
         context = super().get_context_data(**kwargs)
-        context['from_experience'] = True
         return context
 
     def form_valid(self, form):
-        """Save form data in session instead of DB,
-        then redirect to activity selection page"""
+        """
+        Save form data in session instead of DB,
+        then redirect to activity selection page
+        """
         self.request.session['moment_data'] = form.cleaned_data
         return redirect(reverse('select-activity-for-moment'))
 
@@ -268,7 +282,7 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
         """Handle activity selection and redirect to assign activity to moment"""
         activity_id = request.POST.get('activity_id')
         if not activity_id:
-            messages.error(request, "Please select an activity.")
+            messages.warning(request, "Geen activiteit geselecteerd. Kies een activiteit")
             return redirect('select-activity-for-moment')
 
         # Save selected activity in session
@@ -278,11 +292,21 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
 class AssignActivityToMomentView(LoginRequiredMixin, View):
     """View to assign street activity to the moment being created"""
     def get(self, request, *args, **kwargs):
+        """Process GET request to assign activity to moment"""
+        return self.process_request(request)
+
+    def post(self, request, *args, **kwargs):
+        """Retrieve activity from POST and put in session"""
+        selected_activity_id = request.POST.get('activity_id')
+        if selected_activity_id:
+            request.session['selected_activity_id'] = selected_activity_id
+        return self.process_request(request)
+
+    def process_request(self, request):
         """Assign activity to moment using session data and create moment"""
         moment_data = request.session.get('moment_data')
         selected_activity_id = request.session.get('selected_activity_id')
         experience_id = request.session.get('experience_id')
-
         redirect_response = self.redirect_to_moment_form_if_missing_data(moment_data, selected_activity_id, experience_id)
         if redirect_response:
             return redirect_response
@@ -295,17 +319,19 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
 
         self.clear_session_data(request)
 
-        messages.success(request, "Moment successfully added to your experience.")
         return redirect('experience-detail', pk=experience_id)
 
     def redirect_to_moment_form_if_missing_data(self, moment_data, selected_activity_id, experience_id):
         """If required session data is missing, redirect to the appropiate moment form"""
-        if not moment_data or not selected_activity_id:
+        if (not moment_data or
+            not moment_data.get('report') or
+            not moment_data.get('keywords') or
+            not selected_activity_id):
             if experience_id:
                 url = reverse('add-moment-to-experience', kwargs={'experience_id': experience_id})
             else:
                 url = reverse('add-first-moment-to-experience')
-            messages.error(self.request, "Incomplete data, please fill the moment form again.")
+            messages.warning(self.request, "Niet alles ingevuld. Vul alstublieft alle velden in")
             return redirect(url)
         return None
 
@@ -324,24 +350,27 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
     def create_moment(self, moment_data, experience, activity):
         """Given all the data for moment,
         save and return a created moment"""
+
         with transaction.atomic():
+            confidence_level = moment_data.get('confidence_level', 0)
             moment = Moment(
                 experience=experience,
                 activity=activity,
                 report=moment_data.get('report', ''),
-                confidence_level=moment_data.get('confidence_level', 0),
+                confidence_level=confidence_level,
                 from_practitioner=moment_data.get('from_practitioner', True),
                 keywords=moment_data.get('keywords', ''),
                 order=0,  # Will be set automatically in save()
             )
             moment.save()
+            process_xp_and_level(self.request, confidence_level)
         return moment
 
     def clear_session_data(self, request):
         """
         Remove moment-related data from the session.
         """
-        for key in ['moment_data', 'selected_activity_id', 'experience_id']:
+        for key in ['moment_data', 'selected_activity_id', 'experience_id', 'from_experience']:
             if key in request.session:
                 del request.session[key]
 

@@ -16,7 +16,7 @@
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <h1 class="display-5 mb-3">
-                        {% if from_experience %}
+                        {% if request.session.from_experience %}
                             Moment toevoegen aan Ervaring
                         {% else %}
                             {% if form.initial.from_practitioner or object.from_practitioner %}
@@ -32,7 +32,7 @@
                     <div class="alert alert-light border">
                         <small class="text-muted">
                             <i class="bi bi-info-circle"></i>
-                            Elk moment, of je nu onzeker of zelfverzekerdheid voelde, draagt bij aan gemeenschappelijk begrip van de straatactiviteit. Alles is voedingsstof voor de bodem.
+                            Elk moment, of je nu onzeker of zelfverzekerd voelde, draagt bij aan gemeenschappelijk begrip van de straatactiviteit. Alles is voedingsstof voor de bodem.
                         </small>
                     </div>
                 </div>
@@ -48,10 +48,6 @@
                     {% include "streetactivity/step_category_selection.html" with form=form %}
                     <!-- Reflection - Stap 2 -->
                     {% include "streetactivity/step_reflection.html" with form=form %}
-                    {% if not activity %}
-                        <!-- Straatactivity - Stap 3 -->
-                        {% include "streetactivity/step_activity.html" with form=form %}
-                    {% endif %}
                     <!-- Submit Buttons -->
                     <div class="d-flex justify-content-between align-items-center">
                         <button onclick="history.back()" class="btn btn-outline-secondary">
@@ -65,6 +61,7 @@
             </div>
         </div>
     </div>
+    
 {% endblock content %}
 {% block javascript %}
     <script>

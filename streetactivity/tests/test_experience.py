@@ -100,7 +100,7 @@ class TestAddMomentToExperienceFlow:
 
         url_add_moment = reverse('add-moment-to-experience', kwargs={'experience_id': experience.id})
         moment_data = create_moment_data()
-        moment_data.pop('activity', None) 
+        moment_data.pop('activity', None)
 
         self.post_moment_data(client, url_add_moment, moment_data)
 
@@ -138,3 +138,47 @@ class TestAddMomentToExperienceFlow:
         response = client.get(url)
         assert response.status_code == 302
         return response
+
+    def test_missing_report(self, auto_login_user):
+        """Given no report is filled in,
+        test if the user is redirected back to the form
+        and gets an error"""
+        client, _ = auto_login_user()
+        url_add_first = reverse('add-first-moment-to-experience')
+        moment_data = create_moment_data()
+        moment_data['report'] = '' # Remove report to simulate missing input
+        moment_data.pop('activity', None)
+        response = client.post(url_add_first, data=moment_data)
+        assert response.status_code == 200
+        errors = response.context['form'].errors
+        assert 'report' in errors
+
+    def test_missing_keywords(self, auto_login_user):
+        """Given no keywords entered,
+        test if the user is redirected back to the form
+        and gets an error"""
+        client, _ = auto_login_user()
+        url_add_first = reverse('add-first-moment-to-experience')
+        moment_data = create_moment_data()
+        moment_data['keywords'] = '' # Remove keywords to simulate missing input
+        moment_data.pop('activity', None)
+        response = client.post(url_add_first, data=moment_data)
+        assert response.status_code == 200  # Form re-rendered
+        errors = response.context['form'].errors
+        assert 'keywords' in errors
+
+    def test_missing_report_and_keywords(self, auto_login_user):
+        """Given no keywords and no report entered,
+        test if the user is redirected back to the form
+        and gets errors"""
+        client, _ = auto_login_user()
+        url_add_first = reverse('add-first-moment-to-experience')
+        moment_data = create_moment_data()
+        moment_data['keywords'] = '' # Remove keywords to simulate missing input
+        moment_data['report'] = '' # Remove report to simulate missing input
+        moment_data.pop('activity', None)
+        response = client.post(url_add_first, data=moment_data)
+        assert response.status_code == 200  # Form re-rendered
+        errors = response.context['form'].errors
+        assert 'keywords' in errors
+        assert 'report' in errors

@@ -1,5 +1,5 @@
 from django import forms
-from .models import StreetActivity, Moment, Experience
+from .models import StreetActivity, Moment, Experience, ConfidenceLevel
 
 class StreetActivityForm(forms.ModelForm):
     """Form for a StreetActivity."""
@@ -30,11 +30,17 @@ class StreetActivityForm(forms.ModelForm):
 class MomentForm(forms.ModelForm):
     """Base form for Moment with common fields."""
 
+    confidence_level = forms.ChoiceField(
+        choices=ConfidenceLevel.choices,
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        label='Hoe zelfverzekerd voelde je je?',
+        initial=ConfidenceLevel.ONZEKER,
+    )
+
     class Meta:
         model = Moment
         fields = ['confidence_level', 'report', 'keywords']
         widgets = {
-            'confidence_level': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'report': forms.Textarea(attrs={
                 'rows': 4,
                 'class': 'form-control',
@@ -55,6 +61,19 @@ class MomentForm(forms.ModelForm):
             'report': 'Vertel iets over je (on)zekerheid in maximaal 3500 karakters',
             'keywords': "3 woorden, gescheiden door komma's",
         }
+
+    def clean(self):
+        """Custom validation to ensure report and keywords are provided."""
+        cleaned_data = super().clean()
+        report = cleaned_data.get('report')
+        keywords = cleaned_data.get('keywords')
+
+        if not report:
+            self.add_error('report', 'Geen reden gegeven. Hoe komt het dat je je zo voelde?')
+        if not keywords:
+            self.add_error('keywords', 'Geef een paar kernwoorden om je reden samen te vatten')
+
+        return cleaned_data
 
 class AddMomentToExperienceForm(MomentForm):
     """Form to add a moment to an experience."""

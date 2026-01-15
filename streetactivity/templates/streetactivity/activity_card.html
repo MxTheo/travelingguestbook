@@ -1,4 +1,4 @@
-<div class="activity-card card shadow-sm h-100">
+<div class="activity-card card shadow-sm h-100 d-flex flex-column">
     <div class="card-body d-flex flex-column">
         <!-- Header -->
         <div class="card-header bg-white border-0 px-0 pt-0">
@@ -25,16 +25,18 @@
         
         <!-- Footer -->
         <div class="card-footer bg-white border-0 px-0 pb-0 pt-3 mt-auto">
-            <div class="d-flex gap-2 mb-2">
-                <a href="{% url 'create-moment-from-practitioner' activity.pk %}" 
-                   class="btn btn-success btn-sm flex-fill">
-                    <i class="bi bi-person-standing me-1"></i>Ik deed dit
-                </a>
-                <a href="{% url 'create-moment-from-passerby' activity.pk %}" 
-                   class="btn btn-outline-success btn-sm flex-fill">
-                    <i class="bi bi-person-walking me-1"></i>Ik kwam langs
-                </a>
-            </div>
+            {% if not request.session.from_experience %}
+                <div class="d-flex gap-2 mb-2">
+                    <a href="{% url 'create-moment-from-practitioner' activity.pk %}" 
+                    class="btn btn-success btn-sm flex-fill">
+                        <i class="bi bi-person-standing me-1"></i>Ik deed dit
+                    </a>
+                    <a href="{% url 'create-moment-from-passerby' activity.pk %}" 
+                    class="btn btn-outline-success btn-sm flex-fill">
+                        <i class="bi bi-person-walking me-1"></i>Ik kwam langs
+                    </a>
+                </div>
+            {% endif %}
             <div class="text-center">
                 <a href="{% url 'streetactivity-detail' activity.pk %}" 
                    class="text-decoration-none fs-7 text-primary">

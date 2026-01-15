@@ -21,7 +21,7 @@
                                        value="{{ value }}"
                                        id="confidence_level_{{ forloop.counter }}"
                                        class="form-check-input"
-                                       {% if form.confidence_level.value == value %}checked{% endif %}>
+                                       {% if form.confidence_level.value|add:"0" == value %}checked{% endif %}>
                                 <label for="confidence_level_{{ forloop.counter }}"
                                        class="form-check-label stretched-link">
                                     <h6 class="card-title">

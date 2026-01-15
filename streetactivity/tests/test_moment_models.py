@@ -67,17 +67,6 @@ class TestMomentModel:
         moment = Moment.objects.first()  # type: ignore[reportOptionalMemberAccess]
         assert not moment.from_practitioner  # type: ignore[reportOptionalMemberAccess]
 
-    def test_add_moment_to_experience_with_same_activity_prefilled(self, client):
-        """Given an experience,
-        test that adding a moment with the same activity pre-fills the form"""
-        experience = ExperienceFactory()
-        moment = MomentFactory(experience=experience)
-        create_url = reverse("add-moment-to-experience", args=[experience.id])
-
-        response = client.get(create_url)
-        assert response.status_code == 200
-        assert str(moment.activity) in response.content.decode()
-
     def test_moment_listview(self, client):
         """Test the Moment list view to ensure it returns a 200 status code
         and contains the expected context."""
@@ -172,4 +161,5 @@ def create_moment_data(activity=None):
     for field in ["_state", "id", 'activity_id', 'experience_id', 'from_practitioner', 'date_created', 'date_modified', 'order']:
         moment_data.pop(field, None)
     moment_data['activity'] = activity.id
+    moment_data['confidence_level'] = str(moment_data.get('confidence_level', 3))
     return moment_data

@@ -1,4 +1,5 @@
 import uuid
+from django.test import RequestFactory
 from django.urls import reverse
 from django.contrib.messages import get_messages
 from django.contrib import messages
@@ -74,7 +75,7 @@ class TestSelectActivityForMoment:
         assert response.url == url  # redirect back to same page
 
         messages = list(get_messages(response.wsgi_request))
-        assert any("Please select an activity." in str(m) for m in messages)
+        assert any("Geen activiteit geselecteerd" in str(m) for m in messages)
 
     def test_post_with_valid_activity_id(self, auto_login_user):
         """
@@ -156,6 +157,59 @@ class TestAssignActivityToMomentView:
         assert response.status_code == 302
         assert reverse('add-first-moment-to-experience') in response.url
 
+    def test_redirect_to_moment_form_if_report_is_missing(self, rf, auto_login_user):
+        """
+        Test that redirect_to_moment_form_if_missing_data redirects to moment form
+        if 'report' is missing or empty in moment_data.
+        """
+        _, user = auto_login_user()
+        request = rf.get('/')
+        request.user = user
+        request = add_middleware_to_request(request)
+
+        view = AssignActivityToMomentView()
+        view.request = request
+
+        moment_data = {
+            'keywords': 'some,keywords',
+            'confidence_level': 3,
+            'from_practitioner': True,
+        }
+        selected_activity_id = 1
+        experience_id = None
+
+        response = view.redirect_to_moment_form_if_missing_data(moment_data, selected_activity_id, experience_id)
+        assert response is not None
+        assert response.status_code == 302
+        assert reverse('add-first-moment-to-experience') in response.url
+
+
+    def test_redirect_to_moment_form_if_keywords_are_missing(self, rf, auto_login_user):
+        """
+        Test that redirect_to_moment_form_if_missing_data redirects to moment form
+        if 'keywords' is missing or empty in moment_data.
+        """
+        _, user = auto_login_user()
+        request = rf.get('/')
+        request.user = user
+        request = add_middleware_to_request(request)
+
+        view = AssignActivityToMomentView()
+        view.request = request
+
+        moment_data = {
+            'report': 'Some report',
+            'confidence_level': 3,
+            'from_practitioner': True,
+        }
+        selected_activity_id = 1
+        experience_id = None
+
+        response = view.redirect_to_moment_form_if_missing_data(moment_data, selected_activity_id, experience_id)
+        assert response is not None
+        assert response.status_code == 302
+        assert reverse('add-first-moment-to-experience') in response.url
+
     def test_redirect_to_moment_form_if_selected_activity_id_is_missing_but_experience_id_present(self, rf, auto_login_user):
         """Given no activity_id but only experience_id,
         test redirect to moment form"""
@@ -166,7 +220,7 @@ class TestAssignActivityToMomentView:
         view.request = add_middleware_to_request(view.request)
 
         fake_uuid = str(uuid.uuid4())
-        response = view.redirect_to_moment_form_if_missing_data({'report': 'x'}, None, fake_uuid)
+        response = view.redirect_to_moment_form_if_missing_data({'report': 'x', 'keywords':'x'}, None, fake_uuid)
         assert response.status_code == 302
         assert reverse('add-moment-to-experience', kwargs={'experience_id': fake_uuid}) in response.url
 
@@ -180,7 +234,7 @@ class TestAssignActivityToMomentView:
         view.request = add_middleware_to_request(view.request)
 
         fake_uuid = str(uuid.uuid4())
-        response = view.redirect_to_moment_form_if_missing_data({'report': 'x'}, '123', fake_uuid)
+        response = view.redirect_to_moment_form_if_missing_data({'report': 'x', 'keywords':'x'}, '123', fake_uuid)
         assert response is None
 
     def test_get_existing_experience(self, auto_login_user):
@@ -221,6 +275,9 @@ class TestAssignActivityToMomentView:
         test if a moment instance is created"""
         user = auto_login_user()[1]
         view = AssignActivityToMomentView()
+        view.request = RequestFactory().get('/')
+        view.request.user = user
+
         experience = ExperienceFactory(user=user)
         activity = StreetActivityFactory(
             name="Test",
@@ -231,7 +288,7 @@ class TestAssignActivityToMomentView:
         )
         moment_data = {
             'report': 'Report text',
-            'confidence_level': 3,
+            'confidence_level': 2,
             'from_practitioner': True,
             'keywords': 'key1,key2',
         }
@@ -257,6 +314,75 @@ class TestAssignActivityToMomentView:
         assert 'moment_data' not in request.session
         assert 'selected_activity_id' not in request.session
         assert 'experience_id' not in request.session
+
+    def test_assign_activity_to_moment_post_creates_moment(self, auto_login_user):
+        """Given session data with moment_data and no experience,
+        when posting with a selected activity,
+        test that a new experience and moment are created,
+        and the user is redirected to the experience detail page."""
+        client = auto_login_user()[0]
+
+        activity = StreetActivityFactory()
+
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        session = client.session
+        session['moment_data'] = moment_data
+        session['experience_id'] = None  # Nieuwe experience verwacht
+        session.save()
+
+        url = reverse('assign-activity-to-moment')
+
+        # POST met geselecteerde activiteit
+        response = client.post(url, data={'activity_id': str(activity.id)})
+
+        # Check redirect naar experience detail
+        assert response.status_code == 302
+        experience = Experience.objects.first()
+        moment = Moment.objects.first()
+
+        assert experience is not None
+        assert moment is not None
+        assert moment.experience == experience
+        assert moment.activity == activity
+        assert moment.report == moment_data['report']
+        assert response.url == reverse('experience-detail', kwargs={'pk': experience.id})
+
+    def test_lvl_up_on_moment_creation(self, auto_login_user):
+        """Given a user creating a moment with confidence level,
+        test that XP and level are processed correctly."""
+        client, user = auto_login_user()
+
+        activity = StreetActivityFactory()
+
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+        confidence_level = 0
+        moment_data['confidence_level'] = confidence_level
+
+        session = client.session
+        session['moment_data'] = moment_data
+        session['experience_id'] = None
+        session.save()
+
+        url = reverse('assign-activity-to-moment')
+
+        # Capture initial XP and level
+        initial_xp = user.profile.xp
+        initial_level = user.profile.lvl
+
+        # POST met geselecteerde activiteit
+        client.post(url, data={'activity_id': str(activity.id)})
+
+        # Refresh user profile
+        user.profile.refresh_from_db()
+
+        # Check that XP and level have been updated
+        assert user.profile.xp > initial_xp
+        assert user.profile.lvl >= initial_level
+
+
 
 def add_middleware_to_request(request):
     """Add session and message middleware to the request for testing purposes."""
