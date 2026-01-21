@@ -158,7 +158,14 @@ def create_moment_data(activity=None):
     if not activity:
         activity = StreetActivityFactory()
     moment_data = MomentFactory.build().__dict__
-    for field in ["_state", "id", 'activity_id', 'experience_id', 'from_practitioner', 'date_created', 'date_modified', 'order']:
+    for field in [
+        "_state",
+        "id",
+        'activity_id',
+        'experience_id',
+        'from_practitioner',
+        'date_created', 'date_modified',
+        'order']:
         moment_data.pop(field, None)
     moment_data['activity'] = activity.id
     moment_data['confidence_level'] = str(moment_data.get('confidence_level', 3))

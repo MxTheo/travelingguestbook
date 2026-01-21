@@ -50,6 +50,23 @@ class TestExperience:
         assert Experience.objects.count() == 0
         assert response.redirect_chain[0][0] == reverse("user", kwargs={"username": user.username})
 
+    def test_add_moment_data_to_context(self, auto_login_user):
+        """Test that the moment_data is created in json format of the Experience detail view"""
+        client, user = auto_login_user()
+        experience = ExperienceFactory(user=user)
+        MomentFactory(
+            experience=experience,
+            report="Test report",
+        )
+        detail_url = reverse("experience-detail", kwargs={"pk": experience.id})
+
+        response = client.get(detail_url)
+
+        assert response.status_code == 200
+        moment_data_json = response.context["moments_json"]
+        assert '"report": "Test report"' in moment_data_json
+
+
 class TestAddMomentToExperienceFlow:
     """Test the full flow of adding moments to experience"""
     def test_add_first_moment_to_experience(self, auto_login_user):
@@ -98,7 +115,8 @@ class TestAddMomentToExperienceFlow:
         MomentFactory(experience=experience)
         activity_new_moment = StreetActivityFactory()
 
-        url_add_moment = reverse('add-moment-to-experience', kwargs={'experience_id': experience.id})
+        url_add_moment = reverse('add-moment-to-experience',
+                                 kwargs={'experience_id': experience.id})
         moment_data = create_moment_data()
         moment_data.pop('activity', None)
 
@@ -182,3 +200,27 @@ class TestAddMomentToExperienceFlow:
         errors = response.context['form'].errors
         assert 'keywords' in errors
         assert 'report' in errors
+
+    def test_updating_moment_data_when_going_back_to_moment_form(self, auto_login_user):
+        """
+        Given there is already moment data present,
+        for example when the user goes back to the form,
+        test that the initial values from the session are given
+        """
+        client, _ = auto_login_user()
+        url_add_first = reverse('add-first-moment-to-experience')
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        # First post to set session data
+        response = client.post(url_add_first, data=moment_data)
+        assert response.status_code == 302
+        assert response.url == reverse('select-activity-for-moment')
+
+        # Now go back to the moment form
+        response = client.get(url_add_first)
+        assert response.status_code == 200
+
+        form = response.context['form']
+        for field, value in moment_data.items():
+            assert form.initial[field] == value

@@ -53,9 +53,9 @@
                     {% include "streetactivity/step_reflection.html" with form=form %}
                     <!-- Submit Buttons -->
                     <div class="d-flex justify-content-between align-items-center">
-                        <button onclick="history.back()" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left"></i> Terug
-                        </button>
+                        <a href="{{ request.session.cancel_url|default:'/' }}" class="btn btn-secondary btn-lg">
+                            <i class="bi bi-x-lg"></i> Annuleer
+                        </a>
                         <button type="submit" class="btn btn-primary btn-lg">
                             <i class="bi bi-send me-1"></i> Verzenden
                         </button>

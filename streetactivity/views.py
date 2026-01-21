@@ -26,6 +26,7 @@ from .forms import (
     ExperienceForm,
     AddMomentToExperienceForm,
 )
+from .utils.session_helpers import setup_session_for_cancel
 
 CONFIRM_DELETE_TEMPLATE = "admin/confirm_delete.html"
 
@@ -105,7 +106,7 @@ class StreetActivityCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy("streetactivity-detail",
-                            kwargs={"pk": self.object.pk})  # type: ignore[reportOptionalMemberAccess]
+                            kwargs={"pk": self.object.pk})
 
 class StreetActivityUpdateView(UpdateView):
     """View to update an existing street activity."""
@@ -205,13 +206,6 @@ class MomentCreateView(CreateView):
 
         return super().form_valid(form)
 
-    # def form_invalid(self, form):
-    #     """
-    #     Recreate the form with POST data to preserve all values
-    #     """
-    #     form = MomentForm(self.request.POST)
-    #     return self.render_to_response(self.get_context_data(form=form))
-
     def get_success_url(self):
         return reverse_lazy(
             "moment-list-streetactivity",
@@ -244,6 +238,7 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
                      """Voeg nu je eerste moment toe aan de ervaring. 
                      Hoe zelfverzekerd voelde jij je toen je begon?""")
         request.session['from_experience'] = True
+        setup_session_for_cancel(request, self.kwargs)
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
@@ -265,12 +260,11 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
         then redirect to activity selection page
         """
         self.request.session['moment_data'] = form.cleaned_data
-        return redirect(reverse('select-activity-for-moment'))
+        return super().form_valid(form)
 
     def get_success_url(self):
-        """Redirect back to the experience form after adding moment"""
-        return reverse_lazy('experience-detail',
-                            kwargs={'pk': self.experience_id})
+        """Redirect to the next step: select activity for moment"""
+        return reverse('select-activity-for-moment')
 
 class SelectActivityForMomentView(LoginRequiredMixin, ListView):
     """View to select street activity for a moment being created"""
@@ -279,13 +273,13 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
     context_object_name = "activities"
 
     def post(self, request, *args, **kwargs):
-        """Handle activity selection and redirect to assign activity to moment"""
+        """Handle activity selection by saving selected activity in session
+        and redirect to assign activity to moment"""
         activity_id = request.POST.get('activity_id')
         if not activity_id:
             messages.warning(request, "Geen activiteit geselecteerd. Kies een activiteit")
             return redirect('select-activity-for-moment')
 
-        # Save selected activity in session
         request.session['selected_activity_id'] = int(activity_id)
         return redirect('assign-activity-to-moment')
 
@@ -307,7 +301,10 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
         moment_data = request.session.get('moment_data')
         selected_activity_id = request.session.get('selected_activity_id')
         experience_id = request.session.get('experience_id')
-        redirect_response = self.redirect_to_moment_form_if_missing_data(moment_data, selected_activity_id, experience_id)
+        redirect_response = self.redirect_to_moment_form_if_missing_data(
+            moment_data,
+            selected_activity_id,
+            experience_id)
         if redirect_response:
             return redirect_response
 
@@ -321,7 +318,11 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
 
         return redirect('experience-detail', pk=experience_id)
 
-    def redirect_to_moment_form_if_missing_data(self, moment_data, selected_activity_id, experience_id):
+    def redirect_to_moment_form_if_missing_data(
+            self,
+            moment_data,
+            selected_activity_id,
+            experience_id):
         """If required session data is missing, redirect to the appropiate moment form"""
         if (not moment_data or
             not moment_data.get('report') or
@@ -370,7 +371,12 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
         """
         Remove moment-related data from the session.
         """
-        for key in ['moment_data', 'selected_activity_id', 'experience_id', 'from_experience']:
+        for key in [
+            'cancel_url',
+            'moment_data',
+            'selected_activity_id',
+            'experience_id',
+            'from_experience']:
             if key in request.session:
                 del request.session[key]
 

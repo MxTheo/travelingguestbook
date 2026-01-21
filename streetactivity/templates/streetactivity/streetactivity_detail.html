@@ -37,6 +37,10 @@
                                class="btn btn-outline-dark btn-sm">
                                 <i class="bi bi-arrow-left me-1"></i>Terug
                             </a>
+                            <a href="{{ request.session.cancel_url|default:'/' }}"
+                               class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-x-lg me-1"></i>Annuleren
+                            </a>
                         {% endif %}
                     </div>
                 </div>

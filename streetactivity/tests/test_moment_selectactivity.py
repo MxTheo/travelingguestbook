@@ -178,7 +178,10 @@ class TestAssignActivityToMomentView:
         selected_activity_id = 1
         experience_id = None
 
-        response = view.redirect_to_moment_form_if_missing_data(moment_data, selected_activity_id, experience_id)
+        response = view.redirect_to_moment_form_if_missing_data(
+            moment_data,
+            selected_activity_id,
+            experience_id)
         assert response is not None
         assert response.status_code == 302
         assert reverse('add-first-moment-to-experience') in response.url
@@ -205,12 +208,17 @@ class TestAssignActivityToMomentView:
         selected_activity_id = 1
         experience_id = None
 
-        response = view.redirect_to_moment_form_if_missing_data(moment_data, selected_activity_id, experience_id)
+        response = view.redirect_to_moment_form_if_missing_data(
+            moment_data, selected_activity_id,
+            experience_id)
         assert response is not None
         assert response.status_code == 302
         assert reverse('add-first-moment-to-experience') in response.url
 
-    def test_redirect_to_moment_form_if_selected_activity_id_is_missing_but_experience_id_present(self, rf, auto_login_user):
+    def test_redirect_to_moment_form_if_selected_activity_id_is_missing_but_experience_id_present(
+            self,
+            rf,
+            auto_login_user):
         """Given no activity_id but only experience_id,
         test redirect to moment form"""
         _, user = auto_login_user()
@@ -220,9 +228,13 @@ class TestAssignActivityToMomentView:
         view.request = add_middleware_to_request(view.request)
 
         fake_uuid = str(uuid.uuid4())
-        response = view.redirect_to_moment_form_if_missing_data({'report': 'x', 'keywords':'x'}, None, fake_uuid)
+        response = view.redirect_to_moment_form_if_missing_data(
+            {'report': 'x', 'keywords':'x'},
+            None,
+            fake_uuid)
         assert response.status_code == 302
-        assert reverse('add-moment-to-experience', kwargs={'experience_id': fake_uuid}) in response.url
+        assert reverse('add-moment-to-experience',
+                       kwargs={'experience_id': fake_uuid}) in response.url
 
     def test_no_redirect_to_moment_form_if_all_data_present(self, rf, auto_login_user):
         """Given all the data,
@@ -234,7 +246,10 @@ class TestAssignActivityToMomentView:
         view.request = add_middleware_to_request(view.request)
 
         fake_uuid = str(uuid.uuid4())
-        response = view.redirect_to_moment_form_if_missing_data({'report': 'x', 'keywords':'x'}, '123', fake_uuid)
+        response = view.redirect_to_moment_form_if_missing_data(
+            {'report': 'x', 'keywords':'x'},
+            '123',
+            fake_uuid)
         assert response is None
 
     def test_get_existing_experience(self, auto_login_user):
@@ -307,6 +322,7 @@ class TestAssignActivityToMomentView:
         request.session['moment_data'] = 'data'
         request.session['selected_activity_id'] = 1
         request.session['experience_id'] = 'uuid'
+        request.session['cancel_url'] = '/some-url/'
 
         view = AssignActivityToMomentView()
         view.clear_session_data(request)
@@ -314,6 +330,7 @@ class TestAssignActivityToMomentView:
         assert 'moment_data' not in request.session
         assert 'selected_activity_id' not in request.session
         assert 'experience_id' not in request.session
+        assert 'cancel_url' not in request.session
 
     def test_assign_activity_to_moment_post_creates_moment(self, auto_login_user):
         """Given session data with moment_data and no experience,
@@ -381,8 +398,6 @@ class TestAssignActivityToMomentView:
         # Check that XP and level have been updated
         assert user.profile.xp > initial_xp
         assert user.profile.lvl >= initial_level
-
-
 
 def add_middleware_to_request(request):
     """Add session and message middleware to the request for testing purposes."""
