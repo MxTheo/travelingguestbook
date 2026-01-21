@@ -1,5 +1,5 @@
 from django.urls import reverse
-from travelingguestbook.factories import MomentFactory, StreetActivityFactory, ExperienceFactory
+from travelingguestbook.factories import MomentFactory, StreetActivityFactory
 from streetactivity.models import Moment
 
 

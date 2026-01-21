@@ -16,6 +16,11 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 {% include "admin/messages_feed.html" %}
+                {% if show_first_moment_message %}
+                    <div class="alert alert-info">
+                        Voeg nu je eerste moment toe aan de ervaring. Hoe zelfverzekerd voelde jij je toen je begon?
+                    </div>
+                {% endif %}
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <h1 class="display-5 mb-3">

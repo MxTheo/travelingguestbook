@@ -191,10 +191,9 @@ class MomentCreateView(CreateView):
     def form_valid(self, form):
         if "pk" in self.kwargs:
             form.instance.activity = self.activity
-
-        messages.add_message(self.request, messages.SUCCESS,
-                             "Bedankt voor het delen van jouw moment! " \
-                             "Dit helpt anderen deze activiteit te begrijpen. ")
+            messages.add_message(self.request, messages.SUCCESS,
+                                 "Bedankt voor het delen van jouw moment! " \
+                             "Dit helpt anderen deze activiteit te begrijpen.")
 
         if "voorbijganger" in self.request.path:
             form.instance.from_practitioner = False
@@ -233,10 +232,6 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
         self.experience_id = self.kwargs.get("experience_id", None)
         if self.experience_id:
             request.session['experience_id'] = str(self.experience_id)
-        else:
-            messages.info(self.request,
-                     """Voeg nu je eerste moment toe aan de ervaring. 
-                     Hoe zelfverzekerd voelde jij je toen je begon?""")
         request.session['from_experience'] = True
         setup_session_for_cancel(request, self.kwargs)
         return super().dispatch(request, *args, **kwargs)
@@ -252,6 +247,8 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
     def get_context_data(self, **kwargs):
         """Extend context data with experience"""
         context = super().get_context_data(**kwargs)
+        if not self.experience_id:
+            context['show_first_moment_message'] = True
         return context
 
     def form_valid(self, form):
