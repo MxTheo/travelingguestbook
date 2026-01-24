@@ -41,6 +41,7 @@ class StreetActivity(models.Model):
         return str(self.name)
 
 class ConfidenceLevel(models.IntegerChoices):
+    """Choices for confidence level."""
     ONZEKER       = 0, "onzeker"
     TUSSENIN      = 1, "tussenin"
     ZELFVERZEKERD = 2, "zelverzekerd"

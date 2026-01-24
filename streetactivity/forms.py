@@ -75,16 +75,6 @@ class MomentForm(forms.ModelForm):
 
         return cleaned_data
 
-class AddMomentToExperienceForm(MomentForm):
-    """Form to add a moment to an experience."""
-    class Meta(MomentForm.Meta):
-        fields = MomentForm.Meta.fields + ['activity']
-        labels = MomentForm.Meta.labels.copy()
-        labels.update({
-            'activity': 'Wat heb je gedaan?',
-        })
-        help_texts = MomentForm.Meta.help_texts.copy()
-
 class ExperienceForm(forms.ModelForm):
     """Form to create an experience with moments"""
     class Meta:

@@ -4,9 +4,14 @@
     box-shadow: 0 0 0 3px rgba(var(--bs-success-rgb), 0.1) !important;
 }
 
+.card-select-label.selected {
+    border: 2px solid var(--bs-primary); /* Bootstrap primary kleur */
+    box-shadow: 0 0 10px var(--bs-danger);
+}
+
 /* Hover effect for cards */
 .card-select-label:hover .activity-card {
-    border-color: var(--bs-success-border-subtle);
+    border-color: var(--bs-success-border);
     transform: translateY(-2px);
     transition: all 0.2s ease;
 }

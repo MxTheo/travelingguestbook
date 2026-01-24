@@ -8,7 +8,7 @@ from django.contrib.sessions.middleware import SessionMiddleware
 from streetactivity.views import AssignActivityToMomentView
 from streetactivity.tests.test_moment_models import create_moment_data
 from streetactivity.models import Moment, Experience
-from travelingguestbook.factories import ExperienceFactory, StreetActivityFactory
+from travelingguestbook.factories import ExperienceFactory, MomentFactory, StreetActivityFactory
 
 class TestSelectActivityForMoment:
     """Test the session driven flow to select streetactivity for moments"""
@@ -412,3 +412,211 @@ def add_middleware_to_request(request):
     request._messages = messages.storage.default_storage(request)
 
     return request
+
+class TestShowActivityOnMomentForm:
+    """Tests that the streetactivity is shown and selected on moment form when adding a moment to an experience"""
+    def test_when_user_selected_activity_in_next_page(self, auto_login_user):
+        """
+        Given the user goes back from select activity in the moment form,
+        by clicking the back button in browser
+        test that the activity that is selected is shown on the moment form page
+        """
+        client, _ = auto_login_user()
+
+        # Create experience and first moment with activity
+        activity1 = StreetActivityFactory(name="Test1 Activity")
+
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        session = client.session
+        session['moment_data'] = moment_data
+        session.save()
+
+        url = reverse("add-first-moment-to-experience")
+        client.get(url)
+
+        url_next = reverse("select-activity-for-moment")
+        client.get(url_next)
+        # Select activity on the select page
+        response = client.post(url_next, data={'activity_id': str(activity1.id)})
+
+
+        assert response.status_code == 302
+        # Go to previous page (browser back button)
+        response = client.get(url)
+
+        # Assert that the selected activity is shown on page
+        assert response.status_code == 200
+        content = response.content.decode()
+        assert "Test1 Activity" in content
+        assert 'selected="selected"' in content
+
+    def test_when_user_adds_second_moment(self, auto_login_user):
+        """
+        Given the user adds a second moment to experience,
+        test that the streetactivity of the first moment is shown and selected in the moment form
+        """
+        client, user = auto_login_user()
+
+        # Create experience and first moment with activity
+        experience = ExperienceFactory(user=user)
+        activity1 = StreetActivityFactory(name="Test1 Activity")
+        MomentFactory(
+            experience=experience,
+            activity=activity1,
+            report="First moment report",
+            confidence_level=1,
+            keywords="first,moment"
+        )
+
+        # Now add second moment
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        session = client.session
+        session['moment_data'] = moment_data
+        session['experience_id'] = str(experience.id)
+        session.save()
+
+        url = reverse('add-moment-to-experience', kwargs={'experience_id': experience.id})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        content = response.content.decode()
+
+        # Check that the activity of the first moment is shown and selected
+        assert "Test1 Activity" in content
+        assert 'selected="selected"' in content  # Ensure it's selected
+
+    def test_when_user_adds_third_moment(self, auto_login_user):
+        """
+        Given the user adds a third moment to experience,
+        test that the streetactivity of the moment before (the second moment) is shown and selected in the moment form
+        """
+        client, user = auto_login_user()
+
+        # Create experience and first two moments with activities
+        experience = ExperienceFactory(user=user)
+        activity1 = StreetActivityFactory(name="Activity 1")
+        MomentFactory(
+            experience=experience,
+            activity=activity1,
+            report="First moment report",
+            confidence_level=1,
+            keywords="first,moment"
+        )
+        activity2 = StreetActivityFactory(name="Activity 2")
+        MomentFactory(
+            experience=experience,
+            activity=activity2,
+            report="Second moment report",
+            confidence_level=2,
+            keywords="second,moment"
+        )
+
+        # Now add third moment
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        session = client.session
+        session['moment_data'] = moment_data
+        session['experience_id'] = str(experience.id)
+        session.save()
+
+        url = reverse('add-moment-to-experience', kwargs={'experience_id': experience.id})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        content = response.content.decode()
+
+        # Check that the activity of the second moment is shown and selected
+        assert "Activity 2" in content
+        assert 'selected="selected"' in content  # Ensure it's selected
+
+    def test_when_user_adds_second_moment_activity_is_already_selected(self, auto_login_user):
+        """Given the user adds a second moment to experience,
+        test that the initial value of the streetactivity for the second moment is the streetactivity of the first moment"""
+        client, user = auto_login_user()
+
+        # Create experience and first moment with activity
+        experience = ExperienceFactory(user=user)
+        activity1 = StreetActivityFactory(name="Activity One")
+        MomentFactory(
+            experience=experience,
+            activity=activity1,
+            report="First moment report",
+            confidence_level=1,
+            keywords="first,moment"
+        )
+
+        # Now add second moment
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        session = client.session
+        session['moment_data'] = moment_data
+        session['experience_id'] = str(experience.id)
+        session.save()
+
+        url = reverse('add-moment-to-experience', kwargs={'experience_id': experience.id})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        content = response.content.decode()
+
+        # Check that the activity of the first moment is the initial value for the second moment form
+        assert "Activity One" in content
+        assert 'selected="selected"' in content  # Ensure it's selected
+
+    def test_no_activity_selected_on_first_visit(self, auto_login_user):
+        """
+        Given the user adds a moment to an experience with no previous moments,
+        test that no streetactivity is pre-selected in the moment form
+        """
+        client, _ = auto_login_user()
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        session = client.session
+        session['moment_data'] = moment_data
+        session.save()
+
+        url = reverse("add-first-moment-to-experience")
+        response = client.get(url)
+
+        assert response.status_code == 200
+        content = response.content.decode()
+        # Er zou geen activiteit geselecteerd moeten zijn
+        assert 'selected="selected"' not in content
+
+    def test_initial_activity_selected_from_session(self, auto_login_user):
+        # Setup user en login
+        client, _ = auto_login_user()
+
+        # Maak een activiteit aan
+        activity = StreetActivityFactory(name="Test Activity")
+        experience = ExperienceFactory()
+
+        # Zet de activiteit in de sessie als geselecteerd
+        session = client.session
+        session['selected_activity_id'] = activity.id
+        session.save()
+
+        # Ga naar de add moment pagina
+        url = reverse("add-moment-to-experience", kwargs={"experience_id": experience.id})  # pas aan indien nodig
+        response = client.get(url)
+
+        assert response.status_code == 200
+        content = response.content.decode()
+
+        # Controleer of de activiteit naam in de pagina staat (voorselectie zichtbaar)
+        assert "Test Activity" in content
+
+
+    def test_when_activity_changed_on_second_page(self, auto_login_user):
+        """
+        Given the user changes the activity on the second page,
+        test that that changed streetactivity is selected in the moment form
+        """
+    

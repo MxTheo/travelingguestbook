@@ -24,7 +24,6 @@ from .forms import (
     MomentForm,
     StreetActivityForm,
     ExperienceForm,
-    AddMomentToExperienceForm,
 )
 from .utils.session_helpers import setup_session_for_cancel
 
@@ -223,7 +222,7 @@ def process_xp_and_level(request, confidence_level):
 class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
     """View to add a moment to an experience."""
 
-    form_class = AddMomentToExperienceForm
+    form_class = MomentForm
     context_object_name = "experience"
     experience_id: Optional[str] = None
 
@@ -247,6 +246,12 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
     def get_context_data(self, **kwargs):
         """Extend context data with experience"""
         context = super().get_context_data(**kwargs)
+        selected_activity_id = self.request.session.get('selected_activity_id')
+        if selected_activity_id:
+            selected_activity = get_object_or_404(StreetActivity, id=selected_activity_id)
+            context['selected_activity'] = selected_activity
+        else:
+            context['selected_activity'] = None
         if not self.experience_id:
             context['show_first_moment_message'] = True
         return context
@@ -268,6 +273,37 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
     model = StreetActivity
     template_name = "streetactivity/select_activity_for_moment.html"
     context_object_name = "activities"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        selected_activity_id = self.request.session.get('selected_activity_id')
+        context['selected_activity_id'] = selected_activity_id
+        experience_id = self.request.session.get('experience_id')
+        if experience_id:
+            context['back_url'] = reverse('add-moment-to-experience', args=[experience_id])
+        else:
+            context['back_url'] = reverse('add-first-moment-to-experience')
+        return context
+
+    def get(self, request, *args, **kwargs):
+        """Handle GET request to preselect activity if activity_id is in GET params"""
+        activity_id = request.GET.get('activity_id')
+        activity = None
+        if activity_id:
+            try:
+                activity = StreetActivity.objects.get(id=activity_id)
+            except StreetActivity.DoesNotExist:
+                pass
+        else:
+            activity = StreetActivity.objects.first()
+        if activity:
+            request.session['selected_activity_id'] = activity.id
+        # Optioneel: update moment_data in sessie
+            moment_data = request.session.get('moment_data', {})
+            moment_data['activity'] = activity.id
+            request.session['moment_data'] = moment_data
+        # Geen activity_id in GET, toon gewoon lijst
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """Handle activity selection by saving selected activity in session
