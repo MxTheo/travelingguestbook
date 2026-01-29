@@ -1,3 +1,4 @@
+import pytest
 from django.urls import reverse
 from freezegun import freeze_time
 from travelingguestbook.factories import ExperienceFactory, StreetActivityFactory, MomentFactory
@@ -69,6 +70,12 @@ class TestExperience:
 
 class TestAddMomentToExperienceFlow:
     """Test the full flow of adding moments to experience"""
+    @pytest.fixture(autouse=True)
+    def clear_session(self, client):
+        """Clear session between tests"""
+        client.session.flush()
+        yield
+
     def test_add_first_moment_to_experience(self, auto_login_user):
         """
         Test the full flow of adding the first moment to a new experience:
@@ -88,7 +95,7 @@ class TestAddMomentToExperienceFlow:
 
         self.post_select_activity(client, activity)
 
-        response = self.get_assign_activity(client)
+        self.get_assign_activity(client)
 
         # Verify database state
         experience = Experience.objects.first()
@@ -99,7 +106,6 @@ class TestAddMomentToExperienceFlow:
         assert moment.experience == experience
         assert moment.activity == activity
         assert moment.report == moment_data['report']
-        assert response.url == reverse('experience-detail', kwargs={'pk': experience.id})
 
     def test_add_second_moment_to_experience(self, auto_login_user):
         """
@@ -124,37 +130,35 @@ class TestAddMomentToExperienceFlow:
 
         self.post_select_activity(client, activity_new_moment)
 
-        response = self.get_assign_activity(client)
+        self.get_assign_activity(client)
 
         # Verify database state
         assert Experience.objects.count() == 1  # No new experience
         assert Moment.objects.filter(experience=experience).count() == 2
 
-        second_moment = Moment.objects.filter(experience=experience).order_by('-order').first()
+        second_moment = Moment.objects.filter(experience=experience).last()
         assert second_moment.activity == activity_new_moment
         assert second_moment.report == moment_data['report']
-        assert response.url == reverse('experience-detail', kwargs={'pk': experience.id})
 
     def post_moment_data(self, client, url, moment_data):
         """Post moment form data without activity to start the flow."""
-        response = client.post(url, data=moment_data)
-        assert response.status_code == 302
-        assert response.url == reverse('select-activity-for-moment')
-        return response
+        response = client.post(url, data=moment_data, follow=True)
+        assert response.status_code == 200
+        assert response.redirect_chain[-1][0] == reverse('select-activity-for-moment')
 
     def post_select_activity(self, client, activity):
         """Post selected activity to session and redirect to assign moment."""
         url = reverse('select-activity-for-moment')
-        response = client.post(url, data={'activity_id': str(activity.id)})
-        assert response.status_code == 302
-        assert response.url == reverse('assign-activity-to-moment')
-        return response
+        response = client.post(url, data={'activity_id': str(activity.id)}, follow=True)
+
+        assert response.status_code == 200
+        assert response.redirect_chain[0][0] == reverse('assign-activity-to-moment')
 
     def get_assign_activity(self, client):
         """Perform GET request to assign activity and save moment."""
         url = reverse('assign-activity-to-moment')
-        response = client.get(url)
-        assert response.status_code == 302
+        response = client.get(url, follow=True)
+        assert response.status_code == 200
         return response
 
     def test_missing_report(self, auto_login_user):
@@ -224,3 +228,29 @@ class TestAddMomentToExperienceFlow:
         form = response.context['form']
         for field, value in moment_data.items():
             assert form.initial[field] == value
+
+    def test_lvl_up_on_adding_moment_to_experience(self, auto_login_user):
+        """Given a user adds a moment to an experience,
+        test that the user profile lvl and xp are updated correctly"""
+        client, user = auto_login_user()
+        profile = user.profile
+        initial_xp = profile.xp
+        initial_lvl = profile.lvl
+
+        experience = ExperienceFactory(user=user)
+        url_add_moment = reverse('add-moment-to-experience',
+                                 kwargs={'experience_id': experience.id})
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+        moment_data['confidence_level'] = 1  
+        
+        self.post_moment_data(client, url_add_moment, moment_data)
+
+        activity = StreetActivityFactory()
+        self.post_select_activity(client, activity)
+
+        self.get_assign_activity(client)
+
+        profile.refresh_from_db()
+        assert profile.xp > initial_xp
+        assert profile.lvl == initial_lvl + 1

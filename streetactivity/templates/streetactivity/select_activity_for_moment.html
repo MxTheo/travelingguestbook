@@ -33,10 +33,10 @@
             <div class="row g-4">
                 {% for activity in activities %}
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="activity-card-wrapper position-relative">
+                        <div class="activity-card-wrapper position-relative {% if activity.id == selected_activity_id %}selected{% endif %}">
                             <!-- Card with clickable overlay -->
                             <a href="{% url 'select-activity-for-moment' %}?activity_id={{ activity.id }}"
-                               class="card-select-label d-block position-relative text-decoration-none {% if activity.id == selected_activity_id %}selected{% endif %}">
+                               class="card-select-label d-block position-relative text-decoration-none ">
                                 <div class="h-100">{% include "streetactivity/activity_card.html" with activity=activity %}</div>
                                 {% if activity.id == selected_activity_id %}
                                     <span class="badge bg-info position-absolute top-0 start-0 m-2 rounded-5"><i class="bi bi-check-circle-fill"></i></span>

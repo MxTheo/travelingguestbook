@@ -1,12 +1,6 @@
-/* Style for selected card */
-.form-check-input:checked+.card-select-label .activity-card {
-    border-color: var(--bs-success) !important;
-    box-shadow: 0 0 0 3px rgba(var(--bs-success-rgb), 0.1) !important;
-}
-
-.card-select-label.selected {
-    border: 2px solid var(--bs-primary); /* Bootstrap primary kleur */
-    box-shadow: 0 0 10px var(--bs-danger);
+.selected {
+     /* Bootstrap primary kleur */
+    box-shadow: 0 0 10px var(--bs-primary);
 }
 
 /* Hover effect for cards */
