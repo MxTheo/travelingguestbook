@@ -157,7 +157,7 @@ class MomentDetailView(DetailView):
     context_object_name = "moment"
 
 class MomentCreateView(CreateView):
-    """Base view to create a new moment."""
+    """Create view for a single moment"""
 
     model = Moment
     form_class = MomentForm
@@ -182,7 +182,7 @@ class MomentCreateView(CreateView):
         return initial
 
     def get_context_data(self, **kwargs):
-        """Extend context data"""
+        """Extend context data with activity and ConfidenceLevel options"""
         context = super().get_context_data(**kwargs)
         if "pk" in self.kwargs:
             context["activity"] = self.activity
@@ -221,9 +221,10 @@ def process_xp_and_level(request, confidence_level):
     calc_xp_percentage(profile)
     profile.save()
 
-class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
+class AddMomentToExperienceView(CreateView, LoginRequiredMixin):
     """View to add a moment to an experience."""
 
+    model = Moment
     form_class = MomentForm
     context_object_name = "experience"
     experience_id: Optional[str] = None
@@ -251,6 +252,7 @@ class AddMomentToExperienceView(MomentCreateView, LoginRequiredMixin):
         context['selected_activity'] = self.retrieve_selected_activity()
         if not self.experience_id:
             context['show_first_moment_message'] = True
+        context['ConfidenceLevel'] = ConfidenceLevel
         return context
 
     def retrieve_selected_activity(self):
@@ -309,9 +311,12 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
 
     def retrieve_activity(self, request):
         """Retrieve activity based on GET parameter or session data.
-            - activity_id: When the user clicks an activity in the template, the activity_id is saved in the url as ?activity_id={{ activity.id }} and retrieved from there
+            - activity_id: When the user clicks an activity in the template,
+            the activity_id is saved in the url as ?activity_id={{ activity.id }}
+            and retrieved from there
             - selected_activity_id: The preselection comes from the previously selected activity
-            - If the user visits the page for the first time, then the first streetactivity is selected
+            - If the user visits the page for the first time,
+            then the first streetactivity is selected
         """
         
         activity_id = request.GET.get('activity_id')
@@ -334,10 +339,6 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
 class AssignActivityToMomentView(LoginRequiredMixin, View):
     """View to assign street activity to the moment being created"""
     def get(self, request, *args, **kwargs):
-        """Process GET request to assign activity to moment"""
-        return self.process_request(request)
-
-    def process_request(self, request):
         """Assign activity to moment using session data and create moment"""
         moment_data = request.session.get('moment_data')
         selected_activity_id = request.session.get('selected_activity_id')
@@ -354,6 +355,8 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
         activity = get_object_or_404(StreetActivity, pk=selected_activity_id)
 
         self.create_moment(moment_data, experience, activity)
+
+        process_xp_and_level(self.request, confidence_level=moment_data.get('confidence_level', 0))
 
         self.clear_session_data(request)
 
@@ -394,18 +397,16 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
         save and return a created moment"""
 
         with transaction.atomic():
-            confidence_level = moment_data.get('confidence_level', 0)
             moment = Moment(
                 experience=experience,
                 activity=activity,
                 report=moment_data.get('report', ''),
-                confidence_level=confidence_level,
+                confidence_level=moment_data.get('confidence_level', 0),
                 from_practitioner=moment_data.get('from_practitioner', True),
                 keywords=moment_data.get('keywords', ''),
                 order=0,  # Will be set automatically in save()
             )
             moment.save()
-            process_xp_and_level(self.request, confidence_level)
         return moment
 
     def clear_session_data(self, request):
