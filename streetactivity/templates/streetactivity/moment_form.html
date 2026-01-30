@@ -55,47 +55,27 @@
                     {% include "streetactivity/step_category_selection.html" with form=form %}
                     <!-- Reflection - Step 2 -->
                     {% include "streetactivity/step_reflection.html" with form=form %}
-                    <!-- Activity - Step 3 -->
-                    {% include "streetactivity/step_activity.html" with form=form %}
-                    <!-- Submit buttons for the entire form, outside the card -->
+                    {% if request.session.from_experience %}
+                        <!-- Activity - Step 3 -->
+                        {% include "streetactivity/step_activity.html" with form=form %}
+                    {% endif %}
+                    <!-- Submit buttons -->
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <a href="{{ request.session.cancel_url|default:'/' }}"
                            class="btn btn-secondary btn-lg">
                             <i class="bi bi-x-lg"></i> Annuleer
                         </a>
-                        {% if selected_activity %}
-                            <div>
-                                <button type="submit"
-                                        name="action"
-                                        value="save"
-                                        class="btn btn-success btn-lg me-2">
-                                    <i class="bi bi-check-lg me-1"></i> Opslaan met geselecteerde activiteit
-                                </button>
-                                <button type="submit"
-                                        name="action"
-                                        value="select_other"
-                                        class="btn btn-outline-primary btn-lg">
-                                    <i class="bi bi-arrow-repeat me-1"></i> Selecteer andere activiteit
-                                </button>
-                            </div>
-                        {% else %}
+                        {% if request.session.from_experience and not selected_activity %}
+                            <span class="d-inline-block"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-title="Selecteer eerst een activiteit om op te slaan">
+                            {% endif %}
                             <button type="submit"
-                                    name="action"
-                                    value="select"
-                                    class="btn btn-primary btn-lg">
-                                <i class="bi bi-arrow-right-circle me-1"></i> Selecteer activiteit
+                                    class="btn btn-primary btn-lg"
+                                    {% if request.session.from_experience and not selected_activity %}disabled{% endif %}>
+                                <i class="bi bi-check-lg me-1"></i> Opslaan
                             </button>
-                        {% endif %}
-                    </div>
-                    <!-- Submit Buttons -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="{{ request.session.cancel_url|default:'/' }}"
-                           class="btn btn-secondary btn-lg">
-                            <i class="bi bi-x-lg"></i> Annuleer
-                        </a>
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-send me-1"></i> Verzenden
-                        </button>
+                            {% if request.session.from_experience and not selected_activity %}</span>{% endif %}
                     </div>
                 </form>
             </div>

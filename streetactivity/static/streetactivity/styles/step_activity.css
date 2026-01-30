@@ -1,0 +1,15 @@
+.btn-md {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+.card-body button {
+  margin-top: 1rem;
+}
+
+@media (max-width: 576px) {
+  .btn-md {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
