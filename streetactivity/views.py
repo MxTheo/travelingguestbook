@@ -29,12 +29,14 @@ from .utils.session_helpers import setup_session_for_cancel
 
 CONFIRM_DELETE_TEMPLATE = "admin/confirm_delete.html"
 
+
 class StreetActivityListView(ListView):
     """View to list all street activities with filtering options."""
 
     model = StreetActivity
     context_object_name = "activities"
     paginate_by = 10
+
 
 class StreetActivityDetailView(DetailView):
     """View to display details of a single street activity."""
@@ -51,22 +53,21 @@ class StreetActivityDetailView(DetailView):
         moments_count = moments.count()
 
         context["moments_count"] = moments_count
-        context["practitioner_count"] = moments.filter(
-            from_practitioner=True
-        ).count()
+        context["practitioner_count"] = moments.filter(from_practitioner=True).count()
         context["passerby_count"] = moments.filter(from_practitioner=False).count()
         context["recent_moments"] = moments[:3]
         context["moments_remaining"] = max(0, moments_count - 3)
 
         def get_chart_data(queryset):
             confidence_level_counts = queryset.values("confidence_level").annotate(
-                count=Count("confidence_level"))
+                count=Count("confidence_level")
+            )
             data = {"onzeker": 0, "tussenin": 0, "zelfverzekerd": 0}
 
             confidence_mapping = {
                 ConfidenceLevel.ONZEKER: "onzeker",
                 ConfidenceLevel.TUSSENIN: "tussenin",
-                ConfidenceLevel.ZELFVERZEKERD: "zelfverzekerd"
+                ConfidenceLevel.ZELFVERZEKERD: "zelfverzekerd",
             }
             for item in confidence_level_counts:
                 confidence_value = item["confidence_level"]
@@ -93,9 +94,10 @@ class StreetActivityDetailView(DetailView):
         all_keywords = []
         for moment in moments:
             if moment.keywords:
-                words = [w.strip().lower() for w in moment.keywords.split(',')]
+                words = [w.strip().lower() for w in moment.keywords.split(",")]
                 all_keywords.extend(words)
         return Counter(all_keywords).most_common(10)
+
 
 class StreetActivityCreateView(CreateView):
     """View to create a new street activity."""
@@ -104,8 +106,8 @@ class StreetActivityCreateView(CreateView):
     form_class = StreetActivityForm
 
     def get_success_url(self):
-        return reverse_lazy("streetactivity-detail",
-                            kwargs={"pk": self.object.pk})
+        return reverse_lazy("streetactivity-detail", kwargs={"pk": self.object.pk})
+
 
 class StreetActivityUpdateView(UpdateView):
     """View to update an existing street activity."""
@@ -116,6 +118,7 @@ class StreetActivityUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy("streetactivity-detail", kwargs={"pk": self.object.pk})
 
+
 class StreetActivityDeleteView(DeleteView):
     """View to delete a street activity."""
 
@@ -123,16 +126,21 @@ class StreetActivityDeleteView(DeleteView):
     template_name = CONFIRM_DELETE_TEMPLATE
     success_url = reverse_lazy("streetactivity-list")
 
+
 class StreetActivityViewSet(viewsets.ModelViewSet):
     """API endpoint that allows streetactivity to be viewed or edited"""
+
     queryset = StreetActivity.objects.all()
     serializer_class = StreetActivitySerializer
 
+
 class MomentListView(ListView):
     """View to list all moments."""
+
     model = Moment
     context_object_name = "moments"
     paginate_by = 10
+
 
 class MomentListViewStreetActivity(MomentListView):
     """View to list moments related to a specific street activity."""
@@ -150,11 +158,13 @@ class MomentListViewStreetActivity(MomentListView):
         )
         return context
 
+
 class MomentDetailView(DetailView):
     """View to display details of a single moment."""
 
     model = Moment
     context_object_name = "moment"
+
 
 class MomentCreateView(CreateView):
     """Create view for a single moment"""
@@ -165,8 +175,7 @@ class MomentCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         """Determine activity ID from URL parameters."""
-        if "pk" in self.kwargs:
-            self.activity = get_object_or_404(StreetActivity, pk=self.kwargs["pk"])
+        self.activity = get_object_or_404(StreetActivity, pk=self.kwargs["pk"])
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
@@ -177,24 +186,24 @@ class MomentCreateView(CreateView):
         else:
             initial["from_practitioner"] = True
 
-        if "pk" in self.kwargs:
-            initial["activity"] = self.activity
+        initial["activity"] = self.activity
         return initial
 
     def get_context_data(self, **kwargs):
         """Extend context data with activity and ConfidenceLevel options"""
         context = super().get_context_data(**kwargs)
-        if "pk" in self.kwargs:
-            context["activity"] = self.activity
-        context['ConfidenceLevel'] = ConfidenceLevel
+        context["activity"] = self.activity
+        context["ConfidenceLevel"] = ConfidenceLevel
         return context
 
     def form_valid(self, form):
-        if "pk" in self.kwargs:
-            form.instance.activity = self.activity
-            messages.add_message(self.request, messages.SUCCESS,
-                                 "Bedankt voor het delen van jouw moment! " \
-                             "Dit helpt anderen deze activiteit te begrijpen.")
+        form.instance.activity = self.activity
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            "Bedankt voor het delen van jouw moment! "
+            "Dit helpt anderen deze activiteit te begrijpen.",
+        )
 
         if "voorbijganger" in self.request.path:
             form.instance.from_practitioner = False
@@ -209,8 +218,9 @@ class MomentCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy(
             "moment-list-streetactivity",
-            kwargs={"pk": self.object.activity.pk}  # type: ignore[reportOptionalMemberAccess]
+            kwargs={"pk": self.object.activity.pk},  # type: ignore[reportOptionalMemberAccess]
         )
+
 
 def process_xp_and_level(request, confidence_level):
     """Given a request and confidence level,
@@ -220,6 +230,7 @@ def process_xp_and_level(request, confidence_level):
     update_lvl(profile)
     calc_xp_percentage(profile)
     profile.save()
+
 
 class AddMomentToExperienceView(CreateView, LoginRequiredMixin):
     """View to add a moment to an experience."""
@@ -233,15 +244,15 @@ class AddMomentToExperienceView(CreateView, LoginRequiredMixin):
         """Determine experience ID from URL parameters. If not present, create a new experience."""
         self.experience_id = self.kwargs.get("experience_id", None)
         if self.experience_id:
-            request.session['experience_id'] = str(self.experience_id)
-        request.session['from_experience'] = True
+            request.session["experience_id"] = str(self.experience_id)
+        request.session["from_experience"] = True
         setup_session_for_cancel(request, self.kwargs)
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
         """Set initial values from session moment_data if available"""
         initial = super().get_initial()
-        moment_data = self.request.session.get('moment_data')
+        moment_data = self.request.session.get("moment_data")
         if moment_data:
             initial.update(moment_data)
         return initial
@@ -249,17 +260,17 @@ class AddMomentToExperienceView(CreateView, LoginRequiredMixin):
     def get_context_data(self, **kwargs):
         """Extend context data with experience"""
         context = super().get_context_data(**kwargs)
-        context['selected_activity'] = self.retrieve_selected_activity()
+        context["selected_activity"] = self.retrieve_selected_activity()
         if not self.experience_id:
-            context['show_first_moment_message'] = True
-        context['ConfidenceLevel'] = ConfidenceLevel
+            context["show_first_moment_message"] = True
+        context["ConfidenceLevel"] = ConfidenceLevel
         return context
 
     def retrieve_selected_activity(self):
-        """Retrieve selected activity from session if available 
+        """Retrieve selected activity from session if available
         or from last moment of experience
         , else none"""
-        selected_activity_id = self.request.session.get('selected_activity_id')
+        selected_activity_id = self.request.session.get("selected_activity_id")
         if selected_activity_id:
             return get_object_or_404(StreetActivity, id=selected_activity_id)
         if self.experience_id:
@@ -274,55 +285,57 @@ class AddMomentToExperienceView(CreateView, LoginRequiredMixin):
         Save form data in session instead of DB,
         then redirect to activity selection page
         """
-        self.request.session['moment_data'] = form.cleaned_data
+        self.request.session["moment_data"] = form.cleaned_data
         return super().form_valid(form)
 
     def get_success_url(self):
         """Redirect to the next step: select activity for moment"""
-        return reverse('select-activity-for-moment')
+        return reverse("select-activity-for-moment")
+
 
 class SelectActivityForMomentView(LoginRequiredMixin, ListView):
     """View to select street activity for a moment being created"""
+
     model = StreetActivity
     template_name = "streetactivity/select_activity_for_moment.html"
     context_object_name = "activities"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        selected_activity_id = self.request.session.get('selected_activity_id')
-        context['selected_activity_id'] = selected_activity_id
-        context['back_url'] = self.create_back_url()
+        selected_activity_id = self.request.session.get("selected_activity_id")
+        context["selected_activity_id"] = selected_activity_id
+        context["back_url"] = self.create_back_url()
         return context
 
     def create_back_url(self):
         """Create a url to get back to depending if a experience_id is present"""
-        experience_id = self.request.session.get('experience_id')
+        experience_id = self.request.session.get("experience_id")
         if experience_id:
-            return reverse('add-moment-to-experience', args=[experience_id])
+            return reverse("add-moment-to-experience", args=[experience_id])
         else:
-            return reverse('add-first-moment-to-experience')
+            return reverse("add-first-moment-to-experience")
 
     def get(self, request, *args, **kwargs):
         """Handle GET request to preselect activity if activity_id is in GET params"""
         selected_activity = self.retrieve_activity(request)
         if selected_activity:
-            request.session['selected_activity_id'] = selected_activity.id
+            request.session["selected_activity_id"] = selected_activity.id
         return super().get(request, *args, **kwargs)
 
     def retrieve_activity(self, request):
         """Retrieve activity based on GET parameter or session data.
-            - activity_id: When the user clicks an activity in the template,
-            the activity_id is saved in the url as ?activity_id={{ activity.id }}
-            and retrieved from there
-            - selected_activity_id: The preselection comes from the previously selected activity
-            - If the user visits the page for the first time,
-            then the first streetactivity is selected
+        - activity_id: When the user clicks an activity in the template,
+        the activity_id is saved in the url as ?activity_id={{ activity.id }}
+        and retrieved from there
+        - selected_activity_id: The preselection comes from the previously selected activity
+        - If the user visits the page for the first time,
+        then the first streetactivity is selected
         """
-        
-        activity_id = request.GET.get('activity_id')
+
+        activity_id = request.GET.get("activity_id")
         if activity_id:
             return get_object_or_404(StreetActivity, pk=activity_id)
-        selected_activity_id = request.session.get('selected_activity_id')
+        selected_activity_id = request.session.get("selected_activity_id")
         if selected_activity_id:
             return get_object_or_404(StreetActivity, pk=selected_activity_id)
         else:
@@ -330,53 +343,61 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         """Save selected activity to session and redirect to assign activity"""
-        activity_id = request.POST.get('activity_id')
+        activity_id = request.POST.get("activity_id")
         if activity_id:
-            request.session['selected_activity_id'] = activity_id
-        return redirect('assign-activity-to-moment')
+            request.session["selected_activity_id"] = activity_id
+        return redirect("assign-activity-to-moment")
 
 
 class AssignActivityToMomentView(LoginRequiredMixin, View):
     """View to assign street activity to the moment being created"""
+
     def get(self, request, *args, **kwargs):
         """Assign activity to moment using session data and create moment"""
-        moment_data = request.session.get('moment_data')
-        selected_activity_id = request.session.get('selected_activity_id')
-        experience_id = request.session.get('experience_id')
+        moment_data = request.session.get("moment_data")
+        selected_activity_id = request.session.get("selected_activity_id")
+        experience_id = request.session.get("experience_id")
         redirect_response = self.redirect_to_moment_form_if_missing_data(
-            moment_data,
-            selected_activity_id,
-            experience_id)
+            moment_data, selected_activity_id, experience_id
+        )
         if redirect_response:
             return redirect_response
 
-        experience, experience_id = self.get_or_create_experience(experience_id, request.user)
+        experience, experience_id = self.get_or_create_experience(
+            experience_id, request.user
+        )
 
         activity = get_object_or_404(StreetActivity, pk=selected_activity_id)
 
         self.create_moment(moment_data, experience, activity)
 
-        process_xp_and_level(self.request, confidence_level=moment_data.get('confidence_level', 0))
+        process_xp_and_level(
+            self.request, confidence_level=moment_data.get("confidence_level", 0)
+        )
 
         self.clear_session_data(request)
 
-        return redirect('experience-detail', pk=experience_id)
+        return redirect("experience-detail", pk=experience_id)
 
     def redirect_to_moment_form_if_missing_data(
-            self,
-            moment_data,
-            selected_activity_id,
-            experience_id):
+        self, moment_data, selected_activity_id, experience_id
+    ):
         """If required session data is missing, redirect to the appropiate moment form"""
-        if (not moment_data or
-            not moment_data.get('report') or
-            not moment_data.get('keywords') or
-            not selected_activity_id):
+        if (
+            not moment_data
+            or not moment_data.get("report")
+            or not moment_data.get("keywords")
+            or not selected_activity_id
+        ):
             if experience_id:
-                url = reverse('add-moment-to-experience', kwargs={'experience_id': experience_id})
+                url = reverse(
+                    "add-moment-to-experience", kwargs={"experience_id": experience_id}
+                )
             else:
-                url = reverse('add-first-moment-to-experience')
-            messages.warning(self.request, "Niet alles ingevuld. Vul alstublieft alle velden in")
+                url = reverse("add-first-moment-to-experience")
+            messages.warning(
+                self.request, "Niet alles ingevuld. Vul alstublieft alle velden in"
+            )
             return redirect(url)
         return None
 
@@ -400,10 +421,10 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
             moment = Moment(
                 experience=experience,
                 activity=activity,
-                report=moment_data.get('report', ''),
-                confidence_level=moment_data.get('confidence_level', 0),
-                from_practitioner=moment_data.get('from_practitioner', True),
-                keywords=moment_data.get('keywords', ''),
+                report=moment_data.get("report", ""),
+                confidence_level=moment_data.get("confidence_level", 0),
+                from_practitioner=moment_data.get("from_practitioner", True),
+                keywords=moment_data.get("keywords", ""),
                 order=0,  # Will be set automatically in save()
             )
             moment.save()
@@ -414,16 +435,19 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
         Remove moment-related data from the session.
         """
         for key in [
-            'cancel_url',
-            'moment_data',
-            'selected_activity_id',
-            'experience_id',
-            'from_experience']:
+            "cancel_url",
+            "moment_data",
+            "selected_activity_id",
+            "experience_id",
+            "from_experience",
+        ]:
             if key in request.session:
                 del request.session[key]
 
+
 class MomentUpdateView(UpdateView):
     """View to update an moment"""
+
     model = Moment
     form_class = MomentForm
 
@@ -431,7 +455,7 @@ class MomentUpdateView(UpdateView):
         """Extend context data"""
         context = super().get_context_data(**kwargs)
         context["activity"] = self.object.activity
-        context['ConfidenceLevel'] = ConfidenceLevel
+        context["ConfidenceLevel"] = ConfidenceLevel
         return context
 
     def form_valid(self, form):
@@ -443,13 +467,17 @@ class MomentUpdateView(UpdateView):
             "moment-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
 
+
 class MomentDeleteView(DeleteView):
     """View to delete an moment"""
+
     model = Moment
     template_name = CONFIRM_DELETE_TEMPLATE
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.WARNING, "Het moment is verwijderd.")
+        messages.add_message(
+            self.request, messages.WARNING, "Het moment is verwijderd."
+        )
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -457,17 +485,23 @@ class MomentDeleteView(DeleteView):
             "moment-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
 
+
 class MomentViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Moment"""
+
     queryset = Moment.objects.all()
     serializer_class = MomentSerializer
 
+
 class StartExperienceView(LoginRequiredMixin, TemplateView):
     """Navigates to the start experience page"""
+
     template_name = "streetactivity/start_experience.html"
+
 
 class ExperienceDetailView(DetailView):
     """Detailview of experience with its related moments"""
+
     model = Experience
     context_object_name = "experience"
 
@@ -478,39 +512,46 @@ class ExperienceDetailView(DetailView):
 
     def add_moment_data_to_context(self, context):
         """Adds a list of moments and moment data in JSON format to context"""
-        moments = list(self.object.moments.order_by('date_created').select_related('activity'))
+        moments = list(
+            self.object.moments.order_by("date_created").select_related("activity")
+        )
         moment_data = []
         for moment in moments:
-            moment_data.append({
-                'id': moment.id,
-                'activity': {
-                    'name': moment.activity.name,
-                    'id': moment.activity.id
-                },
-                'confidence_level': moment.confidence_level,
-                'report': moment.report,
-                'report_snippet': moment.report[:25] + '...' 
-                if moment.report and len(moment.report) > 25 else moment.report,
-                'order': moment.order,
-                'from_practitioner': moment.from_practitioner
-            })
+            moment_data.append(
+                {
+                    "id": moment.id,
+                    "activity": {
+                        "name": moment.activity.name,
+                        "id": moment.activity.id,
+                    },
+                    "confidence_level": moment.confidence_level,
+                    "report": moment.report,
+                    "report_snippet": moment.report[:25] + "..."
+                    if moment.report and len(moment.report) > 25
+                    else moment.report,
+                    "order": moment.order,
+                    "from_practitioner": moment.from_practitioner,
+                }
+            )
 
         context["moments"] = moments
-        context['moments_json'] = json.dumps(moment_data)
+        context["moments_json"] = json.dumps(moment_data)
         return context
+
 
 class ExperienceDeleteView(DeleteView):
     """View to delete an experience"""
+
     model = Experience
     template_name = CONFIRM_DELETE_TEMPLATE
     success_url = reverse_lazy("user")
 
     def get_success_url(self):
-        return reverse_lazy(
-            "user", kwargs={"username": self.object.user.username}
-        )
+        return reverse_lazy("user", kwargs={"username": self.object.user.username})
+
 
 class ExperienceViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Experience"""
+
     queryset = Experience.objects.all()
     serializer_class = ExperienceForm

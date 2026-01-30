@@ -3,7 +3,7 @@ from django.urls import reverse
 from freezegun import freeze_time
 from travelingguestbook.factories import ExperienceFactory, StreetActivityFactory, MomentFactory
 from streetactivity.tests.test_moment_models import create_moment_data
-from streetactivity.models import Moment, Experience
+from streetactivity.models import ConfidenceLevel, Moment, Experience
 
 class TestExperience:
     """Tests for the Experience model."""
@@ -242,8 +242,8 @@ class TestAddMomentToExperienceFlow:
                                  kwargs={'experience_id': experience.id})
         moment_data = create_moment_data()
         moment_data.pop('activity', None)
-        moment_data['confidence_level'] = 1  
-        
+        moment_data['confidence_level'] = ConfidenceLevel.ONZEKER
+
         self.post_moment_data(client, url_add_moment, moment_data)
 
         activity = StreetActivityFactory()

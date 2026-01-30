@@ -34,7 +34,7 @@ class TestMomentModel:
         """Test the Moment create view to ensure it returns a 200 status code
         and contains the expected form in context."""
         activity = StreetActivityFactory()
-        create_url = reverse("create-moment", args=[activity.id])
+        create_url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         moment_data = create_moment_data(activity)
 

@@ -36,7 +36,7 @@ class TestLvl:
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
@@ -55,7 +55,7 @@ class TestLvl:
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
@@ -77,7 +77,7 @@ class TestLvl:
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
         client.post(url, data_moment, follow=True)
@@ -89,6 +89,7 @@ class TestLvl:
         assert profile.xp_start == 75
 
 class TestProgress:
+    """Tests for progress percentage towards next lvl"""
     def test_progress_in_between(self, auto_login_user):
         """Given a user of lvl 1 who describes 1 moments of inbetween confidence (50xp),
         tests the progress percentage is updated"""
@@ -101,7 +102,7 @@ class TestProgress:
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
@@ -120,7 +121,7 @@ class TestProgress:
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
         client.post(url, data_moment, follow=True)

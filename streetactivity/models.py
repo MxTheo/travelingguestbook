@@ -94,7 +94,7 @@ class Moment(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["order", "-date_created"]
+        ordering = ["-date_created"]
         verbose_name = "Moment"
         verbose_name_plural = "Momenten"
         indexes = [

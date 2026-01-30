@@ -36,11 +36,6 @@ urlpatterns = [
         name="moment-list-streetactivity",
     ),
     path(
-        "<int:pk>/moment/nieuw/",
-        views.MomentCreateView.as_view(),
-        name="create-moment",
-    ),
-    path(
         "<int:pk>/moment/nieuw/beoefenaar/",
         views.MomentCreateView.as_view(),
         name="create-moment-from-practitioner",
