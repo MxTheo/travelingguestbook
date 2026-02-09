@@ -26,7 +26,7 @@ from .forms import (
     StreetActivityForm,
     ExperienceForm,
 )
-from .utils.session_helpers import setup_session_for_cancel
+from .utils.session_helpers import setup_session_for_cancel, clear_session_data
 
 CONFIRM_DELETE_TEMPLATE = "admin/confirm_delete.html"
 
@@ -384,7 +384,7 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
             self.request, confidence_level=moment_data.get("confidence_level", 0)
         )
 
-        self.clear_session_data(request)
+        clear_session_data(request)
 
         return redirect("experience-detail", pk=experience_id)
 
@@ -445,20 +445,6 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
             )
             moment.save()
         return moment
-
-    def clear_session_data(self, request):
-        """
-        Remove moment-related data from the session.
-        """
-        for key in [
-            "cancel_url",
-            "moment_data",
-            "selected_activity_id",
-            "experience_id",
-            "from_experience",
-        ]:
-            if key in request.session:
-                del request.session[key]
 
 
 class MomentUpdateView(UpdateView):

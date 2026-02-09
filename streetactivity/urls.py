@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from . import views
+from .utils.session_helpers import cancel_moment_creation
 
 router = routers.DefaultRouter()
 router.register(
@@ -75,6 +76,10 @@ urlpatterns = [
         views.AddMomentToExperienceView.as_view(),
         name="add-first-moment-to-experience",
     ),
+    path(
+        "moment/annuleer",
+        cancel_moment_creation, 
+        name="cancel-moment-creation"),
     path(
         "moment/kies-activiteit/",
         views.SelectActivityForMomentView.as_view(),

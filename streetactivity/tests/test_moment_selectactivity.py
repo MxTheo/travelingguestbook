@@ -7,7 +7,8 @@ from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
 from streetactivity.views import AssignActivityToMomentView, SelectActivityForMomentView
 from streetactivity.tests.test_moment_models import create_moment_data
-from streetactivity.models import Moment, Experience, StreetActivity
+from streetactivity.utils.session_helpers import clear_session_data
+from streetactivity.models import Moment, Experience
 from travelingguestbook.factories import ExperienceFactory, MomentFactory, StreetActivityFactory
 
 class TestSelectActivityForMoment:
@@ -331,8 +332,7 @@ class TestAssignActivityToMomentView:
         request.session['experience_id'] = 'uuid'
         request.session['cancel_url'] = '/some-url/'
 
-        view = AssignActivityToMomentView()
-        view.clear_session_data(request)
+        clear_session_data(request)
 
         assert 'moment_data' not in request.session
         assert 'selected_activity_id' not in request.session

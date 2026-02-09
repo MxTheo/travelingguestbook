@@ -56,7 +56,7 @@
             </div>
             <!-- Fixed bottom bar for mobile -->
             <div class="d-lg-none fixed-bottom bg-white border-top p-3 mb-2 shadow-sm row">
-                <a href="{{ request.session.cancel_url|default:'/' }}"
+                <a href="{% url "cancel-moment-creation" %}"
                    class="btn btn-secondary mx-3 col-3">
                     <i class="bi bi-x-lg me-2"></i>Annuleren
                 </a>
@@ -66,7 +66,7 @@
             </div>
             <!-- Desktop controls (hidden on mobile) -->
             <div class="d-none d-lg-block text-end mt-5 pt-4 border-top">
-                <a href="{{ request.session.cancel_url|default:'/' }}"
+                <a href="{% url "cancel-moment-creation" %}"
                    class="btn btn-secondary me-3">
                     <i class="bi bi-x-lg me-2"></i>Annuleren
                 </a>

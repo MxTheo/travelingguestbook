@@ -1,7 +1,7 @@
 import uuid
 from django.urls import reverse
 from streetactivity.utils.session_helpers import (
-    determine_cancel_url, setup_session_for_cancel
+    determine_cancel_url, setup_session_for_cancel, cancel_moment_creation
 )
 from travelingguestbook.factories import ExperienceFactory
 
@@ -58,6 +58,32 @@ class TestSetupSessionForCancel:
         setup_session_for_cancel(request, {})
 
         assert 'cancel_url' not in request.session
+
+class TestCancelMomentCreation:
+    """Test suite for cancel_moment_creation view."""
+    def test_cancel_moment_creation_clears_session_and_redirects(self, rf):
+        """Test that cancel_moment_creation clears session data and redirects."""
+        request = rf.get('/moment/annuleer')
+        request.session = {
+            'cancel_url': '/some-url/',
+            'moment_data': {'report': 'test'},
+            'selected_activity_id': 1,
+            'experience_id': 'uuid',
+            'from_experience': True,
+        }
+
+        response = cancel_moment_creation(request)
+
+        # Check that session data is cleared
+        assert 'cancel_url' not in request.session
+        assert 'moment_data' not in request.session
+        assert 'selected_activity_id' not in request.session
+        assert 'experience_id' not in request.session
+        assert 'from_experience' not in request.session
+
+        # Check that it redirects to the cancel_url
+        assert response.status_code == 302
+        assert response.url == '/'
 
 class TestIntegrationCancelMoment:
     """Integration tests for cancel moment functionality in views."""

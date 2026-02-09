@@ -61,7 +61,7 @@
                     {% endif %}
                     <!-- Submit buttons -->
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <a href="{{ request.session.cancel_url|default:'/' }}"
+                        <a href="{% url "cancel-moment-creation" %}"
                            class="btn btn-secondary btn-lg">
                             <i class="bi bi-x-lg"></i> Annuleer
                         </a>
