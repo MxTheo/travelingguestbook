@@ -25,7 +25,7 @@
         
         <!-- Footer -->
         <div class="card-footer bg-white border-0 px-0 pb-0 pt-3 mt-auto">
-            {% if not request.session.from_experience %}
+            {% if request.user.is_anonymous %}
                 <div class="d-flex gap-2 mb-2">
                     <a href="{% url 'create-moment-from-practitioner' activity.pk %}" 
                     class="btn btn-success btn-sm flex-fill">

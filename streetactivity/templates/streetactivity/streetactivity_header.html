@@ -7,14 +7,10 @@
         <div class="col-md-4">
             <div class="card bg-primary text-white">
                 <div class="card-body text-center">
-                    <h5 class="card-title mb-3">
-                        {% if not request.session.from_experience %}
+                    {% if request.user.is_anonymous %}
+                        <h5 class="card-title mb-3">
                             Deel je belevingsmoment
-                        {% else %}
-                            Je zelfverzekerdheid afronden
-                        {% endif %}
-                    </h5>
-                    {% if not request.session.from_experience %}
+                        </h5>
                         <div class="d-grid gap-2">
                             <a href="{% url 'create-moment-from-practitioner' activity.pk %}"
                                class="btn btn-light btn-lg">
@@ -28,7 +24,10 @@
                         <small class="mt-2 d-block opacity-75">
                             <i class="bi bi-shield-check me-1"></i>Anoniem
                         </small>
-                    {% else %}
+                    {% elif request.session.from_experience %}
+                        <h5 class="card-title mb-3">
+                            Je zelfverzekerdheid afronden
+                        </h5>
                         <form method="post" action="{% url "assign-activity-to-moment" %}">
                             {% csrf_token %}
                             <input type="hidden"
@@ -36,7 +35,14 @@
                                    value="{{ activity.id }}">
                             <button type="submit" class="btn btn-light btn-lg">Selecteer deze activiteit</button>
                         </form>
-                        {% endif %}
+                    {% else %}
+                        <h5 class="card-title mb-3">
+                            Start ervaring en voeg deze activiteit later toe
+                        </h5>
+                        <a href="{% url "start-experience" %}" class="btn btn-light btn-lg">
+                            <i class="bi bi-plus-circle me-2"></i>Deel je ervaring
+                        </a>
+                    {% endif %}
                     </div>
                 </div>
             </div>

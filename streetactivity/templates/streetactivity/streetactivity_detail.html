@@ -260,8 +260,8 @@
             <div class="col-12">
                 <div class="card bg-light border-0">
                     <div class="card-body text-center py-5">
-                        <h3 class="h4 text-primary mb-3">Jouw moment telt</h3>
-                        {% if not request.session.from_experience %}
+                        <h3 class="h4 text-primary mb-3">Jouw beleving telt</h3>
+                        {% if request.user.is_anonymous %}
                             <p class="text-muted mb-4">
                                 Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
                                 deze straatactiviteit beter te begrijpen.
@@ -276,7 +276,7 @@
                                     <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
                                 </a>
                             </div>
-                        {% else %}
+                        {% elif request.session.from_experience %}
                             <p class="text-muted mb-4">
                                 jouw beleving helpt ons
                                 deze straatactiviteit beter te begrijpen.
@@ -286,6 +286,14 @@
                                 <input type="hidden" name="activity_id" value="{{ activity.id }}">
                                 <button type="submit" class="btn btn-primary btn-lg">Selecteer deze activiteit</button>
                             </form>
+                        {% else %}
+                            <p class="text-muted mb-4">
+                                Jouw ervaring helpt ons
+                                deze straatactiviteit beter te begrijpen.
+                            </p>
+                            <a href="{% url "start-experience" %}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-plus-circle me-2"></i>Deel je ervaring
+                            </a>
                         {% endif %}
                     </div>
                 </div>
