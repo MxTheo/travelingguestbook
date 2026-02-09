@@ -1,9 +1,12 @@
+from django.test import RequestFactory
 import pytest
 from django.urls import reverse
 from freezegun import freeze_time
+from django.contrib.messages.storage.fallback import FallbackStorage
 from travelingguestbook.factories import ExperienceFactory, StreetActivityFactory, MomentFactory
 from streetactivity.tests.test_moment_models import create_moment_data
 from streetactivity.models import ConfidenceLevel, Moment, Experience
+from streetactivity.views import AddMomentToExperienceView
 
 class TestExperience:
     """Tests for the Experience model."""
@@ -133,10 +136,9 @@ class TestAddMomentToExperienceFlow:
         self.get_assign_activity(client)
 
         # Verify database state
-        assert Experience.objects.count() == 1  # No new experience
+        assert Experience.objects.count() == 1  
         assert Moment.objects.filter(experience=experience).count() == 2
-
-        second_moment = Moment.objects.filter(experience=experience).last()
+        second_moment = Moment.objects.filter(experience=experience).first()
         assert second_moment.activity == activity_new_moment
         assert second_moment.report == moment_data['report']
 
@@ -254,3 +256,101 @@ class TestAddMomentToExperienceFlow:
         profile.refresh_from_db()
         assert profile.xp > initial_xp
         assert profile.lvl == initial_lvl + 1
+
+    def test_retrieve_selected_activity_from_last_moment(self, auto_login_user):
+        """
+        Given an experience with multiple moments,
+        test that retrieve_selected_activity returns the activity of the last moment
+        """
+        _, user = auto_login_user()
+
+        experience = ExperienceFactory(user=user)
+        activity1 = StreetActivityFactory(name="Activity 1")
+        activity2 = StreetActivityFactory(name="Activity 2")
+
+        MomentFactory(
+            experience=experience,
+            activity=activity1,
+        )
+        MomentFactory(
+            experience=experience,
+            activity=activity2,
+        )
+
+        view = AddMomentToExperienceView()
+        request = RequestFactory().get('/')
+        request.user = user
+        request.session = {'experience_id': str(experience.id)}
+        view.request = request
+        view.experience_id = str(experience.id)
+
+        selected_activity = view.retrieve_selected_activity()
+
+        assert selected_activity is not None
+        assert selected_activity.id == activity2.id
+
+
+    def test_moment_form_context_includes_selected_activity(self, auto_login_user):
+        """
+        Given a user viewing the moment form for an experience with previous moments,
+        test that the context includes the selected activity from the last moment
+        """
+        client, user = auto_login_user()
+
+        experience = ExperienceFactory(user=user)
+        activity = StreetActivityFactory(name="Previous Activity")
+        MomentFactory(experience=experience, activity=activity)
+
+        session = client.session
+        session['experience_id'] = str(experience.id)
+        session.save()
+
+        url = reverse('add-moment-to-experience', kwargs={'experience_id': experience.id})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert 'selected_activity' in response.context
+        assert response.context['selected_activity'] == activity
+
+
+    def test_selected_activity_not_in_context_for_first_moment(self, auto_login_user):
+        """
+        Given a user adding the first moment to a new experience,
+        test that selected_activity is None in context
+        """
+        client, _ = auto_login_user()
+
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        session = client.session
+        session['moment_data'] = moment_data
+        session.pop('experience_id', None)
+        session.save()
+
+        url = reverse('add-first-moment-to-experience')
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert response.context.get('selected_activity') is None
+
+    def test_redirect_to_assign_activity_to_moment(self, auto_login_user):
+        """Given the user adds a second moment to an experience and then clicks save,
+        test if the activity is assigned to moment with the activity that was preselected"""
+        client, user = auto_login_user()
+
+        experience = ExperienceFactory(user=user)
+        activity_preselected = StreetActivityFactory(name="Preselected Activity")
+        MomentFactory(experience=experience, activity=activity_preselected)
+
+        url_add_moment = reverse('add-moment-to-experience',
+                                 kwargs={'experience_id': experience.id})
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        client.get(url_add_moment)  # To set experience_id in session
+
+        response = client.post(url_add_moment, data=moment_data, follow=True)
+        assert response.status_code == 200
+        assert response.redirect_chain[0][0] == reverse('assign-activity-to-moment')
+

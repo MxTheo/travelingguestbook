@@ -95,13 +95,13 @@ class TestMomentModel:
             assert moment.activity == activity
 
     def test_moment_ordering(self):
-        """Test that Moment instances are ordered by date in ascending order."""
+        """Test that Moment instances are ordered by date in descending order."""
         exp1 = MomentFactory(date_created="2023-01-01")
         exp2 = MomentFactory(date_created="2023-02-01")
         exp3 = MomentFactory(date_created="2023-03-01")
 
         moments = Moment.objects.all()
-        assert list(moments) == [exp1, exp2, exp3]
+        assert list(moments) == [exp3, exp2, exp1]
 
     def test_moment_activity_relationship(self):
         """Test the ForeignKey relationship between Moment and StreetActivity."""

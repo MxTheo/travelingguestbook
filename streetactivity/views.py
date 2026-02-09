@@ -11,6 +11,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     TemplateView,
+    FormView,
 )
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
@@ -232,11 +233,12 @@ def process_xp_and_level(request, confidence_level):
     profile.save()
 
 
-class AddMomentToExperienceView(CreateView, LoginRequiredMixin):
+class AddMomentToExperienceView(FormView, LoginRequiredMixin):
     """View to add a moment to an experience."""
 
     model = Moment
     form_class = MomentForm
+    template_name = "streetactivity/moment_form.html"
     context_object_name = "experience"
     experience_id: Optional[str] = None
 
@@ -275,8 +277,9 @@ class AddMomentToExperienceView(CreateView, LoginRequiredMixin):
             return get_object_or_404(StreetActivity, id=selected_activity_id)
         if self.experience_id:
             experience = get_object_or_404(Experience, id=self.experience_id)
-            last_moment = experience.moments.last()
+            last_moment = experience.moments.first()
             if last_moment:
+                self.request.session["selected_activity_id"] = last_moment.activity.id
                 return last_moment.activity
         return None
 
@@ -289,7 +292,13 @@ class AddMomentToExperienceView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
     def get_success_url(self):
-        """Redirect to the next step: select activity for moment"""
+        """Redirect to the next step: 
+            - assign activity to moment if an activity is already selected
+            - select activity for moment if an activity is not selected yet
+        """
+        selected_activity_id = self.request.session.get("selected_activity_id")
+        if selected_activity_id:
+            return reverse("assign-activity-to-moment")
         return reverse("select-activity-for-moment")
 
 
@@ -383,10 +392,10 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
         self, moment_data, selected_activity_id, experience_id
     ):
         """If required session data is missing, redirect to the appropiate moment form"""
+        required_fields = ["report", "keywords"]
+        missing_fields = [field for field in required_fields if not moment_data or not moment_data.get(field)]
         if (
-            not moment_data
-            or not moment_data.get("report")
-            or not moment_data.get("keywords")
+            missing_fields
             or not selected_activity_id
         ):
             if experience_id:
@@ -398,6 +407,13 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
             messages.warning(
                 self.request, "Niet alles ingevuld. Vul alstublieft alle velden in"
             )
+            message = ''
+            if missing_fields:
+                message += f": {', '.join(missing_fields)}"
+            if not selected_activity_id:
+                message += ". Selecteer een activiteit."
+            
+            messages.warning(self.request, message)
             return redirect(url)
         return None
 

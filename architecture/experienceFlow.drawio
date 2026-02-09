@@ -1,0 +1,116 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="612" dy="516" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-11" target="Gp0exI5erI1wSoBL5R8x-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-11" value="StartExperienceView" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="10" y="130" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-27" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-12" target="Gp0exI5erI1wSoBL5R8x-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-12" value="AddMomentToExperienceView" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="310" y="130" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-13" target="Gp0exI5erI1wSoBL5R8x-14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="775" y="210" />
+              <mxPoint x="775" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-13" target="Gp0exI5erI1wSoBL5R8x-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="780" y="70" />
+              <mxPoint x="395" y="70" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-13" value="SelectActivityForMomentView" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="692.5" y="130" width="167.5" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-14" target="Gp0exI5erI1wSoBL5R8x-26">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="780" y="330" />
+              <mxPoint x="780" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-14" value="AssignActivityForMomentView" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="690" y="265" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-15" target="Gp0exI5erI1wSoBL5R8x-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-44" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-15" target="Gp0exI5erI1wSoBL5R8x-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-15" value="Is First Moment?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="170" y="110" width="120" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-20" target="Gp0exI5erI1wSoBL5R8x-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-20" value="Preselect the activity of last moment" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="170" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-24" target="Gp0exI5erI1wSoBL5R8x-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-24" target="Gp0exI5erI1wSoBL5R8x-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-24" value="Does user select an &lt;br&gt;activity or saves the moment?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="500" y="85" width="150" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-25" target="Gp0exI5erI1wSoBL5R8x-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="575" y="350" />
+              <mxPoint x="395" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-25" target="Gp0exI5erI1wSoBL5R8x-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-25" value="Is Activity Selected?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="525" y="250" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="Gp0exI5erI1wSoBL5R8x-26" target="Gp0exI5erI1wSoBL5R8x-15">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="380" />
+              <mxPoint x="160" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-26" value="ExperienceDetailView" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="720" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-32" value="user saves moment" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="557" y="230" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-34" value="user selects activity" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="637" y="119" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-38" value="User adds a new moment" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="379" y="356" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-41" value="User goes back to moment form" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="536" y="38" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Gp0exI5erI1wSoBL5R8x-42" value="user saves moment" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="778" y="210" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

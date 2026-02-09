@@ -1,4 +1,5 @@
 import uuid
+import pytest
 from django.test import RequestFactory
 from django.urls import reverse
 from django.contrib import messages
@@ -492,6 +493,9 @@ class TestShowActivityOnMomentForm:
         assert 'selected="selected"' not in content
 
     def test_initial_activity_selected_from_session(self, auto_login_user):
+        """Given the user has selected an activity in the select activity page,
+test that this activity is pre-selected in the moment form page when going back"""
+        client, _ = auto_login_user()
         # Setup user en login
         client, _ = auto_login_user()
 
@@ -536,3 +540,76 @@ class TestShowActivityOnMomentForm:
 
         back_url = view.create_back_url()
         assert back_url == reverse('add-moment-to-experience', kwargs={'experience_id': experience.id})
+
+class TestAssignActivityToMomentViewValidation:
+    """Tests for the validation logic in AssignActivityToMomentView,
+    specifically the redirect_to_moment_form_if_missing_data method.
+    This method checks if the necessary data is present before creating a moment,
+    and redirects to the moment form with appropriate messages if data is missing."""
+    @pytest.fixture
+    def view(self):
+        """Create an instance of AssignActivityToMomentView with a request
+        that has session and messages middleware."""
+        rf = RequestFactory()
+        request = rf.get("/")
+        request = add_middleware_to_request(request)
+
+        view = AssignActivityToMomentView()
+        view.request = request
+        return view
+
+    def test_redirect_when_missing_moment_data(self, view):
+        """Test that if moment_data is None, the user is redirected to the moment form with a message."""
+        redirect_response = view.redirect_to_moment_form_if_missing_data(
+            moment_data=None,
+            selected_activity_id=1,
+            experience_id=None,
+        )
+        assert redirect_response.status_code == 302
+        assert reverse("add-first-moment-to-experience") in redirect_response.url
+
+        message_list = list(messages.get_messages(view.request))
+        assert any("Niet alles ingevuld" in m.message for m in message_list)
+
+    def test_redirect_when_missing_required_fields(self, view):
+        """Test that if there is no report and keywords,
+        the user is redirected to the moment form with a message"""
+        moment_data = {"report": "", "keywords": ""}
+        redirect_response = view.redirect_to_moment_form_if_missing_data(
+            moment_data=moment_data,
+            selected_activity_id=1,
+            experience_id=None,
+        )
+        assert redirect_response.status_code == 302
+        assert reverse("add-first-moment-to-experience") in redirect_response.url
+
+        message_list = list(messages.get_messages(view.request))
+        assert any("Niet alles ingevuld" in m.message for m in message_list)
+        assert "report" in message_list[1].message and "keywords" in message_list[1].message
+
+    def test_redirect_when_missing_selected_activity(self, view):
+        """Test when the user has not selected an activity,
+        the user is redirected to the moment form with a message"""
+        moment_data = {"report": "some report", "keywords": "some keywords"}
+        redirect_response = view.redirect_to_moment_form_if_missing_data(
+            moment_data=moment_data,
+            selected_activity_id=None,
+            experience_id=None,
+        )
+        assert redirect_response.status_code == 302
+        assert reverse("add-first-moment-to-experience") in redirect_response.url
+
+        message_list = list(messages.get_messages(view.request))
+        assert any("Selecteer een activiteit" in m.message for m in message_list)
+
+    def test_no_redirect_when_all_data_present(self, view):
+        """Test when all data is present,
+        the user is not redirected to the moment form with a message"""
+        moment_data = {"report": "some report", "keywords": "some keywords"}
+        redirect_response = view.redirect_to_moment_form_if_missing_data(
+            moment_data=moment_data,
+            selected_activity_id=1,
+            experience_id=None,
+        )
+        assert redirect_response is None
+
