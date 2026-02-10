@@ -4,7 +4,7 @@ to be able to mock the objects in tests"""
 import factory
 from faker import Faker
 from django.contrib.auth.models import User
-from streetactivity.models import StreetActivity, Moment
+from streetactivity.models import StreetActivity, Moment, Experience
 from persona.models import Persona, Problem, Reaction
 
 fake = Faker()
@@ -35,11 +35,27 @@ class MomentFactory(factory.django.DjangoModelFactory):
         model = Moment
     activity      = factory.SubFactory(StreetActivityFactory)
     report        = factory.LazyFunction(fake.text)
-    confidence_level          = 'pioneer'
+    confidence_level  = 0
     from_practitioner = False
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)
     keywords      = factory.LazyFunction(lambda: ', '.join([fake.word() for _ in range(3)]))
+
+class ExperienceFactory(factory.django.DjangoModelFactory):
+    """
+    Mock for streetactivity Experience
+    """
+    class Meta:
+        model = Experience
+        skip_postgeneration_save = True  # Avoid deprecation warning
+
+    user = factory.SubFactory(UserFactory)
+    date_created = factory.LazyFunction(fake.date)
+
+
+class MomentWithExperienceFactory(MomentFactory):
+    """Mock for streetactivities Moment with Experience"""
+    experience = factory.SubFactory(ExperienceFactory)
 
 class PersonaFactory(factory.django.DjangoModelFactory):
     """Mock for persona Persona"""

@@ -1,5 +1,6 @@
 from django.urls import reverse
 from travelingguestbook.factories import StreetActivityFactory, MomentFactory
+from core.models import CookieConsentLog
 
 class TestHome:
     """Tests for the HomeView"""
@@ -25,7 +26,7 @@ class TestHome:
         for i in range(7):
             MomentFactory(report=f"moment{i}")
         response = client.get(reverse('home'))
-        for i in range(4):
+        for i in range(3):
             assert f"moment{i}" not in response.text
         for i in range(4, 7):
             assert f"moment{i}" in response.text

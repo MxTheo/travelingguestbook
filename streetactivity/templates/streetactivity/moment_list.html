@@ -60,7 +60,7 @@
                                     <p class="card-text mb-0 text-start ms-4">{{ moment.report|linebreaksbr }}</p>
                                 </div>
                                 <div class="mt-1 justify-content-end d-flex">
-                                    <span class="badge {% if moment.confidence_level == 'pioneer' %}bg-primary{% elif moment.confidence_level == 'intermediate' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                    <span class="badge {% if moment.confidence_level == 0 %}bg-primary{% elif moment.confidence_level == 1 %}bg-warning text-dark{% else %}bg-success{% endif %}">
                                         {{ moment.get_confidence_level_display }}
                                     </span>
                                 </div>

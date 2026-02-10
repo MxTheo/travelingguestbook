@@ -25,11 +25,23 @@
                         </a>
                     </div>
                     <div>
-                        <a href="{% url "update-streetactivity" activity.pk %}" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
-                        <a href="{% url 'streetactivity-list' %}"
-                           class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-grid me-1"></i>Alle activiteiten
-                        </a>
+                        {% if not request.session.from_experience %}
+                            <a href="{% url "update-streetactivity" activity.pk %}"
+                               class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
+                            <a href="{% url 'streetactivity-list' %}"
+                               class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-grid me-1"></i>Alle activiteiten
+                            </a>
+                        {% else %}
+                            <a href="{% url "select-activity-for-moment" %}"
+                               class="btn btn-outline-dark btn-sm">
+                                <i class="bi bi-arrow-left me-1"></i>Terug
+                            </a>
+                            <a href="{% url "cancel-moment-creation" %}"
+                               class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-x-lg me-1"></i>Annuleren
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -113,12 +125,14 @@
                                         <small class="text-muted" id="filterCount">Totaal: {{ moments_count }} momenten</small>
                                     </div>
                                 </div>
-                                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                                    <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                                       class="btn btn-primary btn-sm">
-                                        <i class="bi bi-list-ul me-1"></i>Alle momenten
-                                    </a>
-                                </div>
+                                {% if not request.session.from_experience %}
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                                           class="btn btn-primary btn-sm">
+                                            <i class="bi bi-list-ul me-1"></i>Alle momenten
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -192,18 +206,22 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="h3 text-primary">Recente Belevingsmomenten</h2>
-                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                           class="btn btn-outline-primary">
-                            <i class="bi bi-list-ul me-1"></i>Alle momenten
-                        </a>
+                        {% if not request.session.from_experience %}
+                            <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-list-ul me-1"></i>Alle momenten
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             <div class="row g-4">
                 {% for moment in recent_moments %}
                     <div class="col-lg-6">
-                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                           class="text-decoration-none">
+                        {% if not request.session.from_experience %}
+                            <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                               class="text-decoration-none">
+                            {% endif %}
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
@@ -219,11 +237,11 @@
                                             {{ moment.date_created|timesince }} geleden
                                         </small>
                                     </div>
-                                    <p class="card-text">"{{ moment.report|truncatewords:30 }}"</p>
+                                    <p class="card-text">"{{ moment.report | truncatewords:65 }}"</p>
                                     {% include "streetactivity/keywords_footer.html" with moment=moment %}
                                 </div>
                             </div>
-                        </a>
+                            {% if not request.session.from_experience %}</a>{% endif %}
                     </div>
                 {% empty %}
                     <div class="col-12">
@@ -242,21 +260,41 @@
             <div class="col-12">
                 <div class="card bg-light border-0">
                     <div class="card-body text-center py-5">
-                        <h3 class="h4 text-primary mb-3">Jouw moment telt</h3>
-                        <p class="text-muted mb-4">
-                            Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
-                            deze straatactiviteit beter te begrijpen.
-                        </p>
-                        <div class="d-flex gap-3 justify-content-center flex-wrap">
-                            <a href="{% url 'create-moment-from-practitioner' activity.pk %}"
-                               class="btn btn-primary btn-lg">
-                                <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
+                        <h3 class="h4 text-primary mb-3">Jouw beleving telt</h3>
+                        {% if request.user.is_anonymous %}
+                            <p class="text-muted mb-4">
+                                Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
+                                deze straatactiviteit beter te begrijpen.
+                            </p>
+                            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                <a href="{% url 'create-moment-from-practitioner' activity.pk %}"
+                                   class="btn btn-primary btn-lg">
+                                    <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
+                                </a>
+                                <a href="{% url 'create-moment-from-passerby' activity.pk %}"
+                                   class="btn btn-outline-primary btn-lg">
+                                    <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
+                                </a>
+                            </div>
+                        {% elif request.session.from_experience %}
+                            <p class="text-muted mb-4">
+                                jouw beleving helpt ons
+                                deze straatactiviteit beter te begrijpen.
+                            </p>
+                            <form method="post" action="{% url "assign-activity-to-moment" %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="activity_id" value="{{ activity.id }}">
+                                <button type="submit" class="btn btn-primary btn-lg">Selecteer deze activiteit</button>
+                            </form>
+                        {% else %}
+                            <p class="text-muted mb-4">
+                                Jouw ervaring helpt ons
+                                deze straatactiviteit beter te begrijpen.
+                            </p>
+                            <a href="{% url "start-experience" %}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-plus-circle me-2"></i>Deel je ervaring
                             </a>
-                            <a href="{% url 'create-moment-from-passerby' activity.pk %}"
-                               class="btn btn-outline-primary btn-lg">
-                                <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
-                            </a>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -265,6 +303,7 @@
 {% endblock content %}
 {% block javascript %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static "streetactivity/js/colors.js" %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('momentChart').getContext('2d');
@@ -272,14 +311,7 @@
             
             // Gebruik Bootstrap CSS variabelen voor kleuren
             const styles = getComputedStyle(document.documentElement);
-            const primaryColor = styles.getPropertyValue('--bs-primary') || '#0d6efd';
-            const warningColor = styles.getPropertyValue('--bs-warning') || '#ffc107';
-            const successColor = styles.getPropertyValue('--bs-success') || '#198754';
-            const secondaryColor = styles.getPropertyValue('--bs-secondary') || '#6c757d';
-            const primaryEmphasisColor = styles.getPropertyValue('--bs-primary-emphasis') || '#0d6efd';
-            const warningEmphasisColor = styles.getPropertyValue('--bs-warning-emphasis') || '#ffc107';
-            const successEmphasisColor = styles.getPropertyValue('--bs-success-emphasis') || '#198754';
-            const secondaryEmphasisColor = styles.getPropertyValue('--bs-secondary-emphasis') || '#6c757d';
+            const colors = MyColors.getBootstrapColors();
             
             // Data voor verschillende filters
             const chartData = {
@@ -305,11 +337,11 @@
                     data: {
                         labels: ['Onzeker', 'Tussenin', 'Zelfverzekerd'],
                         datasets: [{
-                            data: [data.pioneer, data.intermediate, data.climax],
+                            data: [data.onzeker, data.tussenin, data.zelfverzekerd],
                             backgroundColor: [
-                                primaryColor,
-                                warningColor, 
-                                successColor
+                                colors.primary,
+                                colors.warning, 
+                                colors.success
                             ],
                             borderWidth: 2,
                             borderColor: styles.getPropertyValue('--bs-body-bg') || '#fff'

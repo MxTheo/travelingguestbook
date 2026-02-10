@@ -3,69 +3,65 @@
 {% block title %}
     {{ user.username }} - Profiel
 {% endblock title %}
-
 {% block stylesheet %}
     <link href="{% static "usermanagement/styles/user_detail.css" %}" rel="stylesheet">
 {% endblock stylesheet %}
-
 {% block content %}
-
-<div class="container mt-4">
-    {% include "admin/messages_feed.html" %}
-    <!-- Profiel Header -->
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <img src="{{ user.profile.profile_image_url }}" 
-                         alt="{{ user.username }}"
-                         class="img-fluid rounded-circle mb-3 border profile_image" height="150px" width="150px">
-                    <h4 class="card-title">{{ user.username }}</h4>
-                    <div class="badge bg-primary fs-6 mb-2">Level {{ user.profile.lvl }}</div>
-                    <p class="text-muted small">
-                        Sinds {{ user.profile.date_created|date:"d F Y" }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-8">
-            <!-- Basis Informatie -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0">
-                        <i class="bi bi-person-circle me-2"></i>Basis Informatie
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div>
-                            <p class="mb-2"><strong>Gebruikersnaam:</strong></p>
-                            <p class="text-muted">{{ user.username }}</p>
-                        </div>
+    <div class="container mt-4">
+        {% include "admin/messages_feed.html" %}
+        <!-- Profiel Header -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <img src="{{ user.profile.profile_image_url }}"
+                             alt="{{ user.username }}"
+                             class="img-fluid rounded-circle mb-3 border profile_image"
+                             height="150px"
+                             width="150px">
+                        <h4 class="card-title">{{ user.username }}</h4>
+                        <div class="badge bg-primary fs-6 mb-2">Level {{ user.profile.lvl }}</div>
+                        <p class="text-muted small">Sinds {{ user.profile.date_created|date:"d F Y" }}</p>
                     </div>
                 </div>
             </div>
-
-            {% comment %} <!-- Achievements Section (voorbeeld voor toekomstige uitbreiding) -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0">
-                        <i class="bi bi-trophy me-2"></i>Prestaties
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3" id="achievements-container">
-                        <!-- Hier komen achievements dynamisch -->
-                        <div class="col-12 text-center text-muted">
-                            <p>Nog geen prestaties behaald</p>
+            <div class="col-md-8">
+                <!-- Basis Informatie -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-person-circle me-2"></i>Basis Informatie
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div>
+                                <p class="mb-2">
+                                    <strong>Gebruikersnaam:</strong>
+                                </p>
+                                <p class="text-muted">{{ user.username }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div> {% endcomment %}
-
-            <!-- Awards Section (voorbeeld voor toekomstige uitbreiding) -->
-            {% comment %} <div class="card shadow-sm">
+                {% comment %} <!-- Achievements Section (voorbeeld voor toekomstige uitbreiding) -->
+                                                                            <div class="card shadow-sm mb-4">
+                                                                                <div class="card-header bg-light">
+                                                                                    <h5 class="card-title mb-0">
+                                                                                        <i class="bi bi-trophy me-2"></i>Prestaties
+                                                                    </h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3" id="achievements-container">
+                                                        <!-- Hier komen achievements dynamisch -->
+                                                        <div class="col-12 text-center text-muted">
+                                                            <p>Nog geen prestaties behaald</p>
+                                        </div>
+                    </div>
+                </div>
+</div> {% endcomment %}
+<!-- Awards Section (voorbeeld voor toekomstige uitbreiding) -->
+{% comment %} <div class="card shadow-sm">
                 <div class="card-header bg-light">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-award me-2"></i>Onderscheidingen
@@ -79,22 +75,125 @@
                         </div>
                     </div>
                 </div>
-            </div> {% endcomment %}
-        </div>
-    </div>
-
-    <!-- Actie Knoppen -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="d-flex gap-2 justify-content-end">
-                {% if user == request.user %}
-                <a href="{% url 'update-account' %}" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil-square me-1"></i>Profiel Bewerken
-                </a>
-                {% endif %}
-                <!-- Toekomstige knoppen kunnen hier worden toegevoegd -->
+</div> {% endcomment %}
+</div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-8 col-lg-6">
+        <hr>
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-collection me-2"></i>Ervaringen
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div>
+                        {% if experiences %}
+                            <ul class="list-group">
+                                {% for experience in experiences %}
+                                    <li class="list-group-item">
+                                        <p class="my-2 pb-1 justify-content-center d-flex">
+                                            <canvas id="sparklineChart-{{ experience.id }}" height="50"></canvas>
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">{{ experience.date_created|date:"d F Y" }}</small>
+                                            <div class="btn-group">
+                                                <a href="{% url 'experience-detail' experience.id %}"
+                                                   class="btn btn-sm btn-outline-secondary">
+                                                    <i class="bi bi-eye me-1"></i>Bekijk Ervaring
+                                                </a>
+                                                <a href="{% url 'delete-experience' experience.pk %}"
+                                                   class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash me-1"></i>Verwijder Ervaring
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">Geen ervaringen toegevoegd.</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<!-- Actie Knoppen -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="d-flex gap-2 justify-content-end">
+            {% if user == request.user %}
+                <a href="{% url 'update-account' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-pencil-square me-1"></i>Profiel Bewerken
+                </a>
+            {% endif %}
+            <!-- Toekomstige knoppen kunnen hier worden toegevoegd -->
+        </div>
+    </div>
+</div>
+</div>
 {% endblock content %}
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src={% static "streetactivity/js/colors.js" %}></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const colors = MyColors.getBootstrapColors();
+
+            // Data from Django context
+            const experienceData = {{ experience_data_json|safe }};
+
+            experienceData.forEach(exp => {
+                const confidenceData = exp.confidence_levels;
+
+                
+                // Map confidence levels to colors for points
+                const pointColors = MyColors.mapConfidenceLevelsToColors(confidenceData, colors);
+
+                const ctx = document.getElementById(`sparklineChart-${exp.id}`);
+                if (!ctx) return; // safety check if canvas not found
+
+                new Chart(ctx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: confidenceData.map((_, i) => i + 1),
+                        datasets: [{
+                            data: confidenceData,
+                            borderColor: colors.primary,
+                            backgroundColor: 'transparent',
+                            pointBackgroundColor: pointColors,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            fill: false,
+                            tension: 0.3,
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        animation: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        },
+                        scales: {
+                            y: { min: 0, max: 2, display: false },
+                            x: { display: false }
+                        },
+                        elements: {
+                            line: { borderWidth: 1.5 },
+                            point: { borderWidth: 0 }
+                        },
+                        interaction: { mode: 'nearest', intersect: false },
+                        layout: { padding: 0 },
+                        clip: false,
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock javascript %}

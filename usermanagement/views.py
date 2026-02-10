@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import login
@@ -6,13 +7,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from django.views import View
-from streetactivity.models import CONFIDENCE_LEVEL_CHOICES
+from streetactivity.models import ConfidenceLevel
 from .forms import RegisterForm, UserForm, ProfileForm
 
 AMOUNT_XP = {
-    CONFIDENCE_LEVEL_CHOICES[0][0]: 75,
-    CONFIDENCE_LEVEL_CHOICES[1][0]: 50,
-    CONFIDENCE_LEVEL_CHOICES[2][0]: 25,
+    ConfidenceLevel.ONZEKER: 75,
+    ConfidenceLevel.TUSSENIN: 50,
+    ConfidenceLevel.ZELFVERZEKERD: 25,
 
 }
 
@@ -27,7 +28,7 @@ class Register(CreateView):
         """After the user input is valid, it logs in and redirects towards its dashboard"""
         user = form.save()
         login(self.request, user)
-        return redirect(self.success_url)
+        return redirect(self.success_url)  # type: ignore[reportArgumentType]
 
 class UserDetail(DetailView):
     """Generic display view to get to the profile of the user:
@@ -36,6 +37,24 @@ class UserDetail(DetailView):
     model          = User
     slug_field     = "username"
     slug_url_kwarg = "username"
+
+    def get_context_data(self, **kwargs):
+        """Adds the experience list,
+        and its data for the sparkline,
+        to the context data"""
+        context = super().get_context_data(**kwargs)
+        experience_list = self.request.user.experiences.all().order_by('-date_created')  # type: ignore[reportAttributeAccessIssue]
+        experience_data = []
+        for exp in experience_list:
+            moments = exp.moments.all()
+            confidence_levels = [m.confidence_level for m in moments]
+            experience_data.append({
+                'id': str(exp.id),
+                'confidence_levels': confidence_levels,
+            })
+        context['experiences'] = experience_list
+        context['experience_data_json'] = json.dumps(experience_data)
+        return context
 
 class ProfileUpdateView(LoginRequiredMixin, View):
     """View for user to update its profile"""
@@ -83,7 +102,7 @@ class ProfileUpdateView(LoginRequiredMixin, View):
 
 def add_xp(profile, confidence_level):
     """Given the confidence lvl and the user profile, 
-    add the amount of xp specific to that confidence lvl to the user profile and update the percentage_xp"""
+    add the amount of xp specific to that confidence lvl to the user profile"""
     profile.xp += AMOUNT_XP[confidence_level]
 
 def update_lvl(profile):

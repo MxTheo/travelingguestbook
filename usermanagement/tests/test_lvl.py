@@ -32,18 +32,18 @@ class TestLvl:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "pioneer",
+            "confidence_level": 0,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
         profile = Profile.objects.get(user=user)
         assert profile.xp == 75
 
-    def test_from_lvl_0_to_1_insecure_moment(self, auto_login_user):
+    def test_from_lvl_1_to_2_insecure_moment(self, auto_login_user):
         """Given a user of lvl 1 who describes 1 moments of insecure confidence,
         tests if they lvl up"""
         client, user = auto_login_user()
@@ -51,11 +51,11 @@ class TestLvl:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "pioneer",
+            "confidence_level": 0,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
@@ -65,7 +65,7 @@ class TestLvl:
         assert profile.xp == 75
         assert profile.xp_start == 75
 
-    def test_from_lvl_0_to_1_inbetween_moment(self, auto_login_user):
+    def test_from_lvl_1_to_2_inbetween_moment(self, auto_login_user):
         """Given a user of lvl 1 describing 2 moments of inbetween confidence,
         tests if they lvl up"""
         client, user = auto_login_user()
@@ -73,11 +73,11 @@ class TestLvl:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "intermediate",
+            "confidence_level": 1,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
         client.post(url, data_moment, follow=True)
@@ -89,6 +89,7 @@ class TestLvl:
         assert profile.xp_start == 75
 
 class TestProgress:
+    """Tests for progress percentage towards next lvl"""
     def test_progress_in_between(self, auto_login_user):
         """Given a user of lvl 1 who describes 1 moments of inbetween confidence (50xp),
         tests the progress percentage is updated"""
@@ -97,11 +98,11 @@ class TestProgress:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "intermediate",
+            "confidence_level": 1,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
@@ -116,11 +117,11 @@ class TestProgress:
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": "intermediate",
+            "confidence_level": 1,
             "from_practitioner": True,
             "keywords": moment.keywords,
         }
-        url = reverse("create-moment", args=[activity.id])
+        url = reverse("create-moment-from-practitioner", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
         client.post(url, data_moment, follow=True)

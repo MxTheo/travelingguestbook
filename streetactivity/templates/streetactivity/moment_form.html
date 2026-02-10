@@ -8,24 +8,38 @@
         aanmaken
     {% endif %}
 {% endblock title %}
+{% block stylesheet %}
+    <link rel="stylesheet"
+          href="{% static 'streetactivity/styles/moment_form.css' %}">
+{% endblock stylesheet %}
 {% block content %}
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-lg-8">
+                {% include "admin/messages_feed.html" %}
+                {% if show_first_moment_message %}
+                    <div class="alert alert-info">
+                        Voeg nu je eerste moment toe aan de ervaring. Hoe zelfverzekerd voelde jij je toen je begon?
+                    </div>
+                {% endif %}
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <h1 class="display-5 mb-3">
-                        {% if form.initial.from_practitioner or object.from_practitioner %}
-                            <i class="bi bi-person-raised-hand text-warning"></i> Ervaring als Beoefenaar
+                        {% if request.session.from_experience %}
+                            Moment toevoegen aan Ervaring
                         {% else %}
-                            <i class="bi bi-person-walking text-info"></i> Ervaring als Voorbijganger
+                            {% if form.initial.from_practitioner or object.from_practitioner %}
+                                <i class="bi bi-person-raised-hand text-warning"></i> Moment als Beoefenaar
+                            {% else %}
+                                <i class="bi bi-person-walking text-info"></i> Moment als Voorbijganger
+                            {% endif %}
                         {% endif %}
                     </h1>
-                    <p class="lead text-muted">"{{ activity.name }}"</p>
+                    {% if activity %}<p class="lead text-muted">"{{ activity.name }}"</p>{% endif %}
                     <div class="alert alert-light border">
                         <small class="text-muted">
                             <i class="bi bi-info-circle"></i>
-                            Elk moment, of het nu spanning of energie bracht, draagt bij aan gemeenschappelijk begrip van de straatactiviteit. Alles is voedingsstof voor de bodem.
+                            Elk moment, of je nu onzeker of zelfverzekerd voelde, draagt bij aan gemeenschappelijk begrip van de straatactiviteit. Alles is voedingsstof voor de bodem.
                         </small>
                     </div>
                 </div>
@@ -37,22 +51,31 @@
                             {% for error in form.non_field_errors %}{{ error }}{% endfor %}
                         </div>
                     {% endif %}
-                    
-                    <!-- Reflection - Stap 1 -->
-                    {% include "streetactivity/step1_reflection.html" with form=form %}
-                    <!-- Reflection - Stap 2 -->
-                     {% include "streetactivity/step2_keywords.html" with form=form %}
-                    <!-- Category Selection - Stap 3 -->
-                    {% include "streetactivity/step3_category_selection.html" with form=form %}
-                    <!-- Submit Buttons -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <button  onclick="history.back()"
-                           class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left"></i> Terug
-                        </button>
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-send me-1"></i> Verzenden
-                        </button>
+                    <!-- Category Selection - St3p 1 -->
+                    {% include "streetactivity/step_category_selection.html" with form=form %}
+                    <!-- Reflection - Step 2 -->
+                    {% include "streetactivity/step_reflection.html" with form=form %}
+                    {% if request.session.from_experience %}
+                        <!-- Activity - Step 3 -->
+                        {% include "streetactivity/step_activity.html" with form=form %}
+                    {% endif %}
+                    <!-- Submit buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <a href="{% url "cancel-moment-creation" %}"
+                           class="btn btn-secondary btn-lg">
+                            <i class="bi bi-x-lg"></i> Annuleer
+                        </a>
+                        {% if request.session.from_experience and not selected_activity %}
+                            <span class="d-inline-block"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-title="Selecteer eerst een activiteit om op te slaan">
+                            {% endif %}
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg"
+                                    {% if request.session.from_experience and not selected_activity %}disabled{% endif %}>
+                                <i class="bi bi-check-lg me-1"></i> Opslaan
+                            </button>
+                            {% if request.session.from_experience and not selected_activity %}</span>{% endif %}
                     </div>
                 </form>
             </div>

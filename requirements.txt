@@ -72,3 +72,6 @@ typing_extensions
 tzdata==2024.2
 whitenoise==6.6.0
 Whoosh==2.7.4
+
+# Type stubs for Django (used by mypy/pyright)
+django-stubs

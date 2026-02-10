@@ -101,7 +101,7 @@ class TestUserUpdateView:
         user.profile.refresh_from_db()
         assert user.profile.profile_image.name == ""
 
-    def test_update_user_form_valid_profile_form_invalid(self, auto_login_user, temporary_media_root):
+    def test_update_user_form_valid_profile_form_invalid(self, auto_login_user,temporary_media_root):
         """Test that valid user form updates,
           but invalid profile form shows warning"""
         client, _ = auto_login_user()
@@ -141,7 +141,7 @@ class TestImageUrl:
         profile = Profile.objects.get(user=user)
 
         assert (
-            not profile.profile_image_url == "/static/persona/images/empty_portrait.jpg"
+            profile.profile_image_url != "/static/persona/images/empty_portrait.jpg"
         )
 
 
@@ -154,7 +154,7 @@ class TestProfileForm:
             "test.jpg", buffer.read(), content_type="image/jpeg"
         )
 
-        form = ProfileForm(files={"profile_image": valid_image})
+        form = ProfileForm(files={"profile_image": valid_image})  # type: ignore[reportArgumentType]
         assert form.is_valid()
 
     def test_invalid_image(self, temporary_media_root):
@@ -176,7 +176,7 @@ class TestProfileForm:
         )
 
         with patch.object(small_image, "size", 6 * 1024 * 1024):
-            form = ProfileForm(files={"profile_image": small_image})
+            form = ProfileForm(files={"profile_image": small_image})  # type: ignore[reportArgumentType]
             assert not form.is_valid()
             assert "Afbeelding mag niet groter zijn dan 5MB" in str(form.errors)
 
@@ -184,7 +184,7 @@ class TestProfileForm:
         """Test ongeldige extensie"""
         buffer = create_test_image()
         image = SimpleUploadedFile("test.pdf", buffer.read(), "image/jpeg")
-        form = ProfileForm(files={'profile_image': image})
+        form = ProfileForm(files={'profile_image': image})  # type: ignore[reportArgumentType]
         assert not form.is_valid()
         assert 'Ongeldige bestandsextensie' in str(form.errors)
 
@@ -203,7 +203,7 @@ class TestProfileForm:
                 filename, buffer.read(), content_type=content_type
             )
 
-            form = ProfileForm(files={"profile_image": image})
+            form = ProfileForm(files={"profile_image": image})  # type: ignore[reportArgumentType]
             assert form.is_valid(), f"Failed for {filename} with {content_type}"
 
     def test_no_image_provided(self, temporary_media_root):
@@ -213,7 +213,7 @@ class TestProfileForm:
 
 def create_test_image(img_format="JPEG", size=(100, 100)):
     """Helper om test afbeeldingen te maken"""
-    image = Image.new("RGB", size, color="red")
+    image = Image.new("RGB", size, color=(255, 0, 0))  # type: ignore[reportArgumentType]
     buffer = io.BytesIO()
 
     if img_format.upper() == "JPEG":

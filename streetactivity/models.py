@@ -1,15 +1,11 @@
+import uuid
 from django.db import models
-
+from pkg_resources import require
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
     ("approach", "Aanspreken"),
     ("both", "Beide"),
-]
-CONFIDENCE_LEVEL_CHOICES = [
-    ("pioneer", "onzeker"),
-    ("intermediate", "tussenin"),
-    ("climax", "zelfverzekerd"),
 ]
 
 class StreetActivity(models.Model):
@@ -44,15 +40,30 @@ class StreetActivity(models.Model):
     def __str__(self):
         return str(self.name)
 
+class ConfidenceLevel(models.IntegerChoices):
+    """Choices for confidence level."""
+    ONZEKER       = 0, "onzeker"
+    TUSSENIN      = 1, "tussenin"
+    ZELFVERZEKERD = 2, "zelverzekerd"
 
 class Moment(models.Model):
     """An moment is a report of a moment of someone who has done a street activity."""
 
+    experience = models.ForeignKey(
+        "Experience",
+        on_delete=models.CASCADE,
+        related_name="moments",
+        verbose_name="Gerelateerde ervaring",
+        null=True,
+        blank=True,
+    )
     activity = models.ForeignKey(
         "StreetActivity",
         on_delete=models.CASCADE,
         related_name="moments",
         verbose_name="Gerelateerde activiteit",
+        null=True,
+        blank=True,
     )
     report = models.TextField(
         max_length=3500,
@@ -60,10 +71,9 @@ class Moment(models.Model):
         blank=True,
         help_text="Beschrijf wat zich aandiende in maximaal 3500 karakters",
     )
-    confidence_level = models.CharField(
-        max_length=15,
-        choices=CONFIDENCE_LEVEL_CHOICES,
-        default="pioneer",
+    confidence_level = models.IntegerField(
+        choices=ConfidenceLevel.choices,
+        default=ConfidenceLevel.ONZEKER,
         verbose_name="Zelfverzekerdheid",
     )
     from_practitioner = models.BooleanField(
@@ -71,11 +81,15 @@ class Moment(models.Model):
     )
 
     keywords = models.CharField(
-        max_length=200, 
+        max_length=200,
         blank=True,
         verbose_name="Kernwoorden",
-        help_text="3 woorden die je moment samenvatten, gescheiden door komma's")
-    
+        help_text="3 woorden, gescheiden door komma's")
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Volgorde",
+        help_text="Volgorde van het moment binnen de ervaring"
+    )
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
@@ -84,6 +98,7 @@ class Moment(models.Model):
         verbose_name = "Moment"
         verbose_name_plural = "Momenten"
         indexes = [
+            models.Index(fields=["order"]),
             models.Index(fields=["-date_created"]),
             models.Index(fields=["confidence_level"]),
             models.Index(fields=["from_practitioner"]),
@@ -92,4 +107,32 @@ class Moment(models.Model):
     def __str__(self):
         if self.report:
             return f"{self.report[:50]}..."
-        return f"{self.activity.name} - Moment {self.id}"
+        return f"{self.activity.name} - Moment {self.id}"  # type: ignore[reportAttributeAccessIssue]
+
+    def save(self, *args, **kwargs):
+        """Auto-increment order within the same experience"""
+        if not self.order:
+            last_moment = Moment.objects.filter(
+                experience=self.experience).order_by('-order').first()
+            self.order = (last_moment.order + 1) if last_moment else 1
+        super().save(*args, **kwargs)
+
+class Experience(models.Model):
+    """An experience is a collection of moments"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        "auth.User",
+        on_delete=models.CASCADE,
+        related_name="experiences",
+        verbose_name="Speler",
+    )
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-date_created"]
+        verbose_name = "Ervaring"
+        verbose_name_plural = "Ervaringen"
+
+    def __str__(self):
+        return f"Ervaring {self.date_created.strftime('%d-%m-%Y %H:%M')}"

@@ -32,10 +32,17 @@
                     Niet om iets te bereiken, maar om aanwezig te zijn met wat er is.
                 </p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <a href="{% url 'streetactivity-list' %}"
-                       class="btn btn-primary btn-lg px-4 me-md-2">
-                        <i class="bi bi-plus-circle me-2"></i>Deel je belevingsmoment
-                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'start-experience' %}"
+                           class="btn btn-primary btn-lg px-4 me-md-2">
+                            <i class="bi bi-plus-circle me-2"></i>Deel je ervaring
+                        </a>
+                    {% else %}
+                        <a href="{% url 'streetactivity-list' %}"
+                           class="btn btn-primary btn-lg px-4 me-md-2">
+                            <i class="bi bi-plus-circle me-2"></i>Deel je belevingsmoment
+                        </a>
+                    {% endif %}
                     <a href="#recentebelevingsmomenten"
                        class="btn btn-outline-primary btn-lg px-4">
                         <i class="bi bi-people-fill me-2"></i>Recente belevingsmomenten
@@ -247,7 +254,8 @@
             </div>
         </div>
         <!-- Hoe Momenten Samen Een Verhaal Vormen -->
-        <div id="samenbegrijpen" class="row py-5 bg-light rounded-3 my-5 wathoewaarom">
+        <div id="samenbegrijpen"
+             class="row py-5 bg-light rounded-3 my-5 wathoewaarom">
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-4">
                     <h2 class="fw-bold mb-3">Samen Begrijpen</h2>

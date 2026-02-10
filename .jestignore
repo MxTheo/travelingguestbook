@@ -1,0 +1,46 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Django
+migrations/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Coverage
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Django static/media
+static/
+media/
+
+# Temp files
+tmp/
+temp/

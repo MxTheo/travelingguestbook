@@ -1,0 +1,49 @@
+.selected {
+     /* Bootstrap primary kleur */
+    box-shadow: 0 0 10px var(--bs-primary);
+}
+
+/* Hover effect for cards */
+.card-select-label:hover .activity-card {
+    border-color: var(--bs-success-border);
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+}
+
+/* Ensure consistent card width */
+.activity-card-container {
+    width: 100%;
+}
+
+.activity-card {
+    width: 100%;
+}
+
+/* Ensure all columns have equal width */
+.row>[class^="col-"] {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure card images are not selectable */
+.card-select-label {
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    display: block;
+}
+
+.form-check-input {
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .fixed-bottom {
+        padding-bottom: env(safe-area-inset-bottom) !important;
+    }
+}

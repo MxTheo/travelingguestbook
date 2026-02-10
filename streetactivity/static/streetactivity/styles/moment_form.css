@@ -1,0 +1,16 @@
+.form-error {
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 8px 0;
+  box-shadow: 0 2px 4px var(--bs-primary-emphasis);
+  border: 1px solid var(--bs-danger);
+}
+
+.disabled-link {
+  pointer-events: none;
+  cursor: default;
+  background-color: var(--bs-secondary);
+  border: none;
+  text-decoration: none !important;
+}

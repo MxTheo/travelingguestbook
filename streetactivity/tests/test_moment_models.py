@@ -1,5 +1,4 @@
 from django.urls import reverse
-from django.core.exceptions import ValidationError
 from travelingguestbook.factories import MomentFactory, StreetActivityFactory
 from streetactivity.models import Moment
 
@@ -11,14 +10,15 @@ class TestMomentModel:
         the first 50 characters of the report followed by ellipsis."""
         moment = MomentFactory(
             report="This is a test report for the moment model. It should be truncated.")
-        expected_str = "This is a test report for the moment model. It..."
-        assert str(moment) == expected_str
+        expected_str = "This is a test report for the moment model. It sho..."
+        returned_str = str(moment)
+        assert returned_str == expected_str
 
     def test_moment_str_method_no_report(self):
         """Test the __str__ method of the Moment model when there is no report."""
         activity = StreetActivityFactory(name="Test Activity")
         moment = MomentFactory(activity=activity, report="")
-        expected_str = f"{activity.name} - Ervaring {moment.id}"
+        expected_str = f"{activity.name} - Moment {moment.id}"
         assert str(moment) == expected_str
 
     def test_moment_createview_leads_for_form_from_passerby(self, client):
@@ -28,17 +28,15 @@ class TestMomentModel:
         create_url = reverse("create-moment-from-passerby", args=[activity.id])
         response = client.get(create_url)
         assert response.status_code == 200
-        assert "Ervaring als Voorbijganger" in response.content.decode()
+        assert "Moment als Voorbijganger" in response.content.decode()
 
     def test_moment_createview(self, client):
         """Test the Moment create view to ensure it returns a 200 status code
         and contains the expected form in context."""
         activity = StreetActivityFactory()
-        create_url = reverse("create-moment", args=[activity.id])
+        create_url = reverse("create-moment-from-practitioner", args=[activity.id])
 
-        moment_data = MomentFactory.build().__dict__
-        for field in ["_state", "id", 'activity_id']:
-            moment_data.pop(field, None)
+        moment_data = create_moment_data(activity)
 
         response = client.post(create_url, moment_data, follow=True)
 
@@ -50,28 +48,24 @@ class TestMomentModel:
         returns a 200 status code and sets from_practitioner to True."""
         activity = StreetActivityFactory()
         create_url = reverse("create-moment-from-practitioner", args=[activity.id])
-        moment_data = MomentFactory.build().__dict__
-        for field in ["_state", "id", 'activity_id']:
-            moment_data.pop(field, None)
+        moment_data = create_moment_data(activity)
         response = client.post(create_url, moment_data, follow=True)
         assert response.status_code == 200
         assert Moment.objects.count() == 1
-        moment = Moment.objects.first()
-        assert moment.from_practitioner
+        moment = Moment.objects.first()  # type: ignore[reportOptionalMemberAccess]
+        assert moment.from_practitioner  # type: ignore[reportOptionalMemberAccess]
 
     def test_moment_createview_from_passerby(self, client):
         """Test the Moment create view for passerby to ensure it
         returns a 200 status code and sets from_practitioner to False."""
         activity = StreetActivityFactory()
         create_url = reverse("create-moment-from-passerby", args=[activity.id])
-        moment_data = MomentFactory.build().__dict__
-        for field in ["_state", "id", 'activity_id']:
-            moment_data.pop(field, None)
+        moment_data = create_moment_data(activity)
         response = client.post(create_url, moment_data, follow=True)
         assert response.status_code == 200
         assert Moment.objects.count() == 1
-        moment = Moment.objects.first()
-        assert not moment.from_practitioner
+        moment = Moment.objects.first()  # type: ignore[reportOptionalMemberAccess]
+        assert not moment.from_practitioner  # type: ignore[reportOptionalMemberAccess]
 
     def test_moment_listview(self, client):
         """Test the Moment list view to ensure it returns a 200 status code
@@ -151,10 +145,28 @@ class TestMomentModel:
         assert moment.report == "Updated Moment"
 
     def test_updateview_practitioner(self, client):
-        """Given an moment from a practitioner, test that the form shows Ervaring als Beoefenaar"""
+        """Given an moment from a practitioner, test that the form shows Moment als Beoefenaar"""
         moment = MomentFactory(from_practitioner=True)
         update_url = reverse("update-moment", args=[moment.id])
 
         response = client.get(update_url)
 
-        assert "Ervaring als Beoefenaar" in response.content.decode()
+        assert "Moment als Beoefenaar" in response.content.decode()
+
+def create_moment_data(activity=None):
+    """Helper function to create moment data for tests."""
+    if not activity:
+        activity = StreetActivityFactory()
+    moment_data = MomentFactory.build().__dict__
+    for field in [
+        "_state",
+        "id",
+        'activity_id',
+        'experience_id',
+        'from_practitioner',
+        'date_created', 'date_modified',
+        'order']:
+        moment_data.pop(field, None)
+    moment_data['activity'] = activity.id
+    moment_data['confidence_level'] = str(moment_data.get('confidence_level', 3))
+    return moment_data

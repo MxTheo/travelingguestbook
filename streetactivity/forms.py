@@ -1,8 +1,8 @@
 from django import forms
-from .models import StreetActivity, Moment
+from .models import StreetActivity, Moment, Experience, ConfidenceLevel
 
 class StreetActivityForm(forms.ModelForm):
-    """Form for creating or updating a StreetActivity."""
+    """Form for a StreetActivity."""
 
     class Meta:
         '''Model form for the StreetActivity model.'''
@@ -27,9 +27,15 @@ class StreetActivityForm(forms.ModelForm):
             'supplies': forms.Textarea(attrs={'rows': 3}),
         }
 
-# forms.py
 class MomentForm(forms.ModelForm):
     """Base form for Moment with common fields."""
+
+    confidence_level = forms.ChoiceField(
+        choices=ConfidenceLevel.choices,
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        label='Hoe zelfverzekerd voelde je je?',
+        initial=ConfidenceLevel.ONZEKER,
+    )
 
     class Meta:
         model = Moment
@@ -40,7 +46,6 @@ class MomentForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder':
                 'Omschrijf je innerlijke beleving...'}),
-            'confidence_level': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'keywords': forms.Textarea(attrs={
                 'rows': 1,
                 'class': 'form-control',
@@ -49,10 +54,30 @@ class MomentForm(forms.ModelForm):
         }
         labels = {
             'confidence_level': 'Hoe zelfverzekerd voelde je je?',
-            'report': 'Wat voelde je? Wat ging er in je om?',
-            'keywords': "3 woorden die je moment samenvatten, gescheiden door komma's",
+            'report': 'Wat was de reden? Wat deed dat met je?',
+            'keywords': "3 woorden uit wat je net hebt geschreven, gescheiden door komma's",
         }
         help_texts = {
-            'report': 'Beschrijf wat zich aandiende in maximaal 3500 karakters',
-            'keywords': 'Voorbeelden: Energiek, ongeduldig, kalm, vertrouwen'
+            'report': 'Vertel iets over je (on)zekerheid in maximaal 3500 karakters',
+            'keywords': "3 woorden, gescheiden door komma's",
         }
+
+    def clean(self):
+        """Custom validation to ensure report and keywords are provided."""
+        cleaned_data = super().clean()
+        report = cleaned_data.get('report')
+        keywords = cleaned_data.get('keywords')
+
+        if not report:
+            self.add_error('report', 'Geen reden gegeven. Hoe komt het dat je je zo voelde?')
+        if not keywords:
+            self.add_error('keywords', 'Geef een paar kernwoorden om je reden samen te vatten')
+
+        return cleaned_data
+
+class ExperienceForm(forms.ModelForm):
+    """Form to create an experience with moments"""
+    class Meta:
+        """No fields as experience is just a container for moments"""
+        model = Experience
+        fields: list[str] = []
