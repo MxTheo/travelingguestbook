@@ -395,7 +395,8 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
     ):
         """If required session data is missing, redirect to the appropiate moment form"""
         required_fields = ["report"]
-        missing_fields = [field for field in required_fields if not moment_data or not moment_data.get(field)]
+        missing_fields = [field for field in required_fields \
+                          if not moment_data or not moment_data.get(field)]
         if (
             missing_fields
             or not selected_activity_id
@@ -414,7 +415,7 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
                 message += f": {', '.join(missing_fields)}"
             if not selected_activity_id:
                 message += ". Selecteer een activiteit."
-            
+
             messages.warning(self.request, message)
             return redirect(url)
         return None

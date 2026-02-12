@@ -1,6 +1,5 @@
 import uuid
 from django.db import models
-from pkg_resources import require
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -33,6 +32,7 @@ class StreetActivity(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
+        """Order by name and set verbose names."""
         verbose_name = "Straatactiviteit"
         verbose_name_plural = "Straatactiviteiten"
         ordering = ["name"]
@@ -94,6 +94,7 @@ class Moment(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
+        """Order moments by date in descending order."""
         ordering = ["-date_created"]
         verbose_name = "Moment"
         verbose_name_plural = "Momenten"
@@ -107,7 +108,7 @@ class Moment(models.Model):
     def __str__(self):
         if self.report:
             return f"{self.report[:50]}..."
-        return f"{self.activity.name} - Moment {self.id}"  # type: ignore[reportAttributeAccessIssue]
+        return f"{self.activity.name} - Moment {self.id}"
 
     def save(self, *args, **kwargs):
         """Auto-increment order within the same experience"""
