@@ -1,8 +1,7 @@
-from django.test import RequestFactory
 import pytest
+from django.test import RequestFactory
 from django.urls import reverse
 from freezegun import freeze_time
-from django.contrib.messages.storage.fallback import FallbackStorage
 from travelingguestbook.factories import ExperienceFactory, StreetActivityFactory, MomentFactory
 from streetactivity.tests.test_moment_models import create_moment_data
 from streetactivity.models import ConfidenceLevel, Moment, Experience
