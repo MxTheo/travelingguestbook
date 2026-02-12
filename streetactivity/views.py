@@ -285,7 +285,7 @@ class AddMomentToExperienceView(FormView, LoginRequiredMixin):
 
     def form_valid(self, form):
         """
-        Save form data in session instead of DB,
+        Save form data in session,
         then redirect to activity selection page
         """
         self.request.session["moment_data"] = form.cleaned_data
@@ -293,11 +293,13 @@ class AddMomentToExperienceView(FormView, LoginRequiredMixin):
 
     def get_success_url(self):
         """Redirect to the next step: 
-            - assign activity to moment if an activity is already selected
-            - select activity for moment if an activity is not selected yet
+            - assign activity to moment if user chose to save moment
+            - select activity for moment if user chose to select activity
         """
-        selected_activity_id = self.request.session.get("selected_activity_id")
-        if selected_activity_id:
+        submit_action = self.request.POST.get("submit_action")
+        if submit_action == "select_activity":
+            return reverse("select-activity-for-moment")
+        elif submit_action == "save_moment":
             return reverse("assign-activity-to-moment")
         return reverse("select-activity-for-moment")
 

@@ -293,7 +293,9 @@ class TestAddMomentToExperienceFlow:
     def test_moment_form_context_includes_selected_activity(self, auto_login_user):
         """
         Given a user viewing the moment form for an experience with previous moments,
-        test that the context includes the selected activity from the last moment
+        test that the context includes the selected activity from the last moment        request = RequestFactory().get('/')
+        request.session['submit_action'] = 'save_moment'
+        client.request().session = request.session
         """
         client, user = auto_login_user()
 
@@ -348,9 +350,27 @@ class TestAddMomentToExperienceFlow:
         moment_data = create_moment_data()
         moment_data.pop('activity', None)
 
-        client.get(url_add_moment)  # To set experience_id in session
-
+        moment_data['submit_action'] = 'save_moment'
+        client.get(url_add_moment)
         response = client.post(url_add_moment, data=moment_data, follow=True)
         assert response.status_code == 200
         assert response.redirect_chain[0][0] == reverse('assign-activity-to-moment')
 
+    def test_redirect_to_select_activity_for_moment(self, auto_login_user):
+        """Given the user adds a second moment to an experience and then clicks select activity,
+        test if the user is redirected to select activity for moment page"""
+        client, user = auto_login_user()
+
+        experience = ExperienceFactory(user=user)
+        MomentFactory(experience=experience)
+
+        url_add_moment = reverse('add-moment-to-experience',
+                                 kwargs={'experience_id': experience.id})
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        moment_data['submit_action'] = 'select_activity'
+        client.get(url_add_moment)
+        response = client.post(url_add_moment, data=moment_data, follow=True)
+        assert response.status_code == 200
+        assert response.redirect_chain[0][0] == reverse('select-activity-for-moment')

@@ -71,6 +71,8 @@
                                   data-bs-title="Selecteer eerst een activiteit om op te slaan">
                             {% endif %}
                             <button type="submit"
+                                    name="submit_action"
+                                    value="save_moment"
                                     class="btn btn-primary btn-lg"
                                     {% if request.session.from_experience and not selected_activity %}disabled{% endif %}>
                                 <i class="bi bi-check-lg me-1"></i> Opslaan

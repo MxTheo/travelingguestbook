@@ -23,15 +23,19 @@
             </p>
         </div>
         {% if selected_activity %}
-            <a href="{% url 'select-activity-for-moment' %}"
-               class="btn btn-outline-primary btn-md w-100 mb-2">
+            <button type="submit"
+                    name="submit_action"
+                    value="select_activity"
+                    class="btn btn-outline-primary btn-md w-100 mb-2">
                 <i class="bi bi-arrow-repeat me-1"></i> Wijzig
-            </a>
+            </button>
         {% else %}
-            <a href="{% url 'select-activity-for-moment' %}"
-               class="btn btn-primary btn-md w-100 mb-2">
+            <button type="submit"
+                    name="submit_action"
+                    value="select_activity"
+                    class="btn btn-primary btn-md w-100 mb-2">
                 <i class="bi bi-arrow-right-circle me-1"></i> Selecteer
-            </a>
+            </button>
         {% endif %}
     </div>
 </div>
