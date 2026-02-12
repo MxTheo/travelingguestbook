@@ -194,35 +194,6 @@ class TestAssignActivityToMomentView:
         assert response.status_code == 302
         assert reverse('add-first-moment-to-experience') in response.url
 
-
-    def test_redirect_to_moment_form_if_keywords_are_missing(self, rf, auto_login_user):
-        """
-        Test that redirect_to_moment_form_if_missing_data redirects to moment form
-        if 'keywords' is missing or empty in moment_data.
-        """
-        _, user = auto_login_user()
-        request = rf.get('/')
-        request.user = user
-        request = add_middleware_to_request(request)
-
-        view = AssignActivityToMomentView()
-        view.request = request
-
-        moment_data = {
-            'report': 'Some report',
-            'confidence_level': 3,
-            'from_practitioner': True,
-        }
-        selected_activity_id = 1
-        experience_id = None
-
-        response = view.redirect_to_moment_form_if_missing_data(
-            moment_data, selected_activity_id,
-            experience_id)
-        assert response is not None
-        assert response.status_code == 302
-        assert reverse('add-first-moment-to-experience') in response.url
-
     def test_redirect_to_moment_form_if_selected_activity_id_is_missing_but_experience_id_present(
             self,
             rf,
@@ -585,7 +556,7 @@ class TestAssignActivityToMomentViewValidation:
 
         message_list = list(messages.get_messages(view.request))
         assert any("Niet alles ingevuld" in m.message for m in message_list)
-        assert "report" in message_list[1].message and "keywords" in message_list[1].message
+        assert "report" in message_list[1].message
 
     def test_redirect_when_missing_selected_activity(self, view):
         """Test when the user has not selected an activity,

@@ -394,7 +394,7 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
         self, moment_data, selected_activity_id, experience_id
     ):
         """If required session data is missing, redirect to the appropiate moment form"""
-        required_fields = ["report", "keywords"]
+        required_fields = ["report"]
         missing_fields = [field for field in required_fields if not moment_data or not moment_data.get(field)]
         if (
             missing_fields
@@ -407,7 +407,7 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
             else:
                 url = reverse("add-first-moment-to-experience")
             messages.warning(
-                self.request, "Niet alles ingevuld. Vul alstublieft alle velden in"
+                self.request, "Niet alles ingevuld. Vul alstublieft de verplichte velden in"
             )
             message = ''
             if missing_fields:

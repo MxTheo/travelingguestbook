@@ -54,24 +54,21 @@ class MomentForm(forms.ModelForm):
         }
         labels = {
             'confidence_level': 'Hoe zelfverzekerd voelde je je?',
-            'report': 'Wat was de reden? Wat deed dat met je?',
-            'keywords': "3 woorden uit wat je net hebt geschreven, gescheiden door komma's",
+            'report': 'Wat was de reden? Wat deed dat met je? *',
+            'keywords': "Enkele kernwoorden uit wat je net hebt geschreven, gescheiden door komma's (optioneel)",
         }
         help_texts = {
             'report': 'Vertel iets over je (on)zekerheid in maximaal 3500 karakters',
-            'keywords': "3 woorden, gescheiden door komma's",
+            'keywords': "Enkele kernwoorden, gescheiden door komma's",
         }
 
     def clean(self):
         """Custom validation to ensure report and keywords are provided."""
         cleaned_data = super().clean()
         report = cleaned_data.get('report')
-        keywords = cleaned_data.get('keywords')
 
         if not report:
             self.add_error('report', 'Geen reden gegeven. Hoe komt het dat je je zo voelde?')
-        if not keywords:
-            self.add_error('keywords', 'Geef een paar kernwoorden om je reden samen te vatten')
 
         return cleaned_data
 
