@@ -25,6 +25,7 @@ from .forms import (
     MomentForm,
     StreetActivityForm,
     ExperienceForm,
+    AddMomentForm,
 )
 from .utils.session_helpers import setup_session_for_cancel, clear_session_data
 
@@ -237,7 +238,7 @@ class AddMomentToExperienceView(FormView, LoginRequiredMixin):
     """View to add a moment to an experience."""
 
     model = Moment
-    form_class = MomentForm
+    form_class = AddMomentForm
     template_name = "streetactivity/moment_form.html"
     context_object_name = "experience"
     experience_id: Optional[str] = None
