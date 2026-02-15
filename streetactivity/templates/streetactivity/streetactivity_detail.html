@@ -237,7 +237,7 @@
                                             {{ moment.date_created|timesince }} geleden
                                         </small>
                                     </div>
-                                    <p class="card-text">"{{ moment.report | truncatewords:65 }}"</p>
+                                    {% include "streetactivity/report_snippet.html" with moment=moment %}
                                     {% include "streetactivity/keywords_footer.html" with moment=moment %}
                                 </div>
                             </div>

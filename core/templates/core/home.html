@@ -91,11 +91,11 @@
                         {% for moment in recent_moments %}
                             <div class="col-lg-6">
                                 <div class="card h-100 border-0 shadow-sm">
-                                    <div class="card-body p-4">
+                                    <div class="card-body p-4 d-flex flex-column">
                                         <!-- Activiteit en type -->
-                                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start mb-3 gap-2">
+                                        <div class="d-flex flex-wrap gap-2 mb-3 align-items-center justify-content-between">
                                             <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ moment.activity.name }}</span>
-                                            <span class="badge bg-light text-muted border fs-7">
+                                            <span class="badge bg-light text-muted border fs-7 d-flex align-items-center">
                                                 {% if moment.from_practitioner %}
                                                     <i class="bi bi-person-standing me-1"></i>Beoefenaar
                                                 {% else %}
@@ -103,13 +103,11 @@
                                                 {% endif %}
                                             </span>
                                         </div>
-                                        <!-- Belevingsbeschrijving -->
-                                        <div class="moment-content mb-3">
-                                            <p class="card-text fs-6 lh-base text-dark">"{{ moment.report|truncatewords:30 }}"</p>
-                                        </div>
-                                        <!-- Metadata -->
-                                        <div class="d-flex  flex-column flex-sm-row justify-content-between align-items-center text-muted fs-7 gap-2">
-                                            <small>
+                                        <!-- Focus op zekerheidslevel + reden -->
+                                        {% include "streetactivity/report_snippet.html" with moment=moment %}
+                                        <!-- Metadata: tijd, keywords, meer lezen -->
+                                        <div class="d-flex flex-wrap justify-content-between align-items-center text-muted fs-7 gap-2 mt-auto">
+                                            <small class="d-flex align-items-center">
                                                 <i class="bi bi-clock me-1"></i>
                                                 {{ moment.date_created|timesince }} geleden
                                             </small>
@@ -121,7 +119,7 @@
                                                 {% endif %}
                                             </div>
                                             <a href="{% url 'moment-list-streetactivity' moment.activity.pk %}"
-                                               class="text-decoration-none text-primary ms-md-auto">
+                                               class="text-decoration-none text-primary d-flex align-items-center">
                                                 Meer lezen <i class="bi bi-arrow-right ms-1"></i>
                                             </a>
                                         </div>

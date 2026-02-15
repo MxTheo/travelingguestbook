@@ -7,9 +7,7 @@
     <link href="{% static "streetactivity/styles/moment_list.css" %}" rel="stylesheet">
 {% endblock stylesheet %}
 {% block content %}
-    <div class="container mt-3">
-        {% include "admin/messages_feed.html" %}
-    </div>
+    <div class="container mt-3">{% include "admin/messages_feed.html" %}</div>
     <div class="container mt-4">
         <!-- Header -->
         <div class="row mb-4">
@@ -17,19 +15,19 @@
                 {% if object_list %}
                     {% include "streetactivity/streetactivity_header.html" with activity=object_list.0.activity %}
                     <div class="justify-content-between d-flex">
-                        
                         <div class="text-muted small ms-5 pt-2">
                             <i class="bi bi-collection me-1"></i>
                             {{ page_obj.paginator.count }} ervaringen
                         </div>
-                        <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Details activiteit</a>
+                        <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}"
+                           class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Details activiteit</a>
                     </div>
                 {% else %}
                     <h1 class="h3 mb-2">Geen ervaringen gevonden</h1>
                 {% endif %}
             </div>
         </div>
-        <!-- Ervaringen Lijst -->
+        <!-- Moment List -->
         <div class="row">
             <div class="col">
                 {% if object_list %}
@@ -49,21 +47,16 @@
                                             </span>
                                             <small class="text-muted">{{ moment.date_created|date:"d M Y" }}</small>
                                             <div>
-                                                <a href="{% url "update-moment" pk=moment.pk %}" class="btn btn-sm btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
-                                                <a href="{% url "delete-moment" pk=moment.pk %}" class="btn btn-sm  btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                                <a href="{% url "update-moment" pk=moment.pk %}"
+                                                   class="btn btn-sm btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
+                                                <a href="{% url "delete-moment" pk=moment.pk %}"
+                                                   class="btn btn-sm  btn-outline-danger"><i class="bi bi-trash"></i></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Content -->
-                                <div class="mb-3">
-                                    <p class="card-text mb-0 text-start ms-4">{{ moment.report|linebreaksbr }}</p>
-                                </div>
-                                <div class="mt-1 justify-content-end d-flex">
-                                    <span class="badge {% if moment.confidence_level == 0 %}bg-primary{% elif moment.confidence_level == 1 %}bg-warning text-dark{% else %}bg-success{% endif %}">
-                                        {{ moment.get_confidence_level_display }}
-                                    </span>
-                                </div>
+                                {% include "streetactivity/report_snippet.html" with moment=moment %}
                                 {% include "streetactivity/keywords_footer.html" with moment=moment %}
                             </div>
                         </div>
