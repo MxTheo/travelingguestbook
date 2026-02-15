@@ -66,10 +66,10 @@ class Moment(models.Model):
         blank=True,
     )
     report = models.TextField(
-        max_length=3500,
+        max_length=367,
         verbose_name="Wat voelde je? Wat ging er in je om?",
         blank=True,
-        help_text="Beschrijf wat zich aandiende in maximaal 3500 karakters",
+        help_text="Beschrijf wat zich aandiende in maximaal 367 karakters",
     )
     confidence_level = models.IntegerField(
         choices=ConfidenceLevel.choices,

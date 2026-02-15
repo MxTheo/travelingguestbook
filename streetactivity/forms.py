@@ -58,7 +58,7 @@ class MomentForm(forms.ModelForm):
             'keywords': "Enkele kernwoorden uit wat je net hebt geschreven, gescheiden door komma's (optioneel)",
         }
         help_texts = {
-            'report': 'Vertel iets over je (on)zekerheid in maximaal 3500 karakters',
+            'report': 'Vertel iets over je (on)zekerheid in maximaal 367 karakters',
             'keywords': "Enkele kernwoorden, gescheiden door komma's",
         }
 
