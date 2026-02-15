@@ -42,10 +42,10 @@ class MomentForm(forms.ModelForm):
         fields = ['confidence_level', 'report', 'keywords']
         widgets = {
             'report': forms.Textarea(attrs={
-                'rows': 3,
+                'rows': 2,
                 'class': 'form-control',
                 'placeholder':
-                'Omschrijf je innerlijke beleving...'}),
+                'Omschrijf maximaal 1 reden...'}),
             'keywords': forms.Textarea(attrs={
                 'rows': 1,
                 'class': 'form-control',
@@ -54,11 +54,11 @@ class MomentForm(forms.ModelForm):
         }
         labels = {
             'confidence_level': 'Hoe zelfverzekerd voelde je je?',
-            'report': 'Wat was de reden? Wat deed dat met je? *',
+            'report': 'Ik voelde mij zo, omdat ... *',
             'keywords': "Enkele kernwoorden uit wat je net hebt geschreven, gescheiden door komma's (optioneel)",
         }
         help_texts = {
-            'report': 'Vertel iets over je (on)zekerheid in maximaal 367 karakters',
+            'report': 'Deel 1 belangrijk moment voor jou in maximaal 367 karakters. Is je verhaal langer? Overweeg dan om het op te splitsen in meerdere momenten zodat elk moment duidelijk blijft',
             'keywords': "Enkele kernwoorden, gescheiden door komma's",
         }
 
@@ -82,7 +82,11 @@ class AddMomentForm(MomentForm):
                 'rows': 1,
                 'class': 'form-control',
                 'placeholder':
-                'Omschrijf je innerlijke beleving...'}),
+                'Omschrijf maximaal 1 reden...'}),
+        }
+        help_texts = {
+            **MomentForm.Meta.help_texts,
+            'report': 'Omschrijf 1 specifieke reden in maximaal 367 karakters. Heb je meerdere redenen? Maak dan meerdere momenten aan, zodat de verandering van je zelfverzekerdheid inzichtelijk wordt'
         }
 
 class ExperienceForm(forms.ModelForm):
