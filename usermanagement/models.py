@@ -23,7 +23,7 @@ class Profile(models.Model):
     # lvl and experiences
     lvl = models.IntegerField(default=1)
     xp_next_lvl = models.IntegerField(
-        verbose_name="De benodigde xp voor het volgende level", default=75)
+        verbose_name="De benodigde xp voor het volgende level", default=100)
     xp = models.IntegerField(
         verbose_name="De behaalde xp", default=0)
     xp_start = models.IntegerField(

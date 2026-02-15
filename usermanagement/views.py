@@ -113,7 +113,7 @@ def update_lvl(profile):
     while profile.xp >= profile.xp_next_lvl:
         profile.lvl += 1
         profile.xp_start = profile.xp_next_lvl
-        profile.xp_next_lvl = int(75*pow(profile.lvl,1.5))
+        profile.xp_next_lvl = int(100*pow(profile.lvl,1.7))
 
 def calc_xp_percentage(profile):
     """Given the total xp, the xp at the start of the level and the xp treshold for the new level,

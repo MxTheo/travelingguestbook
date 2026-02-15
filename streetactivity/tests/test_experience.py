@@ -227,12 +227,13 @@ class TestAddMomentToExperienceFlow:
         moment_data.pop('activity', None)
         moment_data['confidence_level'] = ConfidenceLevel.ONZEKER
 
-        self.post_moment_data(client, url_add_moment, moment_data)
+        for _ in range(2):
+            self.post_moment_data(client, url_add_moment, moment_data)
 
-        activity = StreetActivityFactory()
-        self.post_select_activity(client, activity)
+            activity = StreetActivityFactory()
+            self.post_select_activity(client, activity)
 
-        self.get_assign_activity(client)
+            self.get_assign_activity(client)
 
         profile.refresh_from_db()
         assert profile.xp > initial_xp
