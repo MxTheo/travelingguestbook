@@ -179,7 +179,6 @@ class TestAssignActivityToMomentView:
         view.request = request
 
         moment_data = {
-            'keywords': 'some,keywords',
             'confidence_level': 3,
             'from_practitioner': True,
         }
@@ -208,7 +207,7 @@ class TestAssignActivityToMomentView:
 
         fake_uuid = str(uuid.uuid4())
         response = view.redirect_to_moment_form_if_missing_data(
-            {'report': 'x', 'keywords':'x'},
+            {'report': 'x'},
             None,
             fake_uuid)
         assert response.status_code == 302
@@ -226,7 +225,7 @@ class TestAssignActivityToMomentView:
 
         fake_uuid = str(uuid.uuid4())
         response = view.redirect_to_moment_form_if_missing_data(
-            {'report': 'x', 'keywords':'x'},
+            {'report': 'x'},
             '123',
             fake_uuid)
         assert response is None
@@ -284,7 +283,6 @@ class TestAssignActivityToMomentView:
             'report': 'Report text',
             'confidence_level': 2,
             'from_practitioner': True,
-            'keywords': 'key1,key2',
         }
 
         moment = view.create_moment(moment_data, experience, activity)
@@ -377,7 +375,6 @@ class TestShowActivityOnMomentForm:
             activity=activity1,
             report="First moment report",
             confidence_level=1,
-            keywords="first,moment"
         )
 
         # Now add second moment
@@ -413,7 +410,6 @@ class TestShowActivityOnMomentForm:
             activity=activity1,
             report="First moment report",
             confidence_level=1,
-            keywords="first,moment"
         )
         activity2 = StreetActivityFactory(name="Activity 2")
         MomentFactory(
@@ -421,7 +417,6 @@ class TestShowActivityOnMomentForm:
             activity=activity2,
             report="Second moment report",
             confidence_level=2,
-            keywords="second,moment"
         )
 
         # Now add third moment
@@ -543,9 +538,9 @@ class TestAssignActivityToMomentViewValidation:
         assert any("Niet alles ingevuld" in m.message for m in message_list)
 
     def test_redirect_when_missing_required_fields(self, view):
-        """Test that if there is no report and keywords,
+        """Test that if there is no report,
         the user is redirected to the moment form with a message"""
-        moment_data = {"report": "", "keywords": ""}
+        moment_data = {"report": ""}
         redirect_response = view.redirect_to_moment_form_if_missing_data(
             moment_data=moment_data,
             selected_activity_id=1,
@@ -561,7 +556,7 @@ class TestAssignActivityToMomentViewValidation:
     def test_redirect_when_missing_selected_activity(self, view):
         """Test when the user has not selected an activity,
         the user is redirected to the moment form with a message"""
-        moment_data = {"report": "some report", "keywords": "some keywords"}
+        moment_data = {"report": "some report"}
         redirect_response = view.redirect_to_moment_form_if_missing_data(
             moment_data=moment_data,
             selected_activity_id=None,
@@ -576,7 +571,7 @@ class TestAssignActivityToMomentViewValidation:
     def test_no_redirect_when_all_data_present(self, view):
         """Test when all data is present,
         the user is not redirected to the moment form with a message"""
-        moment_data = {"report": "some report", "keywords": "some keywords"}
+        moment_data = {"report": "some report"}
         redirect_response = view.redirect_to_moment_form_if_missing_data(
             moment_data=moment_data,
             selected_activity_id=1,

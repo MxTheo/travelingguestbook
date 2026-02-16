@@ -39,7 +39,6 @@ class MomentFactory(factory.django.DjangoModelFactory):
     from_practitioner = False
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)
-    keywords      = factory.LazyFunction(lambda: ', '.join([fake.word() for _ in range(3)]))
 
 class ExperienceFactory(factory.django.DjangoModelFactory):
     """

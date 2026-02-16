@@ -247,17 +247,3 @@ class TestStreetActivityDetailView:
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
         assert context['moments_remaining'] == 0
-
-    def test_analyze_keywords(self):
-        """Test that analyze keywords return a counter"""
-        activity = StreetActivityFactory()
-        moment_list = []
-        for _ in range(3):
-            moment_list.append(MomentFactory(
-                activity=activity,
-                keywords="energiek, ongeduldig, vertrouwen"))
-        activity_detail = StreetActivityDetailView(activity=activity)
-        keyword_list = activity_detail.analyse_keywords(moment_list)
-        assert keyword_list[0][1] == 3
-        assert keyword_list[1][1] == 3
-        assert keyword_list[2][1] == 3

@@ -134,7 +134,6 @@ class TestMomentModel:
             "report": "Updated Moment",
             "activity": moment.activity,
             "confidence_level": moment.confidence_level,
-            "keywords": moment.keywords,
         }
 
         response = client.post(update_url, updated_data, follow=True)

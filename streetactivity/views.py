@@ -86,20 +86,7 @@ class StreetActivityDetailView(DetailView):
             moments.filter(from_practitioner=False)
         )
 
-        context["word_counts"] = self.analyse_keywords(moments)
-
         return context
-
-    def analyse_keywords(self, moments):
-        """Given the moments of the streetactivity,
-        count every keyword and return the 10 most common keywords in a list tuple"""
-        all_keywords = []
-        for moment in moments:
-            if moment.keywords:
-                words = [w.strip().lower() for w in moment.keywords.split(",")]
-                all_keywords.extend(words)
-        return Counter(all_keywords).most_common(10)
-
 
 class StreetActivityCreateView(CreateView):
     """View to create a new street activity."""
@@ -444,7 +431,6 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
                 report=moment_data.get("report", ""),
                 confidence_level=moment_data.get("confidence_level", 0),
                 from_practitioner=moment_data.get("from_practitioner", True),
-                keywords=moment_data.get("keywords", ""),
                 order=0,  # Will be set automatically in save()
             )
             moment.save()
@@ -535,7 +521,6 @@ class ExperienceDetailView(DetailView):
                     "report_snippet": moment.report[:25] + "..."
                     if moment.report and len(moment.report) > 25
                     else moment.report,
-                    "order": moment.order,
                     "from_practitioner": moment.from_practitioner,
                 }
             )

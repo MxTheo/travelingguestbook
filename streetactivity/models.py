@@ -80,16 +80,6 @@ class Moment(models.Model):
         default=True, verbose_name="Is deze ervaring van een beoefenaar?"
     )
 
-    keywords = models.CharField(
-        max_length=200,
-        blank=True,
-        verbose_name="Kernwoorden",
-        help_text="3 woorden, gescheiden door komma's")
-    order = models.PositiveIntegerField(
-        default=0,
-        verbose_name="Volgorde",
-        help_text="Volgorde van het moment binnen de ervaring"
-    )
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
@@ -99,7 +89,6 @@ class Moment(models.Model):
         verbose_name = "Moment"
         verbose_name_plural = "Momenten"
         indexes = [
-            models.Index(fields=["order"]),
             models.Index(fields=["-date_created"]),
             models.Index(fields=["confidence_level"]),
             models.Index(fields=["from_practitioner"]),
@@ -109,14 +98,6 @@ class Moment(models.Model):
         if self.report:
             return f"{self.report[:50]}..."
         return f"{self.activity.name} - Moment {self.id}"
-
-    def save(self, *args, **kwargs):
-        """Auto-increment order within the same experience"""
-        if not self.order:
-            last_moment = Moment.objects.filter(
-                experience=self.experience).order_by('-order').first()
-            self.order = (last_moment.order + 1) if last_moment else 1
-        super().save(*args, **kwargs)
 
 class Experience(models.Model):
     """An experience is a collection of moments"""

@@ -34,7 +34,6 @@ class TestLvl:
             "report": moment.report,
             "confidence_level": 0,
             "from_practitioner": True,
-            "keywords": moment.keywords,
         }
         url = reverse("create-moment-from-practitioner", args=[activity.id])
 
@@ -53,7 +52,6 @@ class TestLvl:
             "report": moment.report,
             "confidence_level": 0,
             "from_practitioner": True,
-            "keywords": moment.keywords,
         }
         url = reverse("create-moment-from-practitioner", args=[activity.id])
 
@@ -76,7 +74,6 @@ class TestLvl:
             "report": moment.report,
             "confidence_level": 1,
             "from_practitioner": True,
-            "keywords": moment.keywords,
         }
         url = reverse("create-moment-from-practitioner", args=[activity.id])
 
@@ -101,7 +98,6 @@ class TestProgress:
             "report": moment.report,
             "confidence_level": 1,
             "from_practitioner": True,
-            "keywords": moment.keywords,
         }
         url = reverse("create-moment-from-practitioner", args=[activity.id])
 
@@ -120,7 +116,6 @@ class TestProgress:
             "report": moment.report,
             "confidence_level": 0,
             "from_practitioner": True,
-            "keywords": moment.keywords,
         }
         url = reverse("create-moment-from-practitioner", args=[activity.id])
 

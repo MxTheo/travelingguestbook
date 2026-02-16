@@ -39,31 +39,24 @@ class MomentForm(forms.ModelForm):
 
     class Meta:
         model = Moment
-        fields = ['confidence_level', 'report', 'keywords']
+        fields = ['confidence_level', 'report']
         widgets = {
             'report': forms.Textarea(attrs={
                 'rows': 2,
                 'class': 'form-control',
                 'placeholder':
                 'Omschrijf maximaal 1 reden...'}),
-            'keywords': forms.Textarea(attrs={
-                'rows': 1,
-                'class': 'form-control',
-                'placeholder':
-                "Energiek, ongeduldig, vertrouwen..."}),
         }
         labels = {
             'confidence_level': 'Hoe zelfverzekerd voelde je je?',
             'report': 'Ik voelde mij zo, omdat ... *',
-            'keywords': "Enkele kernwoorden uit wat je net hebt geschreven, gescheiden door komma's (optioneel)",
         }
         help_texts = {
             'report': 'Deel 1 belangrijk moment voor jou in maximaal 367 karakters. Is je verhaal langer? Overweeg dan om het op te splitsen in meerdere momenten zodat elk moment duidelijk blijft',
-            'keywords': "Enkele kernwoorden, gescheiden door komma's",
         }
 
     def clean(self):
-        """Custom validation to ensure report and keywords are provided."""
+        """Custom validation to ensure report is provided."""
         cleaned_data = super().clean()
         report = cleaned_data.get('report')
 

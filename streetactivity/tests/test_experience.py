@@ -176,18 +176,6 @@ class TestAddMomentToExperienceFlow:
         errors = response.context['form'].errors
         assert 'report' in errors
 
-    def test_missing_keywords(self, auto_login_user):
-        """Given no keywords entered,
-        test if the user is directed towards the next step"""
-        client, _ = auto_login_user()
-        url_add_first = reverse('add-first-moment-to-experience')
-        moment_data = create_moment_data()
-        moment_data['keywords'] = '' # Remove keywords to simulate missing input
-        moment_data.pop('activity', None)
-        response = client.post(url_add_first, data=moment_data, follow=True)
-        assert response.status_code == 200  # Form re-rendered
-        assert response.redirect_chain[-1][0] == reverse('select-activity-for-moment')
-
     def test_updating_moment_data_when_going_back_to_moment_form(self, auto_login_user):
         """
         Given there is already moment data present,
