@@ -32,7 +32,7 @@
                     Niet om iets te bereiken, maar om aanwezig te zijn met wat er is.
                 </p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    {% if user.is_authenticated %}
+                    {% if request.user.is_authenticated %}
                         <a href="{% url 'start-experience' %}"
                            class="btn btn-primary btn-lg px-4 me-md-2">
                             <i class="bi bi-plus-circle me-2"></i>Deel je ervaring

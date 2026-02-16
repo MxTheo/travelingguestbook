@@ -163,8 +163,7 @@ def create_moment_data(activity=None):
         'activity_id',
         'experience_id',
         'from_practitioner',
-        'date_created', 'date_modified',
-        'order']:
+        'date_created', 'date_modified']:
         moment_data.pop(field, None)
     moment_data['activity'] = activity.id
     moment_data['confidence_level'] = str(moment_data.get('confidence_level', 3))

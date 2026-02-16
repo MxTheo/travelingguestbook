@@ -431,7 +431,6 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
                 report=moment_data.get("report", ""),
                 confidence_level=moment_data.get("confidence_level", 0),
                 from_practitioner=moment_data.get("from_practitioner", True),
-                order=0,  # Will be set automatically in save()
             )
             moment.save()
         return moment

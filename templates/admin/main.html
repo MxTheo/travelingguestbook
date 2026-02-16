@@ -39,7 +39,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
             <![endif]-->
         <main>
-            {% if user.is_authenticated and request.path != '/' %}
+            {% if request.user.is_authenticated and request.path != '/' %}
                 {% include "usermanagement/progressbar.html" with profile=user.profile %}
             {% endif %}
             {% block content %}
