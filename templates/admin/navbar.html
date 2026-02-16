@@ -25,14 +25,14 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url "about" %}">Over</a>
           </li>
-          {% if user.is_authenticated %}
+          {% if request.user.is_authenticated %}
             <div class="dropdown nav-item">
               <a class="nav-link dropdown-toggle"
                  href="#"
                  role="button"
                  id="dropdownMenuLink"
                  data-bs-toggle="dropdown"
-                 aria-expanded="false">{{ user.username }}</a>
+                 aria-expanded="false">{{ request.user.username }}</a>
               <ul class="dropdown-menu dropdown-menu-end"
                   aria-labelledby="dropdownMenuLink">
                 <li class="nav-item">
