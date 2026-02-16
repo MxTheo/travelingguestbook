@@ -1,7 +1,14 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 from . import views
 
+router = routers.DefaultRouter()
+router.register(r'persona', views.PersonaViewSet, basename='personas')
+router.register(r'problem', views.ProblemViewSet, basename='problem')
+router.register(r'reaction', views.ReactionViewSet, basename='reaction')
+
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('', views.PersonaListView.as_view(), name='persona-list'),
     path('nieuw/', views.PersonaCreateView.as_view(), name='create-persona'),
     path('<int:pk>/', views.PersonaDetailView.as_view(), name='persona-detail'),

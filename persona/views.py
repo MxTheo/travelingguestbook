@@ -1,9 +1,11 @@
+from rest_framework import viewsets
 from django.views import generic
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import Persona, Problem, Reaction
 from .forms import PersonaForm, ProblemForm, ReactionForm
+from .serializers import PersonaSerializer, ProblemSerializer, ReactionSerializer
 
 class PersonaListView(generic.ListView):
     """View to list all personas."""
@@ -88,3 +90,18 @@ class ReactionDeleteView(generic.DeleteView):
         persona_pk = self.object.persona.pk
         messages.success(self.request, 'Reactie succesvol verwijderd!')
         return reverse_lazy('persona-detail', kwargs={'pk': persona_pk})
+
+class PersonaViewSet(viewsets.ModelViewSet):
+    """API endpoint that allows personas to be viewed or edited."""
+    queryset = Persona.objects.all()
+    serializer_class = PersonaSerializer
+
+class ProblemViewSet(viewsets.ModelViewSet):
+    """API endpoint that allows problems to be viewed or edited."""
+    queryset = Problem.objects.all()
+    serializer_class = ProblemSerializer
+
+class ReactionViewSet(viewsets.ModelViewSet):
+    """API endpoint that allows reactions to be viewed or edited."""
+    queryset = Reaction.objects.all()
+    serializer_class = ReactionSerializer
