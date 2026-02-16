@@ -19,14 +19,14 @@
                 {% include "admin/messages_feed.html" %}
                 {% if show_first_moment_message %}
                     <div class="alert alert-info">
-                        Voeg nu je eerste moment toe aan de ervaring. Hoe zelfverzekerd voelde jij je toen je begon?
+                        Geef nu aan hoe jij je in het begin voelde en hoe dat kwam. Hoe zelfverzekerd voelde jij je toen je begon?
                     </div>
                 {% endif %}
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <h1 class="display-5 mb-3">
                         {% if request.session.from_experience %}
-                            Moment toevoegen aan Ervaring
+                            Zelfverzekerheid toevoegen
                         {% else %}
                             {% if form.initial.from_practitioner or object.from_practitioner %}
                                 <i class="bi bi-person-raised-hand text-warning"></i> Moment als Beoefenaar

@@ -1,4 +1,3 @@
-from collections import Counter
 import json
 from typing import Optional
 from django.db import transaction
@@ -485,9 +484,18 @@ class MomentViewSet(viewsets.ModelViewSet):
 
 
 class StartExperienceView(LoginRequiredMixin, TemplateView):
-    """Navigates to the start experience page"""
+    """Navigates to the start experience page with a random sparkline of an experience"""
 
     template_name = "streetactivity/start_experience.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        random_experience = Experience.objects.order_by("?").first()
+        if random_experience:
+            example_moments_data = create_moment_data_of_experience_for_chart(random_experience)
+            context['moments'] = example_moments_data[0]
+            context["moments_json"] = example_moments_data[1]
+        return context
 
 
 class ExperienceDetailView(DetailView):
@@ -497,37 +505,38 @@ class ExperienceDetailView(DetailView):
     context_object_name = "experience"
 
     def get_context_data(self, **kwargs):
+        """Extend context data with moments and their data for chart"""
         context = super().get_context_data(**kwargs)
-        context = self.add_moment_data_to_context(context)
+        context["user"] = self.object.user
+        moment_data = create_moment_data_of_experience_for_chart(self.object)
+        context["moments"] = moment_data[0]
+        context["moments_json"] = moment_data[1]
         return context
 
-    def add_moment_data_to_context(self, context):
-        """Adds a list of moments and moment data in JSON format to context"""
-        moments = list(
-            self.object.moments.order_by("date_created").select_related("activity")
+def create_moment_data_of_experience_for_chart(experience):
+    """Given an experience,
+    create the moment data in json format for the chart of that experience"""
+    moments = list(
+            experience.moments.order_by("date_created").select_related("activity")
         )
-        moment_data = []
-        for moment in moments:
-            moment_data.append(
-                {
-                    "id": moment.id,
-                    "activity": {
-                        "name": moment.activity.name,
-                        "id": moment.activity.id,
-                    },
-                    "confidence_level": moment.confidence_level,
-                    "report": moment.report,
-                    "report_snippet": moment.report[:25] + "..."
-                    if moment.report and len(moment.report) > 25
-                    else moment.report,
-                    "from_practitioner": moment.from_practitioner,
-                }
-            )
-
-        context["moments"] = moments
-        context["moments_json"] = json.dumps(moment_data)
-        return context
-
+    moment_data = []
+    for moment in moments:
+        moment_data.append(
+            {
+                "id": moment.id,
+                "activity": {
+                    "name": moment.activity.name,
+                    "id": moment.activity.id,
+                },
+                "confidence_level": moment.confidence_level,
+                "report": moment.report,
+                "report_snippet": moment.report[:25] + "..."
+                if moment.report and len(moment.report) > 25
+                else moment.report,
+                "from_practitioner": moment.from_practitioner,
+            }
+        )
+    return moments, json.dumps(moment_data)
 
 class ExperienceDeleteView(DeleteView):
     """View to delete an experience"""

@@ -1,71 +1,161 @@
 {% extends "admin/main.html" %}
 {% load static %}
+
 {% block content %}
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <!-- Simple Card -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center p-5">
-                        <!-- Icon -->
-                        <div class="mb-4">
-                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-4">
-                                <i class="bi bi-plus-circle display-4 text-primary"></i>
-                            </div>
-                        </div>
-                        <!-- Title -->
-                        <h2 class="mb-3">Nieuwe Ervaring Starten</h2>
-                        <p class="text-muted mb-4">
-                            Een ervaring is een reeks van momenten.
-                            Start hier en voeg daarna je momenten toe.
-                        </p>
-                        <!-- Simple Form -->
-                        <div class="d-grid gap-3">
-                            <a href="{% url 'add-first-moment-to-experience' %}"
-                               class="btn btn-primary btn-lg">
-                                <i class="bi bi-play-circle me-2"></i>Start Ervaring
-                            </a>
-                            <a href="{% url 'streetactivity-list' %}" class="btn btn-outline-secondary">Zie alle activiteiten</a>
-                        </div>
-                        <!-- Simple Info -->
-                        <div class="mt-5 pt-4 border-top">
-                            <h6 class="mb-3">Hoe werkt het?</h6>
-                            <div class="row text-start">
-                                <div class="col-12 mb-2">
-                                    <div class="d-flex">
-                                        <div class="me-3">
-                                            <span class="badge bg-primary rounded-circle">1</span>
-                                        </div>
-                                        <div>
-                                            <small>Start een ervaring</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-2">
-                                    <div class="d-flex">
-                                        <div class="me-3">
-                                            <span class="badge bg-primary rounded-circle">2</span>
-                                        </div>
-                                        <div>
-                                            <small>Voeg momenten toe</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="d-flex">
-                                        <div class="me-3">
-                                            <span class="badge bg-primary rounded-circle">3</span>
-                                        </div>
-                                        <div>
-                                            <small>Bekijk je ervaringslijn</small>
-                                        </div>
-                                    </div>
-                                </div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- Example Experience Card (Centraal) -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center p-4">
+                    <h2 class="mb-4">Voorbeeld zelfvertrouwenslijn</h2>
+                    
+                    <!-- Grote voorbeeld plot -->
+                    <div class="card mb-4 border-primary border-2 rounded">
+                        <div class="card-body">
+                            <div class="chart-container position-relative">
+                                <canvas id="confidenceChart" height="300px"></canvas>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Uitleg direct onder het voorbeeld -->
+                    <p class="lead text-muted mb-4 mx-auto">
+                        Dit is een voorbeeld van een ervaringslijn waarop je kunt zien hoe iemands zelfverzekerdheid zich ontwikkelde tijdens het maken van contact op straat. Door zelf aan te geven hoe zelfverzekerd je je voelde op verschillende momenten, kun je straks inzien hoe het verloop van jouw zelfvertrouwen was.
+                    </p>
+
+                    <!-- Call-to-actions -->
+                    <div class="d-grid gap-3 mt-4 mx-auto w-75">
+                        <a href="{% url 'add-first-moment-to-experience' %}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-play-circle me-2"></i>Start jouw zelfvertrouwenslijn
+                        </a>
+                    </div>
                 </div>
             </div>
+
+            <!-- Kortere uitleg over hoe het werkt, onderaan en subtiel -->
+            <div class="text-center text-muted small">
+                <h6 class="mb-3">Hoe werkt het?</h6>
+                <div class="row justify-content-center">
+                    <div class="col-8 col-md-6">
+                        <ol class="list-unstyled d-flex flex-column align-items-start">
+                            <li class="mb-2"><span class="badge bg-primary rounded-circle me-2">1</span> Start met je eerste moment</li>
+                            <li class="mb-2"><span class="badge bg-primary rounded-circle me-2">2</span> Voeg daarna <b>meer</b> momenten toe</li>
+                            <li><span class="badge bg-primary rounded-circle me-2">3</span> Bekijk je ervaringslijn</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
+</div>
 {% endblock %}
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src={% static "streetactivity/js/colors.js" %}></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const colors = MyColors.getBootstrapColors();
+
+        // Data voorbereiden vanuit Django context
+        const moments = {{ moments_json| safe }};
+
+        if (!moments || moments.length === 0) {
+            document.querySelector('.chart-container').innerHTML =
+                '<p class="text-center text-muted">Hoe is je gevoel van (on)zekerheid verlopen tijdens deze ervaring?</p>';
+            return;
+        }
+
+        // Labels (activiteit namen) voor x-as
+        const labels = moments.map(moment => moment.activity.name);
+
+        // Data points of y-axis
+        const confidenceData = moments.map(moment => moment.confidence_level);
+        const reportSnippets = moments.map(moment => moment.report_snippet || '');
+
+        // Colors for each datapoint
+        const pointColors = MyColors.mapConfidenceLevelsToColors(confidenceData, colors);
+
+
+        // Canvas element
+        const ctx = document.getElementById('confidenceChart').getContext('2d');
+
+        // Chart configuration
+        const confidenceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Zelfverzekerdheid',
+                    data: confidenceData,
+                    borderColor: colors.primary,
+                    backgroundColor: colors.dark,
+                    pointBackgroundColor: pointColors,
+                    pointBorderColor: pointColors,
+                    pointRadius: 8,
+                    pointHoverRadius: 10,
+                    pointBorderWidth: 2,
+                    pointHitRadius: 15,
+                    fill: false,
+                    tension: 0.3  // Maakt de lijn vloeiend
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 2,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function (value) {
+                                // Converteer numerieke waarde terug naar label
+                                switch (value) {
+                                    case 0:
+                                        return 'Onzeker';
+                                    case 1:
+                                        return 'Tussenin';
+                                    case 2:
+                                        return 'Zelfverzekerd';
+                                    default:
+                                        return '';
+                                }
+                            }
+                        },
+                        grid: {
+                            drawBorder: true
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const index = context.dataIndex;
+                                return reportSnippets[index] || '';
+                            },
+                        }
+                    }
+                },
+                clip: false
+            }
+        });
+});
+    </script>
+{% endblock javascript %}

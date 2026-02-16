@@ -13,12 +13,14 @@
                 </h1>
                 <p class="text-muted mb-0">{{ experience.date_created|date:"d-m-Y H:i" }}</p>
             </div>
-            <div>
-                <a href="{% url "add-moment-to-experience" experience.pk %}"
-                   class="btn btn-outline-primary">
-                    <i class="bi bi-plus-circle me-1"></i>Moment Toevoegen
-                </a>
-            </div>
+            {% if experience.user == request.user %}
+                <div>
+                    <a href="{% url "add-moment-to-experience" experience.pk %}"
+                    class="btn btn-outline-primary">
+                        <i class="bi bi-plus-circle me-1"></i>Moment Toevoegen
+                    </a>
+                </div>
+            {% endif %}
         </div>
         <!-- Confidence Chart -->
         <div class="card mb-4">
@@ -92,7 +94,11 @@
         <div class="mt-4">
             <div class="d-flex justify-content-end">
                 <a href="{% url 'user' user.username %}" class="btn btn-success">
+                    {% if experience.user == request.user %}
                     <i class="bi bi-check-circle"></i> Klaar
+                    {% else %}
+                    <i class="bi bi-person-circle"></i> Terug naar {{ experience.user.username }}
+                    {% endif %}
                 </a>
             </div>
         </div>
@@ -108,100 +114,100 @@
         // Data voorbereiden vanuit Django context
         const moments = {{ moments_json| safe }};
 
-    if (!moments || moments.length === 0) {
-        document.querySelector('.chart-container').innerHTML =
-            '<p class="text-center text-muted">Hoe is je gevoel van (on)zekerheid verlopen tijdens deze ervaring?</p>';
-        return;
-    }
+        if (!moments || moments.length === 0) {
+            document.querySelector('.chart-container').innerHTML =
+                '<p class="text-center text-muted">Hoe is je gevoel van (on)zekerheid verlopen tijdens deze ervaring?</p>';
+            return;
+        }
 
-    // Labels (activiteit namen) voor x-as
-    const labels = moments.map(moment => moment.activity.name);
+        // Labels (activiteit namen) voor x-as
+        const labels = moments.map(moment => moment.activity.name);
 
-    // Data points of y-axis
-    const confidenceData = moments.map(moment => moment.confidence_level);
-    const reportSnippets = moments.map(moment => moment.report_snippet || '');
+        // Data points of y-axis
+        const confidenceData = moments.map(moment => moment.confidence_level);
+        const reportSnippets = moments.map(moment => moment.report_snippet || '');
 
-    // Colors for each datapoint
-    const pointColors = MyColors.mapConfidenceLevelsToColors(confidenceData, colors);
+        // Colors for each datapoint
+        const pointColors = MyColors.mapConfidenceLevelsToColors(confidenceData, colors);
 
 
-    // Canvas element
-    const ctx = document.getElementById('confidenceChart').getContext('2d');
+        // Canvas element
+        const ctx = document.getElementById('confidenceChart').getContext('2d');
 
-    // Chart configuration
-    const confidenceChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Zelfverzekerdheid',
-                data: confidenceData,
-                borderColor: colors.primary,
-                backgroundColor: colors.dark,
-                pointBackgroundColor: pointColors,
-                pointBorderColor: pointColors,
-                pointRadius: 8,
-                pointHoverRadius: 10,
-                pointBorderWidth: 2,
-                pointHitRadius: 15,
-                fill: false,
-                tension: 0.3  // Maakt de lijn vloeiend
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    min: 0,
-                    max: 2,
-                    ticks: {
-                        stepSize: 1,
-                        callback: function (value) {
-                            // Converteer numerieke waarde terug naar label
-                            switch (value) {
-                                case 0:
-                                    return 'Onzeker';
-                                case 1:
-                                    return 'Tussenin';
-                                case 2:
-                                    return 'Zelfverzekerd';
-                                default:
-                                    return '';
+        // Chart configuration
+        const confidenceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Zelfverzekerdheid',
+                    data: confidenceData,
+                    borderColor: colors.primary,
+                    backgroundColor: colors.dark,
+                    pointBackgroundColor: pointColors,
+                    pointBorderColor: pointColors,
+                    pointRadius: 8,
+                    pointHoverRadius: 10,
+                    pointBorderWidth: 2,
+                    pointHitRadius: 15,
+                    fill: false,
+                    tension: 0.3  // Maakt de lijn vloeiend
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 2,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function (value) {
+                                // Converteer numerieke waarde terug naar label
+                                switch (value) {
+                                    case 0:
+                                        return 'Onzeker';
+                                    case 1:
+                                        return 'Tussenin';
+                                    case 2:
+                                        return 'Zelfverzekerd';
+                                    default:
+                                        return '';
+                                }
                             }
+                        },
+                        grid: {
+                            drawBorder: true
                         }
                     },
-                    grid: {
-                        drawBorder: true
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
                     }
                 },
-                x: {
-                    grid: {
+                plugins: {
+                    legend: {
                         display: false
                     },
-                    ticks: {
-                        autoSkip: false,
-                        maxRotation: 45,
-                        minRotation: 45
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const index = context.dataIndex;
+                                return reportSnippets[index] || '';
+                            },
+                        }
                     }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                            const index = context.dataIndex;
-                            return reportSnippets[index] || '';
-                        },
-                    }
-                }
-            },
-            clip: false
-        }
+                clip: false
+            }
+        });
     });
-});
     </script>
 {% endblock javascript %}

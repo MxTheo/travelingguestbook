@@ -49,21 +49,30 @@ class UserDetail(DetailView):
         return context
     
 def create_experiences_data_of_user_for_sparkline(user):
-    """Given a user, create the json data for the sparklines of all its experiences
+    """Given a user,
+    create the json data for the sparklines of all its experiences
     returns the experiences and the experience data in json format"""
     experience_list = user.experiences.all()\
         .order_by('-date_created')
     experience_data = []
     for exp in experience_list:
-        moments = exp.moments.all()\
-            .order_by('date_created')
-        confidence_levels = [m.confidence_level for m in moments]
-        experience_data.append({
-            'id': str(exp.id),
-            'confidence_levels': confidence_levels,
-        })
+        experience_data.append(
+            create_experience_data_for_sparkline(exp)
+        )
     experience_data_json = json.dumps(experience_data)
     return experience_list, experience_data_json
+
+def create_experience_data_for_sparkline(experience):
+    """Given an experience,
+    create the data for the sparkline of that experience"""
+    moments = experience.moments.all()\
+            .order_by('date_created')
+    confidence_levels = [m.confidence_level for m in moments]
+    experience_data = {
+        'id': str(experience.id),
+        'confidence_levels': confidence_levels,
+    }
+    return experience_data
 
 class ProfileUpdateView(LoginRequiredMixin, View):
     """View for user to update its profile"""

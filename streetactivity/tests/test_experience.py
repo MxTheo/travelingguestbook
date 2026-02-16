@@ -28,8 +28,20 @@ class TestExperience:
         response = client.get(start_url)
 
         assert response.status_code == 200
-        assert "Ervaring Starten" in response.content.decode()
+        assert "Voorbeeld" in response.content.decode()
         assert Experience.objects.count() == 0  # No experience created yet
+
+    def test_start_experience_with_example_experience(self, auto_login_user):
+        """Test the Start Experience view when an example experience is provided
+        to ensure it returns a 200 status code"""
+        client, _ = auto_login_user()
+        start_url = reverse("start-experience") 
+
+        ExperienceFactory()
+        response = client.get(start_url)
+
+        assert response.status_code == 200
+        assert "Voorbeeld" in response.content.decode()
 
     def test_that_no_experience_is_created_when_first_moment_is_not_finished(self, auto_login_user):
         """Test that no experience is created when the first moment form
