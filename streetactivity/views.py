@@ -18,7 +18,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
-from .serializers import StreetActivitySerializer, MomentSerializer
+from .serializers import StreetActivitySerializer, MomentSerializer, ExperienceSerializer
 from .models import StreetActivity, Moment, Experience, ConfidenceLevel
 from .forms import (
     MomentForm,
@@ -553,4 +553,4 @@ class ExperienceViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Experience"""
 
     queryset = Experience.objects.all()
-    serializer_class = ExperienceForm
+    serializer_class = ExperienceSerializer

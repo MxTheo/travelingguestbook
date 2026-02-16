@@ -8,6 +8,7 @@ router.register(
     r"streetactivity", views.StreetActivityViewSet, basename="streetactiviteiten"
 )
 router.register(r"moment", views.MomentViewSet, basename="momenten")
+router.register(r"experience", views.ExperienceViewSet, basename="ervaringen")
 
 urlpatterns = [
     path("api/", include(router.urls)),
