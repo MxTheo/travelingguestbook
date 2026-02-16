@@ -43,7 +43,7 @@ class UserDetail(DetailView):
         and its data for the sparkline,
         to the context data"""
         context = super().get_context_data(**kwargs)
-        experience_list = self.request.user.experiences.all()\
+        experience_list = self.object.experiences.all()\
             .order_by('-date_created')
         experience_data = []
         for exp in experience_list:
