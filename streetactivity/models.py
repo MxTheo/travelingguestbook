@@ -44,7 +44,7 @@ class ConfidenceLevel(models.IntegerChoices):
     """Choices for confidence level."""
     ONZEKER       = 0, "onzeker"
     TUSSENIN      = 1, "tussenin"
-    ZELFVERZEKERD = 2, "zelverzekerd"
+    ZELFVERZEKERD = 2, "zelfverzekerd"
 
 class Moment(models.Model):
     """An moment is a report of a moment of someone who has done a street activity."""

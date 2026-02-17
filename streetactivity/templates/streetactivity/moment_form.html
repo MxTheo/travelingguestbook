@@ -19,14 +19,24 @@
                 {% include "admin/messages_feed.html" %}
                 {% if show_first_moment_message %}
                     <div class="alert alert-info">
-                        Geef nu aan hoe jij je in het begin voelde en hoe dat kwam. Hoe zelfverzekerd voelde jij je toen je begon?
+                        <h4 class="alert-heading">
+                            <i class="bi bi-flower3"></i>
+                            Welkom
+                        </h4>
+                        <p>Denk terug aan het contact dat je op straat maakte. Kun je een paar momenten voor je halen waarop je zelfvertrouwen anders voelde? Neem rustig de tijd om die momenten van zelfvertrouwen in je gedachten voorbij te laten komen.</p>
+                        <p>Als je er klaar voor bent, voeg je het eerste punt toe aan de grafiek. Zo help je niet alleen jezelf, maar ook anderen die met hetzelfde bezig zijn.</p>
                     </div>
                 {% endif %}
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <h1 class="display-5 mb-3">
                         {% if request.session.from_experience %}
-                            Zelfverzekerheid toevoegen
+                        {% if show_first_moment_message %}
+                            Eerste punt
+                        {% else %}
+                            Punt
+                        {% endif %}
+                        toevoegen aan grafiek
                         {% else %}
                             {% if form.initial.from_practitioner or object.from_practitioner %}
                                 <i class="bi bi-person-raised-hand text-warning"></i> Moment als Beoefenaar
@@ -39,7 +49,8 @@
                     <div class="alert alert-light border">
                         <small class="text-muted">
                             <i class="bi bi-info-circle"></i>
-                            Elk moment, of je nu onzeker of zelfverzekerd voelde, draagt bij aan gemeenschappelijk begrip van de straatactiviteit. Alles is voedingsstof voor de bodem.
+                            Het is helemaal prima als je het niet precies weet of niet helemaal duidelijk kunt zeggen. Je reden mag best een beetje vaag zijn, dat is helemaal oké.
+                            <p>Alles wat je deelt helpt ons samen straatcontact een beetje meer te begrijpen.</p>
                         </small>
                     </div>
                 </div>
@@ -68,14 +79,18 @@
                         {% if request.session.from_experience and not selected_activity %}
                             <span class="d-inline-block"
                                   data-bs-toggle="tooltip"
-                                  data-bs-title="Selecteer eerst een activiteit om op te slaan">
+                                  data-bs-title="Selecteer eerst een activiteit voordat je een punt toevoegt">
                             {% endif %}
                             <button type="submit"
                                     name="submit_action"
                                     value="save_moment"
                                     class="btn btn-primary btn-lg"
                                     {% if request.session.from_experience and not selected_activity %}disabled{% endif %}>
-                                <i class="bi bi-check-lg me-1"></i> Opslaan
+                                {% if request.session.from_experience %}
+                                    <i class="bi bi-plus-lg me-1"></i> Punt toevoegen
+                                {% else %}
+                                    <i class="bi bi-check-lg me-1"></i> Opslaan
+                                {% endif %}
                             </button>
                             {% if request.session.from_experience and not selected_activity %}</span>{% endif %}
                     </div>

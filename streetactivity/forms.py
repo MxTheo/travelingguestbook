@@ -33,7 +33,7 @@ class MomentForm(forms.ModelForm):
     confidence_level = forms.ChoiceField(
         choices=ConfidenceLevel.choices,
         widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
-        label='Hoe zelfverzekerd voelde je je?',
+        label='Hoe was je zelfvertrouwen in dat moment?',
         initial=ConfidenceLevel.ONZEKER,
     )
 
@@ -45,14 +45,13 @@ class MomentForm(forms.ModelForm):
                 'rows': 2,
                 'class': 'form-control',
                 'placeholder':
-                'Omschrijf maximaal 1 reden...'}),
+                'Omschrijf 1 reden...'}),
         }
         labels = {
-            'confidence_level': 'Hoe zelfverzekerd voelde je je?',
-            'report': 'Ik voelde mij zo, omdat ... *',
+            'report': 'Ik voelde mij (on)zeker, omdat ...',
         }
         help_texts = {
-            'report': 'Deel 1 belangrijk moment voor jou in maximaal 367 karakters. Is je verhaal langer? Overweeg dan om het op te splitsen in meerdere momenten zodat elk moment duidelijk blijft',
+            'report': 'Je hebt hier ruimte voor ongeveer 3 à 4 zinnen om te vertellen wat jouw zelfvertrouwen op dat moment beïnvloedde. Schrijf gewoon wat als eerste bij je opkomt, het hoeft niet perfect te zijn.',
         }
 
     def clean(self):
@@ -75,16 +74,5 @@ class AddMomentForm(MomentForm):
                 'rows': 1,
                 'class': 'form-control',
                 'placeholder':
-                'Omschrijf maximaal 1 reden...'}),
+                'Omschrijf 1 reden...'}),
         }
-        help_texts = {
-            **MomentForm.Meta.help_texts,
-            'report': 'Omschrijf 1 specifieke reden in maximaal 367 karakters. Heb je meerdere redenen? Maak dan meerdere momenten aan, zodat de verandering van je zelfverzekerdheid inzichtelijk wordt'
-        }
-
-class ExperienceForm(forms.ModelForm):
-    """Form to create an experience with moments"""
-    class Meta:
-        """No fields as experience is just a container for moments"""
-        model = Experience
-        fields: list[str] = []
