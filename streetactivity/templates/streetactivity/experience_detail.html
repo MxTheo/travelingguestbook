@@ -9,7 +9,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h1 class="h3 mb-1">
-                    <i class="bi bi-journal-text text-primary"></i> Ervaring
+                    <i class="bi bi-journal-text text-primary"></i> Ervaringsgrafiek
                 </h1>
                 <p class="text-muted mb-0">{{ experience.date_created|date:"d-m-Y H:i" }}</p>
             </div>
@@ -17,7 +17,7 @@
                 <div>
                     <a href="{% url "add-moment-to-experience" experience.pk %}"
                     class="btn btn-outline-primary">
-                        <i class="bi bi-plus-circle me-1"></i>Moment Toevoegen
+                        <i class="bi bi-plus-circle me-1"></i>Punt Toevoegen
                     </a>
                 </div>
             {% endif %}
@@ -53,22 +53,17 @@
             <div class="card-body">
                 {% if moments %}
                     {% for moment in moments %}
-                        <div class="border-start border-3 {% if moment.confidence_level == 9 %}border-danger {% elif moment.confidence_level == 1 %}border-warning {% else %}border-success{% endif %} ps-3 mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
+                        <div class="border-start border-3 {% if moment.confidence_level == 0 %}border-danger {% elif moment.confidence_level == 1 %}border-warning {% else %}border-success{% endif %} ps-3 mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
                             <!-- Moment header -->
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
-                                    <span class="badge {% if moment.confidence_level == 0 %}bg-danger {% elif moment.confidence_level == 1 %}bg-warning {% else %}bg-success{% endif %}">
-                                        {{ moment.get_confidence_level_display }}
-                                    </span>
                                     <span class="ms-2 small text-muted">{{ moment.activity.name }}</span>
                                 </div>
                                 <div class="small text-muted">#{{ forloop.counter }}</div>
                             </div>
                             <!-- Report -->
                             {% if moment.report %}
-                                <div class="mb-2">
-                                    <p class="mb-0 small">{{ moment.report }}</p>
-                                </div>
+                                {% include "streetactivity/report_snippet.html" with moment=moment %}
                             {% endif %}
                             <!-- Time -->
                             <div class="mt-2">
@@ -105,109 +100,5 @@
     </div>
 {% endblock content %}
 {% block javascript %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src={% static "streetactivity/js/colors.js" %}></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const colors = MyColors.getBootstrapColors();
-
-        // Data voorbereiden vanuit Django context
-        const moments = {{ moments_json| safe }};
-
-        if (!moments || moments.length === 0) {
-            document.querySelector('.chart-container').innerHTML =
-                '<p class="text-center text-muted">Hoe is je gevoel van (on)zekerheid verlopen tijdens deze ervaring?</p>';
-            return;
-        }
-
-        // Labels (activiteit namen) voor x-as
-        const labels = moments.map(moment => moment.activity.name);
-
-        // Data points of y-axis
-        const confidenceData = moments.map(moment => moment.confidence_level);
-        const reportSnippets = moments.map(moment => moment.report_snippet || '');
-
-        // Colors for each datapoint
-        const pointColors = MyColors.mapConfidenceLevelsToColors(confidenceData, colors);
-
-
-        // Canvas element
-        const ctx = document.getElementById('confidenceChart').getContext('2d');
-
-        // Chart configuration
-        const confidenceChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Zelfverzekerdheid',
-                    data: confidenceData,
-                    borderColor: colors.primary,
-                    backgroundColor: colors.dark,
-                    pointBackgroundColor: pointColors,
-                    pointBorderColor: pointColors,
-                    pointRadius: 8,
-                    pointHoverRadius: 10,
-                    pointBorderWidth: 2,
-                    pointHitRadius: 15,
-                    fill: false,
-                    tension: 0.3  // Maakt de lijn vloeiend
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        min: 0,
-                        max: 2,
-                        ticks: {
-                            stepSize: 1,
-                            callback: function (value) {
-                                // Converteer numerieke waarde terug naar label
-                                switch (value) {
-                                    case 0:
-                                        return 'Onzeker';
-                                    case 1:
-                                        return 'Tussenin';
-                                    case 2:
-                                        return 'Zelfverzekerd';
-                                    default:
-                                        return '';
-                                }
-                            }
-                        },
-                        grid: {
-                            drawBorder: true
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            autoSkip: false,
-                            maxRotation: 45,
-                            minRotation: 45
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const index = context.dataIndex;
-                                return reportSnippets[index] || '';
-                            },
-                        }
-                    }
-                },
-                clip: false
-            }
-        });
-    });
-    </script>
+    {% include "streetactivity/one_experience_chart_js.html" with moments_json=moments_json %}
 {% endblock javascript %}

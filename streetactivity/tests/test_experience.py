@@ -35,7 +35,7 @@ class TestExperience:
         """Test the Start Experience view when an example experience is provided
         to ensure it returns a 200 status code"""
         client, _ = auto_login_user()
-        start_url = reverse("start-experience") 
+        start_url = reverse("start-experience")
 
         ExperienceFactory()
         response = client.get(start_url)
@@ -147,7 +147,7 @@ class TestAddMomentToExperienceFlow:
         self.get_assign_activity(client)
 
         # Verify database state
-        assert Experience.objects.count() == 1  
+        assert Experience.objects.count() == 1
         assert Moment.objects.filter(experience=experience).count() == 2
         second_moment = Moment.objects.filter(experience=experience).first()
         assert second_moment.activity == activity_new_moment
@@ -275,9 +275,7 @@ class TestAddMomentToExperienceFlow:
     def test_moment_form_context_includes_selected_activity(self, auto_login_user):
         """
         Given a user viewing the moment form for an experience with previous moments,
-        test that the context includes the selected activity from the last moment        request = RequestFactory().get('/')
-        request.session['submit_action'] = 'save_moment'
-        client.request().session = request.session
+        test that the context includes the selected activity from the last moment
         """
         client, user = auto_login_user()
 
@@ -356,3 +354,81 @@ class TestAddMomentToExperienceFlow:
         response = client.post(url_add_moment, data=moment_data, follow=True)
         assert response.status_code == 200
         assert response.redirect_chain[0][0] == reverse('select-activity-for-moment')
+
+    def test_add_another(self, auto_login_user):
+        """Given the user clicks to add_another moment,
+        test if the user is redirected to add moment to experience"""
+        client, user = auto_login_user()
+        url_add_first_moment = reverse('add-first-moment-to-experience')
+
+        moment_data = create_moment_data()
+        moment_data['submit_action'] = 'add_another'
+
+        client.get(url_add_first_moment)
+        response = client.post(url_add_first_moment, data=moment_data, follow=True)
+
+        request = response.wsgi_request
+        assert response.status_code == 200
+        assert request.session['add_another']
+        assert response.redirect_chain[0][0] == reverse('assign-activity-to-moment')
+        assert "/moment/nieuw/" in response.redirect_chain[1][0]
+
+    def test_assign_activity_with_add_another(self, auto_login_user):
+        """Given the user adds another at the AssignActivityToMomentView,
+        test if user is redirected to add another moment with the same experience"""
+        client, user = auto_login_user()
+
+        experience = ExperienceFactory(user=user)
+        activity = StreetActivityFactory()
+        moment_data = create_moment_data()
+        moment_data.pop('activity', None)
+
+        # Set up session with all required data
+        session = client.session
+        session['experience_id'] = str(experience.id)
+        session['moment_data'] = moment_data
+        session['selected_activity_id'] = str(activity.id)
+        session['add_another'] = True
+        session['from_experience'] = True
+        session.save()
+
+        # Call assign activity which should create moment and redirect
+        url_assign = reverse('assign-activity-to-moment')
+        response = client.get(url_assign, follow=True)
+
+        assert response.status_code == 200
+        # Should redirect to add another moment for the same experience
+        assert response.redirect_chain[0][0] == reverse('add-moment-to-experience',
+                                                         kwargs={'experience_id': experience.id})
+        # Verify moment was created
+        assert Moment.objects.filter(experience=experience).count() == 1
+        created_moment = Moment.objects.first()
+        assert created_moment.activity == activity
+        assert created_moment.report == moment_data['report']
+
+    def test_select_activity_with_add_another(self, auto_login_user):
+        """Given the user clicks to add_another moment in the select activity page,
+        test if add_another flag is set in session
+        and user is redirected to assign-activity-to-moment"""
+        client, _ = auto_login_user()
+        activity = StreetActivityFactory()
+
+        url_select_activity = reverse('select-activity-for-moment')
+
+        session = client.session
+        session['from_experience'] = True
+        session.save()
+
+        response = client.post(
+            url_select_activity,
+            data={
+                'activity_id': str(activity.id),
+                'submit_action': 'add_another'
+            },
+            follow=True
+        )
+
+        assert response.status_code == 200
+        assert response.wsgi_request.session.get('add_another') is True
+        assert response.wsgi_request.session.get('selected_activity_id') == str(activity.id)
+        assert response.redirect_chain[0][0] == reverse('assign-activity-to-moment')

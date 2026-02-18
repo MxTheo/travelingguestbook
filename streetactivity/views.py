@@ -252,6 +252,14 @@ class AddMomentToExperienceView(FormView, LoginRequiredMixin):
         if not self.experience_id:
             context["show_first_moment_message"] = True
         context["ConfidenceLevel"] = ConfidenceLevel
+
+        # Add experience object to context if available
+        if self.experience_id:
+            experience = get_object_or_404(Experience, id=self.experience_id)
+            context["experience"] = experience
+            moments_data = create_moment_data_of_experience_for_chart(experience)
+            context['moments'] = moments_data[0]
+            context["moments_json"] = moments_data[1]
         return context
 
     def retrieve_selected_activity(self):
@@ -287,6 +295,9 @@ class AddMomentToExperienceView(FormView, LoginRequiredMixin):
             return reverse("select-activity-for-moment")
         elif submit_action == "save_moment":
             return reverse("assign-activity-to-moment")
+        elif submit_action == "add_another":
+            self.request.session['add_another'] = True
+            return reverse("assign-activity-to-moment")
         return reverse("select-activity-for-moment")
 
 
@@ -302,6 +313,8 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
         selected_activity_id = self.request.session.get("selected_activity_id")
         context["selected_activity_id"] = selected_activity_id
         context["back_url"] = self.create_back_url()
+        experience_id = self.request.session.get("experience_id")
+        context["experience_id"] = experience_id
         return context
 
     def create_back_url(self):
@@ -343,6 +356,9 @@ class SelectActivityForMomentView(LoginRequiredMixin, ListView):
         activity_id = request.POST.get("activity_id")
         if activity_id:
             request.session["selected_activity_id"] = activity_id
+        submit_action = self.request.POST.get("submit_action")
+        if submit_action == "add_another":
+            self.request.session['add_another'] = True
         return redirect("assign-activity-to-moment")
 
 
@@ -372,8 +388,11 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
             self.request, confidence_level=moment_data.get("confidence_level", 0)
         )
 
+        add_another = request.session.get("add_another")
         clear_session_data(request)
 
+        if add_another:
+            return redirect("add-moment-to-experience", experience_id=experience_id)
         return redirect("experience-detail", pk=experience_id)
 
     def redirect_to_moment_form_if_missing_data(

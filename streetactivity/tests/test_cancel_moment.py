@@ -83,7 +83,7 @@ class TestCancelMomentCreation:
 
         # Check that it redirects to the cancel_url
         assert response.status_code == 302
-        assert response.url == '/'
+        assert response.url == '/some-url/'
 
 class TestIntegrationCancelMoment:
     """Integration tests for cancel moment functionality in views."""

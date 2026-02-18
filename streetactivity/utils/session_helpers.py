@@ -17,8 +17,8 @@ def cancel_moment_creation(request):
     Returns:
         HttpResponseRedirect: A redirect response to the cancel URL
     """
-    clear_session_data(request)
     cancel_url = request.session.get('cancel_url', reverse('home'))
+    clear_session_data(request)
     return redirect(cancel_url)
 
 def determine_cancel_url(view_kwargs: dict) -> str:
@@ -48,7 +48,6 @@ def setup_session_for_cancel(request, view_kwargs: dict) -> None:
         request: Django HttpRequest object
         view_kwargs: kwargs from the view
     """
-    # Check if we are in the AddMomentToExperience multistep flow
     if 'experience_id' in view_kwargs or reverse('add-first-moment-to-experience') in request.path:
         cancel_url = determine_cancel_url(view_kwargs)
         request.session['cancel_url'] = cancel_url
@@ -63,6 +62,7 @@ def clear_session_data(request):
         "selected_activity_id",
         "experience_id",
         "from_experience",
+        "add_another",
     ]:
         if key in request.session:
             del request.session[key]

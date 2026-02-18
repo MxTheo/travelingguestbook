@@ -1,5 +1,5 @@
 from django import forms
-from .models import StreetActivity, Moment, Experience, ConfidenceLevel
+from .models import StreetActivity, Moment, ConfidenceLevel
 
 class StreetActivityForm(forms.ModelForm):
     """Form for a StreetActivity."""
@@ -45,7 +45,7 @@ class MomentForm(forms.ModelForm):
                 'rows': 2,
                 'class': 'form-control',
                 'placeholder':
-                'Omschrijf 1 reden...'}),
+                'Omschrijf een reden...'}),
         }
         labels = {
             'report': 'Ik voelde mij (on)zeker, omdat ...',
@@ -74,5 +74,5 @@ class AddMomentForm(MomentForm):
                 'rows': 1,
                 'class': 'form-control',
                 'placeholder':
-                'Omschrijf 1 reden...'}),
+                'Omschrijf een reden...'}),
         }

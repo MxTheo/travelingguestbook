@@ -45,14 +45,14 @@
                             {% endif %}
                         {% endif %}
                     </h1>
-                    {% if activity %}<p class="lead text-muted">"{{ activity.name }}"</p>{% endif %}
-                    <div class="alert alert-light border">
-                        <small class="text-muted">
-                            <i class="bi bi-info-circle"></i>
-                            Het is helemaal prima als je het niet precies weet of niet helemaal duidelijk kunt zeggen. Je reden mag best een beetje vaag zijn, dat is helemaal oké.
-                            <p>Alles wat je deelt helpt ons samen straatcontact een beetje meer te begrijpen.</p>
-                        </small>
+                    <div class="card mb-4 border-primary border-2 rounded">
+                        <div class="card-body">
+                            <div class="chart-container position-relative">
+                                <canvas id="confidenceChart" height="300px"></canvas>
+                            </div>
+                        </div>
                     </div>
+                    {% if activity %}<p class="lead text-muted">"{{ activity.name }}"</p>{% endif %}
                 </div>
                 <!-- Form -->
                 <form method="post" class="needs-validation" novalidate>
@@ -72,27 +72,42 @@
                     {% endif %}
                     <!-- Submit buttons -->
                     <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
                         <a href="{% url "cancel-moment-creation" %}"
-                           class="btn btn-secondary btn-lg">
+                           class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-x-lg"></i> Annuleer
                         </a>
-                        {% if request.session.from_experience and not selected_activity %}
-                            <span class="d-inline-block"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-title="Selecteer eerst een activiteit voordat je een punt toevoegt">
-                            {% endif %}
+                        {% if experience %}
                             <button type="submit"
                                     name="submit_action"
                                     value="save_moment"
-                                    class="btn btn-primary btn-lg"
-                                    {% if request.session.from_experience and not selected_activity %}disabled{% endif %}>
-                                {% if request.session.from_experience %}
-                                    <i class="bi bi-plus-lg me-1"></i> Punt toevoegen
-                                {% else %}
+                                    class="btn btn-secondary btn-sm">
                                     <i class="bi bi-check-lg me-1"></i> Opslaan
-                                {% endif %}
                             </button>
-                            {% if request.session.from_experience and not selected_activity %}</span>{% endif %}
+                        {% endif %}
+                        </div>
+                        {% if not selected_activity %}
+                        <span class="d-inline-block"
+                                data-bs-toggle="tooltip"
+                                data-bs-title="Selecteer eerst een activiteit voordat je de volgende toevoegt">
+                        {% endif %}
+                        {% if request.session.from_experience %}
+                        <button type="submit"
+                                    name="submit_action"
+                                    value="add_another"
+                                    class="btn btn-primary btn-lg" {% if not selected_activity %}disabled{% endif %}>
+                                    <i class="bi bi-plus-lg me-1"></i> Volgende toevoegen
+                        </button>
+                        {% if not selected_activity %}</span>{% endif %}
+                        {% endif %}
+                        {% if not request.session.from_experience %}
+                        <button type="submit"
+                                    name="submit_action"
+                                    value="save_moment"
+                                    class="btn btn-primary btn-lg">
+                                    <i class="bi bi-check-lg me-1"></i> Opslaan
+                        </button>
+                        {% endif %}
                     </div>
                 </form>
             </div>
@@ -141,4 +156,7 @@
             }
         });
     </script>
+    {% if experience %}
+        {% include "streetactivity/one_experience_chart_js.html" with moments_json=moments_json %}
+    {% endif %}
 {% endblock javascript %}
