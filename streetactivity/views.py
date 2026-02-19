@@ -246,14 +246,15 @@ class AddMomentToExperienceView(FormView, LoginRequiredMixin):
         return initial
 
     def get_context_data(self, **kwargs):
-        """Extend context data with experience"""
+        """Extend context data with 
+            - The activity that the user selected
+            - ConfidenceLevel to show for options
+            - Experience, to determine if it is the firt moment created
+            - Moments for the confidence chart"""
         context = super().get_context_data(**kwargs)
         context["selected_activity"] = self.retrieve_selected_activity()
-        if not self.experience_id:
-            context["show_first_moment_message"] = True
         context["ConfidenceLevel"] = ConfidenceLevel
 
-        # Add experience object to context if available
         if self.experience_id:
             experience = get_object_or_404(Experience, id=self.experience_id)
             context["experience"] = experience
