@@ -48,7 +48,7 @@ class MomentForm(forms.ModelForm):
                 'Omschrijf een reden...'}),
         }
         labels = {
-            'report': 'Ik voelde mij (on)zeker, omdat ...',
+            'report': 'Ik was (on)zeker, omdat ...',
         }
         help_texts = {
             'report': 'Je hebt hier ruimte voor ongeveer 3 à 4 zinnen om te vertellen wat jouw zelfvertrouwen op dat moment beïnvloedde. Schrijf gewoon wat als eerste bij je opkomt, het hoeft niet perfect te zijn.',
