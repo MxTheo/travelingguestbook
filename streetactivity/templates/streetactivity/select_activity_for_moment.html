@@ -77,8 +77,6 @@
                         </a>
                         {% if experience_id %}
                             <button type="submit"
-                                    name="submit_action"
-                                    value="save_moment"
                                     class="btn btn-secondary flex-grow-1 btn-sm">
                                     <i class="bi bi-check-lg me-1"></i> Opslaan
                             </button>
@@ -87,13 +85,23 @@
                 </div>
             </div>
             <!-- Desktop controls (hidden on mobile) -->
-            <div class="d-none d-lg-block text-end mt-5 pt-4 border-top">
-                <a href="{% url "cancel-moment-creation" %}"
-                   class="btn btn-secondary me-3">
-                    <i class="bi bi-x-lg me-2"></i>Annuleren
-                </a>
-                <button type="submit" class="btn btn-success px-5">
-                    <i class="bi bi-arrow-right me-2"></i>Opslaan
+            <div class="mt-5 pt-4 border-top d-flex justify-content-between align-items-center gap-3">
+                <div class="d-flex gap-2">
+                    <a href="{% url "cancel-moment-creation" %}"
+                    class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-x-lg me-2"></i>Annuleren
+                    </a>
+                    {% if experience_id %}
+                        <button type="submit" class="btn btn-sm btn-secondary">
+                            <i class="bi bi-check-lg me-2"></i>Opslaan
+                        </button>
+                    {% endif %}
+                </div>
+                <button type="submit"
+                            name="submit_action"
+                            value="add_another"
+                            class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-lg me-2"></i> Volgende toevoegen
                 </button>
             </div>
         </form>
