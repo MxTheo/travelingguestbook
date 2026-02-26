@@ -28,30 +28,28 @@
                         {% endif %}
                         toevoegen aan grafiek
                         {% else %}
-                            {% if form.initial.from_practitioner or object.from_practitioner %}
-                                <i class="bi bi-person-raised-hand text-warning"></i> Moment als Beoefenaar
-                            {% else %}
-                                <i class="bi bi-person-walking text-info"></i> Moment als Voorbijganger
-                            {% endif %}
+                            Nieuw Moment
                         {% endif %}
                     </h1>
-                    {% if not experience %}
-                        <div class="alert alert-info mt-4">
-                            <h4 class="alert-heading">
-                                <i class="bi bi-flower3"></i>
-                                Welkom
-                            </h4>
-                            <p>Denk terug aan het contact dat je op straat maakte. Kun je een paar momenten voor je halen waarop je zelfvertrouwen anders voelde? Neem rustig de tijd om die momenten van zelfvertrouwen in je gedachten voorbij te laten komen.</p>
-                            <p>Als je er klaar voor bent, voeg je het eerste punt toe aan de grafiek. Zo help je niet alleen jezelf, maar ook anderen die met hetzelfde bezig zijn.</p>
-                        </div>
-                    {% else %}
-                        <div class="card mb-4 border-primary border-2 rounded">
-                            <div class="card-body">
-                                <div class="chart-container position-relative">
-                                    <canvas id="confidenceChart" height="300px"></canvas>
+                    {% if request.user.is_authenticated %}
+                        {% if not experience %}
+                            <div class="alert alert-info mt-4">
+                                <h4 class="alert-heading">
+                                    <i class="bi bi-flower3"></i>
+                                    Welkom
+                                </h4>
+                                <p>Denk terug aan het contact dat je op straat maakte. Kun je een paar momenten voor je halen waarop je zelfvertrouwen anders voelde? Neem rustig de tijd om die momenten van zelfvertrouwen in je gedachten voorbij te laten komen.</p>
+                                <p>Als je er klaar voor bent, voeg je het eerste punt toe aan de grafiek. Zo help je niet alleen jezelf, maar ook anderen die met hetzelfde bezig zijn.</p>
+                            </div>
+                        {% else %}
+                            <div class="card mb-4 border-primary border-2 rounded">
+                                <div class="card-body">
+                                    <div class="chart-container position-relative">
+                                        <canvas id="confidenceChart" height="300px"></canvas>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endif %}
                     {% endif %}
                     {% if activity %}<p class="lead text-muted">"{{ activity.name }}"</p>{% endif %}
                 </div>

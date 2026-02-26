@@ -76,9 +76,6 @@ class Moment(models.Model):
         default=ConfidenceLevel.ONZEKER,
         verbose_name="Zelfverzekerdheid",
     )
-    from_practitioner = models.BooleanField(
-        default=True, verbose_name="Is deze ervaring van een beoefenaar?"
-    )
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
@@ -91,7 +88,6 @@ class Moment(models.Model):
         indexes = [
             models.Index(fields=["-date_created"]),
             models.Index(fields=["confidence_level"]),
-            models.Index(fields=["from_practitioner"]),
         ]
 
     def __str__(self):

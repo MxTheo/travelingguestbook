@@ -12,13 +12,9 @@
                             Deel je belevingsmoment
                         </h5>
                         <div class="d-grid gap-2">
-                            <a href="{% url 'create-moment-from-practitioner' activity.pk %}"
+                            <a href="{% url 'create-moment' activity.pk %}"
                                class="btn btn-light btn-lg">
-                                <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
-                            </a>
-                            <a href="{% url 'create-moment-from-passerby' activity.pk %}"
-                               class="btn btn-outline-light btn-lg">
-                                <i class="bi bi-person-walking me-2 fs-6"></i>Ik kwam langs
+                                <i class="bi bi-person-raised-hand me-2 fs-6"></i>Deel moment
                             </a>
                         </div>
                         <small class="mt-2 d-block opacity-75">

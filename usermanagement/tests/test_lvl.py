@@ -33,9 +33,8 @@ class TestLvl:
         data_moment = {
             "report": moment.report,
             "confidence_level": 0,
-            "from_practitioner": True,
         }
-        url = reverse("create-moment-from-practitioner", args=[activity.id])
+        url = reverse("create-moment", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
@@ -51,9 +50,8 @@ class TestLvl:
         data_moment = {
             "report": moment.report,
             "confidence_level": 0,
-            "from_practitioner": True,
         }
-        url = reverse("create-moment-from-practitioner", args=[activity.id])
+        url = reverse("create-moment", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
         client.post(url, data_moment, follow=True)
@@ -73,9 +71,8 @@ class TestLvl:
         data_moment = {
             "report": moment.report,
             "confidence_level": 1,
-            "from_practitioner": True,
         }
-        url = reverse("create-moment-from-practitioner", args=[activity.id])
+        url = reverse("create-moment", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
         client.post(url, data_moment, follow=True)
@@ -97,9 +94,8 @@ class TestProgress:
         data_moment = {
             "report": moment.report,
             "confidence_level": 1,
-            "from_practitioner": True,
         }
-        url = reverse("create-moment-from-practitioner", args=[activity.id])
+        url = reverse("create-moment", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
@@ -115,9 +111,8 @@ class TestProgress:
         data_moment = {
             "report": moment.report,
             "confidence_level": 0,
-            "from_practitioner": True,
         }
-        url = reverse("create-moment-from-practitioner", args=[activity.id])
+        url = reverse("create-moment", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
         client.post(url, data_moment, follow=True)

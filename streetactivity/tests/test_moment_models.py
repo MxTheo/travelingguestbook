@@ -21,20 +21,11 @@ class TestMomentModel:
         expected_str = f"{activity.name} - Moment {moment.id}"
         assert str(moment) == expected_str
 
-    def test_moment_createview_leads_for_form_from_passerby(self, client):
-        """Test the Moment create view for passerby to ensure it
-        returns a 200 status code and contains the expected form in context."""
-        activity = StreetActivityFactory()
-        create_url = reverse("create-moment-from-passerby", args=[activity.id])
-        response = client.get(create_url)
-        assert response.status_code == 200
-        assert "Moment als Voorbijganger" in response.content.decode()
-
     def test_moment_createview(self, client):
         """Test the Moment create view to ensure it returns a 200 status code
         and contains the expected form in context."""
         activity = StreetActivityFactory()
-        create_url = reverse("create-moment-from-practitioner", args=[activity.id])
+        create_url = reverse("create-moment", args=[activity.id])
 
         moment_data = create_moment_data(activity)
 
@@ -42,30 +33,6 @@ class TestMomentModel:
 
         assert response.status_code == 200
         assert Moment.objects.count() == 1
-
-    def test_moment_createview_from_practitioner(self, client):
-        """Test the Moment create view for practitioners to ensure it
-        returns a 200 status code and sets from_practitioner to True."""
-        activity = StreetActivityFactory()
-        create_url = reverse("create-moment-from-practitioner", args=[activity.id])
-        moment_data = create_moment_data(activity)
-        response = client.post(create_url, moment_data, follow=True)
-        assert response.status_code == 200
-        assert Moment.objects.count() == 1
-        moment = Moment.objects.first()  # type: ignore[reportOptionalMemberAccess]
-        assert moment.from_practitioner  # type: ignore[reportOptionalMemberAccess]
-
-    def test_moment_createview_from_passerby(self, client):
-        """Test the Moment create view for passerby to ensure it
-        returns a 200 status code and sets from_practitioner to False."""
-        activity = StreetActivityFactory()
-        create_url = reverse("create-moment-from-passerby", args=[activity.id])
-        moment_data = create_moment_data(activity)
-        response = client.post(create_url, moment_data, follow=True)
-        assert response.status_code == 200
-        assert Moment.objects.count() == 1
-        moment = Moment.objects.first()  # type: ignore[reportOptionalMemberAccess]
-        assert not moment.from_practitioner  # type: ignore[reportOptionalMemberAccess]
 
     def test_moment_listview(self, client):
         """Test the Moment list view to ensure it returns a 200 status code
@@ -143,15 +110,6 @@ class TestMomentModel:
         moment.refresh_from_db()
         assert moment.report == "Updated Moment"
 
-    def test_updateview_practitioner(self, client):
-        """Given an moment from a practitioner, test that the form shows Moment als Beoefenaar"""
-        moment = MomentFactory(from_practitioner=True)
-        update_url = reverse("update-moment", args=[moment.id])
-
-        response = client.get(update_url)
-
-        assert "Moment als Beoefenaar" in response.content.decode()
-
 def create_moment_data(activity=None):
     """Helper function to create moment data for tests."""
     if not activity:
@@ -162,7 +120,6 @@ def create_moment_data(activity=None):
         "id",
         'activity_id',
         'experience_id',
-        'from_practitioner',
         'date_created', 'date_modified']:
         moment_data.pop(field, None)
     moment_data['activity'] = activity.id

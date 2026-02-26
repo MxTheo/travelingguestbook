@@ -38,13 +38,6 @@
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="flex-grow-1 ms-3">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="fw-medium">
-                                                {% if moment.from_practitioner %}
-                                                    <i class="bi bi-person-raised-hand text-warning fs-5"></i> Beoefenaar
-                                                {% else %}
-                                                    <i class="bi bi-person-walking text-primary fs-5"></i> Voorbijganger
-                                                {% endif %}
-                                            </span>
                                             <small class="text-muted">{{ moment.date_created|date:"d M Y" }}</small>
                                             <div>
                                                 <a href="{% url "update-moment" pk=moment.pk %}"
@@ -96,13 +89,9 @@
                         <p class="text-muted mb-4">Deel als eerste je ervaring.</p>
                         {% if first_moment.activity %}
                             <div>
-                                <a href="{% url 'create-moment-from-passerby' first_moment.activity.pk %}"
-                                   class="btn btn-primary btn-sm me-2">
-                                    <i class="bi bi-person-plus me-1"></i>Voorbijganger
-                                </a>
-                                <a href="{% url 'create-moment-from-practitioner' first_moment.activity.pk %}"
+                                <a href="{% url 'create-moment' first_moment.activity.pk %}"
                                    class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-star me-1"></i>Beoefenaar
+                                    <i class="bi bi-star me-1"></i>Nieuw
                                 </a>
                             </div>
                         {% endif %}

@@ -102,13 +102,6 @@
                                         <!-- Activiteit en type -->
                                         <div class="d-flex flex-wrap gap-2 mb-3 align-items-center justify-content-between">
                                             <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ moment.activity.name }}</span>
-                                            <span class="badge bg-light text-muted border fs-7 d-flex align-items-center">
-                                                {% if moment.from_practitioner %}
-                                                    <i class="bi bi-person-standing me-1"></i>Beoefenaar
-                                                {% else %}
-                                                    <i class="bi bi-person-walking me-1"></i>Voorbijganger
-                                                {% endif %}
-                                            </span>
                                         </div>
                                         <!-- Focus op zekerheidslevel + reden -->
                                         {% include "streetactivity/report_snippet.html" with moment=moment %}

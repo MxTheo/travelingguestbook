@@ -180,7 +180,6 @@ class TestAssignActivityToMomentView:
 
         moment_data = {
             'confidence_level': 3,
-            'from_practitioner': True,
         }
         selected_activity_id = 1
         experience_id = None
@@ -282,7 +281,6 @@ class TestAssignActivityToMomentView:
         moment_data = {
             'report': 'Report text',
             'confidence_level': 2,
-            'from_practitioner': True,
         }
 
         moment = view.create_moment(moment_data, experience, activity)

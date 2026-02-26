@@ -53,8 +53,6 @@ class StreetActivityDetailView(DetailView):
         moments_count = moments.count()
 
         context["moments_count"] = moments_count
-        context["practitioner_count"] = moments.filter(from_practitioner=True).count()
-        context["passerby_count"] = moments.filter(from_practitioner=False).count()
         context["recent_moments"] = moments[:3]
         context["moments_remaining"] = max(0, moments_count - 3)
 
@@ -77,12 +75,6 @@ class StreetActivityDetailView(DetailView):
             return data
 
         context["chart_data_everyone"] = get_chart_data(moments)
-        context["chart_data_practitioners"] = get_chart_data(
-            moments.filter(from_practitioner=True)
-        )
-        context["chart_data_passersby"] = get_chart_data(
-            moments.filter(from_practitioner=False)
-        )
 
         return context
 
@@ -166,13 +158,8 @@ class MomentCreateView(CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
-        """Set initial values including from_practitioner"""
+        """Set initial values"""
         initial = super().get_initial()
-        if "voorbijganger" in self.request.path:
-            initial["from_practitioner"] = False
-        else:
-            initial["from_practitioner"] = True
-
         initial["activity"] = self.activity
         return initial
 
@@ -191,11 +178,6 @@ class MomentCreateView(CreateView):
             "Bedankt voor het delen van jouw moment! "
             "Dit helpt anderen deze activiteit te begrijpen.",
         )
-
-        if "voorbijganger" in self.request.path:
-            form.instance.from_practitioner = False
-        else:
-            form.instance.from_practitioner = True
 
         if not self.request.user.is_anonymous:
             process_xp_and_level(self.request, form.instance.confidence_level)
@@ -448,7 +430,6 @@ class AssignActivityToMomentView(LoginRequiredMixin, View):
                 activity=activity,
                 report=moment_data.get("report", ""),
                 confidence_level=moment_data.get("confidence_level", 0),
-                from_practitioner=moment_data.get("from_practitioner", True),
             )
             moment.save()
         return moment
@@ -552,7 +533,6 @@ def create_moment_data_of_experience_for_chart(experience):
                 "report_snippet": moment.report[:25] + "..."
                 if moment.report and len(moment.report) > 25
                 else moment.report,
-                "from_practitioner": moment.from_practitioner,
             }
         )
     return moments, json.dumps(moment_data)

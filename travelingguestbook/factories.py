@@ -36,7 +36,6 @@ class MomentFactory(factory.django.DjangoModelFactory):
     activity      = factory.SubFactory(StreetActivityFactory)
     report        = factory.LazyFunction(fake.text)
     confidence_level  = 0
-    from_practitioner = False
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)
 
