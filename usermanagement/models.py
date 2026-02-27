@@ -20,7 +20,7 @@ class Profile(models.Model):
         verbose_name="Profiel foto"
     )
 
-    # lvl and experiences
+    # lvl and xp
     lvl = models.IntegerField(default=1)
     xp_next_lvl = models.IntegerField(
         verbose_name="De benodigde xp voor het volgende level", default=100)

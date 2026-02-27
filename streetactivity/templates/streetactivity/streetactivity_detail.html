@@ -25,23 +25,12 @@
                         </a>
                     </div>
                     <div>
-                        {% if not request.session.from_experience %}
-                            <a href="{% url "update-streetactivity" activity.pk %}"
-                               class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
-                            <a href="{% url 'streetactivity-list' %}"
-                               class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-grid me-1"></i>Alle activiteiten
-                            </a>
-                        {% else %}
-                            <a href="{% url "select-activity-for-moment" %}"
-                               class="btn btn-outline-dark btn-sm">
-                                <i class="bi bi-arrow-left me-1"></i>Terug
-                            </a>
-                            <a href="{% url "cancel-moment-creation" %}"
-                               class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-x-lg me-1"></i>Annuleren
-                            </a>
-                        {% endif %}
+                        <a href="{% url "update-streetactivity" activity.pk %}"
+                            class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
+                        <a href="{% url 'streetactivity-list' %}"
+                            class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-grid me-1"></i>Alle activiteiten
+                        </a>
                     </div>
                 </div>
             </div>
@@ -94,45 +83,15 @@
                             <div class="row align-items-center">
                                 <div class="col-md-8">
                                     <div class="d-flex flex-wrap gap-3 align-items-center">
-                                        <span class="fw-medium text-muted">Filter momenten:</span>
-                                        <div class="btn-group" role="group">
-                                            <input type="radio"
-                                                   class="btn-check"
-                                                   name="momentFilter"
-                                                   id="filterEveryone"
-                                                   autocomplete="off"
-                                                   checked>
-                                            <label class="btn btn-outline-primary" for="filterEveryone">
-                                                <i class="bi bi-people"></i> Iedereen
-                                            </label>
-                                            <input type="radio"
-                                                   class="btn-check"
-                                                   name="momentFilter"
-                                                   id="filterPractitioners"
-                                                   autocomplete="off">
-                                            <label class="btn btn-outline-primary" for="filterPractitioners">
-                                                <i class="bi bi-person-raised-hand fs-6"></i> Beoefenaars
-                                            </label>
-                                            <input type="radio"
-                                                   class="btn-check"
-                                                   name="momentFilter"
-                                                   id="filterPassersby"
-                                                   autocomplete="off">
-                                            <label class="btn btn-outline-primary" for="filterPassersby">
-                                                <i class="bi bi-person-walking fs-6"></i> Voorbijgangers
-                                            </label>
-                                        </div>
                                         <small class="text-muted" id="filterCount">Totaal: {{ moments_count }} momenten</small>
                                     </div>
                                 </div>
-                                {% if not request.session.from_experience %}
-                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                                           class="btn btn-primary btn-sm">
-                                            <i class="bi bi-list-ul me-1"></i>Alle momenten
-                                        </a>
-                                    </div>
-                                {% endif %}
+                                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                    <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                                        class="btn btn-primary btn-sm">
+                                        <i class="bi bi-list-ul me-1"></i>Alle momenten
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -182,22 +141,18 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="h3 text-primary">Recente Belevingsmomenten</h2>
-                        {% if not request.session.from_experience %}
-                            <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                               class="btn btn-outline-primary">
-                                <i class="bi bi-list-ul me-1"></i>Alle momenten
-                            </a>
-                        {% endif %}
+                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                            class="btn btn-outline-primary">
+                            <i class="bi bi-list-ul me-1"></i>Alle momenten
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="row g-4">
                 {% for moment in recent_moments %}
                     <div class="col-lg-6">
-                        {% if not request.session.from_experience %}
-                            <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                               class="text-decoration-none">
-                            {% endif %}
+                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                            class="text-decoration-none">
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
@@ -209,7 +164,7 @@
                                     {% include "streetactivity/report_snippet.html" with moment=moment %}
                                 </div>
                             </div>
-                            {% if not request.session.from_experience %}</a>{% endif %}
+                        </a>
                     </div>
                 {% empty %}
                     <div class="col-12">
@@ -229,7 +184,7 @@
                 <div class="card bg-light border-0">
                     <div class="card-body text-center py-5">
                         <h3 class="h4 text-primary mb-3">Jouw beleving telt</h3>
-                        {% if request.user.is_anonymous %}
+                        {% if request.user.is_authenticated %}
                             <p class="text-muted mb-4">
                                 Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
                                 deze straatactiviteit beter te begrijpen.
@@ -240,24 +195,6 @@
                                     <i class="bi bi-person-raised-hand me-2 fs-6"></i>Deel moment
                                 </a>
                             </div>
-                        {% elif request.session.from_experience %}
-                            <p class="text-muted mb-4">
-                                jouw beleving helpt ons
-                                deze straatactiviteit beter te begrijpen.
-                            </p>
-                            <form method="post" action="{% url "assign-activity-to-moment" %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="activity_id" value="{{ activity.id }}">
-                                <button type="submit" class="btn btn-primary btn-lg">Selecteer deze activiteit</button>
-                            </form>
-                        {% else %}
-                            <p class="text-muted mb-4">
-                                Jouw ervaring helpt ons
-                                deze straatactiviteit beter te begrijpen.
-                            </p>
-                            <a href="{% url "start-experience" %}" class="btn btn-primary btn-lg">
-                                <i class="bi bi-plus-circle me-2"></i>Deel je ervaring
-                            </a>
                         {% endif %}
                     </div>
                 </div>

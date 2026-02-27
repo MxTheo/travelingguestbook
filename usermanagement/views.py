@@ -38,42 +38,6 @@ class UserDetail(DetailView):
     slug_field     = "username"
     slug_url_kwarg = "username"
 
-    def get_context_data(self, **kwargs):
-        """Adds the experience list,
-        and its data for the sparkline,
-        to the context data"""
-        context = super().get_context_data(**kwargs)
-        experience_data = create_experiences_data_of_user_for_sparkline(self.object)
-        context['experiences'] = experience_data[0]
-        context['experience_data_json'] = experience_data[1]
-        return context
-    
-def create_experiences_data_of_user_for_sparkline(user):
-    """Given a user,
-    create the json data for the sparklines of all its experiences
-    returns the experiences and the experience data in json format"""
-    experience_list = user.experiences.all()\
-        .order_by('-date_created')
-    experience_data = []
-    for exp in experience_list:
-        experience_data.append(
-            create_experience_data_for_sparkline(exp)
-        )
-    experience_data_json = json.dumps(experience_data)
-    return experience_list, experience_data_json
-
-def create_experience_data_for_sparkline(experience):
-    """Given an experience,
-    create the data for the sparkline of that experience"""
-    moments = experience.moments.all()\
-            .order_by('date_created')
-    confidence_levels = [m.confidence_level for m in moments]
-    experience_data = {
-        'id': str(experience.id),
-        'confidence_levels': confidence_levels,
-    }
-    return experience_data
-
 class ProfileUpdateView(LoginRequiredMixin, View):
     """View for user to update its profile"""
     template_name = "auth/user_form.html"

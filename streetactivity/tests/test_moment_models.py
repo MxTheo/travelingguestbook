@@ -110,6 +110,40 @@ class TestMomentModel:
         moment.refresh_from_db()
         assert moment.report == "Updated Moment"
 
+    def test_get_context_data_moment_createview(self, client):
+        """Given the user creates a moment,
+        test if activity and confidencelevel is in the context"""
+        activity = StreetActivityFactory()
+        create_url = reverse("create-moment", args=[activity.id])
+        response = client.get(create_url)
+        assert response.status_code == 200
+        assert "activity" in response.context
+        assert "ConfidenceLevel" in response.context
+
+    def test_get_context_data_moment_updateview(self,client):
+        """Given the user updates a moment,
+        test if activity and confidencelevel is in the context"""
+        moment = MomentFactory()
+        update_url = reverse("update-moment", args=[moment.id])
+        response = client.get(update_url)
+        assert response.status_code == 200
+        assert "activity" in response.context
+        assert "ConfidenceLevel" in response.context
+
+    def test_report_missing_on_moment_form(self, client):
+        """Given the user forgets to fill in a moment,
+        test if the error 'Geen reden gegeven. Hoe komt het dat je je zo voelde?' is given"""
+        activity = StreetActivityFactory()
+        create_url = reverse("create-moment", args=[activity.id])
+        moment_data = create_moment_data(activity)
+        moment_data.pop("report", None)
+
+        response = client.post(create_url, moment_data)
+
+        assert response.status_code == 200
+        assert "Geen reden gegeven. Hoe komt het dat je je zo voelde?" in response.content.decode()
+
+
 def create_moment_data(activity=None):
     """Helper function to create moment data for tests."""
     if not activity:
@@ -119,7 +153,6 @@ def create_moment_data(activity=None):
         "_state",
         "id",
         'activity_id',
-        'experience_id',
         'date_created', 'date_modified']:
         moment_data.pop(field, None)
     moment_data['activity'] = activity.id

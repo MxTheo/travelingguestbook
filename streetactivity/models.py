@@ -48,15 +48,7 @@ class ConfidenceLevel(models.IntegerChoices):
 
 class Moment(models.Model):
     """An moment is a report of a moment of someone who has done a street activity."""
-
-    experience = models.ForeignKey(
-        "Experience",
-        on_delete=models.CASCADE,
-        related_name="moments",
-        verbose_name="Gerelateerde ervaring",
-        null=True,
-        blank=True,
-    )
+    
     activity = models.ForeignKey(
         "StreetActivity",
         on_delete=models.CASCADE,
@@ -94,23 +86,3 @@ class Moment(models.Model):
         if self.report:
             return f"{self.report[:50]}..."
         return f"{self.activity.name} - Moment {self.id}"
-
-class Experience(models.Model):
-    """An experience is a collection of moments"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(
-        "auth.User",
-        on_delete=models.CASCADE,
-        related_name="experiences",
-        verbose_name="Speler",
-    )
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ["-date_created"]
-        verbose_name = "Ervaring"
-        verbose_name_plural = "Ervaringen"
-
-    def __str__(self):
-        return f"Ervaring {self.date_created.strftime('%d-%m-%Y %H:%M')}"

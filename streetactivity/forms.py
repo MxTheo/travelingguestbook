@@ -63,16 +63,3 @@ class MomentForm(forms.ModelForm):
             self.add_error('report', 'Geen reden gegeven. Hoe komt het dat je je zo voelde?')
 
         return cleaned_data
-
-class AddMomentForm(MomentForm):
-    """Form to add a moment to an experience, inherits from MomentForm."""
-    class Meta(MomentForm.Meta):
-        """Only override the report, so that it is clearer that this moment is one of many."""
-        widgets = {
-            **MomentForm.Meta.widgets,
-            'report': forms.Textarea(attrs={
-                'rows': 1,
-                'class': 'form-control',
-                'placeholder':
-                'Omschrijf een reden...'}),
-        }

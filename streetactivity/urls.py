@@ -1,14 +1,12 @@
 from django.urls import path, include
 from rest_framework import routers
 from . import views
-from .utils.session_helpers import cancel_moment_creation
 
 router = routers.DefaultRouter()
 router.register(
     r"streetactivity", views.StreetActivityViewSet, basename="streetactiviteiten"
 )
 router.register(r"moment", views.MomentViewSet, basename="momenten")
-router.register(r"experience", views.ExperienceViewSet, basename="ervaringen")
 
 urlpatterns = [
     path("api/", include(router.urls)),
@@ -51,44 +49,5 @@ urlpatterns = [
         "bewerk/moment/<int:pk>",
         views.MomentUpdateView.as_view(),
         name="update-moment",
-    ),
-    path(
-        "ervaring/start/",
-        views.StartExperienceView.as_view(),
-        name="start-experience",
-    ),
-    path(
-        "ervaring/<uuid:pk>/",
-        views.ExperienceDetailView.as_view(),
-        name="experience-detail",
-    ),
-    path(
-        "ervaring/<uuid:experience_id>/moment/nieuw/",
-        views.AddMomentToExperienceView.as_view(),
-        name="add-moment-to-experience",
-    ),
-    path(
-        "ervaring/moment/nieuw/",
-        views.AddMomentToExperienceView.as_view(),
-        name="add-first-moment-to-experience",
-    ),
-    path(
-        "moment/annuleer",
-        cancel_moment_creation, 
-        name="cancel-moment-creation"),
-    path(
-        "moment/kies-activiteit/",
-        views.SelectActivityForMomentView.as_view(),
-        name="select-activity-for-moment",
-    ),
-    path(
-        "moment/assign-activiteit/",
-        views.AssignActivityToMomentView.as_view(),
-        name="assign-activity-to-moment",
-    ),
-    path(
-        "verwijder/ervaring/<uuid:pk>",
-        views.ExperienceDeleteView.as_view(),
-        name="delete-experience",
     ),
 ]
