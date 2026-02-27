@@ -68,7 +68,6 @@ class Moment(models.Model):
         related_name="moments",
         on_delete=models.CASCADE,
         verbose_name="Speler",
-        null=True,
         blank=True
     )
 
