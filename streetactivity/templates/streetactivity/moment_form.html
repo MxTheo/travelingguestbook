@@ -1,7 +1,7 @@
 {% extends "admin/main.html" %}
 {% load static %}
 {% block title %}
-    Nieuw ervaring
+    Nieuw moment
     {% if form.instance.pk %}
         bewerken
     {% else %}
@@ -13,86 +13,142 @@
           href="{% static 'streetactivity/styles/moment_form.css' %}">
 {% endblock stylesheet %}
 {% block content %}
-    <div class="container py-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                {% include "admin/messages_feed.html" %}
-                <!-- Header -->
-                <div class="text-center mb-5">
-                    <h1 class="display-5 mb-3">
-                        Nieuw Moment
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+
+            <!-- simpele kaart – geen schaduw, alleen een zachte huid -->
+            <div class="card border-0 bg-transparent">
+
+                <!-- hoofding: display voor meer gewicht -->
+                <div class="card-header bg-transparent border-0 text-center pb-1">
+                    <h1 class="display-4 fw-light text-secondary-emphasis mb-3">
+                        {{ form.word.label }}
                     </h1>
-                    {% if activity %}<p class="lead text-muted">"{{ activity.name }}"</p>{% endif %}
+                    <p class="lead fs-6 text-secondary-emphasis opacity-75 mx-auto" style="max-width: 30rem;">
+                        {{ form.word.help_text }}
+                    </p>
                 </div>
-                <!-- Form -->
-                <form method="post" class="needs-validation" novalidate>
-                    {% csrf_token %}
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+
+                <!-- formulier -->
+                <div class="card-body px-md-4">
+                    <form method="post" novalidate class="moment-form">
+                        {% csrf_token %}
+
+                        <!-- eventuele fouten -->
+                        {% if form.word.errors %}
+                            <div class="alert alert-warning d-flex align-items-center justify-content-center mt-2" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                <div>
+                                {% for error in form.word.errors %}{{ error }}{% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        <!-- woordveld met Bootstrap classes voor extra gewicht -->
+                        <div class="mb-5">
+
+                            <!-- Het tekstveld met Bootstrap classes voor grotere uitstrrcealing -->
+                            <div class="mb-2 text-center">
+                                {{ form.word }}
+                            </div>
+
+                            <!-- teller Eén woord. Wat past?en hint met Bootstrap classes -->
+                            <div class="d-flex justify-content-end align-items-center mt-3">
+                                <div id="word-counter" class="small fw-light text-secondary-emphasis opacity-75">
+                                    <!-- dynamisch via javascript -->
+                                </div>
+                            </div>
                         </div>
-                    {% endif %}
-                    <!-- Reflection - Step 2 -->
-                    {% include "streetactivity/step_reflection.html" with form=form %}
-                    <!-- Submit buttons -->
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>
-                            <a href="{% url 'streetactivity-detail' activity.pk %}"
-                               class="btn btn-outline-secondary btn-lg">
-                                <i class="bi bi-x-lg me-1"></i> Annuleren
+
+                        <!-- grote rustige knoppen -->
+                        <div class="d-flex flex-column flex-sm-row justify-content-center gap-4 mt-5 pt-3">
+
+                            <a href="{% url 'moment-list' %}" class="btn btn-outline-secondary btn-lg flex-fill py-4 px-5 rounded-5 border-2">
+                                <span class="d-flex align-items-center justify-content-center gap-3">
+                                    <i class="bi bi-arrow-left fs-2"></i>
+                                    <span class="fs-3 fw-light">Terug</span>
+                                </span>
                             </a>
+                                                        <button type="submit" class="btn btn-primary btn-lg flex-fill py-4 px-5 rounded-5 border-2">
+                                <span class="d-flex align-items-center justify-content-center gap-3">
+                                    <i class="bi bi-feather fs-2"></i>
+                                    <span class="fs-3 fw-light">Opslaan</span>
+                                </span>
+                            </button>
                         </div>
-                        <button type="submit"
-                                    name="submit_action"
-                                    value="save_moment"
-                                    class="btn btn-primary btn-lg">
-                                    <i class="bi bi-check-lg me-1"></i> Opslaan
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+
+                <!-- footer voor witruimte -->
+                <div class="card-footer bg-transparent border-0 pt-5">
+                    <!-- alleen ruimte -->
+                </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock content %}
 {% block javascript %}
-    <script>
-        // Character counter for report field
+<!-- Aanpassen van het tekstveld via Bootstrap classes in de widget -->
+<script>
+    (function() {
+        // Dit wordt uitgevoerd zodra de DOM geladen is om het tekstveld extra Bootstrap classes te geven
         document.addEventListener('DOMContentLoaded', function() {
-            const reportField = document.getElementById('{{ form.report.id_for_label }}');
-            const maxLength = 367;
+            const wordField = document.getElementById('{{ form.word.id_for_label }}');
             
-            if (reportField) {
-                // Add character counter
-                const counter = document.createElement('div');
-                counter.className = 'form-text text-end';
-                reportField.parentNode.appendChild(counter);
+            if (wordField) {
+                // Bootstrap classes toevoegen voor extra gewicht
+                wordField.classList.add('form-control-lg', 'py-4', 'px-4', 'border-2', 'rounded-4', 'text-center', 'shadow-sm');
+                wordField.classList.add('fs-1', 'fw-light', 'text-secondary-emphasis', 'bg-light', 'bg-opacity-25');
+                wordField.style.minHeight = '150px';
+                wordField.style.resize = 'none';
+                
+                // Focus effect met Bootstrap classes (via event listeners)
+                wordField.addEventListener('focus', function() {
+                    this.classList.add('border-primary', 'bg-opacity-50', 'shadow');
+                });
+                
+                wordField.addEventListener('blur', function() {
+                    this.classList.remove('border-primary', 'bg-opacity-50', 'shadow');
+                });
+            }
+        });
+    })();
+</script>
+    <script>
+        // Character counter voor word field
+        document.addEventListener('DOMContentLoaded', function() {
+            const wordField = document.getElementById('{{ form.word.id_for_label }}');
+            
+            if (wordField) {
+                const counter = document.getElementById('word-counter');
                 
                 function updateCounter() {
-                    const remaining = maxLength - reportField.value.length;
-                    counter.textContent = `${reportField.value.length}/${maxLength} karakters`;
-                    counter.className = `form-text text-end ${remaining < 50 ? 'text-warning' : 'text-muted'}`;
-                }
-                
-                reportField.addEventListener('input', updateCounter);
-                updateCounter();
-            }
-            
-            // Enhanced radio card selection
-            const radioCards = document.querySelectorAll('.card input[type="radio"]');
-            for (const radio of radioCards) {
-                radio.addEventListener('change', function() {
-                    // Remove border-primary from all cards in this group
-                    const allCards = this.closest('.row').querySelectorAll('.card');
-                    for (const card of allCards) {
-                        card.classList.remove('border-primary');
-                        card.classList.add('border-light');
-                    }
+                    const length = wordField.value.length;
+                    counter.textContent = `${length} karakter${length !== 1 ? 's' : ''}`;
                     
-                    // Add border-primary to selected card
-                    const selectedCard = this.closest('.card');
-                    selectedCard.classList.add('border-primary');
-                    selectedCard.classList.remove('border-light');
+                    // Zachte kleurverandering met Bootstrap text classes
+                    if (length > 70) {
+                        counter.classList.add('text-warning-emphasis');
+                        counter.classList.remove('text-info-emphasis', 'text-secondary-emphasis');
+                    } else if (length > 40) {
+                        counter.classList.add('text-info-emphasis');
+                        counter.classList.remove('text-warning-emphasis', 'text-secondary-emphasis');
+                    } else {
+                        counter.classList.add('text-secondary-emphasis');
+                        counter.classList.remove('text-warning-emphasis', 'text-info-emphasis');
+                        counter.classList.add('opacity-75');
+                    }
+                }
+                wordField.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        document.querySelector('.moment-form button[type="submit"]').click();
+                    }
                 });
+
+                wordField.addEventListener('input', updateCounter);
+                updateCounter();
             }
         });
     </script>

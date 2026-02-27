@@ -1,4 +1,3 @@
-import uuid
 from django.db import models
 
 METHOD_CHOICES = [
@@ -50,6 +49,12 @@ class Moment(models.Model):
         verbose_name="Gerelateerde activiteit",
         null=True,
         blank=True,
+    )
+    word = models.CharField(
+        max_length=100,
+        verbose_name="Eén woord",
+        help_text="Welk woord past bij dit moment?",
+        blank=True,  # Voor nu, zodat bestaande data blijft werken
     )
     report = models.TextField(
         max_length=367,

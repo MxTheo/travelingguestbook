@@ -32,28 +32,28 @@ class MomentForm(forms.ModelForm):
 
     class Meta:
         model = Moment
-        fields = ['report']
+        fields = ['word']
         widgets = {
-            'report': forms.Textarea(attrs={
-                'rows': 2,
+            'word': forms.Textarea(attrs={
+                'rows': 1,
                 'class': 'form-control',
                 'placeholder':
-                'Omschrijf je moment...'}),
+                'Jouw moment in één woord...'}),
         }
         labels = {
-            'report': 'Hoe was het?',
+            'word': 'Eén woord. Wat past?',
         }
         help_texts = {
-            'report': """Je hebt hier ruimte voor ongeveer 3 à 4 zinnen. 
-            Schrijf gewoon wat als eerste bij je opkomt, het hoeft niet perfect te zijn.""",
+            'word': """Het mag van alles zijn: "licht", "baksteen", "vlieg", "stil", "moed"... 
+            Het eerste wat in je opkomt""",
         }
 
     def clean(self):
-        """Custom validation to ensure report is provided."""
+        """Custom validation to ensure word is provided."""
         cleaned_data = super().clean()
-        report = cleaned_data.get('report')
+        word = cleaned_data.get('word')
 
-        if not report:
-            self.add_error('report', 'Geen omschrijving gegeven. Hoe was het?')
+        if not word:
+            self.add_error('word', 'Geen woord gegeven')
 
         return cleaned_data

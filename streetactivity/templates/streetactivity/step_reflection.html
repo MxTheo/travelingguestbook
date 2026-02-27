@@ -1,35 +1,41 @@
+
 <div class="card mb-4">
   <div class="card-header bg-light">
     <h5 class="card-title mb-0 lh-base">
-      Kun je iets vertellen over wat je ervaarde?
+      Eén woord. Wat past?
     </h5>
   </div>
   <div class="card-body">
     <div class="alert alert-light border">
       <small class="text-muted">
-          <i class="bi bi-info-circle"></i>
-          Het is helemaal prima als je het niet precies weet of niet helemaal duidelijk kunt zeggen. Het mag best een beetje vaag zijn, dat is helemaal oké.
-          <p>Alles wat je deelt helpt ons samen straatcontact een beetje meer te begrijpen.</p>
+        <i class="bi bi-info-circle"></i>
+        Geen lang verhaal. Alleen één woord dat voelt als jouw moment.
+        Het mag van alles zijn: "licht", "baksteen", "vlieg", "stil", "moed"...
+        <p class="mt-2 mb-0">Jouw woord is genoeg. De rest komt later.</p>
       </small>
     </div>
-    <!-- Bestaande formulier inhoud -->
     <div class="mb-3">
       <div class="container">
-        <label for="{{ form.report.id_for_label }}" class="form-label fw-bold">{{ form.report.label }}</label>
-        <textarea 
-          name="{{ form.report.name }}"
-          id="{{ form.report.id_for_label }}"
-          class="form-control {% if form.report.errors %}is-invalid{% endif %}"
-          {% for attr, value in form.report.field.widget.attrs.items %}
+        <label for="{{ form.word.id_for_label }}" class="form-label fw-bold">
+          {{ form.word.label }}
+        </label>
+        <input 
+          type="text"
+          name="{{ form.word.name }}"
+          id="{{ form.word.id_for_label }}"
+          class="form-control form-control-lg {% if form.word.errors %}is-invalid{% endif %}"
+          placeholder="bijv. verrast, onwetend, vlieg..."
+          value="{{ form.word.value|default:'' }}"
+          {% for attr, value in form.word.field.widget.attrs.items %}
             {{ attr }}="{{ value }}"
           {% endfor %}
-        >{{ form.report.value|default:'' }}</textarea>
-        <div class="form-text">{{ form.report.help_text }}</div>
-        {% if form.report.errors %}
+        >
+        <div class="form-text">{{ form.word.help_text }}</div>
+        {% if form.word.errors %}
           <div class="alert alert-danger d-flex align-items-center mt-2" role="alert">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
             <div>
-              {% for error in form.report.errors %}{{ error }}{% endfor %}
+              {% for error in form.word.errors %}{{ error }}{% endfor %}
             </div>
           </div>
         {% endif %}

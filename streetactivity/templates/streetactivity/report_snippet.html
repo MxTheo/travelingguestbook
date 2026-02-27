@@ -1,3 +1,7 @@
 <div class="mb-3 card-text">
-    <p>{{ moment.report | linebreaks }}</p>
+    {% if moment.word %}
+        <p>{{ moment.word }}</p>
+    {% else %}
+        <p>{{ moment.report | linebreaks }}</p>
+    {% endif %}
 </div>
