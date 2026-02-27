@@ -31,7 +31,7 @@ class TestLvl:
         activity = StreetActivityFactory()
         moment = MomentFactory()
         data_moment = {
-            "report": moment.report,
+            "word": moment.word,
         }
         url = reverse("create-moment", args=[activity.id])
 
@@ -47,7 +47,7 @@ class TestLvl:
         activity = StreetActivityFactory()
         moment = MomentFactory()
         data_moment = {
-            "report": moment.report,
+            "word": moment.word,
         }
         url = reverse("create-moment", args=[activity.id])
 
@@ -69,7 +69,7 @@ class TestProgress:
         activity = StreetActivityFactory()
         moment = MomentFactory()
         data_moment = {
-            "report": moment.report,
+            "word": moment.word,
         }
         url = reverse("create-moment", args=[activity.id])
 

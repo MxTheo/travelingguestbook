@@ -7,7 +7,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from django.db.models import Count
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from rest_framework import viewsets
@@ -49,7 +49,7 @@ class StreetActivityDetailView(DetailView):
 
         return context
 
-class StreetActivityCreateView(CreateView):
+class StreetActivityCreateView(CreateView, LoginRequiredMixin):
     """View to create a new street activity."""
 
     model = StreetActivity
@@ -59,7 +59,7 @@ class StreetActivityCreateView(CreateView):
         return reverse_lazy("streetactivity-detail", kwargs={"pk": self.object.pk})
 
 
-class StreetActivityUpdateView(UpdateView):
+class StreetActivityUpdateView(UpdateView, LoginRequiredMixin):
     """View to update an existing street activity."""
 
     model = StreetActivity
@@ -69,7 +69,7 @@ class StreetActivityUpdateView(UpdateView):
         return reverse_lazy("streetactivity-detail", kwargs={"pk": self.object.pk})
 
 
-class StreetActivityDeleteView(DeleteView):
+class StreetActivityDeleteView(DeleteView, LoginRequiredMixin):
     """View to delete a street activity."""
 
     model = StreetActivity
@@ -116,7 +116,7 @@ class MomentDetailView(DetailView):
     context_object_name = "moment"
 
 
-class MomentCreateView(CreateView):
+class MomentCreateView(CreateView, LoginRequiredMixin):
     """Create view for a single moment"""
 
     model = Moment
@@ -141,16 +141,17 @@ class MomentCreateView(CreateView):
         return context
 
     def form_valid(self, form):
+        """Set the activity and user for the moment, then process XP and level updates."""
         form.instance.activity = self.activity
+        form.instance.user = self.request.user
+        process_xp_and_level(self.request)
+
         messages.add_message(
             self.request,
             messages.SUCCESS,
-            "Bedankt voor het delen van jouw moment! "
+            "Bedankt voor het delen van jouw woord! "
             "Dit helpt anderen deze activiteit te begrijpen.",
         )
-
-        if self.request.user.is_authenticated:
-            process_xp_and_level(self.request)
 
         return super().form_valid(form)
 
@@ -170,7 +171,7 @@ def process_xp_and_level(request):
     calc_xp_percentage(profile)
     profile.save()
 
-class MomentUpdateView(UpdateView):
+class MomentUpdateView(UpdateView, LoginRequiredMixin):
     """View to update an moment"""
 
     model = Moment
@@ -192,7 +193,7 @@ class MomentUpdateView(UpdateView):
         )
 
 
-class MomentDeleteView(DeleteView):
+class MomentDeleteView(DeleteView, LoginRequiredMixin):
     """View to delete an moment"""
 
     model = Moment

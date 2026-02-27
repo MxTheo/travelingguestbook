@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -61,6 +62,14 @@ class Moment(models.Model):
         verbose_name="Wat voelde je? Wat ging er in je om?",
         blank=True,
         help_text="Beschrijf wat zich aandiende in maximaal 367 karakters",
+    )
+    user = models.ForeignKey(
+        User,
+        related_name="moments",
+        on_delete=models.CASCADE,
+        verbose_name="Speler",
+        null=True,
+        blank=True
     )
 
     date_created = models.DateTimeField(auto_now_add=True)

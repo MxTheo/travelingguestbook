@@ -1,6 +1,5 @@
 from django.urls import reverse
 from travelingguestbook.factories import StreetActivityFactory, MomentFactory
-from core.models import CookieConsentLog
 
 class TestHome:
     """Tests for the HomeView"""
@@ -24,7 +23,7 @@ class TestHome:
     def test_if_moments_are_shown(self, client):
         """Test that when there are 6 moments, that there are 3 shown on the homepage"""
         for i in range(7):
-            MomentFactory(report=f"moment{i}")
+            MomentFactory(word=f"moment{i}")
         response = client.get(reverse('home'))
         for i in range(3):
             assert f"moment{i}" not in response.text

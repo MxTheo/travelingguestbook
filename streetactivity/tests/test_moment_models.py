@@ -2,7 +2,6 @@ from django.urls import reverse
 from travelingguestbook.factories import MomentFactory, StreetActivityFactory
 from streetactivity.models import Moment
 
-
 class TestMomentModel:
     """Tests for the Moment model."""
     def test_moment_str_method(self):
@@ -21,9 +20,10 @@ class TestMomentModel:
         expected_str = f"{activity.name} - Moment {moment.id}"
         assert str(moment) == expected_str
 
-    def test_moment_createview(self, client):
+    def test_moment_createview(self, auto_login_user):
         """Test the Moment create view to ensure it returns a 200 status code
         and contains the expected form in context."""
+        client, _ = auto_login_user()
         activity = StreetActivityFactory()
         create_url = reverse("create-moment", args=[activity.id])
 
@@ -33,6 +33,17 @@ class TestMomentModel:
 
         assert response.status_code == 200
         assert Moment.objects.count() == 1
+
+    def test_moment_createview_user_assignment(self, auto_login_user):
+        """Test that the user is correctly assigned to the Moment when created."""
+        client, user = auto_login_user()
+        activity = StreetActivityFactory()
+        create_url = reverse("create-moment", args=[activity.id])
+        moment_data = create_moment_data(activity)
+        response = client.post(create_url, moment_data, follow=True)
+        assert response.status_code == 200
+        moment = Moment.objects.first()
+        assert moment.user == user
 
     def test_moment_listview(self, client):
         """Test the Moment list view to ensure it returns a 200 status code
@@ -98,7 +109,7 @@ class TestMomentModel:
         update_url = reverse("update-moment", args=[moment.id])
 
         updated_data = {
-            "report": "Updated Moment",
+            "word": "Updated",
             "activity": moment.activity,
         }
 
@@ -107,7 +118,7 @@ class TestMomentModel:
         assert response.status_code == 200
 
         moment.refresh_from_db()
-        assert moment.report == "Updated Moment"
+        assert moment.word == "Updated"
 
     def test_get_context_data_moment_createview(self, client):
         """Given the user creates a moment,
@@ -127,18 +138,18 @@ class TestMomentModel:
         assert response.status_code == 200
         assert "activity" in response.context
 
-    def test_report_missing_on_moment_form(self, client):
+    def test_word_missing_on_moment_form(self, client):
         """Given the user forgets to fill in a moment,
-        test if the error 'Geen omschrijving gegeven' is given"""
+        test if the error 'Geen woord gegeven' is given"""
         activity = StreetActivityFactory()
         create_url = reverse("create-moment", args=[activity.id])
         moment_data = create_moment_data(activity)
-        moment_data.pop("report", None)
+        moment_data.pop("word", None)
 
         response = client.post(create_url, moment_data)
 
         assert response.status_code == 200
-        assert "Geen omschrijving gegeven" in response.content.decode()
+        assert "Geen woord gegeven" in response.content.decode()
 
 
 def create_moment_data(activity=None):
@@ -148,6 +159,7 @@ def create_moment_data(activity=None):
         "_state",
         "id",
         'activity_id',
+        'user_id',
         'date_created', 'date_modified']:
         moment_data.pop(field, None)
     moment_data['activity'] = activity.id

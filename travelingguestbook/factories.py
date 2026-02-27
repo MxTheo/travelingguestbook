@@ -34,6 +34,7 @@ class MomentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Moment
     activity      = factory.SubFactory(StreetActivityFactory)
+    word          = factory.LazyFunction(fake.word)
     report        = factory.LazyFunction(fake.text)
     date_created  = factory.LazyFunction(fake.date)
     date_modified = factory.LazyFunction(fake.date)
