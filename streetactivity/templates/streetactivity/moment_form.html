@@ -32,8 +32,6 @@
                             {% for error in form.non_field_errors %}{{ error }}{% endfor %}
                         </div>
                     {% endif %}
-                    <!-- Category Selection - St3p 1 -->
-                    {% include "streetactivity/step_category_selection.html" with form=form %}
                     <!-- Reflection - Step 2 -->
                     {% include "streetactivity/step_reflection.html" with form=form %}
                     <!-- Submit buttons -->

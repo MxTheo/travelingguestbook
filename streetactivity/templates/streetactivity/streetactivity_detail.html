@@ -14,16 +14,7 @@
         <!-- Snelle navigatie -->
         <div class="row mb-5">
             <div class="col-12">
-                <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center p-3 bg-light rounded">
-                    <div class="d-flex flex-wrap gap-2">
-                        <a href="#gemeenschappelijk-begrip"
-                           class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-graph-up me-1"></i>gemeenschappelijk begrip
-                        </a>
-                        <a href="#momenten" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-chat-quote me-1"></i>Belevingsmomenten
-                        </a>
-                    </div>
+                <div class="d-flex flex-wrap gap-3 justify-content-end align-items-center p-3 bg-light rounded">
                     <div>
                         <a href="{% url "update-streetactivity" activity.pk %}"
                             class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
@@ -59,77 +50,6 @@
                         </div>
                         <div class="card-body">
                             <div class="supplies-content">{{ activity.supplies|linebreaks }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- gemeenschappelijk begrip sectie -->
-        <section id="gemeenschappelijk-begrip" class="mb-5">
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h2 class="h3 text-primary mb-3">Gemeenschappelijk Begrip</h2>
-                    <p class="text-muted lead">
-                        Samen bouwen we aan inzicht in deze straatactiviteit.
-                        Niet om te oordelen, maar om te begrijpen wat mensen ervaren.
-                    </p>
-                </div>
-            </div>
-            <!-- Filter knoppen -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <div class="d-flex flex-wrap gap-3 align-items-center">
-                                        <small class="text-muted" id="filterCount">Totaal: {{ moments_count }} momenten</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                                    <a href="{% url 'moment-list-streetactivity' activity.pk %}"
-                                        class="btn btn-primary btn-sm">
-                                        <i class="bi bi-list-ul me-1"></i>Alle momenten
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row g-4">
-                <!-- Zelfverzekerdheid chart -->
-                <div class="col-md-6">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary mb-4">
-                                <i class="bi bi-pie-chart me-2"></i>Mate van zekerheid
-                            </h5>
-                            <div class="text-center">
-                                <div class="donut-chart mx-auto mb-4">
-                                    <canvas id="momentChart"></canvas>
-                                </div>
-                                <div class="row g-3 justify-content-center">
-                                    <div class="col-auto">
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge bg-primary me-2">&nbsp;</span>
-                                            <small>Onzeker</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge bg-warning me-2">&nbsp;</span>
-                                            <small>Tussenin</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge bg-success me-2">&nbsp;</span>
-                                            <small>Zelfverzekerd</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -202,89 +122,3 @@
         </div>
     </div>
 {% endblock content %}
-{% block javascript %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static "streetactivity/js/colors.js" %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('momentChart').getContext('2d');
-            let momentChart;
-            
-            // Gebruik Bootstrap CSS variabelen voor kleuren
-            const styles = getComputedStyle(document.documentElement);
-            const colors = MyColors.getBootstrapColors();
-            
-            // Data voor verschillende filters
-            const chartData = {
-                everyone: {{ chart_data_everyone|safe }},
-                practitioners: {{ chart_data_practitioners|safe }},
-                passersby: {{ chart_data_passersby|safe }}
-            };
-            
-            const countData = {
-                everyone: {{ moments_count }},
-                practitioners: {{ practitioner_count }},
-                passersby: {{ passerby_count }}
-            };
-            
-            // Initialiseer chart
-            function initChart(data) {
-                if (momentChart) {
-                    momentChart.destroy();
-                }
-                
-                momentChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Onzeker', 'Tussenin', 'Zelfverzekerd'],
-                        datasets: [{
-                            data: [data.onzeker, data.tussenin, data.zelfverzekerd],
-                            backgroundColor: [
-                                colors.primary,
-                                colors.warning, 
-                                colors.success
-                            ],
-                            borderWidth: 2,
-                            borderColor: styles.getPropertyValue('--bs-body-bg') || '#fff'
-                        }]
-                    },
-                    options: {
-                        cutout: '60%',
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                        const percentage = total > 0 ? Math.round((context.raw / total) * 100) : 0;
-                                        return `${context.label}: ${context.raw} (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Filter handlers met for...of
-            const filterRadios = document.querySelectorAll('input[name="momentFilter"]');
-            for (const radio of filterRadios) {
-                radio.addEventListener('change', function() {
-                    const filterType = this.id.replace('filter', '').toLowerCase();
-                    
-                    // Update chart
-                    initChart(chartData[filterType]);
-
-                    // Update count
-                    document.getElementById('filterCount').textContent = `Totaal: ${countData[filterType]} ervaringen`;
-                });
-            }
-                // Laad initiële data
-                initChart(chartData.everyone);
-        });
-    </script>
-{% endblock javascript %}

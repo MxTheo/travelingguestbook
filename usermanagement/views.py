@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import login
@@ -7,15 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from django.views import View
-from streetactivity.models import ConfidenceLevel
 from .forms import RegisterForm, UserForm, ProfileForm
-
-AMOUNT_XP = {
-    ConfidenceLevel.ONZEKER: 75,
-    ConfidenceLevel.TUSSENIN: 50,
-    ConfidenceLevel.ZELFVERZEKERD: 25,
-
-}
 
 class Register(CreateView):
     """The sign up functionality"""
@@ -82,10 +73,10 @@ class ProfileUpdateView(LoginRequiredMixin, View):
             "user_form": user_form,
             "profile_form": profile_form})
 
-def add_xp(profile, confidence_level):
-    """Given the confidence lvl and the user profile, 
-    add the amount of xp specific to that confidence lvl to the user profile"""
-    profile.xp += AMOUNT_XP[confidence_level]
+def add_xp(profile):
+    """Given  the user profile, 
+    add 50 xp to the user profile"""
+    profile.xp += 50
 
 def update_lvl(profile):
     """Given the user profile,

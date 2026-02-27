@@ -40,12 +40,6 @@ class StreetActivity(models.Model):
     def __str__(self):
         return str(self.name)
 
-class ConfidenceLevel(models.IntegerChoices):
-    """Choices for confidence level."""
-    ONZEKER       = 0, "onzeker"
-    TUSSENIN      = 1, "tussenin"
-    ZELFVERZEKERD = 2, "zelfverzekerd"
-
 class Moment(models.Model):
     """An moment is a report of a moment of someone who has done a street activity."""
     
@@ -63,11 +57,6 @@ class Moment(models.Model):
         blank=True,
         help_text="Beschrijf wat zich aandiende in maximaal 367 karakters",
     )
-    confidence_level = models.IntegerField(
-        choices=ConfidenceLevel.choices,
-        default=ConfidenceLevel.ONZEKER,
-        verbose_name="Zelfverzekerdheid",
-    )
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
@@ -79,7 +68,6 @@ class Moment(models.Model):
         verbose_name_plural = "Momenten"
         indexes = [
             models.Index(fields=["-date_created"]),
-            models.Index(fields=["confidence_level"]),
         ]
 
     def __str__(self):

@@ -25,25 +25,4 @@ describe('MyColors global', () => {
         expect(colors.primary).toBe('rgba(1,2,3,0.95)');
         expect(colors.danger).toBe('rgba(4,5,6,0.9)');
     });
-
-    test('mapConfidenceLevelToColor works', () => {
-        const colors = {
-            danger: 'red',
-            warning: 'yellow',
-            success: 'green',
-            secondary: 'grey',
-        };
-        expect(window.MyColors.mapConfidenceLevelToColor(0, colors)).toBe('red');
-        expect(window.MyColors.mapConfidenceLevelToColor(42, colors)).toBe('grey');
-    });
-
-    test('mapConfidenceLevelsToColors works', () => {
-        const colors = {
-            danger: 'red',
-            warning: 'yellow',
-            success: 'green',
-            secondary: 'grey',
-        };
-        expect(window.MyColors.mapConfidenceLevelsToColors([0,1,2], colors)).toEqual(['red','yellow','green']);
-    });
 });

@@ -174,7 +174,6 @@ class TestStreetActivityDetailView:
         context = response.context
 
         assert "moments_count" in context
-        assert "chart_data_everyone" in context
 
     def test_detail_view_no_moments(self, client):
         """Test that the detail view handles activities with no moments gracefully"""
@@ -184,34 +183,6 @@ class TestStreetActivityDetailView:
         context = response.context
 
         assert context["moments_count"] == 0
-        assert context["chart_data_everyone"] == {
-            'onzeker': 0,
-            'tussenin': 0,
-            'zelfverzekerd': 0}
-
-    def test_detail_view_with_moments(self, client):
-        """Test that the detail view correctly calculates statistics with moments present"""
-
-        activity = StreetActivityFactory()
-
-        MomentFactory(
-            activity=activity,
-            confidence_level=0)
-        MomentFactory(
-            activity=activity,
-            confidence_level=1)
-        MomentFactory(
-            activity=activity,
-            confidence_level=2)
-
-        response = client.get(reverse("streetactivity-detail", args=[activity.id]))
-        context = response.context
-
-        assert context["moments_count"] == 3
-        assert context["chart_data_everyone"] == {
-            'onzeker': 1,
-            'tussenin': 1,
-            'zelfverzekerd': 1}
 
     def test_negative_moments_remaining(self, client):
         """Test if that when there are no moments,

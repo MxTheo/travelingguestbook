@@ -25,52 +25,29 @@ class TestLvl:
     """Tests for lvling up
     xp_next_lvl = 100 * lvl ^ 1.7"""
 
-    def test_that_moment_is_added_based_on_confidence_lvl(self, auto_login_user):
-        """Given a user of 0xp who describes 1 moment of insecure confidence, test if the user gets 75xp"""
+    def test_that_moment_is_added(self, auto_login_user):
+        """Given a user of 0xp who describes 1 moment, test if the user gets 50xp"""
         client, user = auto_login_user()
         activity = StreetActivityFactory()
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": 0,
         }
         url = reverse("create-moment", args=[activity.id])
 
         client.post(url, data_moment, follow=True)
 
         profile = Profile.objects.get(user=user)
-        assert profile.xp == 75
+        assert profile.xp == 50
 
-    def test_from_lvl_1_to_2_insecure_moment(self, auto_login_user):
-        """Given a user of lvl 1 who describes 1 moments of insecure confidence,
+    def test_from_lvl_1_to_2(self, auto_login_user):
+        """Given a user of lvl 1 who describes 2 moments,
         tests if they lvl up"""
         client, user = auto_login_user()
         activity = StreetActivityFactory()
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": 0,
-        }
-        url = reverse("create-moment", args=[activity.id])
-
-        client.post(url, data_moment, follow=True)
-        client.post(url, data_moment, follow=True)
-
-        profile = Profile.objects.get(user=user)
-        assert profile.lvl == 2
-        assert profile.xp_next_lvl == 324
-        assert profile.xp == 150
-        assert profile.xp_start == 100
-
-    def test_from_lvl_1_to_2_inbetween_moment(self, auto_login_user):
-        """Given a user of lvl 1 describing 2 moments of inbetween confidence,
-        tests if they lvl up"""
-        client, user = auto_login_user()
-        activity = StreetActivityFactory()
-        moment = MomentFactory()
-        data_moment = {
-            "report": moment.report,
-            "confidence_level": 1,
         }
         url = reverse("create-moment", args=[activity.id])
 
@@ -86,14 +63,13 @@ class TestLvl:
 class TestProgress:
     """Tests for progress percentage towards next lvl"""
     def test_progress_in_between(self, auto_login_user):
-        """Given a user of lvl 1 who describes 1 moments of inbetween confidence (50xp),
+        """Given a user of lvl 1 who describes 1 moment,
         tests the progress percentage is updated"""
         client, user = auto_login_user()
         activity = StreetActivityFactory()
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": 1,
         }
         url = reverse("create-moment", args=[activity.id])
 
@@ -103,14 +79,13 @@ class TestProgress:
         assert profile.xp_percentage_of_progress == 50
         
     def test_progress_lvl_up(self, auto_login_user):
-        """Given a user of lvl 1 describing 2 moments of insecure confidence (75xp),
+        """Given a user of lvl 1 describing 2 moments,
         tests if they lvl up"""
         client, user = auto_login_user()
         activity = StreetActivityFactory()
         moment = MomentFactory()
         data_moment = {
             "report": moment.report,
-            "confidence_level": 0,
         }
         url = reverse("create-moment", args=[activity.id])
 
@@ -118,4 +93,4 @@ class TestProgress:
         client.post(url, data_moment, follow=True)
 
         profile = Profile.objects.get(user=user)
-        assert profile.xp_percentage_of_progress == 22
+        assert profile.xp_percentage_of_progress == 0

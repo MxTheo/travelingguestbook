@@ -1,4 +1,3 @@
-import json
 from typing import Optional
 from django.contrib import messages
 from django.views.generic import (
@@ -7,16 +6,14 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
-    TemplateView,
 )
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import viewsets
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
 from .serializers import StreetActivitySerializer, MomentSerializer
-from .models import StreetActivity, Moment, ConfidenceLevel
+from .models import StreetActivity, Moment
 from .forms import (
     MomentForm,
     StreetActivityForm,
@@ -35,7 +32,6 @@ class StreetActivityListView(ListView):
 
 class StreetActivityDetailView(DetailView):
     """View to display details of a single street activity."""
-
     model = StreetActivity
     context_object_name = "activity"
 
@@ -50,26 +46,6 @@ class StreetActivityDetailView(DetailView):
         context["moments_count"] = moments_count
         context["recent_moments"] = moments[:3]
         context["moments_remaining"] = max(0, moments_count - 3)
-
-        def get_chart_data(queryset):
-            confidence_level_counts = queryset.values("confidence_level").annotate(
-                count=Count("confidence_level")
-            )
-            data = {"onzeker": 0, "tussenin": 0, "zelfverzekerd": 0}
-
-            confidence_mapping = {
-                ConfidenceLevel.ONZEKER: "onzeker",
-                ConfidenceLevel.TUSSENIN: "tussenin",
-                ConfidenceLevel.ZELFVERZEKERD: "zelfverzekerd",
-            }
-            for item in confidence_level_counts:
-                confidence_value = item["confidence_level"]
-                if confidence_value in confidence_mapping:
-                    key = confidence_mapping[confidence_value]
-                    data[key] = item["count"]
-            return data
-
-        context["chart_data_everyone"] = get_chart_data(moments)
 
         return context
 
@@ -159,10 +135,9 @@ class MomentCreateView(CreateView):
         return initial
 
     def get_context_data(self, **kwargs):
-        """Extend context data with activity and ConfidenceLevel options"""
+        """Extend context data with activity"""
         context = super().get_context_data(**kwargs)
         context["activity"] = self.activity
-        context["ConfidenceLevel"] = ConfidenceLevel
         return context
 
     def form_valid(self, form):
@@ -175,7 +150,7 @@ class MomentCreateView(CreateView):
         )
 
         if self.request.user.is_authenticated:
-            process_xp_and_level(self.request, form.instance.confidence_level)
+            process_xp_and_level(self.request)
 
         return super().form_valid(form)
 
@@ -186,11 +161,11 @@ class MomentCreateView(CreateView):
         )
 
 
-def process_xp_and_level(request, confidence_level):
-    """Given a request and confidence level,
+def process_xp_and_level(request):
+    """Given a request,
     process XP and level update for the user profile."""
     profile = request.user.profile  # type: ignore[reportAttributeAccessIssue]
-    add_xp(profile, int(confidence_level))
+    add_xp(profile)
     update_lvl(profile)
     calc_xp_percentage(profile)
     profile.save()
@@ -205,7 +180,6 @@ class MomentUpdateView(UpdateView):
         """Extend context data"""
         context = super().get_context_data(**kwargs)
         context["activity"] = self.object.activity
-        context["ConfidenceLevel"] = ConfidenceLevel
         return context
 
     def form_valid(self, form):

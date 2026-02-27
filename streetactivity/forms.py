@@ -1,5 +1,5 @@
 from django import forms
-from .models import StreetActivity, Moment, ConfidenceLevel
+from .models import StreetActivity, Moment
 
 class StreetActivityForm(forms.ModelForm):
     """Form for a StreetActivity."""
@@ -30,28 +30,22 @@ class StreetActivityForm(forms.ModelForm):
 class MomentForm(forms.ModelForm):
     """Base form for Moment with common fields."""
 
-    confidence_level = forms.ChoiceField(
-        choices=ConfidenceLevel.choices,
-        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
-        label='Hoe was je zelfvertrouwen in dat moment?',
-        initial=ConfidenceLevel.ONZEKER,
-    )
-
     class Meta:
         model = Moment
-        fields = ['confidence_level', 'report']
+        fields = ['report']
         widgets = {
             'report': forms.Textarea(attrs={
                 'rows': 2,
                 'class': 'form-control',
                 'placeholder':
-                'Omschrijf een reden...'}),
+                'Omschrijf je moment...'}),
         }
         labels = {
-            'report': 'Ik was (on)zeker, omdat ...',
+            'report': 'Hoe was het?',
         }
         help_texts = {
-            'report': 'Je hebt hier ruimte voor ongeveer 3 à 4 zinnen om te vertellen wat jouw zelfvertrouwen op dat moment beïnvloedde. Schrijf gewoon wat als eerste bij je opkomt, het hoeft niet perfect te zijn.',
+            'report': """Je hebt hier ruimte voor ongeveer 3 à 4 zinnen. 
+            Schrijf gewoon wat als eerste bij je opkomt, het hoeft niet perfect te zijn.""",
         }
 
     def clean(self):
@@ -60,6 +54,6 @@ class MomentForm(forms.ModelForm):
         report = cleaned_data.get('report')
 
         if not report:
-            self.add_error('report', 'Geen reden gegeven. Hoe komt het dat je je zo voelde?')
+            self.add_error('report', 'Geen omschrijving gegeven. Hoe was het?')
 
         return cleaned_data

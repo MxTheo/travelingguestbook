@@ -14,16 +14,4 @@ window.MyColors = {
             dark: cssVar('--bs-dark', 'rgba(33,37,41,0.9)'),
         };
     },
-    mapConfidenceLevelToColor: function(level, colors) {
-        switch(level) {
-            case 0: return colors.danger;
-            case 1: return colors.warning;
-            case 2: return colors.success;
-            default: return colors.secondary;
-        }
-    },
-
-    mapConfidenceLevelsToColors: function(levels, colors) {
-        return levels.map(level => this.mapConfidenceLevelToColor(level, colors));
-    }
 };

@@ -100,7 +100,6 @@ class TestMomentModel:
         updated_data = {
             "report": "Updated Moment",
             "activity": moment.activity,
-            "confidence_level": moment.confidence_level,
         }
 
         response = client.post(update_url, updated_data, follow=True)
@@ -112,27 +111,25 @@ class TestMomentModel:
 
     def test_get_context_data_moment_createview(self, client):
         """Given the user creates a moment,
-        test if activity and confidencelevel is in the context"""
+        test if activity is in the context"""
         activity = StreetActivityFactory()
         create_url = reverse("create-moment", args=[activity.id])
         response = client.get(create_url)
         assert response.status_code == 200
         assert "activity" in response.context
-        assert "ConfidenceLevel" in response.context
 
     def test_get_context_data_moment_updateview(self,client):
         """Given the user updates a moment,
-        test if activity and confidencelevel is in the context"""
+        test if activity is in the context"""
         moment = MomentFactory()
         update_url = reverse("update-moment", args=[moment.id])
         response = client.get(update_url)
         assert response.status_code == 200
         assert "activity" in response.context
-        assert "ConfidenceLevel" in response.context
 
     def test_report_missing_on_moment_form(self, client):
         """Given the user forgets to fill in a moment,
-        test if the error 'Geen reden gegeven. Hoe komt het dat je je zo voelde?' is given"""
+        test if the error 'Geen omschrijving gegeven' is given"""
         activity = StreetActivityFactory()
         create_url = reverse("create-moment", args=[activity.id])
         moment_data = create_moment_data(activity)
@@ -141,13 +138,11 @@ class TestMomentModel:
         response = client.post(create_url, moment_data)
 
         assert response.status_code == 200
-        assert "Geen reden gegeven. Hoe komt het dat je je zo voelde?" in response.content.decode()
+        assert "Geen omschrijving gegeven" in response.content.decode()
 
 
 def create_moment_data(activity=None):
     """Helper function to create moment data for tests."""
-    if not activity:
-        activity = StreetActivityFactory()
     moment_data = MomentFactory.build().__dict__
     for field in [
         "_state",
@@ -156,5 +151,4 @@ def create_moment_data(activity=None):
         'date_created', 'date_modified']:
         moment_data.pop(field, None)
     moment_data['activity'] = activity.id
-    moment_data['confidence_level'] = str(moment_data.get('confidence_level', 3))
     return moment_data
