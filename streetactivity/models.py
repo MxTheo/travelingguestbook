@@ -10,9 +10,9 @@ METHOD_CHOICES = [
 class StreetActivity(models.Model):
     """A street activity is an activity that can be done on the street to engage with strangers."""
 
-    name = models.CharField(max_length=100, verbose_name="Naam van de activiteit")
+    name = models.CharField(max_length=100, verbose_name="Naam van het spel")
     description = models.TextField(
-        max_length=3000, verbose_name="Beschrijving van de activiteit"
+        max_length=3000, verbose_name="Beschrijving van het spel"
     )
     method = models.CharField(
         max_length=10,
@@ -25,7 +25,7 @@ class StreetActivity(models.Model):
         verbose_name="Kernvraag, waarmee je de ander uitnodigt of aanspreekt",
     )
     supplies = models.TextField(
-        max_length=300, verbose_name="Benodigdheden voor de activiteit"
+        max_length=300, verbose_name="Benodigdheden voor het spel"
     )
 
     date_created = models.DateTimeField(auto_now_add=True)
@@ -33,8 +33,8 @@ class StreetActivity(models.Model):
 
     class Meta:
         """Order by name and set verbose names."""
-        verbose_name = "Straatactiviteit"
-        verbose_name_plural = "Straatactiviteiten"
+        verbose_name = "straatspel"
+        verbose_name_plural = "Straatspellen"
         ordering = ["name"]
 
     def __str__(self):

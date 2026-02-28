@@ -23,7 +23,7 @@
                 <!-- hoofding: display voor meer gewicht -->
                 <div class="card-header bg-transparent border-0 text-center pb-1">
                     <h1 class="display-4 fw-light text-secondary-emphasis mb-3">
-                        {{ form.word.label }}
+                        Eén woord. Wat past bij {{ activity.name }}?
                     </h1>
                     <p class="lead fs-6 text-secondary-emphasis opacity-75 mx-auto" style="max-width: 30rem;">
                         {{ form.word.help_text }}
@@ -52,7 +52,7 @@
                                 {{ form.word }}
                             </div>
 
-                            <!-- teller Eén woord. Wat past?en hint met Bootstrap classes -->
+                            <!-- teller en hint met Bootstrap classes -->
                             <div class="d-flex justify-content-end align-items-center mt-3">
                                 <div id="word-counter" class="small fw-light text-secondary-emphasis opacity-75">
                                     <!-- dynamisch via javascript -->
@@ -69,10 +69,10 @@
                                     <span class="fs-3 fw-light">Terug</span>
                                 </span>
                             </a>
-                                                        <button type="submit" class="btn btn-primary btn-lg flex-fill py-4 px-5 rounded-5 border-2">
+                                                        <button type="submit" class="btn btn-success btn-lg flex-fill py-4 px-5 rounded-5 border-2">
                                 <span class="d-flex align-items-center justify-content-center gap-3">
-                                    <i class="bi bi-feather fs-2"></i>
-                                    <span class="fs-3 fw-light">Opslaan</span>
+                                    <i class="bi bi-tree fs-2"></i>
+                                    <span class="fs-3 fw-light">Planten</span>
                                 </span>
                             </button>
                         </div>

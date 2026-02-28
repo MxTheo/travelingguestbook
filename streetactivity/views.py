@@ -150,7 +150,7 @@ class MomentCreateView(CreateView, LoginRequiredMixin):
             self.request,
             messages.SUCCESS,
             "Bedankt voor het delen van jouw woord! "
-            "Dit helpt anderen deze activiteit te begrijpen.",
+            "Dit helpt anderen dit spel te begrijpen.",
         )
 
         return super().form_valid(form)

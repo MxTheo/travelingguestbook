@@ -4,7 +4,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(
-    r"streetactivity", views.StreetActivityViewSet, basename="streetactiviteiten"
+    r"streetactivity", views.StreetActivityViewSet, basename="straatactiviteiten"
 )
 router.register(r"moment", views.MomentViewSet, basename="momenten")
 
@@ -31,7 +31,7 @@ urlpatterns = [
     ),
     path("momenten/", views.MomentListView.as_view(), name="moment-list"),
     path(
-        "<int:pk>/momenten/straatactiviteit/",
+        "<int:pk>/momenten/straatspel/",
         views.MomentListViewStreetActivity.as_view(),
         name="moment-list-streetactivity",
     ),

@@ -22,7 +22,7 @@ from django.conf import settings
 urlpatterns: list[URLPattern | URLResolver] = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
-    path('straatactiviteiten/', include('streetactivity.urls')),
+    path('straatspelen/', include('streetactivity.urls')),
     path('persona/', include('persona.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('speler/', include('usermanagement.urls')),

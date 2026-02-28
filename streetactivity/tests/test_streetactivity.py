@@ -35,7 +35,7 @@ class TestStreetActivityModel:
         update_url = reverse("update-streetactivity", args=[activity.id])
 
         updated_data = {
-            "name": "Updated Activiteit",
+            "name": "Updated straatspel",
             "description": activity.description,
             "method": activity.method,
             "question": activity.question,
@@ -47,7 +47,7 @@ class TestStreetActivityModel:
         assert response.status_code == 200
 
         activity.refresh_from_db()
-        assert activity.name == "Updated Activiteit"
+        assert activity.name == "Updated straatspel"
 
     def test_streetactivity_deleteview(self, client):
         """Test the StreetActivity delete view to ensure it returns a 200 status code
@@ -86,15 +86,15 @@ class TestStreetActivityListView:
 
     def test_list_view_shows_activities(self, client):
         """Test that activities are displayed in the list view"""
-        # Maak test activiteiten aan met factory
-        StreetActivityFactory(name="Test Activiteit 1")
-        StreetActivityFactory(name="Test Activiteit 2")
+        # Maak test straatspelen aan met factory
+        StreetActivityFactory(name="Test straatspel 1")
+        StreetActivityFactory(name="Test straatspel 2")
 
         response = client.get(reverse("streetactivity-list"))
         content = response.content.decode()
 
-        assert "Test Activiteit 1" in content
-        assert "Test Activiteit 2" in content
+        assert "Test straatspel 1" in content
+        assert "Test straatspel 2" in content
 
     def test_list_view_pagination(self, client):
         """Test that pagination works correctly"""
@@ -108,9 +108,9 @@ class TestStreetActivityListView:
 
     def test_list_view_ordering(self, client):
         """Test that activities are ordered by name"""
-        StreetActivityFactory(name="Zebra Activiteit")
-        StreetActivityFactory(name="Alpha Activiteit")
-        StreetActivityFactory(name="Beta Activiteit")
+        StreetActivityFactory(name="Zebra straatspel")
+        StreetActivityFactory(name="Alpha straatspel")
+        StreetActivityFactory(name="Beta straatspel")
 
         response = client.get(reverse('streetactivity-list'))
         activities = list(response.context['activities'])
@@ -147,13 +147,13 @@ class TestStreetActivityDetailView:
     def test_detail_view_shows_activity_details(self, client):
         """Test that activity details are displayed in the detail view"""
         activity = StreetActivityFactory(
-            name="Detail Test Activiteit",
+            name="Detail Test straatspel",
             description="Dit is een test beschrijving."
         )
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
 
-        assert "Detail Test Activiteit" in response.text
+        assert "Detail Test straatspel" in response.text
         assert "Dit is een test beschrijving" in response.text
 
     def test_detail_view_context_data(self, client):

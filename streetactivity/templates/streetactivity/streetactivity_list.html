@@ -1,26 +1,27 @@
 {% extends "admin/main.html" %}
 {% load static %}
-{% block title %}Straatactiviteiten Overzicht{% endblock title %}
+{% block title %}Straatspellen Overzicht{% endblock title %}
 
 {% block content %}
 <div class="container py-4">
     <header class="list-header mb-4">
         <div class="d-flex justify-content-between align-items-start gap-3">
             <div>
-                <h1 class="text-success-emphasis">Straatactiviteiten</h1>
-                <p class="text-muted">Kies een activiteit en deel je ervaring</p>
+                <h1 class="text-success-emphasis">Wat speelde je op straat?</h1>
+                <p class="text-muted">Kies een straatspel en plant je woord. Jouw woord helpt anderen straatcontact beter te begrijpen.</p>
             </div>
             <a href="{% url 'create-streetactivity' %}" class="btn btn-success mt-3">
-                <i class="bi bi-plus-lg"></i> Nieuwe activiteit
+                <i class="bi bi-plus-lg"></i> Nieuw straatpel
             </a>
         </div>
     </header>
 
     <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
-        <span class="text-secondary fw-medium">{{ activities.count }} activiteiten gevonden</span>
+        <span class="text-secondary fw-medium">{{ activities.count }} spellen gevonden</span>
     </div>
 
-    <!-- Activiteiten grid -->
+    
+    <!-- Spellen grid -->
     <div class="row g-4">
         {% for activity in activities %}
         <div class="col-md-6 col-lg-4">
@@ -30,10 +31,10 @@
         <div class="col-12">
             <div class="text-center py-5 bg-light rounded">
                 <i class="bi bi-inbox display-4 text-muted mb-3"></i>
-                <h5 class="text-muted">Geen activiteiten gevonden</h5>
-                <p class="text-muted">Er zijn momenteel geen straatactiviteiten beschikbaar.</p>
+                <h5 class="text-muted">Geen spellen gevonden</h5>
+                <p class="text-muted">Er zijn momenteel geen straatspellen beschikbaar.</p>
                 <a href="{% url 'create-streetactivity' %}" class="btn btn-success">
-                    <i class="bi bi-plus-lg me-2"></i>Creëer eerste activiteit
+                    <i class="bi bi-plus-lg me-2"></i>Creëer eerste straatspel
                 </a>
             </div>
         </div>

@@ -9,18 +9,18 @@ class StreetActivityForm(forms.ModelForm):
         model = StreetActivity
         fields = ['name', 'description', 'method', 'question', 'supplies']
         labels = {
-            'name': 'Naam van de activiteit',
+            'name': 'Naam van het spel',
             'description': 'Stap-voor-stap handleiding',
             'method': 'Methode van benadering',
             'question': 'Kernvraag',
-            'supplies': 'Benodigdheden voor de activiteit'
+            'supplies': 'Benodigdheden voor het spel'
         }
         help_texts = {
-            'name': 'Vul alsjeblieft de naam van de activiteit in.',
-            'description': 'Geef een stap-voor-stap uitleg hoe je de activiteit uitvoert.',
+            'name': 'Vul alsjeblieft de naam van het spel in.',
+            'description': 'Geef een stap-voor-stap uitleg hoe je het spel uitvoert.',
             'method': 'Kies hoe je mensen benadert: uitnodigen of aanspreken.',
             'question': 'Formuleer de kernvraag die je gebruikt om mensen uit te nodigen of aan te spreken.',
-            'supplies': 'Welke materialen heb je nodig voor deze activiteit?',
+            'supplies': 'Welke materialen heb je nodig voor dit spel?',
         }
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),

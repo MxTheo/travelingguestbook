@@ -9,12 +9,12 @@
                 <div class="card-body text-center">
                     {% if request.user.is_authenticated %}
                         <h5 class="card-title mb-3">
-                            Deel je belevingsmoment
+                            Eén woord. Wat past bij dit spel vandaag?
                         </h5>
                         <div class="d-grid gap-2">
                             <a href="{% url 'create-moment' activity.pk %}"
                                class="btn btn-light btn-lg">
-                                <i class="bi bi-person-raised-hand me-2 fs-6"></i>Ik deed dit
+                                <i class="bi bi-droplet me-2 fs-6"></i>Plant je woord
                             </a>
                         </div>
                     {% endif %}

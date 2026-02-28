@@ -10,7 +10,7 @@
     <nav class="navbar navbar-expand navbar-light bg-light border-bottom sticky-top z-1">
         <div class="container">
             <div class="navbar-nav mx-auto">
-                <a class="nav-link px-3 fs-6" href="#de-oefening">
+                <a class="nav-link px-3 fs-6" href="#het-spel">
                     <i class="bi bi-moisture me-1"></i>Wat?
                 </a>
                 <a class="nav-link px-3 fs-6" href="#samenbegrijpen">
@@ -35,17 +35,16 @@
                     {% if request.user.is_authenticated %}
                         <a href="{% url 'streetactivity-list' %}"
                            class="btn btn-primary btn-lg px-4 me-md-2">
-                            <i class="bi bi-plus-circle me-2"></i>Reflecteer op je belevingsmoment
+                            <i class="bi bi-person-walking me-2"></i>Wat speelde je op straat?
                         </a>
                     {% endif %}
-                    <a href="#recentebelevingsmomenten"
+                    <a href="#recentewoorden"
                        class="btn btn-outline-primary btn-lg px-4">
-                        <i class="bi bi-people-fill me-2"></i>Recente belevingsmomenten
+                        <i class="bi bi-people-fill me-2"></i>Recente woorden
                     </a>
                 </div>
                 <div class="mt-3">
                     <small class="text-muted">
-                        <i class="bi bi-shield-check me-1"></i>Anoniem ·
                         <i class="bi bi-people me-1"></i>Draag bij aan gemeenschappelijk begrip
                     </small>
                 </div>
@@ -60,15 +59,15 @@
                 </div>
             </div>
         </div>
-        <!-- Recente Belevingsmomenten Dashboard -->
+        <!-- Recente Woorden Dashboard -->
         <div class="row py-5 bg-primary rounded-3 mx-0"
-             id="recentebelevingsmomenten">
+             id="recentewoorden">
             <div class="col-12">
                 <div class="container">
                     <!-- Header met betere mobile layout -->
                     <div class="row align-items-center mb-5 text-white">
                         <div class="col-lg-8 mb-4 mb-lg-0">
-                            <h2 class="fw-bold mb-3">Recente Belevingsmomenten</h2>
+                            <h2 class="fw-bold mb-3">Recente Woorden</h2>
                             <p class="opacity-75 mb-0 fs-5">
                                 Elk moment draagt bij aan ons gedeelde begrip van de straat.
                                 <strong>Niet om te oordelen, maar om samen te begrijpen.</strong> <a href="#samenbegrijpen" class="font-monospace ms-2">Lees verder <i class="bi bi-arrow-right"></i></a>
@@ -78,18 +77,18 @@
                             {% if request.user.is_authenticated %}
                                 <a href="{% url 'streetactivity-list' %}"
                                 class="btn btn-light btn-lg w-100 w-lg-auto">
-                                    <i class="bi bi-plus-circle me-2"></i>Reflecteer op jouw moment
+                                    <i class="bi bi-person-walking me-2"></i>Wat speelde je op straat?
                                 </a>
                             {% endif %}
                         </div>
                     </div>
-                    <!-- Belevingsmomenten grid -->
+                    <!-- Woorden grid -->
                     <div class="row g-4">
                         {% for moment in recent_moments %}
                             <div class="col-lg-6">
                                 <div class="card h-100 border-0 shadow-sm">
                                     <div class="card-body p-4 d-flex flex-column">
-                                        <!-- Activiteit en type -->
+                                        <!-- Spel en type -->
                                         <div class="d-flex flex-wrap gap-2 mb-3 align-items-center justify-content-between">
                                             <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ moment.activity.name }}</span>
                                         </div>
@@ -112,15 +111,15 @@
                             <div class="col-12">
                                 <div class="text-center py-5 bg-light rounded">
                                     <i class="bi bi-journal-text display-4 text-muted mb-3"></i>
-                                    <h5 class="text-muted">Nog geen belevingsmomenten gedeeld</h5>
-                                    <p class="text-muted mb-3">Deel als eerste wat je beleefde op straat</p>
+                                    <h5 class="text-muted">Nog geen woorden geplant</h5>
+                                    <p class="text-muted mb-3">Plant als eerste je woord voor dit spel</p>
                                     <div class="d-flex gap-2 justify-content-center">
                                         <a href="{% url 'streetactivity-list' %}" class="btn btn-primary">
                                             <i class="bi bi-plus-circle me-2"></i>Deel eerste moment
                                         </a>
                                         <a href="{% url 'streetactivity-list' %}"
                                            class="btn btn-outline-primary">
-                                            <i class="bi bi-compass me-2"></i>Ontdek activiteiten
+                                            <i class="bi bi-compass me-2"></i>Ontdek spellen
                                         </a>
                                     </div>
                                 </div>
@@ -130,21 +129,19 @@
                     <!-- Footer informatie -->
                     <div class="text-center mt-4 pt-3 border-top border-white border-opacity-25">
                         <p class="small text-white opacity-75 mb-0">
-                            <i class="bi bi-shield-check me-1"></i>Anoniem ·
-                            <i class="bi bi-person-x me-1"></i>Geen account nodig ·
                             <i class="bi bi-people me-1"></i>Draag bij aan gemeenschappelijk begrip
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Snel starten met activiteiten -->
+        <!-- Snel starten met spellen -->
         <div class="row py-5 mt-4 bg-light rounded-3">
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-5">
-                    <h2 class="fw-bold mb-3">Kies een activiteit om te beginnen</h2>
+                    <h2 class="fw-bold mb-3">Kies een straatspel om te beginnen</h2>
                     <p class="lead text-muted">
-                        Selecteer een straatactiviteit en deel je belevingsmoment
+                        Selecteer een straatspel en deel je woord
                     </p>
                 </div>
                 <div class="row g-4 mb-3">
@@ -152,7 +149,7 @@
                         <div class="col-md-6 col-lg-4">{% include "streetactivity/activity_card.html" with activity=activity %}</div>
                     {% empty %}
                         <div class="col-12 text-center py-4">
-                            <p class="text-muted">Geen activiteiten beschikbaar</p>
+                            <p class="text-muted">Geen spellen beschikbaar</p>
                         </div>
                     {% endfor %}
                 </div>
@@ -160,7 +157,7 @@
                 <div class="text-center mt-4">
                     <a href="{% url 'streetactivity-list' %}"
                        class="btn btn-outline-primary">
-                        <i class="bi bi-grid me-2"></i>Bekijk alle straatactiviteiten
+                        <i class="bi bi-grid me-2"></i>Bekijk alle straatspellen
                     </a>
                 </div>
             </div>
@@ -182,11 +179,11 @@
             </div>
         </div>
         <!-- De Bodem Filosofie -->
-        <div id="de-oefening" class="row py-5 wathoewaarom">
+        <div id="het-spel" class="row py-5 wathoewaarom">
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-5">
                     <h2 class="fw-bold mb-3">De Kunst van het Zijn op Straat</h2>
-                    <p class="fs-5 text-muted">Een oefening in gelijkmoedigheid, ontvankelijkheid en innerlijke vrede</p>
+                    <p class="fs-5 text-muted">Een spel in gelijkmoedigheid, ontvankelijkheid en innerlijke vrede</p>
                 </div>
                 <div class="row g-4">
                     <!-- De Bodem -->
@@ -222,7 +219,7 @@
                                     <h4 class="card-title mb-0">Alles is Ervaring</h4>
                                 </div>
                                 <p class="card-text">
-                                    Contact met onbekenden in de publieke ruimte zoeken kan niet mislukken, omdat er geen goede of slechte ervaringen zijn. We beoefenen open te staan voor wat zich ook aandient tijdens een straatactiviteit, zonder te oordelen
+                                    Contact met onbekenden in de publieke ruimte zoeken kan niet mislukken, omdat er geen goede of slechte ervaringen zijn. We beoefenen open te staan voor wat zich ook aandient tijdens een straatspel, zonder te oordelen
                                 </p>
                                 <p class="card-text">
                                     Elk moment leert ons iets over onszelf en de wereld om ons heen. Zo zijn er geen goede of slechte ervaringen - alles is ervaring.
@@ -246,11 +243,11 @@
                 <div class="row align-items-center mb-5">
                     <div class="col-md-6">
                         <p class="fs-5">
-                            Jouw beschrijving van wat je ervaart - onzekerheid, verbinding, rust -
+                            Jouw woord van wat je ervaart - onzekerheid, verbinding, steen -
                             helpt anderen het karakter van deze beoefening te begrijpen.
                         </p>
                         <p>
-                            Zo ontstaat er langzaam een gedeeld beeld van wat deze activiteit teweeg kan brengen:
+                            Zo ontstaat er langzaam een gedeeld beeld van wat deze spel teweeg kan brengen:
                             is het vooral uitdagend of juist verbindend?
                         </p>
                     </div>
@@ -262,7 +259,7 @@
                                 <br>
                                 in plaats van
                                 <br>
-                                "Deze activiteit was intensief"
+                                "Deze spel was intensief"
                             </p>
                         </div>
                     </div>
@@ -271,11 +268,11 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0">
                             <div class="card-body text-center p-4">
-                                <i class="bi bi-journal-text display-6 text-info mb-3"></i>
-                                <h5>Momenten Beschrijven</h5>
+                                <i class="bi bi-droplet display-6 text-info mb-3"></i>
+                                <h5>Woorden planten</h5>
                                 <p class="text-muted">
-                                    Jouw beschrijving van wat je ervaart - onzekerheid, verbinding, rust -
-                                    helpt anderen het doen van een straatactiviteit te begrijpen.
+                                    Jouw woord van wat je ervaart - ongemakkelijk, verbinding, steen -
+                                    helpt anderen het doen van een straatspel te begrijpen.
                                 </p>
                             </div>
                         </div>
@@ -286,7 +283,7 @@
                                 <i class="bi bi-pie-chart display-6 text-success mb-3"></i>
                                 <h5>Patronen Herkennen</h5>
                                 <p class="text-muted">
-                                    Zo ontstaat er langzaam een gedeeld beeld van wat een straatactiviteit teweeg kan brengen: is het vooral uitdagend of juist verbindend?
+                                    Zo ontstaat er langzaam een gedeeld beeld van wat een straatspel teweeg kan brengen: is het vooral uitdagend of juist verbindend?
                                 </p>
                             </div>
                         </div>
@@ -298,7 +295,7 @@
                                 <h5>Helder Zicht</h5>
                                 <p class="text-muted">
                                     Dit inzicht helpt nieuwe beoefenaars om te weten wat ze kunnen verwachten,
-                                    zonder vooroordelen over goed of fout.
+                                    zonder oordelen over goed of fout.
                                 </p>
                             </div>
                         </div>
@@ -332,7 +329,7 @@
                                     Waar je leert om met een zachte, open blik in de wereld te staan, ongeacht wat er op je pad komt.
                                 </p>
                                 <p class="card-text">
-                                    Dit beoefenen we op straat, omdat het echte leven zich daar afspeelt - onvoorspelbaar,
+                                    Dit spelen we op straat, omdat het echte leven zich daar afspeelt - onvoorspelbaar,
                                     ongelijkmatig, en perfect in zijn imperfectie.
                                 </p>
                             </div>

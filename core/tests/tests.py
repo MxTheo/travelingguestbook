@@ -16,7 +16,7 @@ class TestHome:
     def test_if_featured_activities_are_there(self,client):
         """Test that when there are 6 activities, that there are 4 activities on the homepage"""
         for i in range(7):
-            StreetActivityFactory(name=f"activiteit{i}")
+            StreetActivityFactory(name=f"spel{i}")
         response = client.get(reverse('home'))
         assert len(response.context['featured_activities']) == 4
 
