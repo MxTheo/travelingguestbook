@@ -14,3 +14,7 @@
   border: none;
   text-decoration: none !important;
 }
+
+.help-text {
+  max-width: 30rem;
+}

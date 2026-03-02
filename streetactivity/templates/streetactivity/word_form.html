@@ -10,7 +10,7 @@
 {% endblock title %}
 {% block stylesheet %}
     <link rel="stylesheet"
-          href="{% static 'streetactivity/styles/moment_form.css' %}">
+          href="{% static 'streetactivity/styles/word_form.css' %}">
 {% endblock stylesheet %}
 {% block content %}
 <div class="container py-5">
@@ -25,14 +25,14 @@
                     <h1 class="display-4 fw-light text-secondary-emphasis mb-3">
                         Eén woord. Wat past bij {{ activity.name }}?
                     </h1>
-                    <p class="lead fs-6 text-secondary-emphasis opacity-75 mx-auto" style="max-width: 30rem;">
+                    <p class="lead fs-6 text-secondary-emphasis opacity-75 mx-auto help-text" >
                         {{ form.word.help_text }}
                     </p>
                 </div>
 
                 <!-- formulier -->
                 <div class="card-body px-md-4">
-                    <form method="post" novalidate class="moment-form">
+                    <form method="post" novalidate class="word-form">
                         {% csrf_token %}
 
                         <!-- eventuele fouten -->
@@ -63,7 +63,7 @@
                         <!-- grote rustige knoppen -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-4 mt-5 pt-3">
 
-                            <a href="{% url 'moment-list' %}" class="btn btn-outline-secondary btn-lg flex-fill py-4 px-5 rounded-5 border-2">
+                            <a href="{% url 'word-list' %}" class="btn btn-outline-secondary btn-lg flex-fill py-4 px-5 rounded-5 border-2">
                                 <span class="d-flex align-items-center justify-content-center gap-3">
                                     <i class="bi bi-arrow-left fs-2"></i>
                                     <span class="fs-3 fw-light">Terug</span>
@@ -98,8 +98,7 @@
             
             if (wordField) {
                 // Bootstrap classes toevoegen voor extra gewicht
-                wordField.classList.add('form-control-lg', 'py-4', 'px-4', 'border-2', 'rounded-4', 'text-center', 'shadow-sm');
-                wordField.classList.add('fs-1', 'fw-light', 'text-secondary-emphasis', 'bg-light', 'bg-opacity-25');
+                wordField.classList.add('form-control-lg', 'py-4', 'px-4', 'border-2', 'rounded-4', 'text-center', 'shadow-sm', 'fs-1', 'fw-light', 'text-secondary-emphasis', 'bg-light', 'bg-opacity-25');
                 wordField.style.minHeight = '150px';
                 wordField.style.resize = 'none';
                 
@@ -125,7 +124,7 @@
                 
                 function updateCounter() {
                     const length = wordField.value.length;
-                    counter.textContent = `${length} karakter${length !== 1 ? 's' : ''}`;
+                    counter.textContent = `${length} karakter${length === 1 ? '' : 's'}`;
                     
                     // Zachte kleurverandering met Bootstrap text classes
                     if (length > 70) {
@@ -143,7 +142,7 @@
                 wordField.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        document.querySelector('.moment-form button[type="submit"]').click();
+                        document.querySelector('.word-form button[type="submit"]').click();
                     }
                 });
 

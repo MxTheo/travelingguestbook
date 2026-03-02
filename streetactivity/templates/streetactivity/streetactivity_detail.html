@@ -56,32 +56,32 @@
             </div>
         </section>
         <!-- Recente Woorden -->
-        <section id="momenten" class="mb-5">
+        <section id="woorden" class="mb-5">
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="h3 text-primary">Recente Woorden</h2>
-                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                        <a href="{% url 'word-list-streetactivity' activity.pk %}"
                             class="btn btn-outline-primary">
-                            <i class="bi bi-list-ul me-1"></i>Alle momenten
+                            <i class="bi bi-list-ul me-1"></i>Alle woorden
                         </a>
                     </div>
                 </div>
             </div>
             <div class="row g-4">
-                {% for moment in recent_moments %}
+                {% for word in recent_words %}
                     <div class="col-lg-6">
-                        <a href="{% url 'moment-list-streetactivity' activity.pk %}"
+                        <a href="{% url 'word-list-streetactivity' activity.pk %}"
                             class="text-decoration-none">
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
                                         <small class="text-muted">
                                             <i class="bi bi-clock me-1"></i>
-                                            {{ moment.date_created|timesince }} geleden
+                                            {{ word.date_created|timesince }} geleden
                                         </small>
                                     </div>
-                                    {% include "streetactivity/report_snippet.html" with moment=moment %}
+                                    {% include "streetactivity/report_snippet.html" with word=word %}
                                 </div>
                             </div>
                         </a>
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                 {% endfor %}
-                <small class="text-muted">... en {{ moments_remaining }} meer</small>
+                <small class="text-muted">... en {{ words_remaining }} meer</small>
             </div>
         </section>
         <!-- Secundaire CTA -->
@@ -110,7 +110,7 @@
                                 deze straatspel beter te begrijpen.
                             </p>
                             <div class="d-flex gap-3 justify-content-center flex-wrap">
-                                <a href="{% url 'create-moment' activity.pk %}"
+                                <a href="{% url 'create-word' activity.pk %}"
                                    class="btn btn-primary btn-lg">
                                     <i class="bi bi-droplet me-2 fs-6"></i>Plant je woord
                                 </a>

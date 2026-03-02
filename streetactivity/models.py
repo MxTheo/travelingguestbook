@@ -40,13 +40,13 @@ class StreetActivity(models.Model):
     def __str__(self):
         return str(self.name)
 
-class Moment(models.Model):
-    """An moment is a report of a moment of someone who has done a street activity."""
-    
+class Word(models.Model):
+    """A word is a descriptor that players associate with a moment during a street activity."""
+
     activity = models.ForeignKey(
         "StreetActivity",
         on_delete=models.CASCADE,
-        related_name="moments",
+        related_name="words",
         verbose_name="Gerelateerde activiteit",
         null=True,
         blank=True,
@@ -55,17 +55,10 @@ class Moment(models.Model):
         max_length=100,
         verbose_name="Eén woord",
         help_text="Welk woord past bij dit moment?",
-        blank=True,  # Voor nu, zodat bestaande data blijft werken
-    )
-    report = models.TextField(
-        max_length=367,
-        verbose_name="Wat voelde je? Wat ging er in je om?",
-        blank=True,
-        help_text="Beschrijf wat zich aandiende in maximaal 367 karakters",
     )
     user = models.ForeignKey(
         User,
-        related_name="moments",
+        related_name="words",
         on_delete=models.CASCADE,
         verbose_name="Speler",
         blank=True
@@ -75,15 +68,13 @@ class Moment(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        """Order moments by date in descending order."""
+        """Order words by date in descending order."""
         ordering = ["-date_created"]
-        verbose_name = "Moment"
-        verbose_name_plural = "Momenten"
+        verbose_name = "Woord"
+        verbose_name_plural = "Woorden"
         indexes = [
             models.Index(fields=["-date_created"]),
         ]
 
     def __str__(self):
-        if self.report:
-            return f"{self.report[:50]}..."
-        return f"{self.activity.name} - Moment {self.id}"
+        return self.word

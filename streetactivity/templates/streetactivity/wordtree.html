@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordtree · Plant je woord</title>
+    <!-- Bootstrap Icons (voor de sfeer, niet noodzakelijk voor de boom) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f7f4ef;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        /* Zachte, aardse kleurenpalet */
+        :root {
+            --bark: #8b6e4b;
+            --bark-light: #b5926a;
+            --leaf-base: #cad2b0;
+            --leaf-soft: #e1e8d9;
+            --ink: #2f2e2b;
+            --paper: #f7f4ef;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Titel met zachte uitstraling */
+        .title {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: var(--ink);
+            margin-bottom: 2rem;
+            border-bottom: 1px dashed #dcd8cf;
+            padding-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .title i {
+            color: #a7b99e;
+            margin-right: 0.5rem;
+        }
+
+        /* De boom-container */
+        .tree-container {
+            position: relative;
+            width: 100%;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            margin: 2rem 0;
+            padding-bottom: 2rem;
+        }
+
+        /* === DE STAM — handgetekend gevoel met CSS === */
+        .trunk {
+            position: relative;
+            width: 120px;
+            height: 280px;
+            background: transparent;
+            z-index: 5;
+            margin-bottom: -20px; /* laat kroon iets over de stam vallen */
+        }
+
+        /* Linker helft van de stam – organische vorm */
+        .trunk-left {
+            position: absolute;
+            left: 0;
+            width: 55px;
+            height: 100%;
+            background: var(--bark);
+            border-radius: 40% 20% 30% 20% / 60% 20% 40% 20%;
+            transform: skewX(-2deg) rotate(1deg);
+            box-shadow: 
+                -5px 0 8px rgba(0,0,0,0.08),
+                inset -4px -4px 8px rgba(0,0,0,0.1),
+                inset 3px 3px 10px rgba(255,255,240,0.3);
+        }
+
+        /* Rechter helft van de stam – onregelmatig */
+        .trunk-right {
+            position: absolute;
+            right: 0;
+            width: 58px;
+            height: 94%;
+            bottom: 0;
+            background: var(--bark-light);
+            border-radius: 30% 40% 20% 35% / 30% 50% 20% 40%;
+            transform: skewX(3deg) rotate(-1deg);
+            box-shadow: 
+                5px 0 10px rgba(0,0,0,0.05),
+                inset 4px -2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Wortel-aanzet / overgang naar aarde */
+        .trunk-base {
+            position: absolute;
+            bottom: -15px;
+            left: -10px;
+            width: 140px;
+            height: 40px;
+            background: #9c825c;
+            border-radius: 50% 30% 40% 20%;
+            filter: blur(4px);
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        /* === DE KROON — zachte, wazige bladeren === */
+        .canopy {
+            position: relative;
+            width: 550px;
+            max-width: 90vw;
+            min-width: 300px;
+            aspect-ratio: 1 / 0.9;
+            background: transparent;
+            z-index: 10;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.05));
+        }
+
+        /* Bladeren-waas – de zachte, wolkige uitstraling */
+        .leaf-mist {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at 30% 40%,
+                rgba(202, 210, 176, 0.65) 0%,
+                rgba(225, 232, 217, 0.4) 45%,
+                transparent 75%
+            );
+            filter: blur(20px);
+            border-radius: 70% 30% 60% 40% / 50% 60% 40% 50%;
+            z-index: 1;
+            pointer-events: none; /* zodat je door de waas op woorden kunt klikken */
+        }
+
+        /* Extra waas voor diepte */
+        .leaf-mist-secondary {
+            position: absolute;
+            top: 5%;
+            left: 10%;
+            width: 90%;
+            height: 90%;
+            background: radial-gradient(
+                circle at 70% 30%,
+                rgba(190, 200, 160, 0.3) 0%,
+                transparent 70%
+            );
+            filter: blur(25px);
+            border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+            z-index: 0;
+        }
+
+        /* De woorden – zweven als blaadjes in de kroon */
+        .words {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            gap: 0.6rem 1.2rem;
+            padding: 2rem;
+        }
+
+        /* Ieder woord is een blaadje */
+        .word {
+            display: inline-block;
+            padding: 0.2rem 0.4rem;
+            background: transparent;
+            color: #2f4b2f;
+            font-weight: 350;
+            font-size: 1rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            border-radius: 30% 70% 50% 50% / 40% 40% 60% 60%;
+            text-shadow: 1px 1px 2px rgba(255, 255, 240, 0.8);
+            cursor: default;
+            border: 1px dotted transparent;
+        }
+
+        /* Grotere woorden (vaker genoemd) worden groter en krijgen meer gewicht */
+        .word.size-1 { font-size: 1.2rem; font-weight: 350; }
+        .word.size-2 { font-size: 1.5rem; font-weight: 380; }
+        .word.size-3 { font-size: 1.9rem; font-weight: 420; }
+        .word.size-4 { font-size: 2.4rem; font-weight: 470; }
+        .word.size-5 { font-size: 3rem; font-weight: 500; }
+
+        /* Variatie in kleur – sommige woorden wat dieper, sommige lichter */
+        .word:nth-child(odd) {
+            color: #3b5e3b;
+        }
+        .word:nth-child(3n) {
+            color: #5f6b4b;
+        }
+        .word:nth-child(5n+2) {
+            color: #48633b;
+        }
+
+        /* Hover – alsof het blaadje even oplicht */
+        .word:hover {
+            background: rgba(230, 240, 210, 0.6);
+            border-color: #9baa8b;
+            transform: scale(1.05) rotate(1deg);
+            z-index: 30;
+        }
+
+        /* Aarde / grond onder de boom */
+        .ground {
+            width: 80%;
+            max-width: 650px;
+            height: 30px;
+            background: #e5ddd0;
+            border-radius: 40% 40% 20% 20% / 100% 100% 40% 40%;
+            filter: drop-shadow(0 -5px 8px #d9d0c0);
+            margin-top: -1rem;
+            position: relative;
+            z-index: 2;
+            box-shadow: inset 0 8px 6px -6px #bcae95;
+        }
+
+        /* Kleine decoratieve elementen – grassprietjes, steentjes */
+        .ground::before {
+            content: "";
+            position: absolute;
+            left: 20%;
+            top: -10px;
+            width: 4px;
+            height: 15px;
+            background: #9aa97b;
+            border-radius: 40% 40% 0 0;
+            transform: rotate(-10deg);
+            filter: blur(1px);
+        }
+        .ground::after {
+            content: "";
+            position: absolute;
+            right: 30%;
+            top: -12px;
+            width: 5px;
+            height: 18px;
+            background: #8b9e6f;
+            border-radius: 40% 40% 0 0;
+            transform: rotate(8deg);
+            filter: blur(1px);
+        }
+
+        /* Responsive aanpassingen */
+        @media (max-width: 700px) {
+            .trunk {
+                width: 90px;
+                height: 220px;
+            }
+            .canopy {
+                width: 95vw;
+            }
+            .word {
+                font-size: 0.9rem;
+            }
+            .word.size-3 { font-size: 1.5rem; }
+            .word.size-4 { font-size: 2rem; }
+            .word.size-5 { font-size: 2.4rem; }
+        }
+
+        @media (max-width: 480px) {
+            .word {
+                white-space: normal; /* woorden mogen wrappen op heel klein scherm */
+                word-break: keep-all;
+            }
+            .words {
+                gap: 0.4rem 0.8rem;
+            }
+        }
+
+        /* Footer met uitleg – optioneel */
+        .footnote {
+            margin-top: 3rem;
+            color: #5f6b5b;
+            font-size: 0.9rem;
+            font-style: italic;
+            border-top: 1px dashed #d4ccc0;
+            padding-top: 1.5rem;
+            max-width: 500px;
+        }
+        .footnote i {
+            color: #98a88c;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="title">
+        <i class="bi bi-chat-fill"></i> 
+        Woorden die geplant werden
+    </h2>
+
+    <!-- De wordtree -->
+    <div class="tree-container">
+
+
+        <!-- De kroon met woorden -->
+        <div class="canopy">
+            <!-- Zachte waas van bladeren -->
+            <div class="leaf-mist"></div>
+            <div class="leaf-mist-secondary"></div>
+            
+            <!-- De woorden zelf – alsof ze in de bladeren hangen -->
+            <div class="words">
+                <!-- Voorbeeldwoorden met verschillende groottes (size-* = hoe vaker genoemd) -->
+                <span class="word size-5">licht</span>
+                <span class="word size-3">baksteen</span>
+                <span class="word size-2">moed</span>
+                <span class="word size-4">ongemakkelijk</span>
+                <span class="word size-2">stil</span>
+                <span class="word size-3">vlieg</span>
+                <span class="word size-1">zon</span>
+                <span class="word size-2">durf</span>
+                <span class="word size-4">twijfel</span>
+                <span class="word size-3">glimlach</span>
+                <span class="word size-2">regen</span>
+                <span class="word size-1">au</span>
+                <span class="word size-3">verbinding</span>
+                <span class="word size-2">kriebel</span>
+                <span class="word size-5">stilte</span>
+                <span class="word size-2">thuis</span>
+                <span class="word size-3">vreemd</span>
+                <span class="word size-4">vrij</span>
+                <span class="word size-1">hout</span>
+                <span class="word size-2">dankbaar</span>
+                <span class="word size-3">waaier</span>
+                <span class="word size-2">zenuwachtig</span>
+                <span class="word size-4">lachen</span>
+                <span class="word size-3">koud</span>
+                <span class="word size-1">ei</span>
+            </div>
+        </div>
+                <!-- Eerst de stam (onder de kroon, maar visueel overlappend) -->
+        <div class="trunk">
+            <div class="trunk-left"></div>
+            <div class="trunk-right"></div>
+            <div class="trunk-base"></div>
+        </div>
+        <div class="py-5">
+            -
+            -
+            -
+        </div>
+        <!-- De grond onder de boom -->
+        <div class="ground"></div>
+    </div>
+
+    <div class="footnote">
+        <i class="bi bi-droplet"></i> 
+        Woorden groeien met hoe vaker ze genoemd worden. 
+        <br>Jouw woord maakt de boom rijker.
+    </div>
+</div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 from django.urls import reverse
 from streetactivity.models import StreetActivity
 from streetactivity.views import StreetActivityDetailView
-from travelingguestbook.factories import MomentFactory, StreetActivityFactory
+from travelingguestbook.factories import WordFactory, StreetActivityFactory
 
 class TestStreetActivityModel:
     """Tests for the StreetActivity model."""
@@ -166,28 +166,28 @@ class TestStreetActivityDetailView:
         assert "activity" in context
         assert context["activity"] == activity
 
-    def test_detail_view_moment_statistics(self, client):
-        """Test that moment statistics are correctly calculated and included in context"""
+    def test_detail_view_word_statistics(self, client):
+        """Test that word statistics are correctly calculated and included in context"""
         activity = StreetActivityFactory()
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
 
-        assert "moments_count" in context
+        assert "words_count" in context
 
-    def test_detail_view_no_moments(self, client):
-        """Test that the detail view handles activities with no moments gracefully"""
+    def test_detail_view_no_words(self, client):
+        """Test that the detail view handles activities with no words gracefully"""
         activity = StreetActivityFactory()
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
 
-        assert context["moments_count"] == 0
+        assert context["words_count"] == 0
 
-    def test_negative_moments_remaining(self, client):
-        """Test if that when there are no moments,
-        then the moments_remaining results in 0 and not -3"""
+    def test_negative_words_remaining(self, client):
+        """Test if that when there are no words,
+        then the words_remaining results in 0 and not -3"""
         activity = StreetActivityFactory()
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
-        assert context['moments_remaining'] == 0
+        assert context['words_remaining'] == 0

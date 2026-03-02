@@ -4,7 +4,7 @@
     Ervaringen
 {% endblock title %}
 {% block stylesheet %}
-    <link href="{% static "streetactivity/styles/moment_list.css" %}" rel="stylesheet">
+    <link href="{% static "streetactivity/styles/word_list.css" %}" rel="stylesheet">
 {% endblock stylesheet %}
 {% block content %}
     <div class="container mt-3">{% include "admin/messages_feed.html" %}</div>
@@ -27,29 +27,29 @@
                 {% endif %}
             </div>
         </div>
-        <!-- Moment List -->
+        <!-- Word List -->
         <div class="row">
             <div class="col">
                 {% if object_list %}
-                    {% for moment in object_list %}
+                    {% for word in object_list %}
                         <div class="card mb-3 border">
                             <div class="card-body">
                                 <!-- Header -->
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="flex-grow-1 ms-3">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">{{ moment.date_created|date:"d M Y" }}</small>
+                                            <small class="text-muted">{{ word.date_created|date:"d M Y" }}</small>
                                             <div>
-                                                <a href="{% url "update-moment" pk=moment.pk %}"
+                                                <a href="{% url "update-word" pk=word.pk %}"
                                                    class="btn btn-sm btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
-                                                <a href="{% url "delete-moment" pk=moment.pk %}"
+                                                <a href="{% url "delete-word" pk=word.pk %}"
                                                    class="btn btn-sm  btn-outline-danger"><i class="bi bi-trash"></i></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Content -->
-                                {% include "streetactivity/report_snippet.html" with moment=moment %}
+                                {% include "streetactivity/report_snippet.html" with word=word %}
                             </div>
                         </div>
                     {% endfor %}
@@ -87,9 +87,9 @@
                         <i class="bi bi-chat-square-text display-4 text-muted mb-3"></i>
                         <h3 class="h5 text-muted mb-2">Nog geen ervaringen</h3>
                         <p class="text-muted mb-4">Deel als eerste je ervaring.</p>
-                        {% if first_moment.activity %}
+                        {% if first_word.activity %}
                             <div>
-                                <a href="{% url 'create-moment' first_moment.activity.pk %}"
+                                <a href="{% url 'create-word' first_word.activity.pk %}"
                                    class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-star me-1"></i>Nieuw
                                 </a>

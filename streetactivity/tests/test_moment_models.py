@@ -1,166 +1,164 @@
 from django.urls import reverse
-from travelingguestbook.factories import MomentFactory, StreetActivityFactory
-from streetactivity.models import Moment
+from travelingguestbook.factories import WordFactory, StreetActivityFactory
+from streetactivity.models import Word
 
-class TestMomentModel:
-    """Tests for the Moment model."""
-    def test_moment_str_method(self):
-        """Test the __str__ method of the Moment model to ensure it returns
-        the first 50 characters of the report followed by ellipsis."""
-        moment = MomentFactory(
-            report="This is a test report for the moment model. It should be truncated.")
-        expected_str = "This is a test report for the moment model. It sho..."
-        returned_str = str(moment)
+class TestWordModel:
+    """Tests for the Word model."""
+    def test_word_str_method(self):
+        """Test the __str__ method of the Word model returns the word"""
+        expected_str = "Test123"
+        word = WordFactory(
+            word=expected_str)
+        returned_str = str(word)
         assert returned_str == expected_str
 
-    def test_moment_str_method_no_report(self):
-        """Test the __str__ method of the Moment model when there is no report."""
+    def test_word_str_method_no_word(self):
+        """Test the __str__ method of the Word model when there is no word."""
         activity = StreetActivityFactory(name="Test Activity")
-        moment = MomentFactory(activity=activity, report="")
-        expected_str = f"{activity.name} - Moment {moment.id}"
-        assert str(moment) == expected_str
+        word = WordFactory(activity=activity, word="")
+        assert str(word) == ""
 
-    def test_moment_createview(self, auto_login_user):
-        """Test the Moment create view to ensure it returns a 200 status code
+    def test_word_createview(self, auto_login_user):
+        """Test the Word create view to ensure it returns a 200 status code
         and contains the expected form in context."""
         client, _ = auto_login_user()
         activity = StreetActivityFactory()
-        create_url = reverse("create-moment", args=[activity.id])
+        create_url = reverse("create-word", args=[activity.id])
 
-        moment_data = create_moment_data(activity)
+        word_data = create_word_data(activity)
 
-        response = client.post(create_url, moment_data, follow=True)
+        response = client.post(create_url, word_data, follow=True)
 
         assert response.status_code == 200
-        assert Moment.objects.count() == 1
+        assert Word.objects.count() == 1
 
-    def test_moment_createview_user_assignment(self, auto_login_user):
-        """Test that the user is correctly assigned to the Moment when created."""
+    def test_word_createview_user_assignment(self, auto_login_user):
+        """Test that the user is correctly assigned to the Word when created."""
         client, user = auto_login_user()
         activity = StreetActivityFactory()
-        create_url = reverse("create-moment", args=[activity.id])
-        moment_data = create_moment_data(activity)
-        response = client.post(create_url, moment_data, follow=True)
+        create_url = reverse("create-word", args=[activity.id])
+        word_data = create_word_data(activity)
+        response = client.post(create_url, word_data, follow=True)
         assert response.status_code == 200
-        moment = Moment.objects.first()
-        assert moment.user == user
+        word = Word.objects.first()
+        assert word.user == user
 
-    def test_moment_listview(self, client):
-        """Test the Moment list view to ensure it returns a 200 status code
+    def test_word_listview(self, client):
+        """Test the Word list view to ensure it returns a 200 status code
         and contains the expected context."""
         activity = StreetActivityFactory()
         for _ in range(3):
-            MomentFactory(activity=activity)
-        response = client.get(reverse("moment-list-streetactivity", args=[activity.id]))
+            WordFactory(activity=activity)
+        response = client.get(reverse("word-list-streetactivity", args=[activity.id]))
         assert response.status_code == 200
-        assert "moments" in response.context
-        assert len(response.context["moments"]) == 3
+        assert "words" in response.context
+        assert len(response.context["words"]) == 3
 
-    def test_moment_listview_by_streetactivity(self, client):
-        """Test the Moment list view filtered by StreetActivity to ensure it
+    def test_word_listview_by_streetactivity(self, client):
+        """Test the Word list view filtered by StreetActivity to ensure it
         returns a 200 status code and contains the expected context."""
         activity = StreetActivityFactory()
-        MomentFactory.create_batch(2, activity=activity)
-        MomentFactory.create_batch(2)  # Moments for other activities
+        WordFactory.create_batch(2, activity=activity)
+        WordFactory.create_batch(2)  # Words for other activities
 
-        list_url = reverse("moment-list-streetactivity", args=[activity.id])
+        list_url = reverse("word-list-streetactivity", args=[activity.id])
         response = client.get(list_url)
 
         assert response.status_code == 200
-        assert "moments" in response.context
-        assert len(response.context["moments"]) == 2
-        for moment in response.context["moments"]:
-            assert moment.activity == activity
+        assert "words" in response.context
+        assert len(response.context["words"]) == 2
+        for word in response.context["words"]:
+            assert word.activity == activity
 
-    def test_moment_ordering(self):
-        """Test that Moment instances are ordered by date in descending order."""
-        exp1 = MomentFactory(date_created="2023-01-01")
-        exp2 = MomentFactory(date_created="2023-02-01")
-        exp3 = MomentFactory(date_created="2023-03-01")
+    def test_word_ordering(self):
+        """Test that Word instances are ordered by date in descending order."""
+        exp1 = WordFactory(date_created="2023-01-01")
+        exp2 = WordFactory(date_created="2023-02-01")
+        exp3 = WordFactory(date_created="2023-03-01")
 
-        moments = Moment.objects.all()
-        assert list(moments) == [exp3, exp2, exp1]
+        words = Word.objects.all()
+        assert list(words) == [exp3, exp2, exp1]
 
-    def test_moment_activity_relationship(self):
-        """Test the ForeignKey relationship between Moment and StreetActivity."""
+    def test_word_activity_relationship(self):
+        """Test the ForeignKey relationship between Word and StreetActivity."""
         activity = StreetActivityFactory()
-        moment = MomentFactory(activity=activity)
+        word = WordFactory(activity=activity)
 
-        assert moment.activity == activity
-        assert moment in activity.moments.all()
+        assert word.activity == activity
+        assert word in activity.words.all()
 
     def test_delete_view(self, client):
-        """Test the Moment delete view to ensure it returns a 200 status code
+        """Test the Word delete view to ensure it returns a 200 status code
         and contains the expected context."""
-        moment = MomentFactory()
+        word = WordFactory()
 
-        delete_moment_url = reverse("delete-moment", args=[moment.id])
+        delete_word_url = reverse("delete-word", args=[word.id])
 
-        response = client.post(delete_moment_url)
+        response = client.post(delete_word_url)
 
         assert response.status_code == 302
-        assert not Moment.objects.filter(id=moment.id).exists()
-        assert Moment.objects.count() == 0
+        assert not Word.objects.filter(id=word.id).exists()
+        assert Word.objects.count() == 0
 
     def test_update_view(self, client):
-        """Test the Moment update view to ensure it returns a 200 status code
+        """Test the Word update view to ensure it returns a 200 status code
         and contains the expected form in context."""
-        moment = MomentFactory()
-        update_url = reverse("update-moment", args=[moment.id])
+        word = WordFactory()
+        update_url = reverse("update-word", args=[word.id])
 
         updated_data = {
             "word": "Updated",
-            "activity": moment.activity,
+            "activity": word.activity,
         }
 
         response = client.post(update_url, updated_data, follow=True)
 
         assert response.status_code == 200
 
-        moment.refresh_from_db()
-        assert moment.word == "Updated"
+        word.refresh_from_db()
+        assert word.word == "Updated"
 
-    def test_get_context_data_moment_createview(self, client):
-        """Given the user creates a moment,
+    def test_get_context_data_word_createview(self, client):
+        """Given the user creates a word,
         test if activity is in the context"""
         activity = StreetActivityFactory()
-        create_url = reverse("create-moment", args=[activity.id])
+        create_url = reverse("create-word", args=[activity.id])
         response = client.get(create_url)
         assert response.status_code == 200
         assert "activity" in response.context
 
-    def test_get_context_data_moment_updateview(self,client):
-        """Given the user updates a moment,
+    def test_get_context_data_word_updateview(self,client):
+        """Given the user updates a word,
         test if activity is in the context"""
-        moment = MomentFactory()
-        update_url = reverse("update-moment", args=[moment.id])
+        word = WordFactory()
+        update_url = reverse("update-word", args=[word.id])
         response = client.get(update_url)
         assert response.status_code == 200
         assert "activity" in response.context
 
-    def test_word_missing_on_moment_form(self, client):
-        """Given the user forgets to fill in a moment,
+    def test_word_missing_on_word_form(self, client):
+        """Given the user forgets to fill in a word,
         test if the error 'Geen woord gegeven' is given"""
         activity = StreetActivityFactory()
-        create_url = reverse("create-moment", args=[activity.id])
-        moment_data = create_moment_data(activity)
-        moment_data.pop("word", None)
+        create_url = reverse("create-word", args=[activity.id])
+        word_data = create_word_data(activity)
+        word_data.pop("word", None)
 
-        response = client.post(create_url, moment_data)
+        response = client.post(create_url, word_data)
 
         assert response.status_code == 200
         assert "Geen woord gegeven" in response.content.decode()
 
 
-def create_moment_data(activity=None):
-    """Helper function to create moment data for tests."""
-    moment_data = MomentFactory.build().__dict__
+def create_word_data(activity=None):
+    """Helper function to create word data for tests."""
+    word_data = WordFactory.build().__dict__
     for field in [
         "_state",
         "id",
         'activity_id',
         'user_id',
         'date_created', 'date_modified']:
-        moment_data.pop(field, None)
-    moment_data['activity'] = activity.id
-    return moment_data
+        word_data.pop(field, None)
+    word_data['activity'] = activity.id
+    return word_data

@@ -1,5 +1,5 @@
 from django import forms
-from .models import StreetActivity, Moment
+from .models import StreetActivity, Word
 
 class StreetActivityForm(forms.ModelForm):
     """Form for a StreetActivity."""
@@ -27,18 +27,18 @@ class StreetActivityForm(forms.ModelForm):
             'supplies': forms.Textarea(attrs={'rows': 3}),
         }
 
-class MomentForm(forms.ModelForm):
-    """Base form for Moment with common fields."""
+class WordForm(forms.ModelForm):
+    """Base form for Word with common fields."""
 
     class Meta:
-        model = Moment
+        model = Word
         fields = ['word']
         widgets = {
             'word': forms.Textarea(attrs={
                 'rows': 1,
                 'class': 'form-control',
                 'placeholder':
-                'Jouw moment in één woord...'}),
+                'Jouw word in één woord...'}),
         }
         labels = {
             'word': 'Eén woord. Wat past?',

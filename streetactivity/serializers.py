@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import StreetActivity, Moment
+from .models import StreetActivity, Word
 
 class StreetActivitySerializer(serializers.ModelSerializer):
     """Serializer to convert Street Activity instance to JSON"""
@@ -7,8 +7,8 @@ class StreetActivitySerializer(serializers.ModelSerializer):
         model = StreetActivity
         fields = "__all__"
 
-class MomentSerializer(serializers.ModelSerializer):
-    """Serializer to convert Moment instance to JSON"""
+class WordSerializer(serializers.ModelSerializer):
+    """Serializer to convert Word instance to JSON"""
     class Meta:
-        model = Moment
+        model = Word
         fields = "__all__"
