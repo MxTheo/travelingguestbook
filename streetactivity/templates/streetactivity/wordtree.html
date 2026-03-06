@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
@@ -71,14 +72,6 @@
         }
 
         /* === DE STAM — handgetekend gevoel met CSS === */
-        .trunk {
-            position: relative;
-            width: 120px;
-            height: 280px;
-            background: transparent;
-            z-index: 5;
-            margin-bottom: -20px; /* laat kroon iets over de stam vallen */
-        }
 
         /* Linker helft van de stam – organische vorm */
         .trunk-left {
@@ -309,6 +302,7 @@
         .footnote i {
             color: #98a88c;
         }
+
     </style>
 </head>
 <body>
@@ -359,10 +353,8 @@
             </div>
         </div>
                 <!-- Eerst de stam (onder de kroon, maar visueel overlappend) -->
-        <div class="trunk">
-            <div class="trunk-left"></div>
-            <div class="trunk-right"></div>
-            <div class="trunk-base"></div>
+        <div class="img-fluid">
+            <img src="{% static 'images/boomstam.svg' %}" alt="stam">
         </div>
         <div class="py-5">
             -

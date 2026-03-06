@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django.urls import reverse
 from travelingguestbook.factories import WordFactory, StreetActivityFactory
 from streetactivity.models import Word
@@ -72,9 +74,9 @@ class TestWordModel:
 
     def test_word_ordering(self):
         """Test that Word instances are ordered by date in descending order."""
-        exp1 = WordFactory(date_created="2023-01-01")
-        exp2 = WordFactory(date_created="2023-02-01")
-        exp3 = WordFactory(date_created="2023-03-01")
+        exp1 = WordFactory(date_created=timezone.now() - timedelta(days=2))
+        exp2 = WordFactory(date_created=timezone.now() - timedelta(days=1))
+        exp3 = WordFactory(date_created=timezone.now())
 
         words = Word.objects.all()
         assert list(words) == [exp3, exp2, exp1]

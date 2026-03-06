@@ -1,4 +1,5 @@
 from typing import Optional
+from rest_framework import viewsets
 from django.contrib import messages
 from django.views.generic import (
     ListView,
@@ -11,7 +12,7 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from rest_framework import viewsets
+from core.utils.mixins import WordTreeMixin
 from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
 from .serializers import StreetActivitySerializer, WordSerializer
 from .models import StreetActivity, Word
@@ -35,10 +36,24 @@ class StreetActivityListView(ListView):
     paginate_by = 10
 
 
-class StreetActivityDetailView(DetailView):
+class StreetActivityDetailView(DetailView, WordTreeMixin):
     """View to display details of a single street activity."""
     model = StreetActivity
     context_object_name = "activity"
+
+    def get_wordtree_base_filter(self):
+        """Base filter: this specific activity."""
+        activity = self.get_object()
+        return {
+            'type': 'activity',
+            'value': activity.id,
+            'display_name': activity.name
+        }
+
+    def get_base_queryset(self):
+        """Base queryset: all words for this activity."""
+        activity = self.get_object()
+        return Word.objects.filter(activity=activity)
 
     def get_context_data(self, **kwargs):
         """Extend context data with word statistics for charts"""
@@ -51,6 +66,34 @@ class StreetActivityDetailView(DetailView):
         context["words_count"] = words_count
         context["recent_words"] = words[:3]
         context["words_remaining"] = max(0, words_count - 3)
+
+        context = self.add_word_tree_data(activity, context)
+        return context
+
+    def add_word_tree_data(self, activity, context):
+        """Given an activity,
+        get the current filters form request and the word tree context,
+        update context and calculate activity specific statistics
+        return context"""
+        # Get current filters from request
+        current_filters = {
+            'date': self.request.GET.get('date_filter', 'all'),
+            'activity': 'all',  # Activity is fixed, so no activity filter needed
+        }
+
+        # Get word tree context
+        wordtree_context = self.get_wordtree_context(
+            self.get_base_queryset(),
+            current_filters
+        )
+        context.update(wordtree_context)
+        context['wordtree_container_id'] = f"activity-{activity.id}"
+
+        # Activity-specific stats
+        all_words = self.get_base_queryset()
+        context['total_words'] = all_words.count()
+        context['unique_words'] = all_words.values('word').distinct().count()
+        context['recent_words'] = all_words.order_by('-date_created')[:5]
 
         return context
 
@@ -214,7 +257,6 @@ class WordDeleteView(DeleteView, LoginRequiredMixin):
         return reverse_lazy(
             "word-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
-
 
 class WordViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Word"""

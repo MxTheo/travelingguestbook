@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.db.models import Count
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
@@ -6,7 +7,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from django.views import View
+from core.utils.mixins import ActivityFilterMixin
+from streetactivity.models import Word
 from .forms import RegisterForm, UserForm, ProfileForm
+
 
 class Register(CreateView):
     """The sign up functionality"""
@@ -21,13 +25,64 @@ class Register(CreateView):
         login(self.request, user)
         return redirect(self.success_url)  # type: ignore[reportArgumentType]
 
-class UserDetail(DetailView):
+class UserDetail(DetailView, ActivityFilterMixin):
     """Generic display view to get to the profile of the user:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/"""
 
     model          = User
     slug_field     = "username"
     slug_url_kwarg = "username"
+    context_object_name = "profile_user"
+
+    def get_wordtree_base_filter(self):
+        """Base filter: this specific user."""
+        user = self.get_object()
+        return {
+            'type': 'user',
+            'value': user.username,
+            'display_name': user.get_full_name() or user.username
+        }
+
+    def get_base_queryset(self):
+        """Base queryset: all words by this user."""
+        user = self.get_object()
+        return Word.objects.filter(user=user)
+
+    def get_context_data(self, **kwargs):
+        """Add word tree data to context"""
+        context = super().get_context_data(**kwargs)
+        user = self.object
+        context = self.add_word_tree_data(user, context)
+        return context
+
+    def add_word_tree_data(self, user, context):
+        """Given the user,
+        returns the context with the wordtree date, user-specific statistics and the user's most used words"""
+        # Get current filters from request
+        current_filters = {
+            'date': self.request.GET.get('date_filter', 'all'),
+            'activity': self.request.GET.get('activity_filter', 'all'),
+        }
+
+        # Get word tree context (includes activity filters via ActivityFilterMixin)
+        wordtree_context = self.get_wordtree_context(
+            self.get_base_queryset(),
+            current_filters
+        )
+        context.update(wordtree_context)
+        context['wordtree_container_id'] = f"user-{user.username}"
+
+        # User-specific stats
+        all_words = self.get_base_queryset()
+        context['total_words'] = all_words.count()
+        context['unique_words'] = all_words.values('word').distinct().count()
+
+        # Get user's most used words
+        context['top_words'] = all_words.values('word')\
+            .annotate(count=Count('word'))\
+            .order_by('-count')[:5]
+
+        return context
 
 class ProfileUpdateView(LoginRequiredMixin, View):
     """View for user to update its profile"""

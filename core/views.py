@@ -1,8 +1,11 @@
+import json
+from datetime import timedelta
+from django.utils import timezone
 from django.views.generic import TemplateView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-import json
+from core.utils.mixins import WordTreeMixin
 from streetactivity.models import Word, StreetActivity
 from .models import CookieConsentLog
 
@@ -23,9 +26,22 @@ class MailtoMixin:
         context['mailto_url'] = self.get_mailto_url()
         return context
 
-class HomeView(TemplateView):
+class HomeView(TemplateView, WordTreeMixin):
     """Renders the home page"""
     template_name = 'core/home.html'
+
+    def get_wordtree_base_filter(self):
+        """Base filter for home page: all words from past week."""
+        return {
+            'type': 'week',
+            'value': timezone.now().strftime("%Y-%m-%d"),
+            'display_name': 'Community words (past week)'
+        }
+
+    def get_base_queryset(self):
+        """Get words from the past week."""
+        one_week_ago = timezone.now() - timedelta(days=7)
+        return Word.objects.filter(date_created__gte=one_week_ago)
 
     def get_context_data(self, **kwargs):
         """Add recent words and randam activities to the home page"""
@@ -34,6 +50,22 @@ class HomeView(TemplateView):
         context['recent_words'] = Word.objects.select_related('activity').all()[:3]
         context['featured_activities'] = featured_activities[:4]
         context['activities_remaining'] = max(0, featured_activities.count() - 4)
+        context = self.add_word_tree_data(context)
+        return context
+
+    def add_word_tree_data(self, context):
+        """Home page only uses date filter (past week by default)"""
+        current_filters = {
+            'date': 'week',  # Default to week view
+        }
+
+        wordtree_context = self.get_wordtree_context(
+            self.get_base_queryset(),
+            current_filters
+        )
+
+        context.update(wordtree_context)
+        context['wordtree_container_id'] = 'global'
         return context
 
 class HelpView(TemplateView):
@@ -62,6 +94,10 @@ def save_cookie_consent(request):
         user_agent = request.META.get('HTTP_USER_AGENT', '')[:1000]
     )
     resp = JsonResponse({'ok': True})
-    resp.set_cookie('site_cookie_consent_v1', json.dumps(data), max_age=365*24*3600, path='/', samesite='Lax', secure=True)
+    resp.set_cookie('site_cookie_consent_v1',
+                    json.dumps(data),
+                    max_age=365*24*3600,
+                    path='/',
+                    samesite='Lax',
+                    secure=True)
     return resp
-

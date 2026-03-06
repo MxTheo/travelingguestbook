@@ -3,6 +3,7 @@ to be able to mock the objects in tests"""
 
 import factory
 from faker import Faker
+from django.utils import timezone
 from django.contrib.auth.models import User
 from streetactivity.models import StreetActivity, Word
 from persona.models import Persona, Problem, Reaction
@@ -26,8 +27,8 @@ class StreetActivityFactory(factory.django.DjangoModelFactory):
     method        = 'invite'
     question      = factory.LazyFunction(fake.text)
     supplies      = factory.LazyFunction(fake.text)
-    date_created  = factory.LazyFunction(fake.date)
-    date_modified = factory.LazyFunction(fake.date)
+    date_created  = factory.LazyFunction(timezone.now)
+    date_modified = factory.LazyFunction(timezone.now)
 
 class WordFactory(factory.django.DjangoModelFactory):
     '''Mock for streetactivities Word'''
@@ -35,8 +36,8 @@ class WordFactory(factory.django.DjangoModelFactory):
         model = Word
     activity      = factory.SubFactory(StreetActivityFactory)
     word          = factory.LazyFunction(fake.word)
-    date_created  = factory.LazyFunction(fake.date)
-    date_modified = factory.LazyFunction(fake.date)
+    date_created  = factory.LazyFunction(timezone.now)
+    date_modified = factory.LazyFunction(timezone.now)
     user          = factory.SubFactory(UserFactory)
 
 class PersonaFactory(factory.django.DjangoModelFactory):

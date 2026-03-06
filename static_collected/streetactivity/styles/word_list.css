@@ -1,0 +1,9 @@
+.card-text {
+    line-height: 1.6;
+}
+.shadow-sm {
+    transition: box-shadow 0.2s ease-in-out;
+}
+.shadow-sm:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}

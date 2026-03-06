@@ -1,0 +1,16 @@
+.activity_card .card-body {
+    overflow: hidden;
+}
+
+.activity_card .card-header {
+    min-height: 3rem;
+}
+
+.activity_card .card-content {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.activity_card .card-footer {
+    min-height: 5.5rem;
+}

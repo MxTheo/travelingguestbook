@@ -1,3 +1,5 @@
+
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -64,8 +66,10 @@ class Word(models.Model):
         blank=True
     )
 
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField(default=timezone.now)
+    date_modified = models.DateTimeField(default=timezone.now)
+
+    context = models.JSONField(default=dict, blank=True)
 
     class Meta:
         """Order words by date in descending order."""
@@ -73,7 +77,8 @@ class Word(models.Model):
         verbose_name = "Woord"
         verbose_name_plural = "Woorden"
         indexes = [
-            models.Index(fields=["-date_created"]),
+            models.Index(fields=['user', 'date_created']),
+            models.Index(fields=['activity', 'date_created']),
         ]
 
     def __str__(self):
