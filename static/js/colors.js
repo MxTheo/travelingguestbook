@@ -1,4 +1,3 @@
-// colors.js
 window.MyColors = {
     getBootstrapColors: function() {
         const cssVar = (name, fallback = '') => {
