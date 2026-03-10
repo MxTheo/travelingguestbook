@@ -58,13 +58,6 @@ class Word(models.Model):
         verbose_name="Eén woord",
         help_text="Welk woord past bij dit moment?",
     )
-    user = models.ForeignKey(
-        User,
-        related_name="words",
-        on_delete=models.CASCADE,
-        verbose_name="Speler",
-        blank=True
-    )
 
     date_created = models.DateTimeField(default=timezone.now)
     date_modified = models.DateTimeField(default=timezone.now)
@@ -77,7 +70,6 @@ class Word(models.Model):
         verbose_name = "Woord"
         verbose_name_plural = "Woorden"
         indexes = [
-            models.Index(fields=['user', 'date_created']),
             models.Index(fields=['activity', 'date_created']),
         ]
 

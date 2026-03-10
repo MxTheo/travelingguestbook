@@ -97,7 +97,7 @@ class StreetActivityDetailView(DetailView, WordTreeMixin):
 
         return context
 
-class StreetActivityCreateView(CreateView, LoginRequiredMixin):
+class StreetActivityCreateView(CreateView):
     """View to create a new street activity."""
 
     model = StreetActivity
@@ -107,7 +107,7 @@ class StreetActivityCreateView(CreateView, LoginRequiredMixin):
         return reverse_lazy("streetactivity-detail", kwargs={"pk": self.object.pk})
 
 
-class StreetActivityUpdateView(UpdateView, LoginRequiredMixin):
+class StreetActivityUpdateView(UpdateView):
     """View to update an existing street activity."""
 
     model = StreetActivity
@@ -117,7 +117,7 @@ class StreetActivityUpdateView(UpdateView, LoginRequiredMixin):
         return reverse_lazy("streetactivity-detail", kwargs={"pk": self.object.pk})
 
 
-class StreetActivityDeleteView(DeleteView, LoginRequiredMixin):
+class StreetActivityDeleteView(DeleteView):
     """View to delete a street activity."""
 
     model = StreetActivity
@@ -164,7 +164,7 @@ class WordDetailView(DetailView):
     context_object_name = "word"
 
 
-class WordCreateView(CreateView, LoginRequiredMixin):
+class WordCreateView(CreateView):
     """Create view for a single word"""
 
     model = Word
@@ -191,8 +191,6 @@ class WordCreateView(CreateView, LoginRequiredMixin):
     def form_valid(self, form):
         """Set the activity and user for the word, then process XP and level updates."""
         form.instance.activity = self.activity
-        form.instance.user = self.request.user
-        process_xp_and_level(self.request)
 
         messages.add_message(
             self.request,
@@ -209,17 +207,7 @@ class WordCreateView(CreateView, LoginRequiredMixin):
             kwargs={"pk": self.object.activity.pk},  # type: ignore[reportOptionalMemberAccess]
         )
 
-
-def process_xp_and_level(request):
-    """Given a request,
-    process XP and level update for the user profile."""
-    profile = request.user.profile  # type: ignore[reportAttributeAccessIssue]
-    add_xp(profile)
-    update_lvl(profile)
-    calc_xp_percentage(profile)
-    profile.save()
-
-class WordUpdateView(UpdateView, LoginRequiredMixin):
+class WordUpdateView(UpdateView):
     """View to update an word"""
 
     model = Word
@@ -241,7 +229,7 @@ class WordUpdateView(UpdateView, LoginRequiredMixin):
         )
 
 
-class WordDeleteView(DeleteView, LoginRequiredMixin):
+class WordDeleteView(DeleteView):
     """View to delete an word"""
 
     model = Word

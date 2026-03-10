@@ -204,9 +204,8 @@ class TestStreetActivityDetailViewContextWordTree:
     def test_activity_view_contains_activity_stats(self, client):
         """Test that activity view has activity-specific stats."""
         activity = StreetActivityFactory(name="Test Game")
-        user = UserFactory()
 
-        WordFactory.create_batch(5, user=user, activity=activity)
+        WordFactory.create_batch(5, activity=activity)
 
         url = reverse('streetactivity-detail', args=[activity.id])
         response = client.get(url)
@@ -235,18 +234,15 @@ class TestStreetActivityDetailViewContextWordTree:
     def test_activity_view_with_date_filter(self, client):
         """Test applying date filter to activity view."""
         activity = StreetActivityFactory()
-        user = UserFactory()
 
         # Words from different dates
         WordFactory(
-            user=user,
             activity=activity,
             word="today",
             date_created=timezone.now()
         )
 
         WordFactory(
-            user=user,
             activity=activity,
             word="old",
             date_created=timezone.now() - timedelta(days=10)

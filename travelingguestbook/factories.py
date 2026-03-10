@@ -38,7 +38,6 @@ class WordFactory(factory.django.DjangoModelFactory):
     word          = factory.LazyFunction(fake.word)
     date_created  = factory.LazyFunction(timezone.now)
     date_modified = factory.LazyFunction(timezone.now)
-    user          = factory.SubFactory(UserFactory)
 
 class PersonaFactory(factory.django.DjangoModelFactory):
     """Mock for persona Persona"""

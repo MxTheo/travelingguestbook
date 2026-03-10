@@ -38,13 +38,11 @@ class TestHomeViewContextWordTree:
         # Create words with different dates
         # Today
         WordFactory(
-            user=self.user,
             activity=self.activity,
             word="courage",
             date_created=timezone.now()
         )
         WordFactory(
-            user=self.user,
             activity=self.activity,
             word="courage",  # Duplicate
             date_created=timezone.now()
@@ -52,7 +50,6 @@ class TestHomeViewContextWordTree:
         
         # Yesterday (within week)
         WordFactory(
-            user=self.user,
             activity=self.activity,
             word="kindness",
             date_created=timezone.now() - timedelta(days=1)
@@ -60,7 +57,6 @@ class TestHomeViewContextWordTree:
         
         # 5 days ago (within week)
         WordFactory(
-            user=self.user,
             activity=self.activity,
             word="patience",
             date_created=timezone.now() - timedelta(days=5)
@@ -68,7 +64,6 @@ class TestHomeViewContextWordTree:
         
         # 10 days ago (outside week)
         WordFactory(
-            user=self.user,
             activity=self.activity,
             word="wisdom",
             date_created=timezone.now() - timedelta(days=10)

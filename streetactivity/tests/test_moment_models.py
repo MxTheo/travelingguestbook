@@ -34,17 +34,6 @@ class TestWordModel:
         assert response.status_code == 200
         assert Word.objects.count() == 1
 
-    def test_word_createview_user_assignment(self, auto_login_user):
-        """Test that the user is correctly assigned to the Word when created."""
-        client, user = auto_login_user()
-        activity = StreetActivityFactory()
-        create_url = reverse("create-word", args=[activity.id])
-        word_data = create_word_data(activity)
-        response = client.post(create_url, word_data, follow=True)
-        assert response.status_code == 200
-        word = Word.objects.first()
-        assert word.user == user
-
     def test_word_listview(self, client):
         """Test the Word list view to ensure it returns a 200 status code
         and contains the expected context."""

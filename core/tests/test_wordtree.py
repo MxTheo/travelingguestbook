@@ -33,31 +33,26 @@ class TestWordTreeMixin:
         # Words from different time periods
         words = {
             'today': WordFactory(
-                user=user,
                 activity=activity1,
                 word="courage",
                 date_created=timezone.now()
             ),
             'yesterday': WordFactory(
-                user=user,
                 activity=activity1,
                 word="kindness",
                 date_created=timezone.now() - timedelta(days=1)
             ),
             'last_week': WordFactory(
-                user=user,
                 activity=activity1,
                 word="patience",
                 date_created=timezone.now() - timedelta(days=8)
             ),
             'last_month': WordFactory(
-                user=user,
                 activity=activity2,
                 word="wisdom",
                 date_created=timezone.now() - timedelta(days=35)
             ),
             'old': WordFactory(
-                user=user,
                 activity=activity2,
                 word="strength",
                 date_created=timezone.now() - timedelta(days=100)
@@ -66,14 +61,12 @@ class TestWordTreeMixin:
 
         # Add duplicate words to test frequency counting
         WordFactory(
-            user=user,
             activity=activity1,
             word="courage",  # Another courage
             date_created=timezone.now()
         )
 
         return {
-            'user': user,
             'activity1': activity1,
             'activity2': activity2,
             'words': words
@@ -305,15 +298,14 @@ class TestActivityFilterMixin:
         activity3 = StreetActivityFactory(name="Game Gamma")  # No words
 
         # Words in activity1
-        WordFactory.create_batch(2, user=user, activity=activity1, word="courage")
-        WordFactory(user=user, activity=activity1, word="kindness")
+        WordFactory.create_batch(2,  activity=activity1, word="courage")
+        WordFactory( activity=activity1, word="kindness")
 
         # Words in activity2
-        WordFactory(user=user, activity=activity2, word="wisdom")
-        WordFactory(user=user, activity=activity2, word="patience")
+        WordFactory( activity=activity2, word="wisdom")
+        WordFactory( activity=activity2, word="patience")
 
         return {
-            'user': user,
             'activity1': activity1,
             'activity2': activity2,
             'activity3': activity3,
