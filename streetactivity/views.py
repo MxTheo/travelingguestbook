@@ -9,11 +9,9 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from core.utils.mixins import WordTreeMixin
-from usermanagement.views import add_xp, update_lvl, calc_xp_percentage
 from .serializers import StreetActivitySerializer, WordSerializer
 from .models import StreetActivity, Word
 from .forms import (
@@ -189,7 +187,7 @@ class WordCreateView(CreateView):
         return context
 
     def form_valid(self, form):
-        """Set the activity and user for the word, then process XP and level updates."""
+        """Set the activity for the word"""
         form.instance.activity = self.activity
 
         messages.add_message(
@@ -237,7 +235,7 @@ class WordDeleteView(DeleteView):
 
     def form_valid(self, form):
         messages.add_message(
-            self.request, messages.WARNING, "Het word is verwijderd."
+            self.request, messages.WARNING, "Het woord is verwijderd."
         )
         return super().form_valid(form)
 

@@ -54,18 +54,9 @@ class TestProfile():
         profile = Profile.objects.get(user=user)
         assert str(profile) == f"Profile of '{user.username}'"
 
-    def test_if_profile_is_edited(self):
-        """Test if a profile lvl is changed, when the user is saved"""
-        user = UserFactory()
-        user.profile.lvl = 1
-        user.save()
-        profile = Profile.objects.get(user=user)
-        assert profile.lvl == 1
-
-class TestUserDetailView():
-    def test_user_detail_view(self, auto_login_user):
-        '''Test if the user detail view is rendered correctly'''
-        client, user = auto_login_user()
-        detail_url = reverse('user', kwargs={'username': user.username})
-        response = client.get(detail_url)
-        assert response.status_code == 200
+def test_user_detail_view(auto_login_user):
+    '''Test if the user detail view is rendered correctly'''
+    client, user = auto_login_user()
+    detail_url = reverse('user', kwargs={'username': user.username})
+    response = client.get(detail_url)
+    assert response.status_code == 200

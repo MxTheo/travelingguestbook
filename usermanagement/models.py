@@ -19,19 +19,6 @@ class Profile(models.Model):
         null=True,
         verbose_name="Profiel foto"
     )
-
-    # lvl and xp
-    lvl = models.IntegerField(default=1)
-    xp_next_lvl = models.IntegerField(
-        verbose_name="De benodigde xp voor het volgende level", default=100)
-    xp = models.IntegerField(
-        verbose_name="De behaalde xp", default=0)
-    xp_start = models.IntegerField(
-        verbose_name="De xp waarmee is gestart in dit level", default=0)
-    xp_percentage_of_progress = models.IntegerField(
-        verbose_name="Percentage van de xp voortgang tijdens dit lvl", default=0)
-
-
     @property
     def profile_image_url(self):
         """Returns the URL of the profile image or a default image if none is set."""

@@ -1,5 +1,4 @@
 from django.shortcuts import redirect, render
-from django.db.models import Count
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
@@ -8,7 +7,6 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from django.views import View
 from core.utils.mixins import ActivityFilterMixin
-from streetactivity.models import Word
 from .forms import RegisterForm, UserForm, ProfileForm
 
 
@@ -77,24 +75,3 @@ class ProfileUpdateView(LoginRequiredMixin, View):
         return render(request, self.template_name, {
             "user_form": user_form,
             "profile_form": profile_form})
-
-def add_xp(profile):
-    """Given  the user profile, 
-    add 50 xp to the user profile"""
-    profile.xp += 50
-
-def update_lvl(profile):
-    """Given the user profile,
-    update the lvl and xp_start, xp_next_lvl if xp exceeds the treshold for next lvl"""
-    while profile.xp >= profile.xp_next_lvl:
-        profile.lvl += 1
-        profile.xp_start = profile.xp_next_lvl
-        profile.xp_next_lvl = int(100*pow(profile.lvl,1.7))
-
-def calc_xp_percentage(profile):
-    """Given the total xp, the xp at the start of the level and the xp treshold for the new level,
-    calculate the percentage of the xp the user acquired during this level,
-    so that it can be used in the progress bar"""
-    xp_acquired_in_this_lvl = profile.xp - profile.xp_start
-    total_xp_needed_for_next_lvl = profile.xp_next_lvl   - profile.xp_start
-    profile.xp_percentage_of_progress = xp_acquired_in_this_lvl/total_xp_needed_for_next_lvl*100
