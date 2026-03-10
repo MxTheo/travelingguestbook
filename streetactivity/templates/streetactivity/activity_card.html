@@ -25,14 +25,12 @@
         
         <!-- Footer -->
         <div class="card-footer bg-white border-0 pb-0 pt-3 mt-auto">
-            {% if request.user.is_authenticated %}
-                <div class="d-flex gap-2 mb-2">
-                    <a href="{% url 'create-word' activity.pk %}" 
-                    class="btn btn-success btn-lg fs-6 flex-fill py-3">
-                        <i class="bi bi-droplet me-2"></i>Plant je woord
-                    </a>
-                </div>
-            {% endif %}
+            <div class="d-flex gap-2 mb-2">
+                <a href="{% url 'create-word' activity.pk %}" 
+                class="btn btn-success btn-lg fs-6 flex-fill py-3">
+                    <i class="bi bi-droplet me-2"></i>Plant je woord
+                </a>
+            </div>
             <div class="text-center">
                 <a href="{% url 'streetactivity-detail' activity.pk %}" 
                    class="text-decoration-none fs-7 text-primary">

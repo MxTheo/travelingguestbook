@@ -7,17 +7,15 @@
         <div class="col-md-4">
             <div class="card bg-primary text-white">
                 <div class="card-body text-center">
-                    {% if request.user.is_authenticated %}
-                        <h5 class="card-title mb-3">
-                            Eén woord. Wat past bij dit spel vandaag?
-                        </h5>
-                        <div class="d-grid gap-2">
-                            <a href="{% url 'create-word' activity.pk %}"
-                               class="btn btn-light btn-lg">
-                                <i class="bi bi-droplet me-2 fs-6"></i>Plant je woord
-                            </a>
-                        </div>
-                    {% endif %}
+                    <h5 class="card-title mb-3">
+                        Eén woord. Wat past bij dit spel vandaag?
+                    </h5>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'create-word' activity.pk %}"
+                            class="btn btn-light btn-lg">
+                            <i class="bi bi-droplet me-2 fs-6"></i>Plant je woord
+                        </a>
+                    </div>
                     </div>
                 </div>
             </div>

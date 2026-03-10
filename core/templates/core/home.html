@@ -32,12 +32,10 @@
                     Niet om iets te bereiken, maar om aanwezig te zijn met wat er is.
                 </p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    {% if request.user.is_authenticated %}
-                        <a href="{% url 'streetactivity-list' %}"
-                           class="btn btn-primary btn-lg px-4 me-md-2">
-                            <i class="bi bi-person-walking me-2"></i>Wat speelde je op straat?
-                        </a>
-                    {% endif %}
+                    <a href="{% url 'streetactivity-list' %}"
+                        class="btn btn-primary btn-lg px-4 me-md-2">
+                        <i class="bi bi-person-walking me-2"></i>Wat speelde je op straat?
+                    </a>
                     <a href="#recentewoorden"
                        class="btn btn-outline-primary btn-lg px-4">
                         <i class="bi bi-people-fill me-2"></i>Recente woorden
@@ -74,12 +72,10 @@
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
-                            {% if request.user.is_authenticated %}
                                 <a href="{% url 'streetactivity-list' %}"
                                 class="btn btn-light btn-lg w-100 w-lg-auto">
                                     <i class="bi bi-person-walking me-2"></i>Wat speelde je op straat?
                                 </a>
-                            {% endif %}
                         </div>
                     </div>
                     <!-- Woorden grid -->

@@ -104,18 +104,16 @@
                 <div class="card bg-light border-0">
                     <div class="card-body text-center py-5">
                         <h3 class="h4 text-primary mb-3">Jouw beleving telt</h3>
-                        {% if request.user.is_authenticated %}
-                            <p class="text-muted mb-4">
-                                Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
-                                deze straatspel beter te begrijpen.
-                            </p>
-                            <div class="d-flex gap-3 justify-content-center flex-wrap">
-                                <a href="{% url 'create-word' activity.pk %}"
-                                   class="btn btn-primary btn-lg">
-                                    <i class="bi bi-droplet me-2 fs-6"></i>Plant je woord
-                                </a>
-                            </div>
-                        {% endif %}
+                        <p class="text-muted mb-4">
+                            Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
+                            dit straatspel beter te begrijpen.
+                        </p>
+                        <div class="d-flex gap-3 justify-content-center flex-wrap">
+                            <a href="{% url 'create-word' activity.pk %}"
+                                class="btn btn-primary btn-lg">
+                                <i class="bi bi-droplet me-2 fs-6"></i>Plant je woord
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
