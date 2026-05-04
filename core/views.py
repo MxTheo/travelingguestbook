@@ -4,27 +4,10 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from django.contrib.auth.models import User
 from core.utils.mixins import WordTreeMixin
 from streetactivity.models import Word, StreetActivity
 from .models import CookieConsentLog
 
-class MailtoMixin:
-    """Mixin that provides mailto_url context for templates"""
-
-    def get_mailto_url(self):
-        """Creates a mailto url for the admin"""
-        admin = User.objects.filter(is_superuser=True).first()
-        if admin and admin.email:
-            return f"mailto:{admin.email}"
-        else:
-            return "mailto:admin@example.com"
-
-    def get_context_data(self, **kwargs):  # type: ignore[override]
-        """Adds mailto_url to the context"""
-        context = super().get_context_data(**kwargs)  # type: ignore[reportAttributeAccessIssue]
-        context['mailto_url'] = self.get_mailto_url()
-        return context
 
 class HomeView(TemplateView, WordTreeMixin):
     """Renders the home page"""
@@ -72,12 +55,12 @@ class HelpView(TemplateView):
     """Renders the help page"""
     template_name = 'core/help.html'
 
-class ContactView(MailtoMixin, TemplateView):
-    """Renders the contact page with dynamic mailto_url"""
+class ContactView(TemplateView):
+    """Renders the contact page"""
     template_name = 'core/contact.html'
 
 class AboutView(TemplateView):
-    """Renders the about page with dynamic mailto_url"""
+    """Renders the about page"""
     template_name = 'core/about.html'
 
 @require_POST
