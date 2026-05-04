@@ -1,6 +1,7 @@
 import json
 from datetime import timedelta
 from django.utils import timezone
+from django.db.models import Count
 from django.views.generic import TemplateView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
@@ -44,28 +45,36 @@ class HomeView(TemplateView, WordTreeMixin):
         return Word.objects.filter(date_created__gte=one_week_ago)
 
     def get_context_data(self, **kwargs):
-        """Add recent words and randam activities to the home page"""
+        """Add recent words and random activities to the home page"""
         context = super().get_context_data(**kwargs)
+        
+        # Featured activities
         featured_activities = StreetActivity.objects.order_by('?')
-        context['recent_words'] = Word.objects.select_related('activity').all()[:3]
         context['featured_activities'] = featured_activities[:4]
         context['activities_remaining'] = max(0, featured_activities.count() - 4)
-        context = self.add_word_tree_data(context)
-        return context
-
-    def add_word_tree_data(self, context):
-        """Home page only uses date filter (past week by default)"""
-        current_filters = {
-            'date': 'week',  # Default to week view
-        }
-
+        
+        # Recent words for display
+        context['recent_words'] = Word.objects.order_by('-date_created')[:5]
+        
+        # Get unique words count
+        context['unique_words'] = Word.objects.values('word').distinct().count()
+        
+        # Get top word
+        top_word = Word.objects.values('word')\
+            .annotate(count=Count('word'))\
+            .order_by('-count')\
+            .first()
+        context['top_word'] = top_word['word'] if top_word else None
+        
+        # Add word tree data
+        current_filters = {'date': 'week'}
         wordtree_context = self.get_wordtree_context(
             self.get_base_queryset(),
             current_filters
         )
-
         context.update(wordtree_context)
         context['wordtree_container_id'] = 'global'
+        
         return context
 
 class HelpView(TemplateView):
@@ -101,3 +110,19 @@ def save_cookie_consent(request):
                     samesite='Lax',
                     secure=True)
     return resp
+
+class WordTreeTestView(TemplateView, WordTreeMixin):
+    """A test page for the WordTree component"""
+    template_name = 'core/wordtree_card.html'
+
+    def get_wordtree_base_filter(self):
+        """Base filter for the word tree test page: all words."""
+        return {
+            'type': 'all',
+            'value': '',
+            'display_name': 'All Words'
+        }
+
+    def get_base_queryset(self):
+        """Get all words."""
+        return Word.objects.all()

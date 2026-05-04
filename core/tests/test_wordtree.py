@@ -189,13 +189,17 @@ class TestWordTreeMixin:
 
         assert result.count() == original_count
 
-    def test_get_word_frequencies(self, mixin, setup_words):
-        """Test word frequency calculation."""
+        def test_get_word_frequencies(self, mixin, setup_words):
+        """Test word frequency calculation returns correct format with 'text' key."""
         queryset = Word.objects.all()
         result = mixin.get_word_frequencies(queryset, limit=10)
 
+        # Should use 'text' key instead of 'word'
+        assert 'text' in result[0]
+        assert 'weight' in result[0]
+        
         # Should count frequencies: courage=2, others=1
-        frequencies = {item['word']: item['weight'] for item in result}
+        frequencies = {item['text']: item['weight'] for item in result}
 
         assert frequencies['courage'] == 2
         assert frequencies['kindness'] == 1
@@ -272,6 +276,18 @@ class TestWordTreeMixin:
         assert wordtree_data['total_count'] == 2
         words = [w['word'] for w in wordtree_data['words']]
         assert set(words) == {'wisdom', 'strength'}
+
+    def test_get_wordtree_context_adds_recent_words(self, mixin, setup_words):
+        """Test wordtree context includes recent words list."""
+        base_queryset = Word.objects.all()
+        current_filters = {'date': 'all', 'activity': 'all'}
+
+        result = mixin.get_wordtree_context(base_queryset, current_filters)
+
+        assert 'recent_words_list' in result
+        assert isinstance(result['recent_words_list'], list)
+        # Should have at least some recent words
+        assert len(result['recent_words_list']) > 0
 
 
 class TestActivityFilterMixin:

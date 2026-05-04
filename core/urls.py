@@ -7,4 +7,5 @@ urlpatterns = [
     path('overons/', views.AboutView.as_view(), name='about'),
     path('help/', views.HelpView.as_view(), name='help'),
     path('cookie-consent/', views.save_cookie_consent, name='cookie-consent'),
+    path('wordtreetest/', views.WordTreeTestView.as_view(), name='wordtree-test'),
 ]

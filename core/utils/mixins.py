@@ -1,22 +1,16 @@
-# streetgame/mixins.py
+# core/utils/mixins.py
+import json
 from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta
-from streetactivity.models import Word, StreetActivity
+from streetactivity.models import StreetActivity
+from streetactivity.models import Word
 
 
 class WordTreeMixin:
     """
     Mixin to provide word tree functionality for views.
     Handles filtering and word frequency calculation.
-
-    Usage:
-        class MyView(WordTreeMixin, DetailView):
-            def get_base_queryset(self):
-                return Word.objects.filter(...)
-
-            def get_wordtree_base_filter(self):
-                return {'type': 'mytype', 'value': self.object.id}
     """
 
     def get_wordtree_base_filter(self):
@@ -81,6 +75,7 @@ class WordTreeMixin:
         if activity_filter and activity_filter != 'all':
             try:
                 activity_id = int(activity_filter)
+                # Verify activity exists
                 StreetActivity.objects.get(id=activity_id)
                 return queryset.filter(activity_id=activity_id)
             except (ValueError, TypeError, StreetActivity.DoesNotExist):
@@ -104,7 +99,7 @@ class WordTreeMixin:
 
         return [
             {
-                'word': item['word'],
+                'word': item['word'],  # Keep as 'word' to match model
                 'weight': item['weight'],
             }
             for item in frequencies
@@ -119,9 +114,9 @@ class WordTreeMixin:
             {'value': 'month', 'label': 'Past month'},
         ]
 
-    def get_wordtree_context(self, base_queryset, current_filters):
+    def get_wordtree_data_dict(self, base_queryset, current_filters):
         """
-        Build the word tree context data.
+        Build the word tree data as a dictionary.
 
         Args:
             base_queryset: The base queryset to filter
@@ -132,7 +127,7 @@ class WordTreeMixin:
                 }
 
         Returns:
-            dict: Context data for the word tree template
+            dict: Word tree data ready for JSON serialization
         """
         # Apply filters sequentially
         filtered_queryset = base_queryset
@@ -149,14 +144,39 @@ class WordTreeMixin:
         word_frequencies = self.get_word_frequencies(filtered_queryset)
 
         return {
-            'wordtree_data': {
-                'words': word_frequencies,
-                'total_count': filtered_queryset.count(),
-                'base_filter': self.get_wordtree_base_filter(),
-                'current_filters': current_filters,
-            },
+            'words': word_frequencies,
+            'total_count': filtered_queryset.count(),
+            'base_filter': self.get_wordtree_base_filter(),
+            'current_filters': current_filters,
+        }
+
+    def get_wordtree_context(self, base_queryset, current_filters):
+        """
+        Build the word tree context data with JSON string.
+
+        Args:
+            base_queryset: The base queryset to filter
+            current_filters: Dict with current filter values
+
+        Returns:
+            dict: Context data for the word tree template including JSON string
+        """
+        # Get the data dictionary
+        data_dict = self.get_wordtree_data_dict(base_queryset, current_filters)
+        
+        # Convert to JSON string for safe template embedding
+        # Use separators to remove whitespace and make it compact
+        json_string = json.dumps(data_dict, separators=(',', ':'))
+
+        # Get recent words for footer (max 5)
+        recent_words = [w.word for w in base_queryset.order_by('-date_created')[:5]]
+
+        return {
+            'wordtree_data_json': json_string,
+            'wordtree_data': data_dict,
             'date_filter_options': self.get_date_filter_options(),
             'current_date_filter': current_filters.get('date', 'all'),
+            'recent_words_list': recent_words,
         }
 
 
@@ -164,11 +184,6 @@ class ActivityFilterMixin(WordTreeMixin):
     """
     Mixin for views that need activity filtering capability.
     Adds activity filter options to context.
-
-    Usage:
-        class MyView(ActivityFilterMixin, DetailView):
-            def get_base_queryset(self):
-                return Word.objects.filter(...)
     """
 
     def get_activity_filter_options(self, base_queryset):
@@ -189,7 +204,7 @@ class ActivityFilterMixin(WordTreeMixin):
         options = [{'value': 'all', 'label': 'All activities'}]
         for activity in activities:
             options.append({
-                'value': activity.id,
+                'value': str(activity.id),
                 'label': activity.name
             })
         return options

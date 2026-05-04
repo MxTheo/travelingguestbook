@@ -23,13 +23,13 @@
   },
   "homepage": "https://github.com/MxTheo/travelingguestbook#readme",
   "devDependencies": {
-    "@babel/core": "^7.22.0",
-    "@babel/preset-env": "^7.22.0",
-    "babel-jest": "^29.5.0",
     "jest": "^30.0.5",
-    "jest-coverage-badges": "^1.0.0",
-    "jest-environment-jsdom": "^30.0.5",
-    "identity-obj-proxy": "^3.0.0"
+    "jest-environment-jsdom": "^30.0.5"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "moduleFileExtensions": ["js"],
+    "testMatch": ["**/?(*.)+(spec|test).[tj]s?(x)"]
   },
   "dependencies": {
     "libsodium-wrappers": "^0.7.15"

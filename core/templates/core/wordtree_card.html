@@ -1,0 +1,224 @@
+<!-- templates/core/wordtree_card.html -->
+{% load static %}
+
+<div class="card shadow-sm h-100 border-0" id="wordtree-{{ container_id }}">
+    <!-- Card Header -->
+    <div class="card-header bg-transparent border-bottom-0 pt-2 pb-1">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-tree-fill text-success me-2"></i>
+                Word Tree
+            </h5>
+            
+            <!-- Filter Controls -->
+            <div class="d-flex gap-2" id="filters-{{ container_id }}">
+                <!-- Date Filter Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
+                            type="button" 
+                            data-bs-toggle="dropdown">
+                        <i class="bi bi-calendar3 me-1"></i>
+                        <span class="d-none d-md-inline">
+                            {% if current_date_filter == 'all' %}All time
+                            {% elif current_date_filter == 'today' %}Today
+                            {% elif current_date_filter == 'week' %}Past week
+                            {% elif current_date_filter == 'month' %}Past month
+                            {% endif %}
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item {% if current_date_filter == 'all' %}active{% endif %}" href="?date_filter=all">All time</a></li>
+                        <li><a class="dropdown-item {% if current_date_filter == 'today' %}active{% endif %}" href="?date_filter=today">Today</a></li>
+                        <li><a class="dropdown-item {% if current_date_filter == 'week' %}active{% endif %}" href="?date_filter=week">Past week</a></li>
+                        <li><a class="dropdown-item {% if current_date_filter == 'month' %}active{% endif %}" href="?date_filter=month">Past month</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Activity Filter Dropdown (if activities exist) -->
+                {% if activity_filter_options %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
+                            type="button" 
+                            data-bs-toggle="dropdown">
+                        <i class="bi bi-grid-3x3-gap-fill me-1"></i>
+                        <span class="d-none d-md-inline">
+                            {% if current_activity_filter == 'all' %}
+                                All activities
+                            {% else %}
+                                {% for option in activity_filter_options %}
+                                    {% if option.value == current_activity_filter %}
+                                        {{ option.label }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" style="max-height: 300px; overflow-y: auto;">
+                        <li><a class="dropdown-item {% if current_activity_filter == 'all' %}active{% endif %}" href="?activity_filter=all">All activities</a></li>
+                        {% for option in activity_filter_options %}
+                        <li><a class="dropdown-item {% if option.value == current_activity_filter %}active{% endif %}" href="?activity_filter={{ option.value }}">{{ option.label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Body with Word Tree - COMPLETELY ELIMINATE ALL PADDING -->
+    <div class="card-body p-0 position-relative" style="min-height: 600px; overflow: hidden; background-color: transparent;">
+        <!-- Hidden JSON data in data attribute -->
+        <div id="wordtree-data-{{ container_id }}" 
+             data-json='{{ wordtree_data_json|safe }}'
+             style="display: none;"></div>
+        
+        <!-- Loading indicator -->
+        <div id="loading-{{ container_id }}" class="position-absolute top-50 start-50 translate-middle d-none" style="z-index: 10;">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        
+        <!-- Error message -->
+        <div id="error-{{ container_id }}" class="position-absolute top-50 start-50 translate-middle text-center d-none" style="z-index: 10;">
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span class="error-message"></span>
+            </div>
+        </div>
+        
+        <!-- Canvas container - Full bleed layout -->
+        <div class="wordtree-container" style="width: 100%; height: 100%; min-height: 600px; position: relative; display: flex; flex-direction: column;">
+            <!-- Word cloud canvas - Positioned to use maximum space -->
+            <div style="flex: 1 1 auto; position: relative; width: 100%; min-height: 480px; background-color: transparent; margin: 0; padding: 0;">
+                <canvas id="wordcloud-canvas-{{ container_id }}" 
+                        class="wordcloud-canvas" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; z-index: 2;"
+                        width="1200" 
+                        height="600"></canvas>
+            </div>
+            
+            <!-- Tree trunk - Fixed height, positioned to touch the cloud -->
+            <div class="tree-trunk-container" style="flex: 0 0 70px; position: relative; width: 100%; z-index: 1; margin-top: -5px;">
+                <svg class="position-absolute start-50 translate-middle-x" 
+                     width="200" 
+                     height="90" 
+                     viewBox="0 0 200 90" 
+                     preserveAspectRatio="xMidYMax meet"
+                     style="bottom: 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));">
+                    <!-- Main trunk - Wider and positioned to connect with cloud -->
+                    <rect x="85" y="0" width="30" height="75" 
+                          fill="#8B4513" 
+                          rx="8" 
+                          ry="8"
+                          filter="url(#trunk-shadow)"/>
+                    
+                    <!-- Trunk texture (wood grain lines) -->
+                    <line x1="92" y1="10" x2="92" y2="70" stroke="#A0522D" stroke-width="2" opacity="0.4"/>
+                    <line x1="100" y1="10" x2="100" y2="70" stroke="#A0522D" stroke-width="2" opacity="0.4"/>
+                    <line x1="108" y1="10" x2="108" y2="70" stroke="#A0522D" stroke-width="2" opacity="0.4"/>
+                    
+                    <!-- Tree roots / ground connection -->
+                    <path d="M85 75 L75 88 L90 88 L115 75" 
+                          fill="#654321" 
+                          opacity="0.7"/>
+                    
+                    <!-- Shadow filter -->
+                    <defs>
+                        <filter id="trunk-shadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="3" dy="3" stdDeviation="5" flood-opacity="0.3"/>
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Footer -->
+    <div class="card-footer bg-transparent border-top-0 pt-2 pb-2">
+        <div class="d-flex justify-content-between align-items-center text-muted small">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-chat-text me-1 text-primary"></i>
+                <span id="word-count-{{ container_id }}">{{ wordtree_data.total_count|default:"0" }}</span>
+                <span class="ms-1 d-none d-sm-inline">words shared</span>
+            </div>
+            
+            {% if unique_words %}
+            <div class="d-flex align-items-center">
+                <i class="bi bi-stars me-1 text-success"></i>
+                <span>{{ unique_words }}</span>
+                <span class="ms-1 d-none d-sm-inline">unique</span>
+            </div>
+            {% endif %}
+            
+            {% if top_word %}
+            <div class="d-flex align-items-center">
+                <i class="bi bi-trophy me-1 text-warning"></i>
+                <span class="fw-medium">"{{ top_word }}"</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if recent_words_list %}
+        <div class="mt-2 d-flex flex-wrap gap-1">
+            {% for word in recent_words_list %}
+            <span class="badge bg-light text-dark border px-2 py-1">{{ word }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block javascript %}
+    <!-- wordcloud2 library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.2/wordcloud2.min.js"></script>
+    
+    <!-- Bootstrap colors -->
+    <script src="{% static 'js/colors.js' %}"></script>
+    
+    <!-- WordTree component -->
+    <script src="{% static 'js/wordtree.js' %}"></script>
+
+    <script>
+        console.log('WordTree script loaded, checking availability...');
+        console.log('WordTree class available:', typeof WordTree !== 'undefined');
+        console.log('WordCloud available:', typeof WordCloud !== 'undefined');
+        
+        // Initialize WordTree when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing WordTree for container: {{ container_id }}');
+            
+            // Check if container exists
+            const container = document.getElementById('wordtree-{{ container_id }}');
+            console.log('Container found:', container ? 'Yes' : 'No');
+            
+            if (typeof WordTree !== 'undefined') {
+                // Create global instances object if it doesn't exist
+                if (!window.wordTreeInstances) {
+                    window.wordTreeInstances = {};
+                }
+                
+                // Initialize the WordTree
+                window.wordTreeInstances['{{ container_id }}'] = new WordTree('{{ container_id }}');
+                console.log('WordTree initialized for container: {{ container_id }}');
+            } else {
+                console.error('WordTree class not found!');
+            }
+        });
+        
+        // Fallback for when DOMContentLoaded has already fired
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(function() {
+                if (document.getElementById('wordtree-{{ container_id }}')) {
+                    console.log('Document already loaded, initializing WordTree now...');
+                    if (typeof WordTree !== 'undefined') {
+                        if (!window.wordTreeInstances) {
+                            window.wordTreeInstances = {};
+                        }
+                        window.wordTreeInstances['{{ container_id }}'] = new WordTree('{{ container_id }}');
+                    }
+                }
+            }, 100);
+        }
+    </script>
+{% endblock javascript %}

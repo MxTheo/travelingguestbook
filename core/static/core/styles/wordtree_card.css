@@ -1,0 +1,137 @@
+/* static/css/wordtree_card.css */
+
+/* Main card styling - Remove any default padding/margins */
+#wordtree-card .card-body {
+    padding: 0 !important;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Container for the entire tree visualization */
+.wordtree-container {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Canvas styling - Make it fill the available space */
+.wordcloud-canvas {
+    width: 100% !important;
+    height: calc(100% - 65px) !important; /* Leave exactly enough space for trunk */
+    min-height: 520px;
+    display: block;
+    position: relative;
+    z-index: 2;
+    /* Remove any default canvas margins */
+    margin: 0;
+    padding: 0;
+    /* Ensure the canvas uses all available width */
+    object-fit: cover;
+}
+
+/* Tree trunk container - Positioned to connect seamlessly with the cloud */
+.tree-trunk-container {
+    position: relative;
+    height: 65px;
+    margin-top: -10px; /* Negative margin to create overlap and eliminate gap */
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* Remove any default spacing */
+    margin-bottom: 0;
+    padding: 0;
+}
+
+/* SVG trunk styling */
+.tree-trunk-container svg {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    height: 100%;
+    max-width: 200px;
+    /* Smooth shadow for depth */
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Ensure the canvas and trunk align perfectly on different screen sizes */
+@media (max-width: 768px) {
+    .wordcloud-canvas {
+        height: 400px !important;
+        min-height: 400px;
+    }
+    
+    .tree-trunk-container {
+        height: 55px;
+        margin-top: -8px;
+    }
+    
+    .tree-trunk-container svg {
+        max-width: 150px;
+    }
+}
+
+@media (max-width: 576px) {
+    .wordcloud-canvas {
+        height: 350px !important;
+        min-height: 350px;
+    }
+    
+    .tree-trunk-container {
+        height: 45px;
+        margin-top: -6px;
+    }
+    
+    .tree-trunk-container svg {
+        max-width: 120px;
+    }
+}
+
+/* Hover effect on trunk for interactivity */
+#wordtree-card:hover .tree-trunk-container svg rect {
+    fill: #9C4F1E; /* Slightly lighter brown on hover */
+    transition: fill 0.3s ease;
+}
+
+/* Loading and error states - Ensure they're centered properly */
+#loading-{{ container_id }},
+#error-{{ container_id }} {
+    z-index: 10;
+    transform: translate(-50%, -50%);
+}
+
+/* Empty state styling - Make it fill the canvas */
+.wordcloud-canvas:empty {
+    background: transparent;
+}
+
+/* Ensure the card body has no extra space */
+.card-body.p-0 {
+    padding: 0 !important;
+}
+
+/* Fix for Bootstrap's default card body padding */
+.card .card-body:first-child {
+    padding-top: 0;
+}
+
+/* Animation for trunk appearance */
+@keyframes trunkGrow {
+    from {
+        transform: translateX(-50%) scaleY(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) scaleY(1);
+        opacity: 1;
+    }
+}
+
+.tree-trunk-container svg {
+    animation: trunkGrow 0.5s ease-out forwards;
+}

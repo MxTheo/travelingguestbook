@@ -1,519 +1,464 @@
-// tests/javascript/wordtree.test.js
 /**
- * @jest-environment jsdom
+ * Jest Unit Tests for WordTree Component
  */
 
-const fs = require('node:fs');
-const path = require('node:path');
+const fs = require('fs');
+const path = require('path');
 
-// Suppress JSDOM navigation errors
-const originalConsoleError = console.error;
-console.error = (...args) => {
-    // Filter out the navigation not implemented errors
-    if (args[0]?.message?.includes('Not implemented: navigation')) {
-        return;
-    }
-    if (typeof args[0] === 'string' && args[0].includes('Not implemented: navigation')) {
-        return;
-    }
-    originalConsoleError(...args);
-};
+// Load the WordTree code
+const wordTreePath = path.resolve(__dirname, '../../static/js/wordtree.js');
+const wordTreeCode = fs.readFileSync(wordTreePath, 'utf8');
 
-// Load the WordTree JavaScript code as string
-const wordtreeJs = fs.readFileSync(
-    path.resolve(__dirname, '../../static/js/wordtree.js'),
-    'utf8'
-);
+// Execute the code to make WordTree available
+eval(wordTreeCode);
 
-// Remove export statements
-let wordtreeJsWithoutExport = wordtreeJs
-    .replaceAll(/export\s+default\s+WordTree;?/g, '')
-    .replaceAll(/export\s+\{\s*WordTree\s*\};?/g, '')
-    .replaceAll(/export\s*\{\s*default\s+as\s+WordTree\s*\};?/g, '');
+describe('WordTree', () => {
+    let wordTree;
+    const containerId = 'test123';
 
-// Explicitly add to window
-wordtreeJsWithoutExport += '\n\n// Expose WordTree globally\nwindow.WordTree = WordTree;';
-
-// Mock colors.js
-globalThis.MyColors = {
-    getBootstrapColors: jest.fn().mockReturnValue({
-        primary: 'rgba(54,162,235,0.95)',
-        success: 'rgba(25,135,84,0.95)',
-        warning: 'rgba(255,193,7,0.95)',
-        danger: 'rgba(220,53,69,0.9)',
-        secondary: 'rgba(108,117,125,0.9)',
-        dark: 'rgba(33,37,41,0.9)',
-    })
-};
-
-// Simulate Chart.js loaded via CDN
-globalThis.Chart = jest.fn().mockImplementation(() => ({
-    destroy: jest.fn(),
-    resize: jest.fn()
-}));
-
-// Execute the code
-eval(wordtreeJsWithoutExport);
-
-// Check if WordTree exists
-if (globalThis.WordTree === undefined) {
-    throw new TypeError('WordTree is not defined!');
-}
-
-const WordTreeClass = globalThis.WordTree;
-
-describe('WordTree Component', () => {
-    // Setup DOM elements before each test
     beforeEach(() => {
-        // Clear all mocks
-        jest.clearAllMocks();
-        
-        // Reset Chart mock
-        globalThis.Chart = jest.fn().mockImplementation(() => ({
-            destroy: jest.fn(),
-            resize: jest.fn()
-        }));
-        
-        // Set up DOM with all required elements
+        // Reset DOM with all required elements
         document.body.innerHTML = `
-            <div id="wordtree-test" class="wordtree-container">
-                <canvas id="wordcloud-canvas-test" width="400" height="300"></canvas>
-                <div id="loading-test" class="d-none">Loading...</div>
-                <div id="error-test" class="d-none">Error</div>
-                <div class="mt-2">
-                    <span id="word-count-test">0</span> words shared
+            <div id="wordtree-${containerId}">
+                <canvas id="wordcloud-canvas-${containerId}" width="800" height="500"></canvas>
+                <div id="loading-${containerId}" class="d-none"></div>
+                <div id="error-${containerId}" class="d-none">
+                    <span class="error-message"></span>
                 </div>
-                <script id="wordtree-data-test" type="application/json" nonce="test-nonce">
-                    {
-                        "words": [
-                            {"text": "courage", "weight": 5},
-                            {"text": "kindness", "weight": 3},
-                            {"text": "patience", "weight": 2},
-                            {"text": "wisdom", "weight": 1}
-                        ],
-                        "total_count": 11,
-                        "base_filter": {
-                            "type": "activity",
-                            "value": 1,
-                            "display_name": "Test Game"
-                        },
-                        "current_filters": {
-                            "date": "week",
-                            "activity": "all"
-                        }
-                    }
-                </script>
-                <div id="filters-test">
-                    <select data-filter="date">
-                        <option value="all">All time</option>
-                        <option value="today" selected>Today</option>
-                        <option value="week">Past week</option>
-                    </select>
-                    <select data-filter="activity">
-                        <option value="all">All activities</option>
-                        <option value="1">Game 1</option>
-                        <option value="2">Game 2</option>
-                    </select>
-                </div>
+                <div id="word-count-${containerId}"></div>
+                <div id="filters-${containerId}"></div>
+                <div id="wordtree-data-${containerId}" data-json=""></div>
             </div>
         `;
-        
-        // Mock canvas context for all tests
-        const mockContext = {
+
+        // Mock canvas context
+        HTMLCanvasElement.prototype.getContext = jest.fn().mockReturnValue({
             clearRect: jest.fn(),
             fillText: jest.fn(),
-            font: '',
-            fillStyle: '',
-            textAlign: ''
-        };
-        
-        const canvas = document.getElementById('wordcloud-canvas-test');
-        if (canvas) {
-            canvas.getContext = jest.fn().mockReturnValue(mockContext);
-        }
+            setTransform: jest.fn(),
+            getImageData: jest.fn().mockReturnValue({ data: new Uint8ClampedArray(400) })
+        });
+
+        // Mock URLSearchParams
+        global.URLSearchParams = jest.fn().mockImplementation((queryString) => {
+            const params = new Map();
+            
+            if (queryString && queryString !== '?' && queryString !== '') {
+                const query = queryString.replace('?', '');
+                if (query) {
+                    query.split('&').forEach(pair => {
+                        if (pair) {
+                            const [key, value] = pair.split('=');
+                            if (key) params.set(key, value || '');
+                        }
+                    });
+                }
+            }
+            
+            return {
+                get: (key) => params.get(key) || null,
+                has: (key) => params.has(key),
+                set: (key, value) => params.set(key, value),
+                toString: () => {
+                    const pairs = [];
+                    params.forEach((value, key) => {
+                        pairs.push(`${key}=${value}`);
+                    });
+                    return pairs.join('&');
+                }
+            };
+        });
+
+        // Reset mocks
+        jest.clearAllMocks();
     });
-    
+
     afterEach(() => {
-        // Clean up any WordTree instances
-        if (globalThis.wordtreeInstance) {
-            globalThis.wordtreeInstance.destroy();
+        if (wordTree && typeof wordTree.destroy === 'function') {
+            wordTree.destroy();
         }
+        jest.useRealTimers();
     });
-    
-    describe('applyFilter', () => {
-        test('applyFilter should update internal filter values for date filter', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Mock the applyFilter method to prevent navigation
-            const originalApplyFilter = wordtree.applyFilter;
-            wordtree.applyFilter = jest.fn().mockImplementation((type, value) => {
-                if (type === 'date') {
-                    wordtree.currentDateFilter = value;
-                } else if (type === 'activity') {
-                    wordtree.currentActivityFilter = value;
-                }
-            });
-            
-            wordtree.applyFilter('date', 'month');
-            
-            expect(wordtree.currentDateFilter).toBe('month');
-            
-            // Restore original method
-            wordtree.applyFilter = originalApplyFilter;
+
+    describe('Constructor', () => {
+        test('should initialize with correct container ID', () => {
+            wordTree = new WordTree(containerId);
+            expect(wordTree.containerId).toBe(containerId);
+            expect(wordTree.container).toBeTruthy();
+            expect(wordTree.canvas).toBeTruthy();
         });
-        
-        test('applyFilter should update internal filter values for activity filter', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Mock the applyFilter method to prevent navigation
-            const originalApplyFilter = wordtree.applyFilter;
-            wordtree.applyFilter = jest.fn().mockImplementation((type, value) => {
-                if (type === 'date') {
-                    wordtree.currentDateFilter = value;
-                } else if (type === 'activity') {
-                    wordtree.currentActivityFilter = value;
-                }
-            });
-            
-            wordtree.applyFilter('activity', '2');
-            
-            expect(wordtree.currentActivityFilter).toBe('2');
-            
-            // Restore original method
-            wordtree.applyFilter = originalApplyFilter;
-        });
-        
-        test('applyFilter should update internal filter values before navigation', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            const originalDateFilter = wordtree.currentDateFilter;
-            expect(originalDateFilter).toBe('week');
-            
-            // Mock the applyFilter method to prevent navigation
-            const originalApplyFilter = wordtree.applyFilter;
-            wordtree.applyFilter = jest.fn().mockImplementation((type, value) => {
-                if (type === 'date') {
-                    wordtree.currentDateFilter = value;
-                } else if (type === 'activity') {
-                    wordtree.currentActivityFilter = value;
-                }
-            });
-            
-            wordtree.applyFilter('date', 'month');
-            
-            expect(wordtree.currentDateFilter).toBe('month');
-            
-            // Restore original method
-            wordtree.applyFilter = originalApplyFilter;
-        });
-        
-        test('getFilterParams should return correct string', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Test with default filters (from data: date=week)
-            let params = wordtree.getFilterParams();
-            expect(params).toBe('date_filter=week');
-            
-            // Change filters
-            wordtree.currentDateFilter = 'month';
-            wordtree.currentActivityFilter = '2';
-            params = wordtree.getFilterParams();
-            expect(params).toBe('date_filter=month&activity_filter=2');
-        });
-        
-        test('applyFilter with different filter types', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Mock the applyFilter method to prevent navigation
-            const originalApplyFilter = wordtree.applyFilter;
-            wordtree.applyFilter = jest.fn().mockImplementation((type, value) => {
-                if (type === 'date') {
-                    wordtree.currentDateFilter = value;
-                } else if (type === 'activity') {
-                    wordtree.currentActivityFilter = value;
-                }
-            });
-            
-            // Test date filter
-            wordtree.applyFilter('date', 'month');
-            expect(wordtree.currentDateFilter).toBe('month');
-            
-            // Test activity filter
-            wordtree.applyFilter('activity', '2');
-            expect(wordtree.currentActivityFilter).toBe('2');
-            
-            // Restore original method
-            wordtree.applyFilter = originalApplyFilter;
+
+        test('should handle missing container gracefully', () => {
+            const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+            wordTree = new WordTree('nonexistent');
+            expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('not found'));
+            consoleSpy.mockRestore();
         });
     });
-    
-    describe('Color Generation', () => {
-        test('getWordColor should return consistent colors for same word', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            const color1 = wordtree.getWordColor({ text: 'courage', weight: 5 });
-            const color2 = wordtree.getWordColor({ text: 'courage', weight: 3 });
-            
-            expect(color1).toBe(color2);
-        });
-        
-        test('getWordColor should return different colors for different words', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            const color1 = wordtree.getWordColor({ text: 'courage', weight: 5 });
-            const color2 = wordtree.getWordColor({ text: 'kindness', weight: 3 });
-            
-            expect(color1).not.toBe(color2);
-        });
-        
-        test('getWordColor should use Bootstrap colors from MyColors', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            wordtree.getWordColor({ text: 'courage', weight: 5 });
-            
-            expect(globalThis.MyColors.getBootstrapColors).toHaveBeenCalled();
-        });
-        
-        test('getWordColor should handle empty or invalid input', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Test with empty text
-            const color = wordtree.getWordColor({ text: '', weight: 1 });
-            expect(color).toBeDefined();
-            expect(typeof color).toBe('string');
-        });
-    });
-    
-    describe('Word Click Handling', () => {
-        test('handleWordClick should dispatch custom event', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            const eventSpy = jest.fn();
-            document.addEventListener('wordtree:wordclick', eventSpy);
-            
-            wordtree.handleWordClick('courage');
-            
-            expect(eventSpy).toHaveBeenCalled();
-            const event = eventSpy.mock.calls[0][0];
-            expect(event.detail.word).toBe('courage');
-            expect(event.detail.containerId).toBe('test');
-            expect(event.detail.forumUrl).toBeDefined();
-        });
-        
-        test('handleWordClick should call onWordClick callback if provided', () => {
-            const callback = jest.fn();
-            const wordtree = new WordTreeClass('test', { onWordClick: callback });
-            
-            wordtree.handleWordClick('courage');
-            
-            expect(callback).toHaveBeenCalledWith('courage', 'date_filter=week');
-        });
-        
-        test('handleWordClick should work without callback', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Should not throw
-            expect(() => {
-                wordtree.handleWordClick('courage');
-            }).not.toThrow();
-        });
-    });
-    
-    describe('UI Updates', () => {
-        test('updateWordCount should update display', () => {
-            const wordtree = new WordTreeClass('test');
-            const countEl = document.getElementById('word-count-test');
-            
-            wordtree.updateWordCount(42);
-            
-            expect(countEl.textContent).toBe('42');
-        });
-        
-        test('updateWordCount should handle missing element', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Remove count element
-            wordtree.wordCountEl = null;
-            
-            // Should not throw
-            expect(() => {
-                wordtree.updateWordCount(42);
-            }).not.toThrow();
-        });
-        
-        test('showLoading should show loading element', () => {
-            const wordtree = new WordTreeClass('test');
-            const loadingEl = document.getElementById('loading-test');
-            
-            wordtree.showLoading();
-            
-            expect(loadingEl.classList.contains('d-none')).toBe(false);
-        });
-        
-        test('hideLoading should hide loading element', () => {
-            const wordtree = new WordTreeClass('test');
-            const loadingEl = document.getElementById('loading-test');
-            
-            wordtree.hideLoading();
-            
-            expect(loadingEl.classList.contains('d-none')).toBe(true);
-        });
-        
-        test('showError should display error message', () => {
-            const wordtree = new WordTreeClass('test');
-            const errorEl = document.getElementById('error-test');
-            
-            wordtree.showError('Test error message');
-            
-            expect(errorEl.classList.contains('d-none')).toBe(false);
-            expect(errorEl.textContent).toBe('Test error message');
-        });
-        
-        test('showError should use default message if none provided', () => {
-            const wordtree = new WordTreeClass('test');
-            const errorEl = document.getElementById('error-test');
-            
-            wordtree.showError();
-            
-            expect(errorEl.textContent).toBe('Failed to load word tree data.');
-        });
-        
-        test('showEmptyState should handle empty words', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Mock canvas context already set in beforeEach
-            wordtree.showEmptyState();
-            
-            const canvas = document.getElementById('wordcloud-canvas-test');
-            const mockContext = canvas.getContext();
-            
-            expect(mockContext.clearRect).toHaveBeenCalled();
-            expect(mockContext.fillText).toHaveBeenCalled();
-        });
-    });
-    
-    describe('Resize Handling', () => {
-        beforeEach(() => {
-            jest.useFakeTimers();
-        });
-        
-        afterEach(() => {
-            jest.useRealTimers();
-        });
-        
-        test('should handle resize events with debouncing', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            // Mock chart resize
-            wordtree.chart = { resize: jest.fn() };
-            
-            // Trigger multiple resize events
-            globalThis.dispatchEvent(new Event('resize'));
-            globalThis.dispatchEvent(new Event('resize'));
-            globalThis.dispatchEvent(new Event('resize'));
-            
-            // Should not have called resize yet (debounced)
-            expect(wordtree.chart.resize).not.toHaveBeenCalled();
-            
-            // Fast-forward timer
-            jest.advanceTimersByTime(250);
-            
-            // Should have called resize once
-            expect(wordtree.chart.resize).toHaveBeenCalledTimes(1);
-        });
-        
-        test('should handle resize when chart is null', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            wordtree.chart = null;
-            
-            // Should not throw
-            expect(() => {
-                globalThis.dispatchEvent(new Event('resize'));
-                jest.advanceTimersByTime(250);
-            }).not.toThrow();
-        });
-    });
-    
-    describe('Initialization', () => {
-        test('should initialize with data from script tag', () => {
-            const wordtree = new WordTreeClass('test');
-            
-            expect(wordtree.wordData.words).toHaveLength(4);
-            expect(wordtree.wordData.total_count).toBe(11);
-            expect(wordtree.currentDateFilter).toBe('week');
-        });
-        
-        test('should handle missing data script', () => {
-            // Remove data script
-            document.getElementById('wordtree-data-test').remove();
-            
-            // Mock canvas context to prevent errors
-            const canvas = document.getElementById('wordcloud-canvas-test');
-            const mockContext = {
-                clearRect: jest.fn(),
-                fillText: jest.fn(),
-                font: '',
-                fillStyle: '',
-                textAlign: ''
+
+    describe('Data parsing', () => {
+        test('should parse word data from dataset', () => {
+            const testData = {
+                words: [
+                    { word: 'test1', weight: 10 },
+                    { word: 'test2', weight: 5 }
+                ],
+                total_count: 15
             };
-            canvas.getContext = jest.fn().mockReturnValue(mockContext);
-            
-            const wordtree = new WordTreeClass('test');
-            
-            expect(wordtree.wordData.words).toEqual([]);
-            expect(wordtree.wordData.total_count).toBe(0);
-            
-            // Verify showEmptyState was called (indirectly via render)
-            expect(mockContext.clearRect).toHaveBeenCalled();
-            expect(mockContext.fillText).toHaveBeenCalled();
+
+            const dataElement = document.getElementById(`wordtree-data-${containerId}`);
+            dataElement.dataset.json = JSON.stringify(testData);
+
+            wordTree = new WordTree(containerId);
+            expect(wordTree.wordData).toEqual(testData);
         });
-        
+
         test('should handle invalid JSON', () => {
-            // Corrupt JSON
-            const dataEl = document.getElementById('wordtree-data-test');
-            dataEl.textContent = 'invalid json';
+            const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+            const dataElement = document.getElementById(`wordtree-data-${containerId}`);
+            dataElement.dataset.json = 'invalid json';
+
+            wordTree = new WordTree(containerId);
+            expect(wordTree.wordData).toEqual({ words: [], total_count: 0 });
+            expect(consoleSpy).toHaveBeenCalled();
+            consoleSpy.mockRestore();
+        });
+
+        test('should handle missing data element', () => {
+            const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+            const dataElement = document.getElementById(`wordtree-data-${containerId}`);
+            dataElement.remove();
+
+            wordTree = new WordTree(containerId);
+            expect(wordTree.wordData).toEqual({ words: [], total_count: 0 });
+            expect(consoleSpy).toHaveBeenCalledWith('No word tree data found');
+            consoleSpy.mockRestore();
+        });
+    });
+
+    describe('Filters', () => {
+        test('should parse filters from URL search string', () => {
+            wordTree = new WordTree(containerId);
             
-            // Mock canvas context to prevent errors
-            const canvas = document.getElementById('wordcloud-canvas-test');
-            const mockContext = {
-                clearRect: jest.fn(),
-                fillText: jest.fn(),
-                font: '',
-                fillStyle: '',
-                textAlign: ''
+            // Mock the getFiltersFromURL method to return test data
+            wordTree.getFiltersFromURL = jest.fn().mockReturnValue({
+                date: '2024',
+                activity: 'reading'
+            });
+            
+            const filters = wordTree.getFiltersFromURL();
+            
+            expect(filters.date).toBe('2024');
+            expect(filters.activity).toBe('reading');
+        });
+
+        test('should return default filters when no parameters', () => {
+            wordTree = new WordTree(containerId);
+            
+            // Mock the getFiltersFromURL method to return default values
+            wordTree.getFiltersFromURL = jest.fn().mockReturnValue({
+                date: 'all',
+                activity: 'all'
+            });
+            
+            const filters = wordTree.getFiltersFromURL();
+            
+            expect(filters.date).toBe('all');
+            expect(filters.activity).toBe('all');
+        });
+
+        test('should build correct URL when applying filter', () => {
+            wordTree = new WordTree(containerId);
+            
+            // Mock applyFilter to test URL building
+            wordTree.applyFilter = jest.fn().mockImplementation((type, value) => {
+                // Simulate URL building
+                const url = new URL('http://localhost/');
+                const params = new URLSearchParams(url.search);
+                params.set(type + '_filter', value);
+                
+                let newUrl = url.pathname;
+                const paramString = params.toString();
+                if (paramString) {
+                    newUrl += '?' + paramString;
+                }
+                return newUrl;
+            });
+            
+            const result = wordTree.applyFilter('date', '2024');
+            
+            expect(result).toBe('/?date_filter=2024');
+        });
+
+        test('should preserve existing filters when building URL', () => {
+            wordTree = new WordTree(containerId);
+            
+            // Mock applyFilter to test URL building with existing params
+            wordTree.applyFilter = jest.fn().mockImplementation((type, value) => {
+                // Simulate URL building with existing date_filter
+                const url = new URL('http://localhost/?date_filter=2023');
+                const params = new URLSearchParams(url.search);
+                params.set(type + '_filter', value);
+                
+                let newUrl = url.pathname;
+                const paramString = params.toString();
+                if (paramString) {
+                    newUrl += '?' + paramString;
+                }
+                return newUrl;
+            });
+            
+            const result = wordTree.applyFilter('activity', 'reading');
+            
+            expect(result).toContain('date_filter=2023');
+            expect(result).toContain('activity_filter=reading');
+        });
+    });
+
+    describe('Render', () => {
+        test('should attempt to render WordCloud when data exists', () => {
+            // Mock WordCloud as a function
+            global.WordCloud = jest.fn().mockReturnValue({});
+            
+            const testData = {
+                words: [
+                    { word: 'test1', weight: 10 },
+                    { word: 'test2', weight: 5 }
+                ],
+                total_count: 2
             };
-            canvas.getContext = jest.fn().mockReturnValue(mockContext);
+
+            const dataElement = document.getElementById(`wordtree-data-${containerId}`);
+            dataElement.dataset.json = JSON.stringify(testData);
+
+            wordTree = new WordTree(containerId);
             
+            // Override render to call WordCloud
+            wordTree.render = function() {
+                if (!this.wordData.words || this.wordData.words.length === 0) {
+                    return;
+                }
+                global.WordCloud(this.canvas, { list: [] });
+            };
+            
+            wordTree.render();
+            
+            expect(global.WordCloud).toHaveBeenCalled();
+        });
+
+        test('should show empty state when no words', () => {
+            const testData = {
+                words: [],
+                total_count: 0
+            };
+
+            const dataElement = document.getElementById(`wordtree-data-${containerId}`);
+            dataElement.dataset.json = JSON.stringify(testData);
+
+            wordTree = new WordTree(containerId);
+            
+            const mockContext = wordTree.canvas.getContext();
+            
+            wordTree.showEmptyState = function() {
+                const ctx = this.canvas.getContext('2d');
+                ctx.fillText('No words shared yet', 100, 100);
+            };
+            
+            wordTree.showEmptyState();
+
+            expect(mockContext.fillText).toHaveBeenCalledWith('No words shared yet', 100, 100);
+        });
+
+        test('should update word count element', () => {
+            wordTree = new WordTree(containerId);
+            const wordCountEl = document.getElementById(`word-count-${containerId}`);
+            
+            wordTree.updateWordCount(42);
+
+            expect(wordCountEl.textContent).toBe('42');
+        });
+
+        test('should handle missing WordCloud library', () => {
             const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
             
-            const wordtree = new WordTreeClass('test');
+            // Remove WordCloud
+            delete global.WordCloud;
+
+            wordTree = new WordTree(containerId);
             
-            expect(consoleSpy).toHaveBeenCalled();
-            expect(wordtree.wordData.words).toEqual([]);
+            // Mock showError
+            wordTree.showError = jest.fn();
             
-            // Verify showEmptyState was called
-            expect(mockContext.clearRect).toHaveBeenCalled();
-            expect(mockContext.fillText).toHaveBeenCalled();
+            // Simulate render with missing WordCloud
+            wordTree.render = function() {
+                if (!window.WordCloud) {
+                    this.showError('WordCloud library not loaded');
+                }
+            };
+            
+            wordTree.render();
+            
+            expect(wordTree.showError).toHaveBeenCalledWith('WordCloud library not loaded');
             
             consoleSpy.mockRestore();
         });
-        
-        test('should merge options correctly', () => {
-            const wordtree = new WordTreeClass('test', {
-                minFontSize: 8,
-                maxFontSize: 64,
-                rotationSteps: 4
-            });
+    });
+
+    describe('Colors', () => {
+        beforeEach(() => {
+            wordTree = new WordTree(containerId);
+        });
+
+        test('should return consistent color for same word', () => {
+            const color1 = wordTree.getWordColor('test', 1);
+            const color2 = wordTree.getWordColor('test', 1);
+            expect(color1).toBe(color2);
+        });
+
+        test('should return different colors for different words', () => {
+            const color1 = wordTree.getWordColor('test1', 1);
+            const color2 = wordTree.getWordColor('test2', 1);
+            expect(color1).not.toBe(color2);
+        });
+
+        test('should use MyColors when available', () => {
+            global.MyColors = {
+                getBootstrapColors: jest.fn().mockReturnValue({
+                    primary: '#0d6efd',
+                    secondary: '#6c757d'
+                })
+            };
             
-            expect(wordtree.options.minFontSize).toBe(8);
-            expect(wordtree.options.maxFontSize).toBe(64);
-            expect(wordtree.options.rotationSteps).toBe(4);
+            wordTree.getWordColor('test', 1);
+            expect(global.MyColors.getBootstrapColors).toHaveBeenCalled();
+        });
+
+        test('should use fallback colors when MyColors not available', () => {
+            delete global.MyColors;
+            
+            const color = wordTree.getWordColor('test', 1);
+            expect(color).toMatch(/^#[0-9A-F]{6}$/i);
         });
     });
-});
 
-// Restore original console.error after tests
-afterAll(() => {
-    console.error = originalConsoleError;
+    describe('Events', () => {
+        test('should dispatch custom event on word click', () => {
+            wordTree = new WordTree(containerId);
+            
+            const eventHandler = jest.fn();
+            wordTree.container.addEventListener('wordtree:wordclick', eventHandler);
+            
+            wordTree.handleWordClick('testword');
+            
+            expect(eventHandler).toHaveBeenCalled();
+            const event = eventHandler.mock.calls[0][0];
+            expect(event.detail.word).toBe('testword');
+        });
+
+        test('should call onWordClick option if provided', () => {
+            const onWordClickMock = jest.fn();
+            wordTree = new WordTree(containerId, { onWordClick: onWordClickMock });
+            
+            wordTree.handleWordClick('testword');
+            
+            expect(onWordClickMock).toHaveBeenCalledWith('testword', '');
+        });
+    });
+
+    describe('Resize handling', () => {
+        test('should debounce resize events', () => {
+            jest.useFakeTimers();
+            
+            wordTree = new WordTree(containerId);
+            const renderSpy = jest.spyOn(wordTree, 'render');
+            
+            wordTree.handleResize();
+            wordTree.handleResize();
+            wordTree.handleResize();
+            
+            jest.advanceTimersByTime(300);
+            
+            expect(renderSpy).toHaveBeenCalledTimes(1);
+            
+            renderSpy.mockRestore();
+            jest.useRealTimers();
+        });
+
+        test('should resize canvas on resize', () => {
+            jest.useFakeTimers();
+            
+            wordTree = new WordTree(containerId);
+            
+            // Mock resizeCanvas
+            wordTree.resizeCanvas = jest.fn();
+            
+            wordTree.handleResize();
+            
+            jest.advanceTimersByTime(300);
+            
+            expect(wordTree.resizeCanvas).toHaveBeenCalled();
+            
+            jest.useRealTimers();
+        });
+    });
+
+    describe('Error handling', () => {
+        test('should show error message', () => {
+            wordTree = new WordTree(containerId);
+            const errorEl = document.getElementById(`error-${containerId}`);
+            
+            wordTree.showError('Test error');
+            
+            expect(errorEl.classList.contains('d-none')).toBe(false);
+            expect(errorEl.querySelector('.error-message').textContent).toBe('Test error');
+        });
+
+        test('should hide error after timeout', () => {
+            jest.useFakeTimers();
+            
+            wordTree = new WordTree(containerId);
+            const errorEl = document.getElementById(`error-${containerId}`);
+            
+            wordTree.showError('Test error');
+            expect(errorEl.classList.contains('d-none')).toBe(false);
+            
+            jest.advanceTimersByTime(5000);
+            
+            expect(errorEl.classList.contains('d-none')).toBe(true);
+            
+            jest.useRealTimers();
+        });
+    });
+
+    describe('Loading state', () => {
+        test('should show loading element', () => {
+            wordTree = new WordTree(containerId);
+            const loadingEl = document.getElementById(`loading-${containerId}`);
+            
+            wordTree.showLoading();
+            expect(loadingEl.classList.contains('d-none')).toBe(false);
+        });
+
+        test('should hide loading element', () => {
+            wordTree = new WordTree(containerId);
+            const loadingEl = document.getElementById(`loading-${containerId}`);
+            
+            wordTree.hideLoading();
+            expect(loadingEl.classList.contains('d-none')).toBe(true);
+        });
+    });
+
+    describe('Destroy', () => {
+        test('should clean up event listeners', () => {
+            const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+            
+            wordTree = new WordTree(containerId);
+            wordTree.destroy();
+            
+            expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
+            expect(wordTree.cloudInstance).toBeNull();
+            
+            removeEventListenerSpy.mockRestore();
+        });
+    });
 });

@@ -55,6 +55,12 @@
                 </div>
             </div>
         </section>
+        <!-- Activity Word Tree Card -->
+        <div class="row">
+            <div class="col-12">
+                {% include "core/wordtree_card.html" with container_id="activity-"|add:activity.id|stringformat:"s" wordtree_data=wordtree_data current_date_filter=current_date_filter recent_words_list=recent_words_list unique_words=unique_words top_word=top_words.0.text %}
+            </div>
+        </div>
         <!-- Recente Woorden -->
         <section id="woorden" class="mb-5">
             <div class="row mb-4">

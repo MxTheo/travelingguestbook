@@ -1,461 +1,552 @@
-// static/js/wordtree.js
 /**
- * WordTree Component
+ * WordTree Component using wordcloud2.js
  * 
- * A reusable word cloud visualization that displays words as leaves on a tree.
- * Words are rendered using Chart.js word cloud plugin with sizes based on frequency.
- * 
- * Features:
- * - Progressive filtering (date, activity)
- * - Clickable words (for future forum integration)
- * - Responsive design
- * - Uses Bootstrap colors for consistency
- * 
- * @class WordTree
+ * A word cloud visualization that displays words as leaves on a tree with a trunk.
+ * FORCE FILL mode - Eliminates all whitespace around the cloud.
  */
 
 class WordTree {
-    /**
-     * Create a new WordTree instance
-     * 
-     * @param {string} containerId - Unique ID for this word tree instance (without 'wordtree-' prefix)
-     * @param {Object} options - Configuration options
-     * @param {number} options.minFontSize - Minimum font size for words (default: 12)
-     * @param {number} options.maxFontSize - Maximum font size for words (default: 48)
-     * @param {number} options.rotationSteps - Number of rotation steps (0, 90, etc.) (default: 2)
-     * @param {number} options.rotationProbability - Chance of word rotation (default: 0.3)
-     * @param {Function} options.onWordClick - Callback when word is clicked
-     */
     constructor(containerId, options = {}) {
-        // Store container ID and find the DOM element
+        console.log('WordTree constructor called for:', containerId);
+        
         this.containerId = containerId;
+        
+        // Find the container with the correct ID
         this.container = document.getElementById(`wordtree-${containerId}`);
         
-        // Exit if container doesn't exist (prevents errors on pages without word tree)
         if (!this.container) {
-            console.warn(`WordTree container #wordtree-${containerId} not found`);
+            console.error(`Container #wordtree-${containerId} not found!`);
+            console.log('Available containers:', Array.from(document.querySelectorAll('[id^="wordtree-"]')).map(el => el.id));
             return;
         }
-
-        // Find all required DOM elements
+        
+        console.log('Container found successfully');
+        
         this.canvas = document.getElementById(`wordcloud-canvas-${containerId}`);
         this.loadingEl = document.getElementById(`loading-${containerId}`);
         this.errorEl = document.getElementById(`error-${containerId}`);
         this.wordCountEl = document.getElementById(`word-count-${containerId}`);
         
-        // Get initial data from embedded JSON (set by Django template)
+        if (!this.canvas) {
+            console.error(`Canvas #wordcloud-canvas-${containerId} not found!`);
+            return;
+        }
+
+        console.log('Canvas found successfully');
+
+        // Force canvas to fill its container with no gaps
+        this.forceCanvasSize();
+        
+        // Get data from data attribute
         const dataElement = document.getElementById(`wordtree-data-${containerId}`);
-        if (dataElement) {
+        if (dataElement && dataElement.dataset.json) {
             try {
-                this.wordData = JSON.parse(dataElement.textContent);
+                const jsonString = dataElement.dataset.json;
+                this.wordData = JSON.parse(jsonString);
+                console.log('Word data loaded:', this.wordData.words.length, 'words');
             } catch (e) {
                 console.error('Failed to parse word tree data:', e);
-                this.wordData = { words: [], total_count: 0, base_filter: {}, current_filters: {} };
+                this.wordData = { words: [], total_count: 0 };
             }
         } else {
-            this.wordData = { words: [], total_count: 0, base_filter: {}, current_filters: {} };
+            console.warn('No word tree data found for container:', containerId);
+            this.wordData = { words: [], total_count: 0 };
         }
         
-        // Extract filter information from the data
-        this.baseFilter = this.wordData.base_filter || { type: 'all', value: '', display_name: 'All words' };
-        this.currentDateFilter = this.wordData.current_filters?.date || 'all';
-        this.currentActivityFilter = this.wordData.current_filters?.activity || 'all';
-        
-        // Merge default options with user-provided options
+        // CRITICAL: These options are tuned to ELIMINATE WHITESPACE
         this.options = {
-            minFontSize: 12,
-            maxFontSize: 48,
-            rotationSteps: 2,        // 0° and 90° rotation for zen-like simplicity
-            rotationProbability: 0.3, // 30% chance of rotation
+            // Smaller grid size = more precise placement
+            gridSize: 8,
+            
+            // Weight factor to make words fill the space
+            weightFactor: function(weight) {
+                // Scale words to fill the canvas based on available dimensions
+                return Math.pow(weight, 0.55) * 18;
+            },
+            
+            fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+            color: this.getWordColor.bind(this),
+            
+            // Rotate some words to fill space better
+            rotateRatio: 0.3,
+            rotationSteps: 2,
+            
+            backgroundColor: 'transparent',
+            
+            // Shape function to maximize fill
+            shape: this.getFillShape.bind(this),
+            
+            // Minimum font size
+            minSize: 10,
+            
+            // Don't shrink to fit - we want to fill the space
+            shrinkToFit: false,
+            
+            // Origin at top to eliminate top margin
+            origin: [0.5, 0.25], // Moved way up to eliminate top whitespace
+            
+            // Make words slightly elliptical to fill width better
+            ellipticity: 1.0,
+            
+            // Disable drawing out of bounds to prevent clipping
+            drawOutOfBound: false,
+            
+            // Clear canvas before drawing
+            clearCanvas: true,
+            
+            // Click handler
+            click: (item, dimension, event) => {
+                if (item && item[0]) {
+                    this.handleWordClick(item[0]);
+                }
+            },
+            
+            // No hover effect for performance
+            hover: null,
+            
+            // Use size weighting
+            weightMode: 'size',
+            
+            // Don't shuffle - keep consistent layout
+            shuffle: false,
+            
             ...options
         };
         
-        // Chart.js instance (will be created in render())
-        this.chart = null;
-        
-        // Debounce timeout for resize events
+        this.currentFilters = this.getFiltersFromURL();
+        this.cloudInstance = null;
         this.resizeTimeout = null;
         
-        // Initialize the component
-        this.init();
+        // Initialize with a slight delay to ensure DOM is ready
+        setTimeout(() => this.init(), 50);
     }
     
     /**
-     * Initialize the word tree component
-     * Sets up rendering and event listeners
-     * 
-     * @private
+     * Force canvas to have exactly the right size with no margins
      */
+    forceCanvasSize() {
+        if (!this.canvas) return;
+        
+        // Get the parent container that has flex: 1 1 auto
+        const container = this.canvas.parentElement;
+        if (!container) return;
+        
+        // Get the grootste container
+        const wordtreeContainer = container.parentElement;
+        if (!wordtreeContainer) return;
+        
+        // Force dimensions based on the flex container
+        const containerRect = wordtreeContainer.getBoundingClientRect();
+        
+        // Calculate available height (total height minus trunk height)
+        const trunkHeight = 70; // Match the trunk container height
+        const availableHeight = Math.max(500, containerRect.height - trunkHeight - 10);
+        
+        // Set canvas dimensions with NO PADDING
+        this.canvas.width = containerRect.width;
+        this.canvas.height = availableHeight;
+        
+        // Also set CSS dimensions to match
+        this.canvas.style.width = containerRect.width + 'px';
+        this.canvas.style.height = availableHeight + 'px';
+        this.canvas.style.position = 'absolute';
+        this.canvas.style.top = '0';
+        this.canvas.style.left = '0';
+        
+        console.log(`Canvas FORCED to ${containerRect.width}x${availableHeight} (no margins)`);
+        
+        return {
+            width: containerRect.width,
+            height: availableHeight
+        };
+    }
+    
+    /**
+     * Shape function that makes words fill the entire top portion
+     */
+    getFillShape(theta) {
+        // Normalize theta to 0-2PI
+        const normalizedTheta = theta < 0 ? theta + 2 * Math.PI : theta;
+        
+        // We want the shape to be a full circle/ellipse that touches the top
+        // and sides, but leaves a small gap at the bottom for the trunk
+        
+        // Base ellipticity - make it slightly elliptical to fill width
+        const baseRadius = 0.95;
+        
+        // If this is the bottom portion (where trunk goes), flatten slightly
+        if (normalizedTheta > 1.8 && normalizedTheta < 4.5) {
+            // Bottom - flatten to create connection point for trunk
+            return baseRadius * 0.85;
+        }
+        
+        // Top and sides - full radius to fill space
+        return baseRadius;
+    }
+    
+    getFiltersFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            date: params.get('date_filter') || 'all',
+            activity: params.get('activity_filter') || 'all'
+        };
+    }
+    
     init() {
-        this.render();
-        this.setupEventListeners();
+        console.log('Initializing WordTree with', this.wordData.words ? this.wordData.words.length : 0, 'words');
+        
+        if (this.wordData.words && this.wordData.words.length > 0) {
+            // Force canvas size one more time before rendering
+            this.forceCanvasSize();
+            this.render();
+        } else {
+            this.showEmptyState();
+        }
+        
         this.setupFilterControls();
+        this.setupEventListeners();
     }
     
-    /**
-     * Render the word cloud using Chart.js word cloud plugin
-     * 
-     * The word cloud plugin expects:
-     * - labels: array of words
-     * - data: array of weights (frequencies)
-     * - color: array of colors for each word
-     * 
-     * @private
-     */
     render() {
-        // Don't render if canvas doesn't exist or no words to display
-        if (!this.canvas || !this.wordData.words || this.wordData.words.length === 0) {
+        if (!this.canvas) return;
+        
+        if (!this.wordData.words || this.wordData.words.length === 0) {
             this.showEmptyState();
             return;
         }
-        
-        // Prepare data for Chart.js word cloud
-        const wordData = this.wordData.words.map(word => ({
-            word: word.text,
-            weight: word.weight || 1,
-            color: this.getWordColor(word)
-        }));
-        
-        // Destroy existing chart if it exists (prevents memory leaks)
-        if (this.chart) {
-            this.chart.destroy();
+
+        // Check if WordCloud is available
+        if (!window.WordCloud) {
+            console.error('WordCloud2 is not loaded');
+            this.showError('WordCloud library not loaded');
+            return;
+        }
+
+        if (!window.WordCloud.isSupported) {
+            console.error('WordCloud2 is not supported in this browser');
+            this.showError('WordCloud is not supported in this browser');
+            return;
         }
         
-        // Create new word cloud chart
-        // Chart.js word cloud plugin registers the 'wordCloud' chart type
-        this.chart = new Chart(this.canvas, {
-            type: 'wordCloud',
-            data: {
-                labels: wordData.map(w => w.word),
-                datasets: [{
-                    label: 'Word frequency',
-                    data: wordData.map(w => w.weight),
-                    color: wordData.map(w => w.color)
-                }]
-            },
-            options: {
-                plugins: {
-                    // Hide the legend (not needed for word cloud)
-                    legend: { display: false },
-                    
-                    // Customize tooltips that appear on hover
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => {
-                                const word = wordData[context.dataIndex];
-                                return `${word.word}: ${word.weight} occurrence${word.weight === 1 ? '' : 's'}`;
-                            }
-                        }
-                    }
-                },
-                elements: {
-                    word: {
-                        padding: 5,           // Space between words
-                        minFontSize: this.options.minFontSize,
-                        maxFontSize: this.options.maxFontSize,
-                        rotation: this.options.rotationSteps,
-                        rotationProbability: this.options.rotationProbability
-                    }
-                },
-                // Handle word click events
-                onClick: (event, elements) => {
-                    if (elements && elements.length > 0) {
-                        const index = elements[0].index;
-                        const word = wordData[index];
-                        this.handleWordClick(word.word);
-                    }
-                }
+        // Update word count
+        if (this.wordCountEl) {
+            this.wordCountEl.textContent = this.wordData.total_count || this.wordData.words.length;
+        }
+        
+        // Prepare data for wordcloud2: [['word', weight], ...]
+        // Scale weights to ensure good distribution
+        const maxWeight = Math.max(...this.wordData.words.map(w => w.weight));
+        const minWeight = Math.min(...this.wordData.words.map(w => w.weight));
+        const weightRange = maxWeight - minWeight;
+        
+        const words = this.wordData.words.map(item => {
+            // Normalize weight to ensure good size variation
+            let normalizedWeight = item.weight;
+            if (weightRange > 0) {
+                normalizedWeight = 0.5 + ((item.weight - minWeight) / weightRange) * 1.5;
             }
+            return [item.word, normalizedWeight];
         });
         
-        // Update the word count display
-        this.updateWordCount(this.wordData.total_count);
-    }
-    
-    /**
-     * Show empty state when no words are available
-     * 
-     * @private
-     */
-    showEmptyState() {
-        // Clear the canvas
+        console.log('Rendering', words.length, 'words on canvas', this.canvas.width, 'x', this.canvas.height);
+        
+        // Clear any existing cloud
+        if (this.cloudInstance) {
+            this.cloudInstance = null;
+        }
+        
+        // Clear canvas with NO MARGINS
         const ctx = this.canvas.getContext('2d');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Draw a friendly message
-        ctx.font = '16px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
-        ctx.fillStyle = 'var(--bs-secondary)';
-        ctx.textAlign = 'center';
-        ctx.fillText('Nog geen woorden gedeeld', this.canvas.width / 2, this.canvas.height / 2);
+        // CRITICAL: Override wordcloud2's internal margin calculation
+        // We do this by setting a custom shape that forces words to the edges
         
-        this.updateWordCount(0);
+        const options = {
+            ...this.options,
+            list: words,
+            
+            // Force grid size for precise placement
+            gridSize: 6, // Smaller grid = more precise
+            
+            // Aggressive weight factor to fill space
+            weightFactor: (weight) => {
+                // Dynamic scaling based on canvas size
+                const baseSize = Math.min(this.canvas.width, this.canvas.height) * 0.08;
+                return weight * baseSize;
+            },
+            
+            // Move origin up to eliminate top margin
+            origin: [0.5, 0.2], // Even higher to kill top whitespace
+            
+            // Custom shape that pushes words to edges
+            shape: (theta) => {
+                // Make shape fill the entire top portion
+                const r = 0.98; // Almost full radius
+                
+                // Bottom gets slightly flattened for trunk
+                if (theta > 2.0 && theta < 4.2) {
+                    return r * 0.82;
+                }
+                return r;
+            },
+            
+            // Disable any built-in padding
+            shuffle: false,
+            rotateRatio: 0.3,
+            weightMode: 'size',
+            clearCanvas: true,
+            backgroundColor: 'transparent',
+            
+            // Prevent any automatic margin calculation
+            ellipticity: 1.0,
+            minSize: 12
+        };
+        
+        // Render the wordcloud
+        try {
+            this.hideLoading();
+            console.log('Rendering WordCloud with FORCE FILL options');
+            this.cloudInstance = window.WordCloud(this.canvas, options);
+            
+            // After rendering, check if we need to scale up
+            setTimeout(() => {
+                this.scaleUpIfNeeded();
+            }, 100);
+            
+            console.log('WordCloud rendered successfully');
+        } catch (e) {
+            console.error('Error rendering wordcloud:', e);
+            this.showError('Failed to render word cloud: ' + e.message);
+        }
     }
     
     /**
-     * Set up filter controls (dropdowns) and attach event listeners
-     * 
-     * @private
+     * If there's still whitespace, scale up the words
      */
+    scaleUpIfNeeded() {
+        if (!this.canvas) return;
+        
+        const ctx = this.canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        const data = imageData.data;
+        
+        // Check if top 10% of canvas is empty
+        let topEmpty = true;
+        for (let y = 0; y < this.canvas.height * 0.1; y++) {
+            for (let x = 0; x < this.canvas.width; x += 10) {
+                const index = (y * this.canvas.width + x) * 4;
+                if (data[index + 3] > 0) { // Has alpha > 0
+                    topEmpty = false;
+                    break;
+                }
+            }
+            if (!topEmpty) break;
+        }
+        
+        // If top is empty, re-render with even higher origin
+        if (topEmpty && this.wordData.words.length > 0) {
+            console.log('Top area empty, re-rendering with higher origin');
+            this.options.origin = [0.5, 0.15];
+            
+            // Re-render
+            const words = this.wordData.words.map(item => [item.word, item.weight]);
+            const options = {
+                ...this.options,
+                list: words,
+                clearCanvas: true
+            };
+            
+            try {
+                this.cloudInstance = window.WordCloud(this.canvas, options);
+            } catch (e) {
+                console.error('Error in scale-up render:', e);
+            }
+        }
+    }
+    
+    showEmptyState() {
+        if (!this.canvas) return;
+        
+        const ctx = this.canvas.getContext('2d');
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Draw an empty tree that fills the space
+        this.drawEmptyTree(ctx);
+        
+        if (this.wordCountEl) {
+            this.wordCountEl.textContent = '0';
+        }
+    }
+    
+    drawEmptyTree(ctx) {
+        const width = this.canvas.width;
+        const height = this.canvas.height;
+        
+        ctx.save();
+        
+        // Tree crown - positioned to fill the space
+        ctx.beginPath();
+        ctx.ellipse(width/2, height * 0.3, width * 0.4, height * 0.3, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = '#ddd';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([8, 8]);
+        ctx.stroke();
+        
+        // Trunk connection point
+        ctx.beginPath();
+        ctx.moveTo(width/2, height * 0.5);
+        ctx.lineTo(width/2, height * 0.8);
+        ctx.stroke();
+        
+        // Text
+        ctx.setLineDash([]);
+        ctx.font = '24px system-ui, sans-serif';
+        ctx.fillStyle = '#6c757d';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('No words shared yet', width / 2, height * 0.35);
+        
+        ctx.restore();
+    }
+    
+    getWordColor(word, weight) {
+        // Rich green colors for the tree leaves
+        const greenColors = [
+            '#1B5E20', '#2E7D32', '#388E3C', '#43A047', '#4CAF50', 
+            '#66BB6A', '#81C784', '#A5D6A7', '#0B5E1B', '#137333',
+            '#1E7E34', '#2E8B57', '#228B22', '#32CD32', '#006400'
+        ];
+        
+        // Use the word to choose a consistent color
+        const hash = word.split('').reduce((acc, char) => {
+            return ((acc << 5) - acc) + char.charCodeAt(0);
+        }, 0);
+        
+        return greenColors[Math.abs(hash) % greenColors.length];
+    }
+    
     setupFilterControls() {
         const filterContainer = document.getElementById(`filters-${this.containerId}`);
         if (!filterContainer) return;
         
-        // Date filter dropdown
-        const dateFilter = filterContainer.querySelector('[data-filter="date"]');
-        if (dateFilter) {
-            dateFilter.addEventListener('change', (e) => {
-                this.applyFilter('date', e.target.value);
+        const dateItems = filterContainer.querySelectorAll('.dropdown-item[href*="date_filter"]');
+        dateItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const url = new URL(item.href, window.location.origin);
+                const dateFilter = url.searchParams.get('date_filter');
+                this.applyFilter('date', dateFilter);
             });
-        }
-        
-        // Activity filter dropdown (if it exists)
-        const activityFilter = filterContainer.querySelector('[data-filter="activity"]');
-        if (activityFilter) {
-            activityFilter.addEventListener('change', (e) => {
-                this.applyFilter('activity', e.target.value);
-            });
-        }
-    }
-    
-    /**
-     * Apply a filter and reload the page with new parameters
-     * 
-     * This uses page reload instead of AJAX because:
-     * 1. Simpler implementation for MVP
-     * 2. SEO-friendly (filters in URL)
-     * 3. Shareable URLs
-     * 
-     * @param {string} filterType - Type of filter ('date' or 'activity')
-     * @param {string} filterValue - New filter value
-     */
-    applyFilter(filterType, filterValue) {
-        const url = new URL(globalThis.location.href);
-        const params = new URLSearchParams(url.search);
-        
-        if (filterType === 'date') {
-            params.set('date_filter', filterValue);
-            this.currentDateFilter = filterValue;
-        } else if (filterType === 'activity') {
-            params.set('activity_filter', filterValue);
-            this.currentActivityFilter = filterValue;
-        }
-        
-        // Reload page with new filters
-        globalThis.location.href = `${url.pathname}?${params.toString()}`;
-    }
-    
-    /**
-     * Get color for a word based on its text (consistent hashing)
-     * 
-     * Uses a simple string hash to ensure the same word always gets the same color.
-     * This creates visual consistency across page loads.
-     * 
-     * @param {Object} word - Word object with text and weight
-     * @returns {string} CSS color value (rgba format)
-     */
-    getWordColor(word) {
-        // Get Bootstrap colors from global MyColors object
-        const colors = globalThis.MyColors?.getBootstrapColors() || {
-            primary: 'rgba(54,162,235,0.95)',
-            success: 'rgba(25,135,84,0.95)',
-            warning: 'rgba(255,193,7,0.95)',
-            danger: 'rgba(220,53,69,0.9)',
-            secondary: 'rgba(108,117,125,0.9)',
-        };
-        
-        // Convert colors object to array for easy access
-        const colorArray = Object.values(colors);
-        
-        /**
-         * Simple string hash function (djb2 algorithm)
-         * 
-         * Why djb2?
-         * - Simple and fast
-         * - Good distribution for short strings (like our words)
-         * - Deterministic: same input always produces same output
-         * 
-         * Algorithm: hash = hash * 33 + charCode
-         * 33 is used because it works well with ASCII characters
-         */
-        const hash = word.text.split('').reduce((acc, char) => {
-            // Multiply by 33 (using shift + add for speed)
-            // Then add character code
-            return ((acc << 5) - acc) + char.codePointAt(0);
-        }, 0);
-        
-        // Use absolute value to handle negative hashes
-        // Modulo to stay within array bounds
-        const colorIndex = Math.abs(hash) % colorArray.length;
-        
-        return colorArray[colorIndex];
-    }
-    
-    /**
-     * Handle word click events
-     * 
-     * Dispatches a custom event that other parts of the application can listen for.
-     * This is designed for future forum integration - when a word is clicked,
-     * we can navigate to a forum thread about that word.
-     * 
-     * @param {string} word - The clicked word
-     */
-    handleWordClick(word) {
-        // Create a custom event with detailed information about the click
-        const event = new CustomEvent('wordtree:wordclick', {
-            detail: {
-                word: word,
-                containerId: this.containerId,
-                filters: {
-                    base: this.baseFilter,
-                    date: this.currentDateFilter,
-                    activity: this.currentActivityFilter
-                },
-                // Generate URL for potential navigation (for future use)
-                forumUrl: `/forum/word/${encodeURIComponent(word)}/?${this.getFilterParams()}`
-            },
-            // Allow the event to bubble up the DOM tree
-            bubbles: true
         });
         
-        // Dispatch the event from the container
+        const activityItems = filterContainer.querySelectorAll('.dropdown-item[href*="activity_filter"]');
+        activityItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const url = new URL(item.href, window.location.origin);
+                const activityFilter = url.searchParams.get('activity_filter');
+                this.applyFilter('activity', activityFilter);
+            });
+        });
+    }
+    
+    applyFilter(type, value) {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        params.set(type + '_filter', value);
+        
+        let newUrl = url.pathname;
+        const paramString = params.toString();
+        if (paramString) {
+            newUrl += '?' + paramString;
+        }
+        
+        window.location.href = newUrl;
+    }
+    
+    handleWordClick(word) {
+        const params = this.getFilterParams();
+        const event = new CustomEvent('wordtree:wordclick', {
+            detail: { 
+                word, 
+                containerId: this.containerId,
+                filters: params
+            }
+        });
         this.container.dispatchEvent(event);
         
-        // If a callback was provided in options, call it
         if (this.options.onWordClick) {
-            this.options.onWordClick(word, this.getFilterParams());
+            this.options.onWordClick(word, params);
         }
     }
     
-    /**
-     * Get current filter parameters as URL string
-     * 
-     * @returns {string} URL query string (e.g., "date_filter=week&activity_filter=1")
-     */
     getFilterParams() {
-        const params = new URLSearchParams();
-        if (this.currentDateFilter !== 'all') {
-            params.set('date_filter', this.currentDateFilter);
+        const params = new URLSearchParams(window.location.search);
+        const parts = [];
+        if (params.has('date_filter')) {
+            parts.push(`date_filter=${params.get('date_filter')}`);
         }
-        if (this.currentActivityFilter !== 'all') {
-            params.set('activity_filter', this.currentActivityFilter);
+        if (params.has('activity_filter')) {
+            parts.push(`activity_filter=${params.get('activity_filter')}`);
         }
-        return params.toString();
+        return parts.join('&');
     }
     
-    /**
-     * Update the word count display with animation
-     * 
-     * @param {number} count - Total number of words
-     */
-    updateWordCount(count) {
-        if (this.wordCountEl) {
-            this.wordCountEl.textContent = count;
-            
-            // Add animation class for visual feedback
-            this.wordCountEl.classList.add('word-count-update');
-            
-            // Remove animation class after it completes
-            setTimeout(() => {
-                this.wordCountEl.classList.remove('word-count-update');
-            }, 300);
-        }
-    }
-    
-    /**
-     * Setup global event listeners
-     * 
-     * @private
-     */
     setupEventListeners() {
-        // Handle window resize with debouncing
         window.addEventListener('resize', this.handleResize.bind(this));
     }
     
-    /**
-     * Handle window resize event
-     * 
-     * Debounces the resize event to prevent too many chart redraws.
-     * Only redraws after the user has stopped resizing for 250ms.
-     * 
-     * @private
-     */
     handleResize() {
         clearTimeout(this.resizeTimeout);
         this.resizeTimeout = setTimeout(() => {
-            if (this.chart) {
-                this.chart.resize();
-            }
+            this.forceCanvasSize();
+            this.render();
         }, 250);
     }
     
-    /**
-     * Show loading spinner
-     * 
-     * @private
-     */
     showLoading() {
         if (this.loadingEl) {
             this.loadingEl.classList.remove('d-none');
         }
-        if (this.canvas) {
-            this.canvas.style.opacity = '0.5';
-        }
     }
     
-    /**
-     * Hide loading spinner
-     * 
-     * @private
-     */
     hideLoading() {
         if (this.loadingEl) {
             this.loadingEl.classList.add('d-none');
         }
-        if (this.canvas) {
-            this.canvas.style.opacity = '1';
-        }
     }
     
-    /**
-     * Show error message
-     * 
-     * @param {string} message - Error message to display
-     * @private
-     */
     showError(message) {
         if (this.errorEl) {
-            this.errorEl.textContent = message || 'Failed to load word tree data.';
+            const messageEl = this.errorEl.querySelector('.error-message');
+            if (messageEl) {
+                messageEl.textContent = message || 'Failed to load word tree data.';
+            }
             this.errorEl.classList.remove('d-none');
+            
+            setTimeout(() => {
+                this.errorEl.classList.add('d-none');
+            }, 5000);
         }
     }
     
-    /**
-     * Clean up resources when component is destroyed
-     * 
-     * This is important for single-page applications to prevent memory leaks.
-     */
+    updateWordCount(count) {
+        if (this.wordCountEl) {
+            this.wordCountEl.textContent = count;
+        }
+    }
+    
     destroy() {
-        if (this.chart) {
-            this.chart.destroy();
+        if (this.cloudInstance) {
+            this.cloudInstance = null;
         }
         window.removeEventListener('resize', this.handleResize.bind(this));
     }
 }
 
-// Auto-initialize all word trees when DOM is loaded
-// This allows the component to work without manual initialization
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('[id^="wordtree-"]').forEach(container => {
-        // Extract containerId from the full ID (remove 'wordtree-' prefix)
-        const containerId = container.id.replace('wordtree-', '');
-    });
-});
-
-// Export for use in modules (if needed)
-if (typeof module !== 'undefined' && module.exports) {
-    // Node.js environment (for tests)
-    module.exports = WordTree;
-} else {
-    // Browser environment
-    globalThis.WordTree = WordTree;
+// Expose WordTree globally
+if (typeof window !== 'undefined') {
+    window.WordTree = WordTree;
+    console.log('WordTree class exported to window with FORCE FILL enabled');
 }

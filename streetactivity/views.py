@@ -1,5 +1,6 @@
 from typing import Optional
 from rest_framework import viewsets
+from django.db.models import Count
 from django.contrib import messages
 from django.views.generic import (
     ListView,
@@ -92,6 +93,15 @@ class StreetActivityDetailView(DetailView, WordTreeMixin):
         context['total_words'] = all_words.count()
         context['unique_words'] = all_words.values('word').distinct().count()
         context['recent_words'] = all_words.order_by('-date_created')[:5]
+
+                # Get top words for display
+        top_words = all_words.values('word')\
+            .annotate(count=Count('word'))\
+            .order_by('-count')[:5]
+        context['top_words'] = top_words
+        
+        if top_words:
+            context['top_word'] = top_words[0]['word']
 
         return context
 
