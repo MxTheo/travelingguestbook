@@ -1,8 +1,6 @@
-from datetime import timedelta
-from django.utils import timezone
 from django.urls import reverse
 from streetactivity.models import StreetActivity
-from travelingguestbook.factories import UserFactory, WordFactory, StreetActivityFactory
+from travelingguestbook.factories import StreetActivityFactory
 
 class TestStreetActivityModel:
     """Tests for the StreetActivity model."""
@@ -172,117 +170,28 @@ class TestStreetActivityDetailView:
         assert "activity" in context
         assert context["activity"] == activity
 
-    def test_detail_view_word_statistics(self, client):
-        """Test that word statistics are correctly calculated and included in context"""
+    def test_detail_view_reflection_statistics(self, client):
+        """Test that reflection statistics are correctly calculated and included in context"""
         activity = StreetActivityFactory()
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
 
-        assert "words_count" in context
+        assert "reflections_count" in context
 
-    def test_detail_view_no_words(self, client):
-        """Test that the detail view handles activities with no words gracefully"""
+    def test_detail_view_no_reflections(self, client):
+        """Test that the detail view handles activities with no reflections gracefully"""
         activity = StreetActivityFactory()
 
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
 
-        assert context["words_count"] == 0
+        assert context["reflections_count"] == 0
 
-    def test_negative_words_remaining(self, client):
-        """Test if that when there are no words,
-        then the words_remaining results in 0 and not -3"""
+    def test_negative_reflections_remaining(self, client):
+        """Test if that when there are no reflections,
+        then the reflections_remaining results in 0 and not -3"""
         activity = StreetActivityFactory()
         response = client.get(reverse("streetactivity-detail", args=[activity.id]))
         context = response.context
-        assert context['words_remaining'] == 0
-
-class TestStreetActivityDetailViewContextWordTree:
-    """Test the context data for the WordTree of StreetActivityDetailView."""
-
-    def test_activity_view_contains_activity_stats(self, client):
-        """Test that activity view has activity-specific stats."""
-        activity = StreetActivityFactory(name="Test Game")
-
-        WordFactory.create_batch(5, activity=activity)
-
-        url = reverse('streetactivity-detail', args=[activity.id])
-        response = client.get(url)
-
-        assert response.status_code == 200
-        assert response.context['activity'] == activity
-
-        # Check activity stats
-        assert 'total_words' in response.context
-        assert response.context['total_words'] == 5
-        assert 'unique_words' in response.context
-        assert 'recent_words' in response.context
-
-    def test_activity_view_wordtree_base_filter(self, client):
-        """Test that wordtree base filter is the activity."""
-        activity = StreetActivityFactory(name="Test Game")
-
-        url = reverse('streetactivity-detail', args=[activity.id])
-        response = client.get(url)
-
-        base_filter = response.context['wordtree_data']['base_filter']
-        assert base_filter['type'] == 'activity'
-        assert base_filter['value'] == activity.id
-        assert base_filter['display_name'] == activity.name
-
-    def test_activity_view_with_date_filter(self, client):
-        """Test applying date filter to activity view."""
-        activity = StreetActivityFactory()
-
-        # Words from different dates
-        WordFactory(
-            activity=activity,
-            word="today",
-            date_created=timezone.now()
-        )
-
-        WordFactory(
-            activity=activity,
-            word="old",
-            date_created=timezone.now() - timedelta(days=10)
-        )
-
-        # Test with 'today' filter
-        url = reverse('streetactivity-detail', args=[activity.id])
-        response = client.get(url, {'date_filter': 'today'})
-
-        wordtree_data = response.context['wordtree_data']
-        assert wordtree_data['total_count'] == 1
-        assert wordtree_data['words'][0]['word'] == 'today'
-        assert wordtree_data['current_filters']['date'] == 'today'
-
-        # Test with 'all' filter
-        response = client.get(url, {'date_filter': 'all'})
-        wordtree_data = response.context['wordtree_data']
-        assert wordtree_data['total_count'] == 2
-
-    def test_activity_view_no_activity_filter_option(self, client):
-        """Test that activity view doesn't show activity filter."""
-        activity = StreetActivityFactory()
-
-        url = reverse('streetactivity-detail', args=[activity.id])
-        response = client.get(url)
-
-        # Activity view should not have activity filter options
-        assert 'activity_filter_options' not in response.context
-        assert 'current_activity_filter' not in response.context
-
-    def test_activity_view_date_filter_options(self, client):
-        """Test that activity view has correct date filter options."""
-        activity = StreetActivityFactory()
-
-        url = reverse('streetactivity-detail', args=[activity.id])
-        response = client.get(url)
-
-        date_options = response.context['date_filter_options']
-        assert len(date_options) == 4
-        assert date_options[0]['value'] == 'all'
-        assert date_options[1]['value'] == 'today'
-        assert date_options[2]['value'] == 'week'
-        assert date_options[3]['value'] == 'month'
+        assert context['reflections_remaining'] == 0

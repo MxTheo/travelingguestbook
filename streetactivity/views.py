@@ -5,26 +5,19 @@ from django.views.generic import (
     ListView,
     DetailView,
     CreateView,
-    TemplateView,
     UpdateView,
     DeleteView,
 )
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from core.utils.mixins import WordTreeMixin
-from .serializers import StreetActivitySerializer, WordSerializer
-from .models import StreetActivity, Word
+from .serializers import StreetActivitySerializer, ReflectionSerializer
+from .models import StreetActivity, Reflection
 from .forms import (
-    WordForm,
+    ReflectionForm,
     StreetActivityForm,
 )
 
 CONFIRM_DELETE_TEMPLATE = "admin/confirm_delete.html"
-
-class WordTreeView(TemplateView):
-    """View to display the word tree visualization."""
-
-    template_name = "streetactivity/wordtree.html"
 
 class StreetActivityListView(ListView):
     """View to list all street activities with filtering options."""
@@ -34,64 +27,28 @@ class StreetActivityListView(ListView):
     paginate_by = 10
 
 
-class StreetActivityDetailView(DetailView, WordTreeMixin):
+class StreetActivityDetailView(DetailView):
     """View to display details of a single street activity."""
     model = StreetActivity
     context_object_name = "activity"
 
-    def get_wordtree_base_filter(self):
-        """Base filter: this specific activity."""
-        activity = self.get_object()
-        return {
-            'type': 'activity',
-            'value': activity.id,
-            'display_name': activity.name
-        }
 
     def get_base_queryset(self):
-        """Base queryset: all words for this activity."""
+        """Base queryset: all reflections for this activity."""
         activity = self.get_object()
-        return Word.objects.filter(activity=activity)
+        return Reflection.objects.filter(activity=activity)
 
     def get_context_data(self, **kwargs):
         """Extend context data with word statistics for charts"""
         context = super().get_context_data(**kwargs)
         activity = self.object
 
-        words = activity.words.all()
-        words_count = words.count()
+        reflections = activity.reflections.all()
+        reflections_count = reflections.count()
 
-        context["words_count"] = words_count
-        context["recent_words"] = words[:3]
-        context["words_remaining"] = max(0, words_count - 3)
-
-        context = self.add_word_tree_data(activity, context)
-        return context
-
-    def add_word_tree_data(self, activity, context):
-        """Given an activity,
-        get the current filters form request and the word tree context,
-        update context and calculate activity specific statistics
-        return context"""
-        # Get current filters from request
-        current_filters = {
-            'date': self.request.GET.get('date_filter', 'all'),
-            'activity': 'all',  # Activity is fixed, so no activity filter needed
-        }
-
-        # Get word tree context
-        wordtree_context = self.get_wordtree_context(
-            self.get_base_queryset(),
-            current_filters
-        )
-        context.update(wordtree_context)
-        context['wordtree_container_id'] = f"activity-{activity.id}"
-
-        # Activity-specific stats
-        all_words = self.get_base_queryset()
-        context['total_words'] = all_words.count()
-        context['unique_words'] = all_words.values('word').distinct().count()
-        context['recent_words'] = all_words.order_by('-date_created')[:5]
+        context["reflections_count"] = reflections_count
+        context["recent_reflections"] = reflections[:3]
+        context["reflections_remaining"] = max(0, reflections_count - 3)
 
         return context
 
@@ -130,21 +87,21 @@ class StreetActivityViewSet(viewsets.ModelViewSet):
     serializer_class = StreetActivitySerializer
 
 
-class WordListView(ListView):
-    """View to list all words."""
+class ReflectionListView(ListView):
+    """View to list all reflections."""
 
-    model = Word
-    context_object_name = "words"
+    model = Reflection
+    context_object_name = "reflections"
     paginate_by = 10
 
 
-class WordListViewStreetActivity(WordListView):
-    """View to list words related to a specific street activity."""
+class ReflectionListViewStreetActivity(ReflectionListView):
+    """View to list reflections related to a specific street activity."""
 
     def get_queryset(self):
-        """Filter words by street activity ID from URL."""
+        """Filter reflections by street activity ID from URL."""
         activity_id = self.kwargs["pk"]
-        return Word.objects.filter(activity_id=activity_id)
+        return Reflection.objects.filter(activity_id=activity_id)
 
     def get_context_data(self, **kwargs):
         """Add street activity to context for header."""
@@ -155,18 +112,18 @@ class WordListViewStreetActivity(WordListView):
         return context
 
 
-class WordDetailView(DetailView):
-    """View to display details of a single word."""
+class ReflectionDetailView(DetailView):
+    """View to display details of a single reflection."""
 
-    model = Word
-    context_object_name = "word"
+    model = Reflection
+    context_object_name = "reflection"
 
 
-class WordCreateView(CreateView):
-    """Create view for a single word"""
+class ReflectionCreateView(CreateView):
+    """Create view for a single reflection"""
 
-    model = Word
-    form_class = WordForm
+    model = Reflection
+    form_class = ReflectionForm
     activity: Optional[StreetActivity] = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -193,7 +150,7 @@ class WordCreateView(CreateView):
         messages.add_message(
             self.request,
             messages.SUCCESS,
-            "Bedankt voor het delen van jouw woord! "
+            "Bedankt voor het delen van jouw reflectie! "
             "Dit helpt anderen dit spel te begrijpen.",
         )
 
@@ -201,15 +158,15 @@ class WordCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "word-list-streetactivity",
+            "reflection-list-streetactivity",
             kwargs={"pk": self.object.activity.pk},  # type: ignore[reportOptionalMemberAccess]
         )
 
-class WordUpdateView(UpdateView):
-    """View to update an word"""
+class ReflectionUpdateView(UpdateView):
+    """View to update an reflection"""
 
-    model = Word
-    form_class = WordForm
+    model = Reflection
+    form_class = ReflectionForm
 
     def get_context_data(self, **kwargs):
         """Extend context data"""
@@ -218,34 +175,34 @@ class WordUpdateView(UpdateView):
         return context
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.WARNING, "Het word is aangepast.")
+        messages.add_message(self.request, messages.WARNING, "De reflectie is aangepast.")
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy(
-            "word-list-streetactivity", kwargs={"pk": self.object.activity.pk}
+            "reflection-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
 
 
-class WordDeleteView(DeleteView):
-    """View to delete an word"""
+class ReflectionDeleteView(DeleteView):
+    """View to delete an reflection"""
 
-    model = Word
+    model = Reflection
     template_name = CONFIRM_DELETE_TEMPLATE
 
     def form_valid(self, form):
         messages.add_message(
-            self.request, messages.WARNING, "Het woord is verwijderd."
+            self.request, messages.WARNING, "De reflectie is verwijderd."
         )
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy(
-            "word-list-streetactivity", kwargs={"pk": self.object.activity.pk}
+            "reflection-list-streetactivity", kwargs={"pk": self.object.activity.pk}
         )
 
-class WordViewSet(viewsets.ModelViewSet):
-    """API endpoint that provides full CRUD for Word"""
+class ReflectionViewSet(viewsets.ModelViewSet):
+    """API endpoint that provides full CRUD for Reflection"""
 
-    queryset = Word.objects.all()
-    serializer_class = WordSerializer
+    queryset = Reflection.objects.all()
+    serializer_class = ReflectionSerializer

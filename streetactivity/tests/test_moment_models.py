@@ -1,155 +1,155 @@
 from datetime import timedelta
 from django.utils import timezone
 from django.urls import reverse
-from travelingguestbook.factories import WordFactory, StreetActivityFactory
-from streetactivity.models import Word
+from travelingguestbook.factories import ReflectionFactory, StreetActivityFactory
+from streetactivity.models import Reflection
 
-class TestWordModel:
-    """Tests for the Word model."""
-    def test_word_str_method(self):
-        """Test the __str__ method of the Word model returns the word"""
+class TestReflectionModel:
+    """Tests for the Reflection model."""
+    def test_reflection_str_method(self):
+        """Test the __str__ method of the Reflection model returns the reflection"""
         expected_str = "Test123"
-        word = WordFactory(
-            word=expected_str)
-        returned_str = str(word)
+        reflection = ReflectionFactory(
+            reflection=expected_str)
+        returned_str = str(reflection)
         assert returned_str == expected_str
 
-    def test_word_str_method_no_word(self):
-        """Test the __str__ method of the Word model when there is no word."""
+    def test_reflection_str_method_no_reflection(self):
+        """Test the __str__ method of the Reflection model when there is no reflection."""
         activity = StreetActivityFactory(name="Test Activity")
-        word = WordFactory(activity=activity, word="")
-        assert str(word) == ""
+        reflection = ReflectionFactory(activity=activity, reflection="")
+        assert str(reflection) == ""
 
-    def test_word_createview(self, auto_login_user):
-        """Test the Word create view to ensure it returns a 200 status code
+    def test_reflection_createview(self, auto_login_user):
+        """Test the Reflection create view to ensure it returns a 200 status code
         and contains the expected form in context."""
         client, _ = auto_login_user()
         activity = StreetActivityFactory()
-        create_url = reverse("create-word", args=[activity.id])
+        create_url = reverse("create-reflection", args=[activity.id])
 
-        word_data = create_word_data(activity)
+        reflection_data = create_reflection_data(activity)
 
-        response = client.post(create_url, word_data, follow=True)
+        response = client.post(create_url, reflection_data, follow=True)
 
         assert response.status_code == 200
-        assert Word.objects.count() == 1
+        assert Reflection.objects.count() == 1
 
-    def test_word_listview(self, client):
-        """Test the Word list view to ensure it returns a 200 status code
+    def test_reflection_listview(self, client):
+        """Test the Reflection list view to ensure it returns a 200 status code
         and contains the expected context."""
         activity = StreetActivityFactory()
         for _ in range(3):
-            WordFactory(activity=activity)
-        response = client.get(reverse("word-list-streetactivity", args=[activity.id]))
+            ReflectionFactory(activity=activity)
+        response = client.get(reverse("reflection-list-streetactivity", args=[activity.id]))
         assert response.status_code == 200
-        assert "words" in response.context
-        assert len(response.context["words"]) == 3
+        assert "reflections" in response.context
+        assert len(response.context["reflections"]) == 3
 
-    def test_word_listview_by_streetactivity(self, client):
-        """Test the Word list view filtered by StreetActivity to ensure it
+    def test_reflection_listview_by_streetactivity(self, client):
+        """Test the Reflection list view filtered by StreetActivity to ensure it
         returns a 200 status code and contains the expected context."""
         activity = StreetActivityFactory()
-        WordFactory.create_batch(2, activity=activity)
-        WordFactory.create_batch(2)  # Words for other activities
+        ReflectionFactory.create_batch(2, activity=activity)
+        ReflectionFactory.create_batch(2)  # Reflections for other activities
 
-        list_url = reverse("word-list-streetactivity", args=[activity.id])
+        list_url = reverse("reflection-list-streetactivity", args=[activity.id])
         response = client.get(list_url)
 
         assert response.status_code == 200
-        assert "words" in response.context
-        assert len(response.context["words"]) == 2
-        for word in response.context["words"]:
-            assert word.activity == activity
+        assert "reflections" in response.context
+        assert len(response.context["reflections"]) == 2
+        for reflection in response.context["reflections"]:
+            assert reflection.activity == activity
 
-    def test_word_ordering(self):
-        """Test that Word instances are ordered by date in descending order."""
-        exp1 = WordFactory(date_created=timezone.now() - timedelta(days=2))
-        exp2 = WordFactory(date_created=timezone.now() - timedelta(days=1))
-        exp3 = WordFactory(date_created=timezone.now())
+    def test_reflection_ordering(self):
+        """Test that Reflection instances are ordered by date in descending order."""
+        exp1 = ReflectionFactory(date_created=timezone.now() - timedelta(days=2))
+        exp2 = ReflectionFactory(date_created=timezone.now() - timedelta(days=1))
+        exp3 = ReflectionFactory(date_created=timezone.now())
 
-        words = Word.objects.all()
-        assert list(words) == [exp3, exp2, exp1]
+        reflections = Reflection.objects.all()
+        assert list(reflections) == [exp3, exp2, exp1]
 
-    def test_word_activity_relationship(self):
-        """Test the ForeignKey relationship between Word and StreetActivity."""
+    def test_reflection_activity_relationship(self):
+        """Test the ForeignKey relationship between Reflection and StreetActivity."""
         activity = StreetActivityFactory()
-        word = WordFactory(activity=activity)
+        reflection = ReflectionFactory(activity=activity)
 
-        assert word.activity == activity
-        assert word in activity.words.all()
+        assert reflection.activity == activity
+        assert reflection in activity.reflections.all()
 
     def test_delete_view(self, client):
-        """Test the Word delete view to ensure it returns a 200 status code
+        """Test the Reflection delete view to ensure it returns a 200 status code
         and contains the expected context."""
-        word = WordFactory()
+        reflection = ReflectionFactory()
 
-        delete_word_url = reverse("delete-word", args=[word.id])
+        delete_reflection_url = reverse("delete-reflection", args=[reflection.id])
 
-        response = client.post(delete_word_url)
+        response = client.post(delete_reflection_url)
 
         assert response.status_code == 302
-        assert not Word.objects.filter(id=word.id).exists()
-        assert Word.objects.count() == 0
+        assert not Reflection.objects.filter(id=reflection.id).exists()
+        assert Reflection.objects.count() == 0
 
     def test_update_view(self, client):
-        """Test the Word update view to ensure it returns a 200 status code
+        """Test the Reflection update view to ensure it returns a 200 status code
         and contains the expected form in context."""
-        word = WordFactory()
-        update_url = reverse("update-word", args=[word.id])
+        reflection = ReflectionFactory()
+        update_url = reverse("update-reflection", args=[reflection.id])
 
         updated_data = {
-            "word": "Updated",
-            "activity": word.activity,
+            "reflection": "Updated",
+            "activity": reflection.activity,
         }
 
         response = client.post(update_url, updated_data, follow=True)
 
         assert response.status_code == 200
 
-        word.refresh_from_db()
-        assert word.word == "Updated"
+        reflection.refresh_from_db()
+        assert reflection.reflection == "Updated"
 
-    def test_get_context_data_word_createview(self, client):
-        """Given the user creates a word,
+    def test_get_context_data_reflection_createview(self, client):
+        """Given the user creates a reflection,
         test if activity is in the context"""
         activity = StreetActivityFactory()
-        create_url = reverse("create-word", args=[activity.id])
+        create_url = reverse("create-reflection", args=[activity.id])
         response = client.get(create_url)
         assert response.status_code == 200
         assert "activity" in response.context
 
-    def test_get_context_data_word_updateview(self,client):
-        """Given the user updates a word,
+    def test_get_context_data_reflection_updateview(self,client):
+        """Given the user updates a reflection,
         test if activity is in the context"""
-        word = WordFactory()
-        update_url = reverse("update-word", args=[word.id])
+        reflection = ReflectionFactory()
+        update_url = reverse("update-reflection", args=[reflection.id])
         response = client.get(update_url)
         assert response.status_code == 200
         assert "activity" in response.context
 
-    def test_word_missing_on_word_form(self, client):
-        """Given the user forgets to fill in a word,
-        test if the error 'Geen woord gegeven' is given"""
+    def test_reflection_missing_on_reflection_form(self, client):
+        """Given the user forgets to fill in a reflection,
+        test if the error 'Geen reflectie gegeven' is given"""
         activity = StreetActivityFactory()
-        create_url = reverse("create-word", args=[activity.id])
-        word_data = create_word_data(activity)
-        word_data.pop("word", None)
+        create_url = reverse("create-reflection", args=[activity.id])
+        reflection_data = create_reflection_data(activity)
+        reflection_data.pop("reflection", None)
 
-        response = client.post(create_url, word_data)
+        response = client.post(create_url, reflection_data)
 
         assert response.status_code == 200
-        assert "Geen woord gegeven" in response.content.decode()
+        assert "Geen reflectie gegeven" in response.content.decode()
 
 
-def create_word_data(activity=None):
-    """Helper function to create word data for tests."""
-    word_data = WordFactory.build().__dict__
+def create_reflection_data(activity=None):
+    """Helper function to create reflection data for tests."""
+    reflection_data = ReflectionFactory.build().__dict__
     for field in [
         "_state",
         "id",
         'activity_id',
         'user_id',
         'date_created', 'date_modified']:
-        word_data.pop(field, None)
-    word_data['activity'] = activity.id
-    return word_data
+        reflection_data.pop(field, None)
+    reflection_data['activity'] = activity.id
+    return reflection_data

@@ -6,7 +6,7 @@ router = routers.DefaultRouter()
 router.register(
     r"streetactivity", views.StreetActivityViewSet, basename="straatactiviteiten"
 )
-router.register(r"word", views.WordViewSet, basename="worden")
+router.register(r"reflection", views.ReflectionViewSet, basename="reflecties")
 
 urlpatterns = [
     path("api/", include(router.urls)),
@@ -29,30 +29,25 @@ urlpatterns = [
         views.StreetActivityDeleteView.as_view(),
         name="delete-streetactivity",
     ),
-    path("woorden/", views.WordListView.as_view(), name="word-list"),
+    path("reflecties/", views.ReflectionListView.as_view(), name="reflection-list"),
     path(
-        "<int:pk>/woorden/straatspel/",
-        views.WordListViewStreetActivity.as_view(),
-        name="word-list-streetactivity",
+        "<int:pk>/reflecties/straatspel/",
+        views.ReflectionListViewStreetActivity.as_view(),
+        name="reflection-list-streetactivity",
     ),
     path(
-        "<int:pk>/woord/nieuw/",
-        views.WordCreateView.as_view(),
-        name="create-word",
+        "<int:pk>/reflectie/nieuw/",
+        views.ReflectionCreateView.as_view(),
+        name="create-reflection",
     ),
     path(
-        "verwijder/woord/<int:pk>",
-        views.WordDeleteView.as_view(),
-        name="delete-word",
+        "verwijder/reflectie/<int:pk>",
+        views.ReflectionDeleteView.as_view(),
+        name="delete-reflection",
     ),
     path(
-        "bewerk/woord/<int:pk>",
-        views.WordUpdateView.as_view(),
-        name="update-word",
+        "bewerk/reflectie/<int:pk>",
+        views.ReflectionUpdateView.as_view(),
+        name="update-reflection",
     ),
-    path(
-        "woordenboom",
-        views.WordTreeView.as_view(),
-        name="wordtree",
-    )
 ]

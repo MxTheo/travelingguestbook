@@ -5,7 +5,7 @@ from pytest_factoryboy import register
 from travelingguestbook import factories
 
 register(factories.StreetActivityFactory)
-register(factories.WordFactory)
+register(factories.ReflectionFactory)
 register(factories.PersonaFactory)
 register(factories.ProblemFactory)
 register(factories.ReactionFactory)

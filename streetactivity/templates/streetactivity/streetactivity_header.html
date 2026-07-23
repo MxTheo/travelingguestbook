@@ -8,12 +8,12 @@
             <div class="card bg-primary text-white">
                 <div class="card-body text-center">
                     <h5 class="card-title mb-3">
-                        Eén woord. Wat past bij dit spel vandaag?
+                        Hoe heb je het doen van {{ activity.name }} ervaren?
                     </h5>
                     <div class="d-grid gap-2">
-                        <a href="{% url 'create-word' activity.pk %}"
+                        <a href="{% url 'create-reflection' activity.pk %}"
                             class="btn btn-light btn-lg">
-                            <i class="bi bi-droplet me-2 fs-6"></i>Plant je woord
+                            <i class="bi bi-droplet me-2 fs-6"></i>Plant je reflectie
                         </a>
                     </div>
                     </div>

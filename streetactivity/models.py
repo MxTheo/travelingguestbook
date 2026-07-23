@@ -1,7 +1,5 @@
-
 from django.utils import timezone
 from django.db import models
-from django.contrib.auth.models import User
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -42,21 +40,21 @@ class StreetActivity(models.Model):
     def __str__(self):
         return str(self.name)
 
-class Word(models.Model):
-    """A word is a descriptor that players associate with a moment during a street activity."""
+class Reflection(models.Model):
+    """A reflection is a player's thought or feeling about doing a street activity."""
 
     activity = models.ForeignKey(
         "StreetActivity",
         on_delete=models.CASCADE,
-        related_name="words",
+        related_name="reflections",
         verbose_name="Gerelateerde activiteit",
         null=True,
         blank=True,
     )
-    word = models.CharField(
-        max_length=100,
-        verbose_name="Eén woord",
-        help_text="Welk woord past bij dit moment?",
+    reflection = models.CharField(
+        max_length=1000,
+        verbose_name="Reflectie over het spel",
+        help_text="Hoe heb je het doen van dit spel ervaren?",
     )
 
     date_created = models.DateTimeField(default=timezone.now)
@@ -65,13 +63,13 @@ class Word(models.Model):
     context = models.JSONField(default=dict, blank=True)
 
     class Meta:
-        """Order words by date in descending order."""
+        """Order reflections by date in descending order."""
         ordering = ["-date_created"]
-        verbose_name = "Woord"
-        verbose_name_plural = "Woorden"
+        verbose_name = "Reflectie"
+        verbose_name_plural = "Reflecties"
         indexes = [
             models.Index(fields=['activity', 'date_created']),
         ]
 
     def __str__(self):
-        return self.word
+        return self.reflection

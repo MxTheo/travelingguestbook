@@ -5,7 +5,7 @@ import factory
 from faker import Faker
 from django.utils import timezone
 from django.contrib.auth.models import User
-from streetactivity.models import StreetActivity, Word
+from streetactivity.models import StreetActivity, Reflection
 from persona.models import Persona, Problem, Reaction
 
 fake = Faker()
@@ -30,12 +30,12 @@ class StreetActivityFactory(factory.django.DjangoModelFactory):
     date_created  = factory.LazyFunction(timezone.now)
     date_modified = factory.LazyFunction(timezone.now)
 
-class WordFactory(factory.django.DjangoModelFactory):
-    '''Mock for streetactivities Word'''
+class ReflectionFactory(factory.django.DjangoModelFactory):
+    '''Mock for streetactivities Reflection'''
     class Meta:
-        model = Word
+        model = Reflection
     activity      = factory.SubFactory(StreetActivityFactory)
-    word          = factory.LazyFunction(fake.word)
+    reflection    = factory.LazyFunction(fake.text)
     date_created  = factory.LazyFunction(timezone.now)
     date_modified = factory.LazyFunction(timezone.now)
 

@@ -1,5 +1,5 @@
 from django import forms
-from .models import StreetActivity, Word
+from .models import StreetActivity, Reflection
 
 class StreetActivityForm(forms.ModelForm):
     """Form for a StreetActivity."""
@@ -27,33 +27,33 @@ class StreetActivityForm(forms.ModelForm):
             'supplies': forms.Textarea(attrs={'rows': 3}),
         }
 
-class WordForm(forms.ModelForm):
-    """Base form for Word with common fields."""
+class ReflectionForm(forms.ModelForm):
+    """Base form for Reflection with common fields."""
 
     class Meta:
-        model = Word
-        fields = ['word']
+        model = Reflection
+        fields = ['reflection']
         widgets = {
-            'word': forms.Textarea(attrs={
-                'rows': 1,
+            'reflection': forms.Textarea(attrs={
+                'rows': 3,
                 'class': 'form-control',
                 'placeholder':
-                'Jouw word in één woord...'}),
+                'Jouw reflectie over het doen van dit spel...'}),
         }
         labels = {
-            'word': 'Eén woord. Wat past?',
+            'reflection': 'Hoe denk je terug over het doen van dit spel?',
         }
         help_texts = {
-            'word': """Het mag van alles zijn: "licht", "baksteen", "vlieg", "stil", "moed"... 
-            Het eerste wat in je opkomt""",
+            'reflection': """Wat heb je geleerd? Tips, suggesties?
+            Jouw ervaring draagt bij aan het begrijpen van dit spel!""",
         }
 
     def clean(self):
-        """Custom validation to ensure word is provided."""
+        """Custom validation to ensure reflection is provided."""
         cleaned_data = super().clean()
-        word = cleaned_data.get('word')
+        reflection = cleaned_data.get('reflection')
 
-        if not word:
-            self.add_error('word', 'Geen woord gegeven')
+        if not reflection:
+            self.add_error('reflection', 'Geen reflectie gegeven')
 
         return cleaned_data

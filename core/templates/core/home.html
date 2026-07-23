@@ -36,9 +36,9 @@
                         class="btn btn-primary btn-lg px-4 me-md-2">
                         <i class="bi bi-person-walking me-2"></i>Wat speelde je op straat?
                     </a>
-                    <a href="#recentewoorden"
+                    <a href="#recentereflecties"
                        class="btn btn-outline-primary btn-lg px-4">
-                        <i class="bi bi-people-fill me-2"></i>Recente woorden
+                        <i class="bi bi-people-fill me-2"></i>Recente reflecties
                     </a>
                 </div>
                 <div class="mt-3">
@@ -57,17 +57,17 @@
                 </div>
             </div>
         </div>
-        <!-- Recente Woorden Dashboard -->
+        <!-- Recente Reflecties Dashboard -->
         <div class="row py-5 bg-primary rounded-3 mx-0"
-             id="recentewoorden">
+             id="recentereflecties">
             <div class="col-12">
                 <div class="container">
                     <!-- Header met betere mobile layout -->
                     <div class="row align-items-center mb-5 text-white">
                         <div class="col-lg-8 mb-4 mb-lg-0">
-                            <h2 class="fw-bold mb-3">Recente Woorden</h2>
+                            <h2 class="fw-bold mb-3">Recente Reflecties</h2>
                             <p class="opacity-75 mb-0 fs-5">
-                                Elk woord draagt bij aan ons gedeelde begrip van de straat.
+                                Elk reflectie draagt bij aan ons gedeelde begrip van de straat.
                                 <strong>Niet om te oordelen, maar om samen te begrijpen.</strong> <a href="#samenbegrijpen" class="font-monospace ms-2">Lees verder <i class="bi bi-arrow-right"></i></a>
                             </p>
                         </div>
@@ -78,24 +78,24 @@
                                 </a>
                         </div>
                     </div>
-                    <!-- Woorden grid -->
+                    <!-- Reflecties grid -->
                     <div class="row g-4">
-                        {% for word in recent_words %}
+                        {% for reflection in recent_reflections %}
                             <div class="col-lg-6">
                                 <div class="card h-100 border-0 shadow-sm">
                                     <div class="card-body p-4 d-flex flex-column">
                                         <!-- Spel en type -->
                                         <div class="d-flex flex-wrap gap-2 mb-3 align-items-center justify-content-between">
-                                            <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ word.activity.name }}</span>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ reflection.activity.name }}</span>
                                         </div>
-                                        {% include "streetactivity/report_snippet.html" with word=word %}
+                                        {% include "streetactivity/report_snippet.html" with reflection=reflection %}
                                         <!-- Metadata: tijd, meer lezen -->
                                         <div class="d-flex flex-wrap justify-content-between align-items-center text-muted fs-7 gap-2 mt-auto">
                                             <small class="d-flex align-items-center">
                                                 <i class="bi bi-clock me-1"></i>
-                                                {{ word.date_created|timesince }} geleden
+                                                {{ reflection.date_created|timesince }} geleden
                                             </small>
-                                            <a href="{% url 'word-list-streetactivity' word.activity.pk %}"
+                                            <a href="{% url 'reflection-list-streetactivity' reflection.activity.pk %}"
                                                class="text-decoration-none text-primary d-flex align-items-center">
                                                 Meer lezen <i class="bi bi-arrow-right ms-1"></i>
                                             </a>
@@ -107,11 +107,11 @@
                             <div class="col-12">
                                 <div class="text-center py-5 bg-light rounded">
                                     <i class="bi bi-journal-text display-4 text-muted mb-3"></i>
-                                    <h5 class="text-muted">Nog geen woorden geplant</h5>
-                                    <p class="text-muted mb-3">Plant als eerste je woord voor dit spel</p>
+                                    <h5 class="text-muted">Nog geen reflecties geplant</h5>
+                                    <p class="text-muted mb-3">Plant als eerste je reflectie voor dit spel</p>
                                     <div class="d-flex gap-2 justify-content-center">
                                         <a href="{% url 'streetactivity-list' %}" class="btn btn-primary">
-                                            <i class="bi bi-plus-circle me-2"></i>Deel eerste woord
+                                            <i class="bi bi-plus-circle me-2"></i>Deel eerste reflectie
                                         </a>
                                         <a href="{% url 'streetactivity-list' %}"
                                            class="btn btn-outline-primary">
@@ -137,7 +137,7 @@
                 <div class="text-center mb-5">
                     <h2 class="fw-bold mb-3">Kies een straatspel om te beginnen</h2>
                     <p class="lead text-muted">
-                        Selecteer een straatspel en deel je woord
+                        Selecteer een straatspel en deel je reflectie
                     </p>
                 </div>
                 <div class="row g-4 mb-3">
@@ -218,7 +218,7 @@
                                     Contact met onbekenden in de publieke ruimte zoeken kan niet mislukken, omdat er geen goede of slechte ervaringen zijn. We beoefenen open te staan voor wat zich ook aandient tijdens een straatspel, zonder te oordelen
                                 </p>
                                 <p class="card-text">
-                                    Elk woord leert ons iets over onszelf en de wereld om ons heen. Zo zijn er geen goede of slechte ervaringen - alles is ervaring.
+                                    Elk reflectie leert ons iets over onszelf en de wereld om ons heen. Zo zijn er geen goede of slechte ervaringen - alles is ervaring.
                                 </p>
                             </div>
                         </div>
@@ -226,7 +226,7 @@
                 </div>
             </div>
         </div>
-        <!-- Hoe Woorden Samen Een Verhaal Vormen -->
+        <!-- Hoe Reflecties Samen Een Verhaal Vormen -->
         <div id="samenbegrijpen"
              class="row py-5 bg-light rounded-3 my-5 wathoewaarom">
             <div class="col-lg-10 mx-auto">
@@ -239,7 +239,7 @@
                 <div class="row align-items-center mb-5">
                     <div class="col-md-6">
                         <p class="fs-5">
-                            Jouw woord van wat je ervaart - onzekerheid, verbinding, steen -
+                            Jouw reflectie van wat je ervaart - onzekerheid, verbinding, steen -
                             helpt anderen het karakter van deze beoefening te begrijpen.
                         </p>
                         <p>
@@ -265,9 +265,9 @@
                         <div class="card h-100 border-0">
                             <div class="card-body text-center p-4">
                                 <i class="bi bi-droplet display-6 text-info mb-3"></i>
-                                <h5>Woorden planten</h5>
+                                <h5>Reflecties planten</h5>
                                 <p class="text-muted">
-                                    Jouw woord van wat je ervaart - ongemakkelijk, verbinding, steen -
+                                    Jouw reflectie van wat je ervaart - ongemakkelijk, verbinding, steen -
                                     helpt anderen het doen van een straatspel te begrijpen.
                                 </p>
                             </div>
