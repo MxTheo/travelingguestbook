@@ -1,13 +1,13 @@
-from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
 from django.views import View
-from core.utils.mixins import ActivityFilterMixin
-from .forms import RegisterForm, UserForm, ProfileForm
+from django.views.generic import CreateView, DetailView
+
+from .forms import ProfileForm, RegisterForm, UserForm
 
 
 class Register(CreateView):
@@ -23,7 +23,7 @@ class Register(CreateView):
         login(self.request, user)
         return redirect(self.success_url)  # type: ignore[reportArgumentType]
 
-class UserDetail(DetailView, ActivityFilterMixin):
+class UserDetail(DetailView):
     """Generic display view to get to the profile of the user:
     https://docs.djangoproject.com/en/5.0/ref/class-based-views/generic-display/"""
 

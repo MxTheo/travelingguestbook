@@ -1,7 +1,6 @@
 from django.urls import reverse
 from travelingguestbook.factories import StreetActivityFactory
 
-
 class TestHome:
     """Tests for the HomeView"""
     def test_returns_200(self, client):

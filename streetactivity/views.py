@@ -32,12 +32,6 @@ class StreetActivityDetailView(DetailView):
     model = StreetActivity
     context_object_name = "activity"
 
-
-    def get_base_queryset(self):
-        """Base queryset: all reflections for this activity."""
-        activity = self.get_object()
-        return Reflection.objects.filter(activity=activity)
-
     def get_context_data(self, **kwargs):
         """Extend context data with word statistics for charts"""
         context = super().get_context_data(**kwargs)
