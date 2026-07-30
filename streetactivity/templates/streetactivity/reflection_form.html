@@ -47,7 +47,7 @@
                         <!-- reflectieveld met Bootstrap classes voor extra gewicht -->
                         <div class="mb-5">
 
-                            <!-- Het tekstveld met Bootstrap classes voor grotere uitstrrcealing -->
+                            <!-- Het tekstveld met Bootstrap classes voor grotere uitstraling -->
                             <div class="mb-2 text-center">
                                 {{ form.reflection }}
                             </div>
@@ -94,7 +94,7 @@
     (function() {
         // Dit wordt uitgevoerd zodra de DOM geladen is om het tekstveld extra Bootstrap classes te geven
         document.addEventListener('DOMContentLoaded', function() {
-            const reflectionField = document.getElementById('{{ form.word.id_for_label }}');
+            const reflectionField = document.getElementById('{{ form.reflection.id_for_label }}');
             
             if (reflectionField) {
                 // Bootstrap classes toevoegen voor extra gewicht
@@ -104,23 +104,23 @@
                 
                 // Focus effect met Bootstrap classes (via event listeners)
                 reflectionField.addEventListener('focus', function() {
-                    this.classList.add('border-primary', 'bg-opacity-50', 'shadow');
+                    this.classList.add('border-secondary', 'bg-opacity-50', 'shadow', 'border-4');
                 });
                 
                 reflectionField.addEventListener('blur', function() {
-                    this.classList.remove('border-primary', 'bg-opacity-50', 'shadow');
+                    this.classList.remove('border-secondary', 'bg-opacity-50', 'shadow', 'border-4');
                 });
             }
         });
     })();
 </script>
     <script>
-        // Character counter voor word field
+        // Character counter voor reflection field
         document.addEventListener('DOMContentLoaded', function() {
-            const reflectionField = document.getElementById('{{ form.word.id_for_label }}');
+            const reflectionField = document.getElementById('{{ form.reflection.id_for_label }}');
             
             if (reflectionField) {
-                const counter = document.getElementById('word-counter');
+                const counter = document.getElementById('reflection-counter');
                 
                 function updateCounter() {
                     const length = reflectionField.value.length;
@@ -142,7 +142,7 @@
                 reflectionField.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        document.querySelector('.word-form button[type="submit"]').click();
+                        document.querySelector('.reflection-form button[type="submit"]').click();
                     }
                 });
 
