@@ -1,6 +1,8 @@
 from django.urls import reverse
+
 from streetactivity.models import StreetActivity
 from travelingguestbook.factories import StreetActivityFactory
+
 
 class TestStreetActivityModel:
     """Tests for the StreetActivity model."""
@@ -27,10 +29,9 @@ class TestStreetActivityModel:
         assert response.status_code == 200
         assert StreetActivity.objects.count() == 1
 
-    def test_streetactivity_updateview(self, auto_login_user):
+    def test_streetactivity_updateview(self, client):
         """Test the StreetActivity update view to ensure it returns a 200 status code
         and contains the expected form in context."""
-        client, _ = auto_login_user()
         activity = StreetActivityFactory()
         update_url = reverse("update-streetactivity", args=[activity.id])
 
@@ -48,10 +49,6 @@ class TestStreetActivityModel:
 
         activity.refresh_from_db()
         assert activity.name == "Updated straatspel"
-
-    def test_streetactivity_update_by_anonymous(self, client):
-        """Given an anonymous user tries to update a streetactivity,
-        test if that is not allowed"""
 
     def test_streetactivity_deleteview(self, client):
         """Test the StreetActivity delete view to ensure it returns a 200 status code

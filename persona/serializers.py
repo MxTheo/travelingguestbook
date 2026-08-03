@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from .models import Persona, Problem, Reaction
+
 
 class PersonaSerializer(serializers.ModelSerializer):
     """Serializer to convert Persona instance to JSON"""

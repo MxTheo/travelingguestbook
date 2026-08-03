@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import StreetActivity, Reflection
+
+from .models import Reflection, StreetActivity
+
 
 class StreetActivitySerializer(serializers.ModelSerializer):
     """Serializer to convert Street Activity instance to JSON"""

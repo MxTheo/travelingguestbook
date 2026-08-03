@@ -1,21 +1,21 @@
-from typing import Optional
-from rest_framework import viewsets
 from django.contrib import messages
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-)
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from .serializers import StreetActivitySerializer, ReflectionSerializer
-from .models import StreetActivity, Reflection
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
+from rest_framework import viewsets
+
 from .forms import (
     ReflectionForm,
     StreetActivityForm,
 )
+from .models import Reflection, StreetActivity
+from .serializers import ReflectionSerializer, StreetActivitySerializer
 
 CONFIRM_DELETE_TEMPLATE = "admin/confirm_delete.html"
 
@@ -118,7 +118,7 @@ class ReflectionCreateView(CreateView):
 
     model = Reflection
     form_class = ReflectionForm
-    activity: Optional[StreetActivity] = None
+    activity: StreetActivity
 
     def dispatch(self, request, *args, **kwargs):
         """Determine activity ID from URL parameters."""

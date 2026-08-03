@@ -4,16 +4,16 @@ An open platform for practicing equanimity in public spaces.
 
 ## About Gemene Grond
 
-Gemene Grond facilitates street activities to practice equanimity - the art of being open to what is, without judgment or expectation. The platform supports both practitioners and passers-by in sharing their experiences.
+Gemene Grond facilitates street activities to practice equanimity - the art of being open to what is, without judgment or expectation. The platform supports both practitioners and passers-by in sharing their experiences, as sharing is anonymous.
 
 ### Philosophy
 
-We see the street as a training ground for inner freedom. Not to make contact, but to be open to what is. The practitioner is like **soil** - everything that happens (smile, frown, silence) is **nutrient** for presence.
+We see the street as a training ground for inner freedom. Not to achieve contact, but to be open to what is. The practitioner is like **soil** - everything that happens (smile, frown, silence) is **nutrient** for presence.
 
 ### Features
 
 - **Street Activities**: Inviting or approaching strangers
-- **Moment Sharing**: Anonymous reflections
+- **Reflections Sharing**: Anonymous reflections
 - **Personas**: Insights into different types of passers-by
 - **Collective Understanding**: Recognizing patterns in how activities are experienced
 
@@ -69,11 +69,9 @@ Visit http://localhost:8000 to see the application.
 - Methods: invite, approach, or both
 - Includes description and supplies
 
-### Moments (Experience)
+### Reflections (Experience)
 
-- Reflections from practitioners and passers-by
-- Keywords summarizing the shared moment
-- Confidence level
+- Free text of what you learned, tips or suggestions
 
 ![persona_domainmodel](architecture/persona_domainmodel.png)
 

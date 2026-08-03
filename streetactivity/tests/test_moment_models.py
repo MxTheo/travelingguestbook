@@ -1,8 +1,11 @@
 from datetime import timedelta
-from django.utils import timezone
+
 from django.urls import reverse
-from travelingguestbook.factories import ReflectionFactory, StreetActivityFactory
+from django.utils import timezone
+
 from streetactivity.models import Reflection
+from travelingguestbook.factories import ReflectionFactory, StreetActivityFactory
+
 
 class TestReflectionModel:
     """Tests for the Reflection model."""
@@ -20,10 +23,9 @@ class TestReflectionModel:
         reflection = ReflectionFactory(activity=activity, reflection="")
         assert str(reflection) == ""
 
-    def test_reflection_createview(self, auto_login_user):
+    def test_reflection_createview(self, client):
         """Test the Reflection create view to ensure it returns a 200 status code
         and contains the expected form in context."""
-        client, _ = auto_login_user()
         activity = StreetActivityFactory()
         create_url = reverse("create-reflection", args=[activity.id])
 

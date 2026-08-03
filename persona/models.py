@@ -1,7 +1,9 @@
 import os
 import uuid
+
 from django.db import models
 from django.urls import reverse
+
 
 def persona_portrait_path(instance, filename):
     """Upload path voor persona portretten"""
@@ -26,11 +28,11 @@ class Persona(models.Model):
     def __str__(self):
         """Persona is represented by its title."""
         return str(self.title)
-    
+
     def get_absolute_url(self):
         """Returns the url to access a particular persona instance."""
         return reverse('persona-detail', kwargs={'pk': self.pk})
-    
+
     @property
     def portrait_url(self):
         """Returns the URL of the portrait image or a default image if none is set."""

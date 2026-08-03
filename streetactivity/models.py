@@ -1,5 +1,5 @@
-from django.utils import timezone
 from django.db import models
+from django.utils import timezone
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -59,8 +59,6 @@ class Reflection(models.Model):
 
     date_created = models.DateTimeField(default=timezone.now)
     date_modified = models.DateTimeField(default=timezone.now)
-
-    context = models.JSONField(default=dict, blank=True)
 
     class Meta:
         """Order reflections by date in descending order."""

@@ -1,5 +1,7 @@
 from django import forms
-from .models import StreetActivity, Reflection
+
+from .models import Reflection, StreetActivity
+
 
 class StreetActivityForm(forms.ModelForm):
     """Form for a StreetActivity."""

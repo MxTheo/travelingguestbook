@@ -1,11 +1,13 @@
-from rest_framework import viewsets
-from django.views import generic
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.contrib import messages
-from .models import Persona, Problem, Reaction
+from django.views import generic
+from rest_framework import viewsets
+
 from .forms import PersonaForm, ProblemForm, ReactionForm
+from .models import Persona, Problem, Reaction
 from .serializers import PersonaSerializer, ProblemSerializer, ReactionSerializer
+
 
 class PersonaListView(generic.ListView):
     """View to list all personas."""
