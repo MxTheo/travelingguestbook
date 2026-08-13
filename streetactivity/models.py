@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -71,3 +72,32 @@ class Reflection(models.Model):
 
     def __str__(self):
         return self.reflection
+
+class StreetActivityPhoto(models.Model):
+    """
+    A photo uploaded for a street activity.
+    Photos are directly linked to a StreetActivity and are visible immediately after upload.
+    """
+    activity = models.ForeignKey(
+        'StreetActivity',
+        on_delete=models.CASCADE,
+        related_name='photos',
+        help_text="The street activity this photo belongs to."
+    )
+    image = models.ImageField(
+        upload_to='street_activity_photos/',
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
+        help_text="Upload a photo of the street activity (JPG, JPEG, or PNG)."
+    )
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="The date and time when the photo was uploaded."
+    )
+
+    class Meta:
+        verbose_name = "Street Activity Photo"
+        verbose_name_plural = "Street Activity Photos"
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return f"Photo for {self.activity} (uploaded at {self.uploaded_at})"

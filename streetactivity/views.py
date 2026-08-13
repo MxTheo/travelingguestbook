@@ -13,8 +13,9 @@ from rest_framework import viewsets
 from .forms import (
     ReflectionForm,
     StreetActivityForm,
+    StreetActivityPhotoForm,
 )
-from .models import Reflection, StreetActivity
+from .models import Reflection, StreetActivity, StreetActivityPhoto
 from .serializers import ReflectionSerializer, StreetActivitySerializer
 
 CONFIRM_DELETE_TEMPLATE = "admin/confirm_delete.html"
@@ -192,7 +193,8 @@ class ReflectionDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "reflection-list-streetactivity", kwargs={"pk": self.object.activity.pk}
+            "reflection-list-streetactivity",
+            kwargs={"pk": self.object.activity.pk}
         )
 
 class ReflectionViewSet(viewsets.ModelViewSet):
@@ -200,3 +202,89 @@ class ReflectionViewSet(viewsets.ModelViewSet):
 
     queryset = Reflection.objects.all()
     serializer_class = ReflectionSerializer
+
+class StreetActivityPhotoCreateView(CreateView):
+    """
+    View for uploading a photo for a StreetActivity.
+    Uses the StreetActivityPhotoForm for validation and saving.
+    """
+    model = StreetActivityPhoto
+    form_class = StreetActivityPhotoForm
+
+    def form_valid(self, form):
+        """
+        Process the form when it is valid.
+        Associates the uploaded photo with the current StreetActivity.
+        """
+        photo = form.save(commit=False)
+        activity_id = self.kwargs.get('activity_id')
+        photo.activity = get_object_or_404(StreetActivity, id=activity_id)
+        photo.save()
+        messages.success(self.request, "Je foto is succesvol geupload!")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        """
+        Handle invalid form submissions.
+        Display an error message to the user.
+        """
+        messages.error(self.request, "Er was een fout bij het uploaden van je foto. Controleer het bestand en probeer opnieuw.")
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        """Use the activity id from the URL
+          to redirect to the gallery after a successful upload"""
+        activity_id = self.kwargs.get('activity_id')
+        return reverse_lazy(
+            "streetactivity-photo-list",
+            kwargs={"activity_id": activity_id}
+        )
+
+class StreetActivityPhotoDeleteView(DeleteView):
+    '''Delete view for streetactivity photo'''
+    model = StreetActivityPhoto
+    template_name = CONFIRM_DELETE_TEMPLATE
+
+    def form_valid(self, form):
+        messages.add_message(
+            self.request, messages.WARNING, "De foto is verwijderd."
+        )
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "streetactivity-photo-list",
+            kwargs={"activity_id": self.object.activity.pk}
+        )
+
+class StreetActivityPhotoListView(ListView):
+    """View to list photos related to a specific street activity."""
+    model = StreetActivityPhoto
+    context_object_name = "photos"
+    paginate_by = 10
+
+    def get_queryset(self):
+        """Filter photos by street activity ID from URL."""
+        activity_id = self.kwargs["activity_id"]
+        return StreetActivityPhoto.objects.filter(activity_id=activity_id)
+
+    def get_context_data(self, **kwargs):
+        """Add street activity to context for header."""
+        context = super().get_context_data(**kwargs)
+        context["activity"] = get_object_or_404(
+            StreetActivity, pk=self.kwargs["activity_id"]
+        )
+        return context
+
+class StreetActivityPhotoDetailView(DetailView):
+    """View to display details of a single street activity photo."""
+    model = StreetActivityPhoto
+    context_object_name = "photo"
+    
+    def get_context_data(self, **kwargs):
+        """Extend context data with word statistics for charts"""
+        context = super().get_context_data(**kwargs)
+        activity = self.object.activity
+        context['activity'] = activity
+
+        return context

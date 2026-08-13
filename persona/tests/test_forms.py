@@ -1,8 +1,8 @@
-import pytest
 from io import BytesIO
-from PIL import Image
+
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.files.storage import default_storage
+from PIL import Image
+
 from persona.forms import PersonaForm
 
 

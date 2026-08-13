@@ -2,11 +2,12 @@
 to be able to mock the objects in tests"""
 
 import factory
-from faker import Faker
-from django.utils import timezone
 from django.contrib.auth.models import User
-from streetactivity.models import StreetActivity, Reflection
+from django.utils import timezone
+from faker import Faker
+
 from persona.models import Persona, Problem, Reaction
+from streetactivity.models import Reflection, StreetActivity
 
 fake = Faker()
 
@@ -29,6 +30,14 @@ class StreetActivityFactory(factory.django.DjangoModelFactory):
     supplies      = factory.LazyFunction(fake.text)
     date_created  = factory.LazyFunction(timezone.now)
     date_modified = factory.LazyFunction(timezone.now)
+
+class StreetActivityPhotoFactory(factory.django.DjangoModelFactory):
+    '''Mock for streetactivities StreetActivityPhoto'''
+    class Meta:
+        model =  'streetactivity.StreetActivityPhoto'
+    activity      = factory.SubFactory(StreetActivityFactory)
+    image         = factory.django.ImageField(color='blue')
+    uploaded_at   = factory.LazyFunction(timezone.now)
 
 class ReflectionFactory(factory.django.DjangoModelFactory):
     '''Mock for streetactivities Reflection'''

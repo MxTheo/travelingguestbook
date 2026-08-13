@@ -51,4 +51,21 @@ urlpatterns = [
         views.ReflectionUpdateView.as_view(),
         name="update-reflection",
     ),
+    path(
+        "upload-foto/<int:activity_id>/",
+        views.StreetActivityPhotoCreateView.as_view(),
+        name="create-streetactivity-photo",
+    ),
+    path(
+        'verwijder-foto/<int:pk>',
+        views.StreetActivityPhotoDeleteView.as_view(),
+        name='delete-streetactivity-photo'),
+    path(
+        'gallerij/<int:activity_id>/',
+        views.StreetActivityPhotoListView.as_view(),
+        name='streetactivity-photo-list'),
+    path(
+        'foto/<int:pk>/',
+        views.StreetActivityPhotoDetailView.as_view(),
+        name='streetactivity-photo-detail'),
 ]

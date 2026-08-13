@@ -1,6 +1,7 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
-from .models import Reflection, StreetActivity
+from .models import Reflection, StreetActivity, StreetActivityPhoto
 
 
 class StreetActivityForm(forms.ModelForm):
@@ -59,3 +60,37 @@ class ReflectionForm(forms.ModelForm):
             self.add_error('reflection', 'Geen reflectie gegeven')
 
         return cleaned_data
+
+class StreetActivityPhotoForm(forms.ModelForm):
+    """Form for uploading a photo related to a StreetActivity."""
+    class Meta:
+        model = StreetActivityPhoto
+        fields = ['image']
+
+    def clean_image(self):
+        """
+        Validation for the image field:
+        - Check if the file is an image (JPG, JPEG, PNG).
+        - Check if the file size is not too large (default 5MB).
+        """
+        image = self.cleaned_data.get('image')
+        if image:
+            try:
+                self.check_image_size(image)
+                self.check_image_type(image)
+            except ValidationError as e:
+                raise ValidationError(e.message)
+
+        return image
+
+    def check_image_type(self, image):
+        """Check if the uploaded file is an image (JPG, JPEG, PNG)."""
+        valid_extensions = ['jpg', 'jpeg', 'png']
+        if image.name.split('.')[-1].lower() not in valid_extensions:
+            raise ValidationError("Alleen JPG, JPEG en PNG bestanden zijn toegestaan.")
+
+    def check_image_size(self, image):
+        """Check if the uploaded image file size is not too large (default 5MB)."""
+        max_size = 5 * 1024 * 1024  # 5MB
+        if image.size > max_size:
+            raise ValidationError(f"Bestand is te groot.")
