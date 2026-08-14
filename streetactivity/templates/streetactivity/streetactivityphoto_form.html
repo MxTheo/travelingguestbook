@@ -1,16 +1,43 @@
- {% extends "admin/main.html" %}
- {% load static %}
- {% block title %}
-    Foto {% if form.instance.pk %}bewerken{% else %}uploaden{% endif %}
- {% endblock title %}
-{% block stylesheet %}<link href="{% static "styles/form.css" %}" rel="stylesheet" >{% endblock stylesheet %}
- {% block content %}
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+    Foto
+    {% if form.instance.pk %}
+        bewerken
+    {% else %}
+        uploaden
+    {% endif %}
+{% endblock title %}
+{% block stylesheet %}
+    <link href="{% static "styles/form.css" %}" rel="stylesheet">
+{% endblock stylesheet %}
+{% block content %}
     <div class="container mt-4">
+        <h1>
+            Foto
+            {% if form.instance.pk %}
+                bewerken
+            {% else %}
+                uploaden
+            {% endif %}
+        </h1>
+    </div>
+    <div class="container mt-4">
+        <div class="alert alert-warning">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                <div class="small">
+                    <strong>Toestemming:</strong> Zorg ervoor dat je toestemming hebt van de persoon op de foto voordat je deze uploadt.
+                </div>
+            </div>
+        </div>
         <form method="post" enctype="multipart/form-data" action="">
             {% csrf_token %}
             {% load crispy_forms_tags %}
             {{ form|crispy }}
-            <input class="btn btn-success" type="submit" value="Opslaan"/>     
-            <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
+            <input class="btn btn-success" type="submit" value="Opslaan" />
+            <button onclick="window.history.back();"
+                    class="btn btn-secondary ms-4"
+                    type="button">Annuleer</button>
         </form>
- {% endblock content %}
+    {% endblock content %}
