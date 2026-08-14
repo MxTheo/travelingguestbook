@@ -12,18 +12,18 @@
         <!-- Header sectie met titel en CTA -->
         {% include "streetactivity/streetactivity_header.html" with activity=activity %}
         <!-- Snelle navigatie -->
-        <div class="row mb-5">
+        <div class="row mb-3">
             <div class="col-12">
                 <div class="d-flex flex-wrap gap-3 justify-content-end align-items-center p-3 bg-light rounded">
                     <div>
                         <a href="{% url "update-streetactivity" activity.pk %}"
-                            class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
+                           class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
                         <a href="{% url "streetactivity-photo-list" activity.pk %}"
-                            class="btn btn-outline-primary btn-sm"><i class="bi bi-images me-1"></i>Gallerij</a> 
+                           class="btn btn-outline-primary btn-sm"><i class="bi bi-images me-1"></i>Gallerij</a>
                         <a href="{% url "create-streetactivity-photo" activity.pk %}"
-                            class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a> 
+                           class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a>
                         <a href="{% url 'streetactivity-list' %}"
-                            class="btn btn-outline-secondary btn-sm">
+                           class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-grid me-1"></i>Alle spellen
                         </a>
                     </div>
@@ -31,7 +31,7 @@
             </div>
         </div>
         <!-- Instructies sectie -->
-        <section id="instructies" class="mb-5">
+        <section id="instructies" class="m-5">
             <div class="row">
                 <div class="col-lg-8">
                     <div class="card border-0 shadow-sm">
@@ -66,17 +66,36 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="h3 text-primary">Recente Reflecties</h2>
                         <a href="{% url 'reflection-list-streetactivity' activity.pk %}"
-                            class="btn btn-outline-primary">
+                           class="btn btn-outline-primary">
                             <i class="bi bi-list-ul me-1"></i>Alle reflecties
                         </a>
                     </div>
                 </div>
             </div>
             <div class="row g-4">
+                {% if photo %}
+                    <div class="col-sm-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <img src="{{ photo.image.url }}"
+                                     alt="Foto van {{ activity.name }}"
+                                     class="img-fluid rounded mb-3"
+                                     style="max-height: 200px;
+                                            width: auto;
+                                            object-fit: contain">
+                                <div class='d-flex justify-content-evenly'>
+                                    <small class="text-muted">Geupload op {{ photo.uploaded_at|date:"d-m-Y H:i" }}</small>
+                                    <a href="{% url "streetactivity-photo-list" activity.pk %}"
+                                       class="btn btn-outline-primary btn-sm align-content-center"><i class="bi bi-images"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
                 {% for reflection in recent_reflections %}
-                    <div class="col-lg-6">
+                    <div class="col-md-3 col-sm-6">
                         <a href="{% url 'reflection-list-streetactivity' activity.pk %}"
-                            class="text-decoration-none">
+                           class="text-decoration-none">
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
@@ -114,7 +133,7 @@
                         </p>
                         <div class="d-flex gap-3 justify-content-center flex-wrap">
                             <a href="{% url 'create-reflection' activity.pk %}"
-                                class="btn btn-primary btn-lg">
+                               class="btn btn-primary btn-lg">
                                 <i class="bi bi-droplet me-2 fs-6"></i>Plant je reflectie
                             </a>
                         </div>

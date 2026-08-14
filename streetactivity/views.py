@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models.functions import Random
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -34,10 +35,14 @@ class StreetActivityDetailView(DetailView):
     context_object_name = "activity"
 
     def get_context_data(self, **kwargs):
-        """Extend context data with word statistics for charts"""
+        """Extend context data with reflection and choose random photo"""
         context = super().get_context_data(**kwargs)
-        activity = self.object
+        context = self.add_reflection_context_data(activity=self.object, context=context)
+        context["photo"] = self.get_random_photo(activity=self.object)
+        return context
 
+    def add_reflection_context_data(self, activity, context):
+        '''Extend context data with reflection statistics'''
         reflections = activity.reflections.all()
         reflections_count = reflections.count()
 
@@ -46,6 +51,11 @@ class StreetActivityDetailView(DetailView):
         context["reflections_remaining"] = max(0, reflections_count - 3)
 
         return context
+
+    def get_random_photo(self, activity):
+        """Given an activity,
+        get a random photo associated with that activity"""
+        return activity.photos.annotate(random=Random()).order_by('random').first()
 
 class StreetActivityCreateView(CreateView):
     """View to create a new street activity."""
