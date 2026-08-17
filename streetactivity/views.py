@@ -38,7 +38,10 @@ class StreetActivityDetailView(DetailView):
         """Extend context data with reflection and choose random photo"""
         context = super().get_context_data(**kwargs)
         context = self.add_reflection_context_data(activity=self.object, context=context)
-        context["photo"] = self.get_random_photo(activity=self.object)
+        photo = self.get_random_photo(activity=self.object)
+        context["photo"] = photo
+        context["photo_width"] = photo.image.width if photo else None
+        context["photo_height"] = photo.image.height if photo else None
         return context
 
     def add_reflection_context_data(self, activity, context):
@@ -290,7 +293,7 @@ class StreetActivityPhotoDetailView(DetailView):
     """View to display details of a single street activity photo."""
     model = StreetActivityPhoto
     context_object_name = "photo"
-    
+
     def get_context_data(self, **kwargs):
         """Extend context data with word statistics for charts"""
         context = super().get_context_data(**kwargs)

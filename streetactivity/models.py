@@ -1,6 +1,6 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
-from django.core.validators import FileExtensionValidator
 
 METHOD_CHOICES = [
     ("invite", "Uitnodigen"),
@@ -100,4 +100,4 @@ class StreetActivityPhoto(models.Model):
         ordering = ['-uploaded_at']
 
     def __str__(self):
-        return f"Photo for {self.activity} (uploaded at {self.uploaded_at})"
+        return f"{self.activity} - {self.uploaded_at}"

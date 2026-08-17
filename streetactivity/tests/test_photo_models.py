@@ -35,7 +35,7 @@ class TestStreetActivityPhotoModel:
         """Test that StreetActivityPhoto returns the correct string of
         Photo for {self.activity} (uploaded at {self.uploaded_at})"""
         photo = StreetActivityPhotoFactory()
-        expected_string = f"Photo for {photo.activity} (uploaded at {photo.uploaded_at})"
+        expected_string = f"{photo.activity} - {photo.uploaded_at}"
         assert str(photo) == expected_string
 
 

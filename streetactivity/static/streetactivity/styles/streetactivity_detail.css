@@ -1,11 +1,10 @@
 /* streetactivity_detail.css - MINIMALE custom CSS met Bootstrap variabelen */
-
 img {
-    max-height: 200px;
-    width: auto;
+    width: 100%;
+    height: auto;
+    max-height: 300px;  /* Pas aan naar gewenste hoogte */
     object-fit: contain;
-    margin: 0 auto;
-    display: block;
+    border-radius: 4px;
 }
 
 .activity-detail-container {
