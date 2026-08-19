@@ -17,13 +17,13 @@
                 <div class="d-flex flex-wrap gap-3 justify-content-end align-items-center p-3 bg-light rounded">
                     <div>
                         <a href="{% url "update-streetactivity" activity.pk %}"
-                           class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
+                           class="btn btn-outline-warning"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
                         <a href="{% url "streetactivity-photo-list" activity.pk %}"
-                           class="btn btn-outline-primary btn-sm"><i class="bi bi-images me-1"></i>Gallerij</a>
+                           class="btn btn-outline-primary"><i class="bi bi-images me-1"></i>Gallerij</a>
                         <a href="{% url "create-streetactivity-photo" activity.pk %}"
-                           class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a>
+                           class="btn btn-outline-primary"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a>
                         <a href="{% url 'streetactivity-list' %}"
-                           class="btn btn-outline-secondary btn-sm">
+                           class="btn btn-outline-secondary">
                             <i class="bi bi-grid me-1"></i>Alle spellen
                         </a>
                     </div>
@@ -81,10 +81,17 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="h3 text-primary">Recente Reflecties</h2>
-                        <a href="{% url 'reflection-list-streetactivity' activity.pk %}"
-                           class="btn btn-outline-primary">
-                            <i class="bi bi-list-ul me-1"></i>Alle reflecties
-                        </a>
+                        {% if recent_reflections %}
+                            <a href="{% url 'reflection-list-streetactivity' activity.pk %}"
+                            class="btn btn-outline-primary">
+                                <i class="bi bi-list-ul me-1"></i>Alle reflecties
+                            </a>
+                        {% else %}
+                            <a href="{% url 'create-reflection' activity.pk %}"
+                            class="btn btn-outline-primary">
+                                <i class="bi bi-plus me-1"></i>Plant eerste reflectie
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

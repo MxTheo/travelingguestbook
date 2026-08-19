@@ -22,7 +22,7 @@ Gallerij van {{ activity.name }}
                         <i class="bi bi-arrow-left"></i> Terug naar activiteit
                     </a>
                     <a href="{% url "create-streetactivity-photo" activity.pk %}"
-                        class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a> 
+                        class="btn btn-outline-primary"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a> 
                 </div>
             </div>
         </div>
@@ -47,14 +47,14 @@ Gallerij van {{ activity.name }}
                     <div>
                         <a
                             href="{% url 'streetactivity-photo-detail' photo.pk %}"
-                            class="btn btn-sm btn-outline-primary"
+                            class="btn btn-outline-primary"
                             title="Bekijk foto"
                         >
                             <i class="bi bi-eye"></i>
                         </a>
                         <a
                             href="{% url 'delete-streetactivity-photo' photo.pk %}"
-                            class="btn btn-sm btn-outline-danger"
+                            class="btn btn-outline-danger"
                             title="Verwijder foto"
                             onclick="return confirm('Weet je zeker dat je deze foto wilt verwijderen?')"
                         >

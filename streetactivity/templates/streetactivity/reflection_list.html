@@ -20,7 +20,7 @@
                             {{ page_obj.paginator.count }} reflecties
                         </div>
                         <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}"
-                           class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Details straatspel</a>
+                           class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Details straatspel</a>
                     </div>
                 {% else %}
                     <h1 class="h3 mb-2">Geen reflecties gevonden</h1>
@@ -41,9 +41,9 @@
                                             <small class="text-muted">{{ reflection.date_created|date:"d M Y" }}</small>
                                             <div>
                                                 <a href="{% url "update-reflection" pk=reflection.pk %}"
-                                                   class="btn btn-sm btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
+                                                   class="btn btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
                                                 <a href="{% url "delete-reflection" pk=reflection.pk %}"
-                                                   class="btn btn-sm  btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                                   class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -90,7 +90,7 @@
                         {% if first_reflection.activity %}
                             <div>
                                 <a href="{% url 'create-reflection' first_reflection.activity.pk %}"
-                                   class="btn btn-outline-primary btn-sm">
+                                   class="btn btn-outline-primary ">
                                     <i class="bi bi-star me-1"></i>Nieuw
                                 </a>
                             </div>
