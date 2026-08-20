@@ -20,7 +20,7 @@
                             {{ page_obj.paginator.count }} reflecties
                         </div>
                         <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}"
-                           class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Details straatspel</a>
+                           class="btn btn-outline-secondary btn-lg"><i class="bi bi-arrow-left"></i> Details straatspel</a>
                     </div>
                 {% else %}
                     <h1 class="h3 mb-2">Geen reflecties gevonden</h1>
@@ -87,14 +87,6 @@
                         <i class="bi bi-chat-square-text display-4 text-muted mb-3"></i>
                         <h3 class="h5 text-muted mb-2">Nog geen ervaringen</h3>
                         <p class="text-muted mb-4">Deel als eerste je ervaring.</p>
-                        {% if first_reflection.activity %}
-                            <div>
-                                <a href="{% url 'create-reflection' first_reflection.activity.pk %}"
-                                   class="btn btn-outline-primary ">
-                                    <i class="bi bi-star me-1"></i>Nieuw
-                                </a>
-                            </div>
-                        {% endif %}
                     </div>
                 {% endif %}
             </div>
