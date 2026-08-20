@@ -125,19 +125,6 @@
                 function updateCounter() {
                     const length = reflectionField.value.length;
                     counter.textContent = `${length} karakter${length === 1 ? '' : 's'}`;
-                    
-                    // Zachte kleurverandering met Bootstrap text classes
-                    if (length > 70) {
-                        counter.classList.add('text-warning-emphasis');
-                        counter.classList.remove('text-info-emphasis', 'text-secondary-emphasis');
-                    } else if (length > 40) {
-                        counter.classList.add('text-info-emphasis');
-                        counter.classList.remove('text-warning-emphasis', 'text-secondary-emphasis');
-                    } else {
-                        counter.classList.add('text-secondary-emphasis');
-                        counter.classList.remove('text-warning-emphasis', 'text-info-emphasis');
-                        counter.classList.add('opacity-75');
-                    }
                 }
                 reflectionField.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
