@@ -1,8 +1,11 @@
 import json
-from django.views.generic import TemplateView
-from django.views.decorators.http import require_POST
+
 from django.http import JsonResponse
-from streetactivity.models import Reflection, StreetActivity
+from django.views.decorators.http import require_POST
+from django.views.generic import TemplateView
+
+from streetactivity.models import Reflection, StreetActivity, StreetActivityPhoto
+
 from .models import CookieConsentLog
 
 
@@ -17,6 +20,7 @@ class HomeView(TemplateView):
         context['recent_reflections'] = Reflection.objects.select_related('activity').all()[:3]
         context['featured_activities'] = featured_activities[:4]
         context['activities_remaining'] = max(0, featured_activities.count() - 4)
+        context['photos'] = StreetActivityPhoto.objects.order_by('?')[:4]
         return context
 
 class HelpView(TemplateView):

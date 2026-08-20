@@ -9,3 +9,9 @@
 .card:hover {
     transform: translateY(-5px);
 }
+
+.card-img-top {
+    height: 200px; /* Vaste hoogte voor alle afbeeldingen */
+    width: 100%;   /* Zorg dat de afbeelding de breedte van de container neemt */
+    object-fit: cover; /* Zorg dat de afbeelding de container vult, zelfs als de verhoudingen anders zijn */
+}

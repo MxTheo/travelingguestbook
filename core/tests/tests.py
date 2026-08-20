@@ -1,5 +1,10 @@
 from django.urls import reverse
-from travelingguestbook.factories import StreetActivityFactory
+
+from travelingguestbook.factories import (
+    StreetActivityFactory,
+    StreetActivityPhotoFactory,
+)
+
 
 class TestHome:
     """Tests for the HomeView"""
@@ -19,3 +24,10 @@ class TestHome:
             StreetActivityFactory(name=f"spel{i}")
         response = client.get(reverse('home'))
         assert len(response.context['featured_activities']) == 4
+
+    def test_get_random_photos_returns_correct_number_of_photos(self, client):
+        """Test that home shows 4 random photos when there are more than 4 photos in the database"""
+        for _ in range(5):
+            StreetActivityPhotoFactory()
+        response = client.get(reverse('home'))
+        assert len(response.context['photos']) == 4
