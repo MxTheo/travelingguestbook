@@ -1,7 +1,7 @@
 {% extends "admin/main.html" %}
 {% load static %}
 {% block title %}
-    {{ activity.name }} - straatspel
+    {{ activity.name }} - straatactiviteit
 {% endblock title %}
 {% block stylesheet %}
     <link href="{% static "streetactivity/styles/streetactivity_detail.css" %}" rel="stylesheet">
@@ -23,7 +23,7 @@
                        class="btn btn-outline-primary btn-lg"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a>
                     <a href="{% url 'streetactivity-list' %}"
                        class="btn btn-outline-secondary btn-lg">
-                        <i class="bi bi-grid me-1"></i>Alle spellen
+                        <i class="bi bi-grid me-1"></i>Alle activiteiten
                     </a>
                 </div>
             </div>
@@ -131,7 +131,7 @@
                         <h3 class="h4 text-primary mb-3">Jouw beleving telt</h3>
                         <p class="text-muted mb-4">
                             Of je nu actief deelnam of toevallig langsliep - jouw beleving helpt ons
-                            dit straatspel beter te begrijpen.
+                            dit straatactiviteit beter te begrijpen.
                         </p>
                         <div class="d-flex gap-3 justify-content-center flex-wrap">
                             <a href="{% url 'create-reflection' activity.pk %}"

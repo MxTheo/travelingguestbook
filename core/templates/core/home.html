@@ -28,7 +28,7 @@
             <h1 class="display-4 fw-bold text-primary mb-4">Bedankt voor het contact</h1>
             <div class="col-lg-6">
                 <p class="lead mb-4">
-                    Een uitnodiging om de straat te gebruiken als beoefening voor innerlijke vrijheid.
+                    Beoefen innerlijke vrijheid door contact te maken op straat.
                     Niet om iets te bereiken, maar om aanwezig te zijn met wat er is.
                 </p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
@@ -92,8 +92,8 @@
                         <div class="col-lg-8 mb-4 mb-lg-0">
                             <h2 class="fw-bold mb-3">Recente Reflecties</h2>
                             <p class="opacity-75 mb-0 fs-5">
-                                Elk reflectie draagt bij aan ons gedeelde begrip van de straat.
-                                <strong>Niet om te oordelen, maar om samen te begrijpen.</strong> <a href="#samenbegrijpen" class="font-monospace ms-2">Lees verder <i class="bi bi-arrow-right"></i></a>
+                                Jouw reflectie draagt bij aan ons gedeelde begrip van contact op straat.
+                                <strong>Niet om te oordelen, maar om samen te begrijpen.</strong> <a href="#samenbegrijpen" class="font-monospace ms-2">Hoe? <i class="bi bi-arrow-right"></i></a>
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
@@ -140,7 +140,7 @@
                                         </a>
                                         <a href="{% url 'streetactivity-list' %}"
                                            class="btn btn-outline-primary btn-lg">
-                                            <i class="bi bi-compass me-2"></i>Ontdek spellen
+                                            <i class="bi bi-compass me-2"></i>Ontdek activiteiten
                                         </a>
                                     </div>
                                 </div>
@@ -156,19 +156,19 @@
                 </div>
             </div>
         </div>
-        <!-- Snel starten met spellen -->
+        <!-- Snel starten met activiteiten -->
         <div class="row py-5 mt-4 bg-light rounded-3">
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-5">
-                    <h2 class="fw-bold mb-3">Kies een straatspel om te beginnen</h2>
-                    <p class="lead text-muted">Selecteer een straatspel en deel je reflectie</p>
+                    <h2 class="fw-bold mb-3">Kies een straatactiviteit om te beginnen</h2>
+                    <p class="lead text-muted">Selecteer een straatactiviteit en deel je reflectie</p>
                 </div>
                 <div class="row g-4 mb-3">
                     {% for activity in featured_activities %}
                         <div class="col-md-6 col-lg-4">{% include "streetactivity/activity_card.html" with activity=activity %}</div>
                     {% empty %}
                         <div class="col-12 text-center py-4">
-                            <p class="text-muted">Geen spellen beschikbaar</p>
+                            <p class="text-muted">Geen activiteiten beschikbaar</p>
                         </div>
                     {% endfor %}
                 </div>
@@ -176,7 +176,7 @@
                 <div class="text-center mt-4">
                     <a href="{% url 'streetactivity-list' %}"
                        class="btn btn-outline-primary btn-lg">
-                        <i class="bi bi-grid me-2"></i>Bekijk alle straatspellen
+                        <i class="bi bi-grid me-2"></i>Wat kun je doen?
                     </a>
                 </div>
             </div>
@@ -192,7 +192,7 @@
                     </p>
                     <a href="{% url 'persona-list' %}"
                        class="btn btn-outline-primary btn-lg">
-                        <i class="bi bi-people-fill me-2"></i>Bekijk Alle Fictieve Voorbijgangers
+                        <i class="bi bi-people-fill me-2"></i>Wie komt er voorbij?
                     </a>
                 </div>
             </div>
@@ -238,7 +238,7 @@
                                     <h4 class="card-title mb-0">Alles is Ervaring</h4>
                                 </div>
                                 <p class="card-text">
-                                    Contact met onbekenden in de publieke ruimte zoeken kan niet mislukken, omdat er geen goede of slechte ervaringen zijn. We beoefenen open te staan voor wat zich ook aandient tijdens een straatspel, zonder te oordelen
+                                    Contact met onbekenden in de publieke ruimte zoeken kan niet mislukken, omdat er geen goede of slechte ervaringen zijn. We beoefenen open te staan voor wat zich ook aandient tijdens een straatactiviteit, zonder te oordelen
                                 </p>
                                 <p class="card-text">
                                     Elk reflectie leert ons iets over onszelf en de wereld om ons heen. Zo zijn er geen goede of slechte ervaringen - alles is ervaring.
@@ -262,7 +262,7 @@
                 <div class="row align-items-center mb-5">
                     <div class="col-md-6">
                         <p class="fs-5">
-                            Jouw reflectie van wat je ervaart - onzekerheid, verbinding, steen -
+                            Jouw reflectie van wat je ervaart - onzekerheid, verbinding, flirt -
                             helpt anderen het karakter van deze beoefening te begrijpen.
                         </p>
                         <p>
@@ -290,8 +290,8 @@
                                 <i class="bi bi-droplet display-6 text-info mb-3"></i>
                                 <h5>Reflecties planten</h5>
                                 <p class="text-muted">
-                                    Jouw reflectie van wat je ervaart - ongemakkelijk, verbinding, steen -
-                                    helpt anderen het doen van een straatspel te begrijpen.
+                                    Jouw reflectie van wat je ervaart - ongemakkelijk, verbinding, flirt -
+                                    helpt anderen het doen van een straatactiviteit te begrijpen.
                                 </p>
                             </div>
                         </div>
@@ -302,7 +302,7 @@
                                 <i class="bi bi-pie-chart display-6 text-success mb-3"></i>
                                 <h5>Patronen Herkennen</h5>
                                 <p class="text-muted">
-                                    Zo ontstaat er langzaam een gedeeld beeld van wat een straatspel teweeg kan brengen: is het vooral uitdagend of juist verbindend?
+                                    Zo ontstaat er langzaam een gedeeld beeld van wat een straatactiviteit teweeg kan brengen: is het vooral uitdagend of juist verbindend?
                                 </p>
                             </div>
                         </div>

@@ -32,7 +32,7 @@ urlpatterns = [
     ),
     path("reflecties/", views.ReflectionListView.as_view(), name="reflection-list"),
     path(
-        "<int:pk>/reflecties/straatspel/",
+        "<int:pk>/reflecties/straatactiviteit/",
         views.ReflectionListViewStreetActivity.as_view(),
         name="reflection-list-streetactivity",
     ),

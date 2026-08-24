@@ -34,8 +34,8 @@ class StreetActivity(models.Model):
 
     class Meta:
         """Order by name and set verbose names."""
-        verbose_name = "straatspel"
-        verbose_name_plural = "Straatspellen"
+        verbose_name = "straatactiviteit"
+        verbose_name_plural = "Straatactiviteiten"
         ordering = ["name"]
 
     def __str__(self):
