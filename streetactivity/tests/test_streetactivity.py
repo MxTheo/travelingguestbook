@@ -129,6 +129,17 @@ class TestStreetActivityListView:
 
         assert "activities" in context
 
+    def test_count_more_then_10_activities(self, client):
+        """Test that the list view correctly counts activities when there are more than 10"""
+        for i in range(15):
+            StreetActivityFactory(name=f"Count Test {i}")
+
+        response = client.get(reverse("streetactivity-list"))
+        context = response.context
+
+        assert context["page_obj"].paginator.count == 15
+        assert '15 activiteiten gevonden' in response.content.decode()
+
 class TestStreetActivityDetailView:
     """Tests for the StreetActivity detail view."""
 
