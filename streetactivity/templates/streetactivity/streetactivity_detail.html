@@ -17,8 +17,8 @@
                 <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center p-3 bg-light rounded">
                     <a href="{% url "update-streetactivity" activity.pk %}"
                        class="btn btn-outline-warning btn-lg"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
-                    <a href="{% url "streetactivity-photo-list" activity.pk %}"
-                       class="btn btn-outline-primary btn-lg"><i class="bi bi-images me-1"></i>Gallerij</a>
+                    {% if photo %}<a href="{% url "streetactivity-photo-list" activity.pk %}"
+                       class="btn btn-outline-primary btn-lg"><i class="bi bi-images me-1"></i>Gallerij</a>{% endif %}
                     <a href="{% url "create-streetactivity-photo" activity.pk %}"
                        class="btn btn-outline-primary btn-lg"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a>
                     <a href="{% url 'streetactivity-list' %}"
