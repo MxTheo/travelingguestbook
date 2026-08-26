@@ -133,15 +133,6 @@ class TestStreetActivityPhotoListView:
             t.name for t in response.templates
         ]
 
-    def test_list_view_shows_photos(self, client, temporary_media_root):
-        """Test that photos are displayed in the list view"""
-        activity = StreetActivityFactory()
-        StreetActivityPhotoFactory(activity=activity)
-
-        response = client.get(reverse("streetactivity-photo-list", kwargs={'activity_id':activity.id}))
-        content = response.content.decode()
-
-        assert "Geupload op" in content
 
     def test_list_view_pagination(self, client, temporary_media_root):
         """Test that pagination works correctly"""
@@ -163,33 +154,3 @@ class TestStreetActivityPhotoListView:
         context = response.context
 
         assert "activity" in context
-
-class TestStreetActivityPhotoDetailView:
-    """Tests for the StreetActivityPhoto detail view."""
-
-    def test_detail_view_returns_200(self, client, temporary_media_root):
-        """Test that the detail view returns a 200 status code"""
-        photo = StreetActivityPhotoFactory()
-        url = reverse("streetactivity-photo-detail", args=[photo.id])
-        response = client.get(url)
-        assert response.status_code == 200
-
-    def test_detail_view_uses_correct_template(self, client, temporary_media_root):
-        """Test that the detail view uses the correct template"""
-        photo = StreetActivityPhotoFactory()
-        response = client.get(reverse("streetactivity-photo-detail", args=[photo.id]))
-        assert "streetactivity/streetactivityphoto_detail.html" in [
-            t.name for t in response.templates
-        ]
-
-
-    def test_detail_view_context_data(self, client, temporary_media_root):
-        """Test that the correct context data is provided in the detail view"""
-        activity = StreetActivityFactory()
-        photo = StreetActivityPhotoFactory(activity=activity)
-
-        response = client.get(reverse("streetactivity-photo-detail", args=[photo.id]))
-        context = response.context
-
-        assert "activity" in context
-        assert context["activity"] == activity

@@ -64,8 +64,4 @@ urlpatterns = [
         'gallerij/<int:activity_id>/',
         views.StreetActivityPhotoListView.as_view(),
         name='streetactivity-photo-list'),
-    path(
-        'foto/<int:pk>/',
-        views.StreetActivityPhotoDetailView.as_view(),
-        name='streetactivity-photo-detail'),
 ]

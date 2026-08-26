@@ -47,7 +47,7 @@ Gallerij van {{ activity.name }}
                     </small>
                     <fieldset class="btn-group" aria-label="Foto acties">
                         <a
-                            href="{% url 'streetactivity-photo-detail' photo.pk %}"
+                            href="{{ photo.image.url }}"
                             class="btn btn-outline-primary"
                             title="Bekijk foto"
                         >

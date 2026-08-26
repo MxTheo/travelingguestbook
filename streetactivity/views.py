@@ -289,15 +289,3 @@ class StreetActivityPhotoListView(ListView):
         )
         return context
 
-class StreetActivityPhotoDetailView(DetailView):
-    """View to display details of a single street activity photo."""
-    model = StreetActivityPhoto
-    context_object_name = "photo"
-
-    def get_context_data(self, **kwargs):
-        """Extend context data with word statistics for charts"""
-        context = super().get_context_data(**kwargs)
-        activity = self.object.activity
-        context['activity'] = activity
-
-        return context
