@@ -119,6 +119,12 @@ class ReflectionListViewStreetActivity(ReflectionListView):
         )
         return context
 
+class ReflectionListViewLoose(ReflectionListView):
+    """View to list reflections not related to any street activity."""
+
+    def get_queryset(self):
+        """Filter reflections that are not linked to any street activity."""
+        return Reflection.objects.filter(activity__isnull=True)
 
 class ReflectionDetailView(DetailView):
     """View to display details of a single reflection."""
@@ -126,10 +132,33 @@ class ReflectionDetailView(DetailView):
     model = Reflection
     context_object_name = "reflection"
 
+SUCCESS_MESSAGE_REFLECTION_CREATED = (
+    "Bedankt voor het delen van jouw reflectie! "
+    "Dit helpt anderen de activiteit te begrijpen."
+)
 
-class ReflectionCreateView(CreateView):
+class ReflectionCreateViewNoActivity(CreateView):
     """Create view for a single reflection"""
 
+    model = Reflection
+    form_class = ReflectionForm
+
+    def form_valid(self, form):
+        """Add success message when the form is valid."""
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            SUCCESS_MESSAGE_REFLECTION_CREATED,
+        )
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "reflection-list-no-activity"
+        )
+
+class ReflectionCreateViewActivity(CreateView):
+    """Create view for a single reflection"""
     model = Reflection
     form_class = ReflectionForm
     activity: StreetActivity
@@ -158,15 +187,14 @@ class ReflectionCreateView(CreateView):
         messages.add_message(
             self.request,
             messages.SUCCESS,
-            "Bedankt voor het delen van jouw reflectie! "
-            "Dit helpt anderen dit spel te begrijpen.",
+            SUCCESS_MESSAGE_REFLECTION_CREATED,
         )
 
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy(
-            "reflection-list-streetactivity",
+            "reflection-list-activity",
             kwargs={"pk": self.object.activity.pk},  # type: ignore[reportOptionalMemberAccess]
         )
 
@@ -188,7 +216,7 @@ class ReflectionUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "reflection-list-streetactivity", kwargs={"pk": self.object.activity.pk}
+            "reflection-list-activity", kwargs={"pk": self.object.activity.pk}
         )
 
 
@@ -206,7 +234,7 @@ class ReflectionDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "reflection-list-streetactivity",
+            "reflection-list-activity",
             kwargs={"pk": self.object.activity.pk}
         )
 

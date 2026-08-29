@@ -23,7 +23,7 @@
                 <!-- hoofding: display voor meer gewicht -->
                 <div class="card-header bg-transparent border-0 text-center pb-1">
                     <h1 class="display-4 fw-light text-secondary-emphasis mb-3">
-                        Hoe heb je {{ activity.name }} ervaren?
+                        Hoe heb je {% if activity %}{{ activity.name }}{% else %}het contact op straat{% endif %} ervaren?
                     </h1>
                     <p class="lead fs-6 text-secondary-emphasis opacity-75 mx-auto help-text" >
                         {{ form.reflection.help_text }}
@@ -63,7 +63,7 @@
                         <!-- grote rustige knoppen -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-4 mt-5 pt-3">
 
-                            <a href="{% url 'reflection-list' %}" class="btn btn-outline-secondary btn-lg flex-fill py-4 px-5 rounded-5 border-2">
+                            <a href="{% if activity %}{% url 'reflection-list-activity' activity.id %}{% else %}{% url 'reflection-list-no-activity' %}{% endif %}" class="btn btn-outline-secondary btn-lg flex-fill py-4 px-5 rounded-5 border-2">
                                 <span class="d-flex align-items-center justify-content-center gap-3">
                                     <i class="bi bi-arrow-left fs-2"></i>
                                     <span class="fs-3 fw-light">Terug</span>
@@ -71,8 +71,8 @@
                             </a>
                                                         <button type="submit" class="btn btn-success btn-lg flex-fill py-4 px-5 rounded-5 border-2">
                                 <span class="d-flex align-items-center justify-content-center gap-3">
-                                    <i class="bi bi-tree fs-2"></i>
-                                    <span class="fs-3 fw-light">Planten</span>
+                                    <i class="bi bi-check-lg fs-2"></i>
+                                    <span class="fs-3 fw-light">Toevoegen</span>
                                 </span>
                             </button>
                         </div>

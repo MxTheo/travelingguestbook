@@ -11,9 +11,9 @@ METHOD_CHOICES = [
 class StreetActivity(models.Model):
     """A street activity is an activity that can be done on the street to engage with strangers."""
 
-    name = models.CharField(max_length=100, verbose_name="Naam van het spel")
+    name = models.CharField(max_length=100, verbose_name="Naam van deze activiteit")
     description = models.TextField(
-        max_length=3000, verbose_name="Beschrijving van het spel"
+        max_length=3000, verbose_name="Beschrijving van de activiteit"
     )
     method = models.CharField(
         max_length=10,
@@ -26,7 +26,7 @@ class StreetActivity(models.Model):
         verbose_name="Kernvraag, waarmee je de ander uitnodigt of aanspreekt",
     )
     supplies = models.TextField(
-        max_length=300, verbose_name="Benodigdheden voor het spel"
+        max_length=300, verbose_name="Benodigdheden voor de activiteit"
     )
 
     date_created = models.DateTimeField(auto_now_add=True)
@@ -54,8 +54,8 @@ class Reflection(models.Model):
     )
     reflection = models.CharField(
         max_length=1000,
-        verbose_name="Reflectie over het spel",
-        help_text="Hoe heb je het doen van dit spel ervaren?",
+        verbose_name="Reflectie over de activiteit",
+        help_text="Hoe heb je het doen van deze activiteit ervaren?",
     )
 
     date_created = models.DateTimeField(default=timezone.now)

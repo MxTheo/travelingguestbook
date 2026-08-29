@@ -30,16 +30,21 @@ urlpatterns = [
         views.StreetActivityDeleteView.as_view(),
         name="delete-streetactivity",
     ),
-    path("reflecties/", views.ReflectionListView.as_view(), name="reflection-list"),
+    path("lossereflecties/", views.ReflectionListViewLoose.as_view(), name="reflection-list-no-activity"),
     path(
         "<int:pk>/reflecties/straatactiviteit/",
         views.ReflectionListViewStreetActivity.as_view(),
-        name="reflection-list-streetactivity",
+        name="reflection-list-activity",
     ),
     path(
         "<int:pk>/reflectie/nieuw/",
-        views.ReflectionCreateView.as_view(),
-        name="create-reflection",
+        views.ReflectionCreateViewActivity.as_view(),
+        name="create-reflection-activity",
+    ),
+    path(
+        "reflectie/nieuw/",
+        views.ReflectionCreateViewNoActivity.as_view(),
+        name="create-reflection-no-activity",
     ),
     path(
         "verwijder/reflectie/<int:pk>",

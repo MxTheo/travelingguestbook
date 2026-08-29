@@ -12,18 +12,18 @@ class StreetActivityForm(forms.ModelForm):
         model = StreetActivity
         fields = ['name', 'description', 'method', 'question', 'supplies']
         labels = {
-            'name': 'Naam van het spel',
+            'name': 'Naam van de activiteit',
             'description': 'Stap-voor-stap handleiding',
             'method': 'Methode van benadering',
             'question': 'Kernvraag',
-            'supplies': 'Benodigdheden voor het spel'
+            'supplies': 'Benodigdheden voor de activiteit'
         }
         help_texts = {
-            'name': 'Vul alsjeblieft de naam van het spel in.',
-            'description': 'Geef een stap-voor-stap uitleg hoe je het spel uitvoert.',
+            'name': 'Vul alsjeblieft de naam van de activiteit in.',
+            'description': 'Geef een stap-voor-stap uitleg hoe je de activiteit uitvoert.',
             'method': 'Kies hoe je mensen benadert: uitnodigen of aanspreken.',
             'question': 'Formuleer de kernvraag die je gebruikt om mensen uit te nodigen of aan te spreken.',
-            'supplies': 'Welke materialen heb je nodig voor dit spel?',
+            'supplies': 'Welke materialen heb je nodig voor deze activiteit?',
         }
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
@@ -41,14 +41,14 @@ class ReflectionForm(forms.ModelForm):
                 'rows': 3,
                 'class': 'form-control',
                 'placeholder':
-                'Jouw reflectie over het doen van dit spel...'}),
+                'Jouw reflectie over het contact maken op straat...'}),
         }
         labels = {
-            'reflection': 'Hoe denk je terug over het doen van dit spel?',
+            'reflection': 'Hoe denk je terug over het doen van deze activiteit?',
         }
         help_texts = {
             'reflection': """Wat heb je geleerd? Tips, suggesties?
-            Jouw ervaring draagt bij aan het begrijpen van dit spel!""",
+            Jouw ervaring draagt bij aan het begrijpen van deze activiteit!""",
         }
 
     def clean(self):

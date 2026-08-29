@@ -27,9 +27,20 @@ class TestReflectionModel:
         """Test the Reflection create view to ensure it returns a 200 status code
         and contains the expected form in context."""
         activity = StreetActivityFactory()
-        create_url = reverse("create-reflection", args=[activity.id])
+        create_url = reverse("create-reflection-activity", args=[activity.id])
 
         reflection_data = create_reflection_data(activity)
+
+        response = client.post(create_url, reflection_data, follow=True)
+
+        assert response.status_code == 200
+        assert Reflection.objects.count() == 1
+
+    def test_reflection_createview_no_activity(self, client):
+        """Test the Reflection create view for reflections not linked to any StreetActivity."""
+        create_url = reverse("create-reflection-no-activity")
+
+        reflection_data = create_reflection_data(activity=None)
 
         response = client.post(create_url, reflection_data, follow=True)
 
@@ -42,7 +53,7 @@ class TestReflectionModel:
         activity = StreetActivityFactory()
         for _ in range(3):
             ReflectionFactory(activity=activity)
-        response = client.get(reverse("reflection-list-streetactivity", args=[activity.id]))
+        response = client.get(reverse("reflection-list-activity", args=[activity.id]))
         assert response.status_code == 200
         assert "reflections" in response.context
         assert len(response.context["reflections"]) == 3
@@ -54,7 +65,7 @@ class TestReflectionModel:
         ReflectionFactory.create_batch(2, activity=activity)
         ReflectionFactory.create_batch(2)  # Reflections for other activities
 
-        list_url = reverse("reflection-list-streetactivity", args=[activity.id])
+        list_url = reverse("reflection-list-activity", args=[activity.id])
         response = client.get(list_url)
 
         assert response.status_code == 200
@@ -62,6 +73,20 @@ class TestReflectionModel:
         assert len(response.context["reflections"]) == 2
         for reflection in response.context["reflections"]:
             assert reflection.activity == activity
+
+    def test_reflection_listview_loose(self, client):
+        """Test the Reflection list view for reflections not linked to any StreetActivity."""
+        ReflectionFactory.create_batch(2, activity=None)
+        ReflectionFactory.create_batch(2, activity=StreetActivityFactory())  # Linked reflections
+
+        list_url = reverse("reflection-list-no-activity")
+        response = client.get(list_url)
+
+        assert response.status_code == 200
+        assert "reflections" in response.context
+        assert len(response.context["reflections"]) == 2
+        for reflection in response.context["reflections"]:
+            assert reflection.activity is None
 
     def test_reflection_ordering(self):
         """Test that Reflection instances are ordered by date in descending order."""
@@ -115,12 +140,12 @@ class TestReflectionModel:
         """Given the user creates a reflection,
         test if activity is in the context"""
         activity = StreetActivityFactory()
-        create_url = reverse("create-reflection", args=[activity.id])
+        create_url = reverse("create-reflection-activity", args=[activity.id])
         response = client.get(create_url)
         assert response.status_code == 200
         assert "activity" in response.context
 
-    def test_get_context_data_reflection_updateview(self,client):
+    def test_get_context_data_reflection_updateview(self, client):
         """Given the user updates a reflection,
         test if activity is in the context"""
         reflection = ReflectionFactory()
@@ -133,7 +158,7 @@ class TestReflectionModel:
         """Given the user forgets to fill in a reflection,
         test if the error 'Geen reflectie gegeven' is given"""
         activity = StreetActivityFactory()
-        create_url = reverse("create-reflection", args=[activity.id])
+        create_url = reverse("create-reflection-activity", args=[activity.id])
         reflection_data = create_reflection_data(activity)
         reflection_data.pop("reflection", None)
 
@@ -153,5 +178,6 @@ def create_reflection_data(activity=None):
         'user_id',
         'date_created', 'date_modified']:
         reflection_data.pop(field, None)
-    reflection_data['activity'] = activity.id
+    if activity:
+        reflection_data['activity'] = activity.id
     return reflection_data

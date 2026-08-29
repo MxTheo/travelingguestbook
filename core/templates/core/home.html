@@ -10,7 +10,7 @@
     <nav class="navbar navbar-expand navbar-light bg-light border-bottom sticky-top z-1">
         <div class="container">
             <div class="navbar-nav mx-auto">
-                <a class="nav-link px-3 fs-6" href="#het-spel">
+                <a class="nav-link px-3 fs-6" href="#de-activiteit">
                     <i class="bi bi-moisture me-1"></i>Wat?
                 </a>
                 <a class="nav-link px-3 fs-6" href="#samenbegrijpen">
@@ -111,7 +111,7 @@
                                     <div class="card-body p-4 d-flex flex-column">
                                         <!-- Spel en type -->
                                         <div class="d-flex flex-wrap gap-2 mb-3 align-items-center justify-content-between">
-                                            <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{{ reflection.activity.name }}</span>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary fs-7">{% if reflection.activity %}{{ reflection.activity.name }}{% else %}Algemeen{% endif %}</span>
                                         </div>
                                         {% include "streetactivity/report_snippet.html" with reflection=reflection %}
                                         <!-- Metadata: tijd, meer lezen -->
@@ -120,7 +120,7 @@
                                                 <i class="bi bi-clock me-1"></i>
                                                 {{ reflection.date_created|timesince }} geleden
                                             </small>
-                                            <a href="{% url 'reflection-list-streetactivity' reflection.activity.pk %}"
+                                            <a href="{% if reflection.activity %}{% url 'reflection-list-activity' reflection.activity.pk %}{% else %}{% url "reflection-list-no-activity" %}{% endif %}"
                                                class=" text-primary d-flex align-items-center">
                                                 Alle ervaringen <i class="bi bi-arrow-right ms-1"></i>
                                             </a>
@@ -198,10 +198,10 @@
             </div>
         </div>
         <!-- De Bodem Filosofie -->
-        <div id="het-spel" class="row py-5 wathoewaarom">
+        <div id="de-activiteit" class="row py-3 wathoewaarom">
             <div class="col-lg-10 mx-auto">
-                <div class="text-center mb-5">
-                    <h2 class="fw-bold mb-3">De Kunst van het Zijn op Straat</h2>
+                <div class="text-center mb-3">
+                    <h2 class="fw-bold">Wat?</h2>
                 </div>
                 <div class="row g-4">
                     <!-- De Bodem -->
@@ -253,7 +253,7 @@
              class="row py-5 bg-light rounded-3 my-5 wathoewaarom">
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-4">
-                    <h2 class="fw-bold mb-3">Samen Begrijpen</h2>
+                    <h2 class="fw-bold mb-3">Hoe?</h2>
                     <p class="lead">
                         Doordat jij je ervaringen toevoegt, bouw je samen met anderen aan gemeenschappelijk begrip. Niet om te analyseren, maar om te herkennen.
                     </p>
@@ -265,7 +265,7 @@
                             helpt anderen het karakter van deze beoefening te begrijpen.
                         </p>
                         <p>
-                            Zo ontstaat er langzaam een gedeeld beeld van wat dit spel teweeg kan brengen:
+                            Zo ontstaat er langzaam een gedeeld beeld van wat deze activiteit teweeg kan brengen:
                             is het vooral uitdagend of juist verbindend?
                         </p>
                     </div>
@@ -277,7 +277,7 @@
                                 <br>
                                 in plaats van
                                 <br>
-                                "Dit spel was intensief"
+                                "Deze activiteit was intensief"
                             </p>
                         </div>
                     </div>
@@ -286,7 +286,7 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0">
                             <div class="card-body text-center p-4">
-                                <i class="bi bi-droplet display-6 text-info mb-3"></i>
+                                <i class="bi bi-chat-left-text display-6 text-info mb-3"></i>
                                 <h5>Reflecties toevoegen</h5>
                                 <p class="text-muted">
                                     Jouw reflectie van wat je ervaart - ongemakkelijk, verbinding, flirt -
@@ -323,7 +323,7 @@
                     <div class="p-3 bg-primary bg-opacity-10 rounded">
                         <p class="mb-0 text-primary">
                             <i class="bi bi-info-circle me-2"></i>
-                            <strong>Jouw bijdrage aan onze gemeenschap:</strong> Door te delen wat jij meemaakt
+                            <strong>Jouw bijdrage aan de gemeenschap:</strong> Door te delen wat jij meemaakt
                             help je anderen een realistisch beeld te vormen. Je deelt niet voor een onderzoeker,
                             maar voor <strong>medemensen</strong>.
                         </p>

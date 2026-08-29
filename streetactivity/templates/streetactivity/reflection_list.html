@@ -12,19 +12,43 @@
         <!-- Header -->
         <div class="row mb-4">
             <div class="col">
-                {% if object_list %}
+                {% if object_list and object_list.0.activity %}
                     {% include "streetactivity/streetactivity_header.html" with activity=object_list.0.activity %}
-                    <div class="justify-content-between d-flex">
+                {% else %}
+                    <header class="mb-5">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h1 class="text-success-emphasis mb-3">Wil je iets delen wat niet past binnen een straatactiviteit?</h1>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-primary text-white">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title mb-3">Hoe ervaarde je het contact op straat?</h5>
+                                            <div class="d-grid gap-2">
+                                                <a href="{% url 'create-reflection-no-activity' %}"
+                                                   class="btn btn-light btn-lg">
+                                                    <i class="bi bi-chat-left-text me-2 fs-6"></i>Mijn reflectie toevoegen
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                {% endif %}
+                <div class="justify-content-between d-flex">
                         <div class="text-muted small ms-5 pt-2">
                             <i class="bi bi-collection me-1"></i>
                             {{ page_obj.paginator.count }} reflecties
                         </div>
-                        <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}"
-                           class="btn btn-outline-secondary btn-lg"><i class="bi bi-arrow-left"></i> Details straatactiviteit</a>
+                        {% if object_list.0.activity %}
+                            <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}"
+                                class="btn btn-outline-secondary btn-lg"><i class="bi bi-info-circle me-1"></i> {{ object_list.0.activity }}</a>
+                        {% else %}
+                            <a href="{% url "streetactivity-list" %}"
+                                class="btn btn-outline-secondary btn-lg"><i class="bi bi-grid"></i> Alle activiteiten</a>
+                        {% endif %}
                     </div>
-                {% else %}
-                    <h1 class="h3 mb-2">Geen reflecties gevonden</h1>
-                {% endif %}
             </div>
         </div>
         <!-- Reflection List -->
