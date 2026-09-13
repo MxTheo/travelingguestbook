@@ -16,39 +16,39 @@
                     {% include "streetactivity/streetactivity_header.html" with activity=object_list.0.activity %}
                 {% else %}
                     <header class="mb-5">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <h1 class="text-success-emphasis mb-3">Wil je iets delen wat niet past binnen een straatactiviteit?</h1>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="card bg-primary text-white">
-                                        <div class="card-body text-center">
-                                            <h5 class="card-title mb-3">Hoe ervaarde je het contact op straat?</h5>
-                                            <div class="d-grid gap-2">
-                                                <a href="{% url 'create-reflection-no-activity' %}"
-                                                   class="btn btn-light btn-lg">
-                                                    <i class="bi bi-chat-left-text me-2 fs-6"></i>Mijn reflectie toevoegen
-                                                </a>
-                                            </div>
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="text-success-emphasis mb-3 text-center">Wil je iets delen wat niet past binnen een straatactiviteit?</h1>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title mb-3">Hoe ervaarde je het contact op straat?</h5>
+                                        <div class="d-grid gap-2">
+                                            <a href="{% url 'create-reflection-no-activity' %}"
+                                               class="btn btn-light btn-lg">
+                                                <i class="bi bi-chat-left-text me-2 fs-6"></i>Mijn reflectie toevoegen
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </header>
+                        </div>
+                    </header>
                 {% endif %}
                 <div class="justify-content-between d-flex">
-                        <div class="text-muted small ms-5 pt-2">
-                            <i class="bi bi-collection me-1"></i>
-                            {{ page_obj.paginator.count }} reflecties
-                        </div>
-                        {% if object_list.0.activity %}
-                            <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}"
-                                class="btn btn-outline-secondary btn-lg"><i class="bi bi-info-circle me-1"></i> {{ object_list.0.activity }}</a>
-                        {% else %}
-                            <a href="{% url "streetactivity-list" %}"
-                                class="btn btn-outline-secondary btn-lg"><i class="bi bi-grid"></i> Alle activiteiten</a>
-                        {% endif %}
+                    <div class="text-muted small ms-5 pt-2">
+                        <i class="bi bi-collection me-1"></i>
+                        {{ page_obj.paginator.count }} reflecties
                     </div>
+                    {% if object_list.0.activity %}
+                        <a href="{% url "streetactivity-detail" object_list.0.activity.pk %}"
+                           class="btn btn-outline-secondary btn-lg"><i class="bi bi-info-circle me-1"></i> {{ object_list.0.activity }}</a>
+                    {% else %}
+                        <a href="{% url "streetactivity-list" %}"
+                           class="btn btn-outline-secondary btn-lg"><i class="bi bi-grid"></i> Alle activiteiten</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
         <!-- Reflection List -->
@@ -62,10 +62,18 @@
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="flex-grow-1 ms-3">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">{{ reflection.date_created|date:"d M Y" }}</small>
+                                            <small class="text-muted">
+                                                {% if reflection.timestamp %}
+                                                    {{ reflection.timestamp|date:"d M Y" }}
+                                                {% else %}
+                                                    {{ reflection.date_created|date:"d M Y" }}
+                                                {% endif %}
+                                            </small>
                                             <div>
-                                                <a href="{% url "update-reflection" pk=reflection.pk %}"
-                                                   class="btn btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
+                                                {% if not reflection.platform %}
+                                                    <a href="{% url "update-reflection" pk=reflection.pk %}"
+                                                       class="btn btn-outline-warning me-2"><i class="bi bi-pencil-square"></i></a>
+                                                {% endif %}
                                                 <a href="{% url "delete-reflection" pk=reflection.pk %}"
                                                    class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
                                             </div>
@@ -73,47 +81,55 @@
                                     </div>
                                 </div>
                                 <!-- Content -->
-                                {% include "streetactivity/report_snippet.html" with reflection=reflection %}
+                                <div class="d-flex justify-content-center">
+                                    {% include "streetactivity/report_snippet.html" with reflection=reflection %}
+                                </div>
+                                {% if reflection.platform %}
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        {% include "streetactivity/socialmedia_username_badge_snippet.html" with reflection=reflection %}
+                                        {% include "streetactivity/platformbadge_snippet.html" with reflection=reflection %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-                    {% endfor %}
-                    <!-- Pagination -->
-                    {% if is_paginated %}
-                        <nav aria-label="Page navigation" class="mt-4">
-                            <ul class="pagination justify-content-center">
-                                {% if page_obj.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">← Vorige</a>
-                                    </li>
-                                {% endif %}
-                                {% for num in page_obj.paginator.page_range %}
-                                    {% if page_obj.number == num %}
-                                        <li class="page-item active">
-                                            <span class="page-link">{{ num }}</span>
-                                        </li>
-                                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if page_obj.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Volgende →</a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                    {% endif %}
-                {% else %}
-                    <!-- Empty State -->
-                    <div class="text-center py-5">
-                        <i class="bi bi-chat-square-text display-4 text-muted mb-3"></i>
-                        <h3 class="h5 text-muted mb-2">Nog geen ervaringen</h3>
-                        <p class="text-muted mb-4">Deel als eerste je ervaring.</p>
                     </div>
-                {% endif %}
+                </div>
+            {% endfor %}
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">← Vorige</a>
+                            </li>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Volgende →</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <i class="bi bi-chat-square-text display-4 text-muted mb-3"></i>
+                <h3 class="h5 text-muted mb-2">Nog geen ervaringen</h3>
+                <p class="text-muted mb-4">Deel als eerste je ervaring.</p>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock content %}

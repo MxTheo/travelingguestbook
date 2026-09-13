@@ -1,3 +1,9 @@
+{% load markdown_tags %}
+
 <div class="mb-3 card-text">
-    <p>{{ reflection.reflection | linebreaks }}</p>
+    {% if reflection.platform %}
+        <p>{{ reflection.reflection |  markdown_to_html | safe }}</p>
+    {% else %}
+        <p>{{ reflection.reflection | linebreaks }}</p>
+    {% endif %}
 </div>

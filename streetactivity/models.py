@@ -40,22 +40,79 @@ class StreetActivity(models.Model):
 
     def __str__(self):
         return str(self.name)
-
 class Reflection(models.Model):
-    """A reflection is a player's thought or feeling about doing a street activity."""
+    """
+    A reflection is a user's thought or feeling about participating in a street activity.
+    Can be created locally or imported from external platforms (e.g., Mastodon, Bluesky).
+    """
 
     activity = models.ForeignKey(
         "StreetActivity",
         on_delete=models.CASCADE,
         related_name="reflections",
-        verbose_name="Gerelateerde activiteit",
+        verbose_name="Related activity",
         null=True,
         blank=True,
     )
-    reflection = models.CharField(
+    reflection = models.TextField(
         max_length=1000,
-        verbose_name="Reflectie over de activiteit",
+        verbose_name="Reflection about the activity",
         help_text="Hoe heb je het doen van deze activiteit ervaren?",
+    )
+
+    # Fields for external data (e.g., from social media platforms)
+    external_id = models.CharField(
+        max_length=255,
+        unique=True,
+        db_index=True,  # Voeg deze toe voor betere performance
+        verbose_name="Externe ID",
+        help_text="De unieke ID van de post op het externe platform (bijv. Mastodon).",
+        blank=True,
+        null=True,
+    )
+    platform = models.CharField(
+        max_length=20,
+        verbose_name="Platform",
+        help_text="The platform where the reflection originated (e.g., Mastodon, Bluesky).",
+        blank=True,
+        null=True,
+    )
+    author_username = models.CharField(
+        max_length=255,
+        verbose_name="Username",
+        help_text="The username of the author of the reflection.",
+        blank=True,
+        null=True,
+    )
+    author_profile_url = models.URLField(
+        verbose_name="Profile URL",
+        help_text="The URL of the author's profile.",
+        blank=True,
+        null=True,
+    )
+    post_url = models.URLField(
+        verbose_name="Post URL",
+        help_text="The URL of the original post.",
+        blank=True,
+        null=True,
+    )
+    timestamp = models.DateTimeField(
+        verbose_name="Date and time of the post",
+        help_text="When the reflection was shared.",
+        blank=True,
+        null=True,
+    )
+    media_url = models.URLField(
+        verbose_name="Media URL",
+        help_text="URL of an image or video associated with the reflection.",
+        blank=True,
+        null=True,
+    )
+    hashtags = models.JSONField(
+        default=list,
+        verbose_name="Hashtags",
+        help_text="List of hashtags in the reflection.",
+        blank=True,
     )
 
     date_created = models.DateTimeField(default=timezone.now)
@@ -64,14 +121,15 @@ class Reflection(models.Model):
     class Meta:
         """Order reflections by date in descending order."""
         ordering = ["-date_created"]
-        verbose_name = "Reflectie"
-        verbose_name_plural = "Reflecties"
+        verbose_name = "Reflection"
+        verbose_name_plural = "Reflections"
         indexes = [
             models.Index(fields=['activity', 'date_created']),
+            models.Index(fields=['platform', 'timestamp']),
         ]
 
     def __str__(self):
-        return self.reflection
+        return f"{self.reflection[:50]}... ({self.platform or 'local'})"
 
 class StreetActivityPhoto(models.Model):
     """

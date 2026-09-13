@@ -172,3 +172,6 @@ REST_FRAMEWORK = {
 }
 
 GA_MEASUREMENT_ID = ''  # zet hier je ID in productie, of laat leeg voor dev
+
+MASTODON_ACCESS_TOKEN = os.getenv('MASTODON_ACCESS_TOKEN')
+MASTODON_SERVER = 'mastodon.social'

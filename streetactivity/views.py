@@ -233,10 +233,13 @@ class ReflectionDeleteView(DeleteView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy(
-            "reflection-list-activity",
-            kwargs={"pk": self.object.activity.pk}
-        )
+        if self.object.activity:
+            return reverse_lazy(
+                "reflection-list-activity",
+                kwargs={"pk": self.object.activity.pk}
+            )
+        else:
+            return reverse_lazy("reflection-list-no-activity")
 
 class ReflectionViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Reflection"""

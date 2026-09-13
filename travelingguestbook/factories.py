@@ -43,10 +43,15 @@ class ReflectionFactory(factory.django.DjangoModelFactory):
     '''Mock for streetactivities Reflection'''
     class Meta:
         model = Reflection
-    activity      = factory.SubFactory(StreetActivityFactory)
-    reflection    = factory.LazyFunction(fake.text)
-    date_created  = factory.LazyFunction(timezone.now)
-    date_modified = factory.LazyFunction(timezone.now)
+    activity        = factory.SubFactory(StreetActivityFactory)
+    reflection      = factory.LazyFunction(fake.text)
+    date_created    = factory.LazyFunction(timezone.now)
+    date_modified   = factory.LazyFunction(timezone.now)
+    external_id     = factory.LazyFunction(fake.uuid4)
+    platform        = None
+    author_username = factory.LazyFunction(fake.user_name)
+    post_url        = factory.LazyFunction(fake.url)
+    hashtags        = factory.LazyFunction(lambda: [fake.word()])
 
 class PersonaFactory(factory.django.DjangoModelFactory):
     """Mock for persona Persona"""

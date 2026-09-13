@@ -15,13 +15,13 @@ class TestReflectionModel:
         reflection = ReflectionFactory(
             reflection=expected_str)
         returned_str = str(reflection)
-        assert returned_str == expected_str
+        assert returned_str == expected_str+'... (local)'
 
     def test_reflection_str_method_no_reflection(self):
         """Test the __str__ method of the Reflection model when there is no reflection."""
         activity = StreetActivityFactory(name="Test Activity")
         reflection = ReflectionFactory(activity=activity, reflection="")
-        assert str(reflection) == ""
+        assert str(reflection) == "... (local)"
 
     def test_reflection_createview(self, client):
         """Test the Reflection create view to ensure it returns a 200 status code
@@ -118,6 +118,18 @@ class TestReflectionModel:
         assert not Reflection.objects.filter(id=reflection.id).exists()
         assert Reflection.objects.count() == 0
 
+    def test_delete_view_no_activity(self, client):
+        """Test the Reflection delete view for reflections not linked to any StreetActivity."""
+        reflection = ReflectionFactory(activity=None)
+
+        delete_reflection_url = reverse("delete-reflection", args=[reflection.id])
+
+        response = client.post(delete_reflection_url)
+
+        assert response.status_code == 302
+        assert not Reflection.objects.filter(id=reflection.id).exists()
+        assert Reflection.objects.count() == 0
+
     def test_update_view(self, client):
         """Test the Reflection update view to ensure it returns a 200 status code
         and contains the expected form in context."""
@@ -170,14 +182,10 @@ class TestReflectionModel:
 
 def create_reflection_data(activity=None):
     """Helper function to create reflection data for tests."""
-    reflection_data = ReflectionFactory.build().__dict__
-    for field in [
-        "_state",
-        "id",
-        'activity_id',
-        'user_id',
-        'date_created', 'date_modified']:
-        reflection_data.pop(field, None)
+    reflection = ReflectionFactory.build()
+    reflection_data = {
+        "reflection": reflection.reflection,
+    }
     if activity:
-        reflection_data['activity'] = activity.id
+        reflection_data["activity"] = activity.id
     return reflection_data

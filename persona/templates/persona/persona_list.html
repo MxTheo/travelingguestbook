@@ -12,10 +12,9 @@
         <header class="row align-items-center mb-4">
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-start mb-4">
-                    <div>
-                        <i class="bi bi-person-walking display-1 text-success-emphasis mb-3"></i>
-                        <h1 class="display-4 text-success-emphasis mb-3">Wie kun je ontmoeten?</h1>
-                    </div>
+                    <h1 class="display-4 text-success-emphasis mb-3">
+                        <i class="bi bi-person-walking display-3"></i> Wie kun je ontmoeten?
+                    </h1>
                     <a href="{% url 'create-persona' %}" class="btn btn-success btn-lg">
                         <i class="bi bi-plus-circle me-2"></i>
                         Nieuw voorbeeld
@@ -25,18 +24,16 @@
                     Op straat kom je verschillende soorten mensen tegen. Sommigen zijn enthousiast en open,
                     anderen zijn wat argwanend of hebben hun eigen zorgen. Deze verzonnen voorbeelden zijn bedoeld om de diversiteit aan reacties te begrijpen die je kunt tegenkomen, niet om mensen in hokjes te stoppen.
                 </p>
-                <p>
-                    Je kunt alle voorbeelden aanpassen, verbeteren of nieuwe toevoegen.
-                </p>
-            <!-- Alert -->
-            <div class="alert alert-warning">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-info-circle-fill me-2"></i>
-                    <div class="small">
-                        <strong>Fictief:</strong> Deze mensen zijn geen echte mensen. Ze zijn verzonnen. De foto's zijn van <a href="https://www.pixabay.com" target="_blank">pixabay</a> uit het publieke domein.
+                <p>Je kunt alle voorbeelden aanpassen, verbeteren of nieuwe toevoegen.</p>
+                <!-- Alert -->
+                <div class="alert alert-warning">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <div class="small">
+                            <strong>Fictief:</strong> Deze mensen zijn geen echte mensen. Ze zijn verzonnen. De foto's zijn van <a href="https://www.pixabay.com" target="_blank">pixabay</a> uit het publieke domein.
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         </header>
         <div class="row">
@@ -48,10 +45,11 @@
                         </div>
                         <div class="persona-body ">
                             <div class="persona-portrait mb-3">
-                                <img src="{{ persona.portrait_url }}" 
-                                     alt="{{ persona.title }}" 
-                                     class="img-fluid " height="155px" width="155px"
-                                     >
+                                <img src="{{ persona.portrait_url }}"
+                                     alt="{{ persona.title }}"
+                                     class="img-fluid "
+                                     height="155px"
+                                     width="155px">
                             </div>
                             <div class="persona-core-question mb-3">
                                 <small class="text-muted">Kernvraag:</small>
@@ -66,9 +64,7 @@
                                     <i class="bi bi-exclamation-triangle me-1"></i>Problemen
                                 </h4>
                                 <ul class="problems-list small mb-0">
-                                    {% for problem in persona.problems.all|slice:":3" %}
-                                        <li>{{ problem.description }}</li>
-                                    {% endfor %}
+                                    {% for problem in persona.problems.all|slice:":3" %}<li>{{ problem.description }}</li>{% endfor %}
                                     {% if persona.problems.count > 3 %}
                                         <li class="text-muted">... en {{ persona.problems.count|add:"-3" }} meer</li>
                                     {% endif %}
@@ -79,18 +75,15 @@
                                     <i class="bi bi-chat-quote me-1"></i>Reacties
                                 </h4>
                                 <ul class="reactions-list small mb-0">
-                                    {% for reaction in persona.reactions.all|slice:":3" %}
-                                        <li>"{{ reaction.description }}"</li>
-                                    {% endfor %}
+                                    {% for reaction in persona.reactions.all|slice:":3" %}<li>"{{ reaction.description }}"</li>{% endfor %}
                                     {% if persona.reactions.count > 3 %}
                                         <li class="text-muted">... en {{ persona.reactions.count|add:"-3" }} meer</li>
                                     {% endif %}
                                 </ul>
                             </div>
                             <div class="mt-auto pt-3">
-                                <a href="{% url 'persona-detail' persona.pk %}" class="btn btn-outline-primary w-100 btn-lg">
-                                    Wie is deze persoon?
-                                </a>
+                                <a href="{% url 'persona-detail' persona.pk %}"
+                                   class="btn btn-outline-primary w-100 btn-lg">Wie is deze persoon?</a>
                             </div>
                         </div>
                     </div>
