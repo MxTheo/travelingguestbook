@@ -63,17 +63,16 @@ class Reflection(models.Model):
     # Fields for external data (e.g., from social media platforms)
     external_id = models.CharField(
         max_length=255,
-        unique=True,
-        db_index=True,  # Voeg deze toe voor betere performance
-        verbose_name="Externe ID",
-        help_text="De unieke ID van de post op het externe platform (bijv. Mastodon).",
+        db_index=True,
+        verbose_name="External ID",
+        help_text="Unique ID of the post on the external platform.",
         blank=True,
         null=True,
     )
     platform = models.CharField(
         max_length=20,
         verbose_name="Platform",
-        help_text="The platform where the reflection originated (e.g., Mastodon, Bluesky).",
+        help_text="The platform where the reflection originated.",
         blank=True,
         null=True,
     )
@@ -119,13 +118,19 @@ class Reflection(models.Model):
     date_modified = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        """Order reflections by date in descending order."""
         ordering = ["-date_created"]
         verbose_name = "Reflection"
         verbose_name_plural = "Reflections"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["platform", "external_id"],
+                name="unique_external_post_per_platform",
+                condition=models.Q(external_id__isnull=False),
+            ),
+        ]
         indexes = [
-            models.Index(fields=['activity', 'date_created']),
-            models.Index(fields=['platform', 'timestamp']),
+            models.Index(fields=["activity", "date_created"]),
+            models.Index(fields=["platform", "timestamp"]),
         ]
 
     def __str__(self):

@@ -15,13 +15,13 @@ class TestReflectionModel:
         reflection = ReflectionFactory(
             reflection=expected_str)
         returned_str = str(reflection)
-        assert returned_str == expected_str+'... (local)'
+        assert returned_str == expected_str+'... (Bluesky)'
 
     def test_reflection_str_method_no_reflection(self):
         """Test the __str__ method of the Reflection model when there is no reflection."""
         activity = StreetActivityFactory(name="Test Activity")
         reflection = ReflectionFactory(activity=activity, reflection="")
-        assert str(reflection) == "... (local)"
+        assert str(reflection) == "... (Bluesky)"
 
     def test_reflection_createview(self, client):
         """Test the Reflection create view to ensure it returns a 200 status code

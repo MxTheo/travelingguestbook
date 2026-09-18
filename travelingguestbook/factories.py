@@ -47,8 +47,10 @@ class ReflectionFactory(factory.django.DjangoModelFactory):
     reflection      = factory.LazyFunction(fake.text)
     date_created    = factory.LazyFunction(timezone.now)
     date_modified   = factory.LazyFunction(timezone.now)
-    external_id     = factory.LazyFunction(fake.uuid4)
-    platform        = None
+    external_id     = factory.Sequence(
+        lambda n: f"at://did:plc:test/app.bsky.feed.post/{n}"
+    )
+    platform        = "Bluesky"
     author_username = factory.LazyFunction(fake.user_name)
     post_url        = factory.LazyFunction(fake.url)
     hashtags        = factory.LazyFunction(lambda: [fake.word()])
