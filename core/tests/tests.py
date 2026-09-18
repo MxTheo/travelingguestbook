@@ -25,7 +25,7 @@ class TestHome:
         response = client.get(reverse('home'))
         assert len(response.context['featured_activities']) == 4
 
-    def test_get_random_photos_returns_correct_number_of_photos(self, client):
+    def test_get_random_photos_returns_correct_number_of_photos(self, client, temporary_media_root):
         """Test that home shows 4 random photos when there are more than 4 photos in the database"""
         for _ in range(5):
             StreetActivityPhotoFactory()
