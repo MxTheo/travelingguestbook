@@ -8,6 +8,7 @@ from faker import Faker
 
 from persona.models import Persona, Problem, Reaction
 from streetactivity.models import Reflection, StreetActivity
+from gettogether.models import GetTogether
 
 fake = Faker()
 
@@ -18,6 +19,14 @@ class UserFactory(factory.django.DjangoModelFactory):
     username = factory.LazyFunction(fake.unique.name)
     email    = factory.LazyFunction(fake.unique.email)
     password = factory.LazyFunction(fake.unique.password)
+
+class GetTogetherFactory(factory.django.DjangoModelFactory):
+    """Mock for gettogether GetTogether"""
+    class Meta:
+        model = GetTogether
+    location = factory.LazyFunction(fake.address)
+    date     = factory.LazyFunction(timezone.now)
+    user     = factory.SubFactory(UserFactory)
 
 class StreetActivityFactory(factory.django.DjangoModelFactory):
     '''Mock for streetactivities StreetActivity'''

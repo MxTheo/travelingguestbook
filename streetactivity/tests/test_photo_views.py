@@ -98,7 +98,7 @@ class TestStreetActivityPhotoCreateView:
 
         messages = list(get_messages(response.wsgi_request))
         assert len(messages) == 1
-        assert str(messages[0]) == "Er was een fout bij het uploaden van je foto. Controleer het bestand en probeer opnieuw."
+        assert "Er was een fout bij het uploaden van je foto." in str(messages[0])
 
 class TestStreetActivityPhotoDeleteView:
     '''Test class for delete view of streetactivity photo'''

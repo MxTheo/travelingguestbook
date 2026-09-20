@@ -272,7 +272,8 @@ class StreetActivityPhotoCreateView(CreateView):
         Handle invalid form submissions.
         Display an error message to the user.
         """
-        messages.error(self.request, "Er was een fout bij het uploaden van je foto. Controleer het bestand en probeer opnieuw.")
+        messages.error(self.request, """Er was een fout bij het uploaden van je foto.
+        Controleer het bestand en probeer opnieuw.""")
         return super().form_invalid(form)
 
     def get_success_url(self):
@@ -319,4 +320,3 @@ class StreetActivityPhotoListView(ListView):
             StreetActivity, pk=self.kwargs["activity_id"]
         )
         return context
-

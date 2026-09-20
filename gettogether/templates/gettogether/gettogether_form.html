@@ -1,7 +1,7 @@
  {% extends "admin/main.html" %}
  {% load static %}
  {% block title %}
-    straatactiviteit {% if form.instance.pk %}bewerken{% else %}aanmaken{% endif %}
+    Samenkomst {% if form.instance.pk %}bewerken{% else %}aanmaken{% endif %}
  {% endblock title %}
 {% block stylesheet %}<link href="{% static "styles/form.css" %}" rel="stylesheet" >{% endblock stylesheet %}
  {% block content %}
@@ -10,7 +10,7 @@
             {% csrf_token %}
             {% load crispy_forms_tags %}
             {{ form|crispy }}
-            <input class="btn btn-success" type="submit" value="Verzend"/>     
+            <input class="btn btn-success" type="submit" value="Plan in"/>     
             <button onclick="window.history.back();" class="btn btn-secondary ms-4" type="button">Annuleer</button>
         </form>
     </div>

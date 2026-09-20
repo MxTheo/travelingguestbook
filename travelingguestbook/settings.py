@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'core',
     'streetactivity',
     'persona',
+    'gettogether',
     'rest_framework',
     'usermanagement',
 ]
