@@ -1,9 +1,11 @@
-from django.urls import reverse
 from django.contrib import auth
-from travelingguestbook.helpers_test import helper_test_page_rendering
+from django.urls import reverse
+
 from travelingguestbook.factories import UserFactory
+from travelingguestbook.helpers_test import helper_test_page_rendering
 from usermanagement.forms import RegisterForm
 from usermanagement.models import Profile
+
 
 class TestRegister():
     '''Tests for registering a new user'''
@@ -45,6 +47,14 @@ class TestRegister():
         client.post(self.register_url, self.data_correct)
         user = auth.get_user(client)
         assert user.is_authenticated
+
+    def test_error_when_username_is_reserved(self, client):
+        '''Test if the user is not registered, when the username is reserved'''
+        data_incorrect              = self.data_correct
+        data_incorrect['username']  = 'admin'
+        response                    = client.post(self.register_url, data_incorrect)
+        assert response.status_code == 200
+        assert 'admin is gereserveerd en kan niet als gebruikersnaam worden gebruikt.' in str(response.content)
 
 class TestProfile():
     """Tests for the profile of a user"""

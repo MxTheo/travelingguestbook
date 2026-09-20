@@ -1,7 +1,11 @@
 import os
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+
+from usermanagement.validators import validate_username_not_reserved
+
 from .models import Profile
 
 
@@ -16,6 +20,12 @@ class RegisterForm(UserCreationForm):
             "password1",
             "password2",
         ]
+
+    def clean_username(self):
+        """Validate the username to ensure it is not reserved"""
+        username = self.cleaned_data.get("username")
+        validate_username_not_reserved(username)
+        return username
 
 
 class UserForm(forms.ModelForm):
