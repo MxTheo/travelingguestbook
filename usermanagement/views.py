@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views import View
 from django.views.generic import CreateView, DetailView
 
@@ -31,6 +32,23 @@ class UserDetail(DetailView):
     slug_field     = "username"
     slug_url_kwarg = "username"
     context_object_name = "profile_user"
+
+    def get_context_data(self, **kwargs):
+        """Update context for the user profile page"""
+        context = super().get_context_data(**kwargs)
+        context = self.add_gettogethers_to_context(context)
+        return context
+
+    def add_gettogethers_to_context(self, context):
+        """Add next, later and past get-togethers to the profile context."""
+        now = timezone.now()
+        upcoming_gettogethers = self.object.gettogethers.filter(date__gte=now).order_by("date")
+        context["next_get_together"] = upcoming_gettogethers.first()
+        context["later_get_togethers"] = upcoming_gettogethers[1:]
+        context["past_get_togethers"] = (
+            self.object.gettogethers.filter(date__lt=now).order_by("-date")
+        )
+        return context
 
 class ProfileUpdateView(LoginRequiredMixin, View):
     """View for user to update its profile"""

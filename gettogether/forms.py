@@ -16,3 +16,6 @@ class GetTogetherForm(forms.ModelForm):
             'location': 'Voer de locatie in waar de samenkomst zal plaatsvinden.',
             'date': 'Voer de datum in voor de samenkomst.',
         }
+        widgets = {
+            'date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }

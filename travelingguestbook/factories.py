@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from faker import Faker
 
+from gettogether.models import GetTogether
 from persona.models import Persona, Problem, Reaction
 from streetactivity.models import Reflection, StreetActivity
-from gettogether.models import GetTogether
 
 fake = Faker()
 
