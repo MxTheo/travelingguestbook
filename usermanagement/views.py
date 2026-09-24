@@ -36,17 +36,17 @@ class UserDetail(DetailView):
     def get_context_data(self, **kwargs):
         """Update context for the user profile page"""
         context = super().get_context_data(**kwargs)
-        context = self.add_gettogethers_to_context(context)
+        context = self.add_whereabouts_to_context(context)
         return context
 
-    def add_gettogethers_to_context(self, context):
+    def add_whereabouts_to_context(self, context):
         """Add next, later and past get-togethers to the profile context."""
         now = timezone.now()
-        upcoming_gettogethers = self.object.gettogethers.filter(date__gte=now).order_by("date")
-        context["next_get_together"] = upcoming_gettogethers.first()
-        context["later_get_togethers"] = upcoming_gettogethers[1:]
+        upcoming_whereabouts = self.object.whereabouts.filter(date__gte=now).order_by("date")
+        context["next_get_together"] = upcoming_whereabouts.first()
+        context["later_get_togethers"] = upcoming_whereabouts[1:]
         context["past_get_togethers"] = (
-            self.object.gettogethers.filter(date__lt=now).order_by("-date")
+            self.object.whereabouts.filter(date__lt=now).order_by("-date")
         )
         return context
 

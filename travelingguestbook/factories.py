@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from faker import Faker
 
-from gettogether.models import GetTogether
+from weaktie.models import Whereabout
 from persona.models import Persona, Problem, Reaction
 from streetactivity.models import Reflection, StreetActivity
 
@@ -20,10 +20,10 @@ class UserFactory(factory.django.DjangoModelFactory):
     email    = factory.LazyFunction(fake.unique.email)
     password = factory.LazyFunction(fake.unique.password)
 
-class GetTogetherFactory(factory.django.DjangoModelFactory):
-    """Mock for gettogether GetTogether"""
+class WhereaboutFactory(factory.django.DjangoModelFactory):
+    """Mock for whereabout Whereabout"""
     class Meta:
-        model = GetTogether
+        model = Whereabout
     location = factory.LazyFunction(fake.address)
     date     = factory.LazyFunction(timezone.now)
     user     = factory.SubFactory(UserFactory)

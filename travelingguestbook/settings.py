@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'core',
     'streetactivity',
     'persona',
-    'gettogether',
+    'weaktie',
     'rest_framework',
     'usermanagement',
 ]
@@ -176,3 +176,6 @@ GA_MEASUREMENT_ID = ''  # zet hier je ID in productie, of laat leeg voor dev
 
 MASTODON_ACCESS_TOKEN = os.getenv('MASTODON_ACCESS_TOKEN')
 MASTODON_SERVER = 'mastodon.social'
+
+LANGUAGE_CODE = 'nl-nl'
+USE_TZ = True

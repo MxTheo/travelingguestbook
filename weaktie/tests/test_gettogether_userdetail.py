@@ -2,7 +2,7 @@
 from django.urls import reverse
 from django.utils import timezone
 
-from travelingguestbook.factories import GetTogetherFactory, UserFactory
+from travelingguestbook.factories import WhereaboutFactory, UserFactory
 
 
 
@@ -42,15 +42,15 @@ class TestBasicRendering:
 # ---------------------------------------------------------------------------
 # Get-together grouping
 # ---------------------------------------------------------------------------
-class TestGetTogetherGrouping:
+class TestWhereaboutGrouping:
     """Tests for how get-togethers are grouped into next, later, and past."""
     def test_next_get_together_is_the_earliest_upcoming(self, client):
         """The next get-together is the earliest upcoming one."""
         user = UserFactory()
 
-        later = GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=10), location="Later")
-        sooner = GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=2), location="Eerder")
-        GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=-1), location="Verleden")
+        later = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=10), location="Later")
+        sooner = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2), location="Eerder")
+        WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=-1), location="Verleden")
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
@@ -63,9 +63,9 @@ class TestGetTogetherGrouping:
         """Later get-togethers are all upcoming ones except the next."""
         user = UserFactory()
 
-        GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=2), location="Eerste")
-        second = GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=5), location="Tweede")
-        third = GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=9), location="Derde")
+        WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2), location="Eerste")
+        second = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=5), location="Tweede")
+        third = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=9), location="Derde")
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
@@ -77,8 +77,8 @@ class TestGetTogetherGrouping:
         """Past get-togethers are ordered newest first."""
         user = UserFactory()
 
-        older = GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=-10), location="Ouder")
-        newer = GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=-2), location="Nieuwer")
+        older = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=-10), location="Ouder")
+        newer = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=-2), location="Nieuwer")
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
@@ -102,8 +102,8 @@ class TestGetTogetherGrouping:
         """Get-togethers of other users are not shown on this profile."""
         owner = UserFactory(username="owner")
 
-        GetTogetherFactory(user=owner, date=timezone.now() + timezone.timedelta(days=2), location="Van owner")
-        GetTogetherFactory(date=timezone.now() + timezone.timedelta(days=2), location="Van other")
+        WhereaboutFactory(user=owner, date=timezone.now() + timezone.timedelta(days=2), location="Van owner")
+        WhereaboutFactory(date=timezone.now() + timezone.timedelta(days=2), location="Van other")
 
         url = reverse("user", kwargs={"username": owner.username})
         response = client.get(url)
@@ -127,7 +127,7 @@ class TestOwnerOnlyControls:
     def test_owner_sees_edit_and_delete_buttons(self, client, auto_login_user):
         """The owner sees edit and delete links for their get-togethers."""
         client, user = auto_login_user()
-        gt = GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=2))
+        gt = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2))
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
@@ -142,7 +142,7 @@ class TestOwnerOnlyControls:
         """An anonymous visitor sees no edit, delete or create links."""
         user = UserFactory(username="owner")
         
-        gt = GetTogetherFactory(user=user, date=timezone.now() + timezone.timedelta(days=2))
+        gt = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2))
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
@@ -157,7 +157,7 @@ class TestOwnerOnlyControls:
         """A logged-in user who is not the owner sees no controls."""
         owner = UserFactory(username="owner")
         client, _ = auto_login_user()
-        gt = GetTogetherFactory(user=owner, date=timezone.now() + timezone.timedelta(days=2))
+        gt = WhereaboutFactory(user=owner, date=timezone.now() + timezone.timedelta(days=2))
 
 
         url = reverse("user", kwargs={"username": owner.username})

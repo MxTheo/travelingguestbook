@@ -1,12 +1,12 @@
 from django import forms
 
-from gettogether.models import GetTogether
+from weaktie.models import Whereabout
 
 
-class GetTogetherForm(forms.ModelForm):
-    """Form for creating a GetTogether instance."""
+class WhereaboutForm(forms.ModelForm):
+    """Form for creating a Whereabout instance."""
     class Meta:
-        model = GetTogether
+        model = Whereabout
         fields = ['location', 'date']
         labels = {
             'location': 'Waar wil je de samenkomst doen?',
