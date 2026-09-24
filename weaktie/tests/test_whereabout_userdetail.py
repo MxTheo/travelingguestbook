@@ -40,12 +40,12 @@ class TestBasicRendering:
 
 
 # ---------------------------------------------------------------------------
-# Get-together grouping
+# whereabout grouping
 # ---------------------------------------------------------------------------
 class TestWhereaboutGrouping:
-    """Tests for how get-togethers are grouped into next, later, and past."""
+    """Tests for how whereabouts are grouped into next, later, and past."""
     def test_next_get_together_is_the_earliest_upcoming(self, client):
-        """The next get-together is the earliest upcoming one."""
+        """The next whereabout is the earliest upcoming one."""
         user = UserFactory()
 
         later = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=10), location="Later")
@@ -60,7 +60,7 @@ class TestWhereaboutGrouping:
 
 
     def test_later_get_togethers_exclude_next(self, client):
-        """Later get-togethers are all upcoming ones except the next."""
+        """Later whereabouts are all upcoming ones except the next."""
         user = UserFactory()
 
         WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2), location="Eerste")
@@ -74,7 +74,7 @@ class TestWhereaboutGrouping:
 
 
     def test_past_get_togethers_are_ordered_newest_first(self, client):
-        """Past get-togethers are ordered newest first."""
+        """Past whereabouts are ordered newest first."""
         user = UserFactory()
 
         older = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=-10), location="Ouder")
@@ -87,7 +87,7 @@ class TestWhereaboutGrouping:
 
 
     def test_no_get_togethers_returns_empty_context(self, client):
-        """A user with no get-togethers has empty/None context values."""
+        """A user with no whereabouts has empty/None context values."""
         user = UserFactory()
 
         url = reverse("user", kwargs={"username": user.username})
@@ -99,7 +99,7 @@ class TestWhereaboutGrouping:
 
 
     def test_get_togethers_are_scoped_to_profile_owner(self, client):
-        """Get-togethers of other users are not shown on this profile."""
+        """whereabouts of other users are not shown on this profile."""
         owner = UserFactory(username="owner")
 
         WhereaboutFactory(user=owner, date=timezone.now() + timezone.timedelta(days=2), location="Van owner")
@@ -125,7 +125,7 @@ class TestWhereaboutGrouping:
 class TestOwnerOnlyControls:
     """Tests for edit/delete controls on the profile page."""
     def test_owner_sees_edit_and_delete_buttons(self, client, auto_login_user):
-        """The owner sees edit and delete links for their get-togethers."""
+        """The owner sees edit and delete links for their whereabouts."""
         client, user = auto_login_user()
         gt = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2))
 
@@ -133,9 +133,9 @@ class TestOwnerOnlyControls:
         response = client.get(url)
         content = response.content.decode()
 
-        assert reverse("update-get-together", kwargs={"pk": gt.pk}) in content
-        assert reverse("delete-get-together", kwargs={"pk": gt.pk}) in content
-        assert reverse("create-get-together") in content
+        assert reverse("update-whereabout", kwargs={"pk": gt.pk}) in content
+        assert reverse("delete-whereabout", kwargs={"pk": gt.pk}) in content
+        assert reverse("create-whereabout") in content
 
 
     def test_anonymous_visitor_sees_no_controls(self, client):
@@ -148,9 +148,9 @@ class TestOwnerOnlyControls:
         response = client.get(url)
         content = response.content.decode()
 
-        assert reverse("update-get-together", kwargs={"pk": gt.pk}) not in content
-        assert reverse("delete-get-together", kwargs={"pk": gt.pk}) not in content
-        assert reverse("create-get-together") not in content
+        assert reverse("update-whereabout", kwargs={"pk": gt.pk}) not in content
+        assert reverse("delete-whereabout", kwargs={"pk": gt.pk}) not in content
+        assert reverse("create-whereabout") not in content
 
 
     def test_other_logged_in_user_sees_no_controls(self, client, auto_login_user):
@@ -164,9 +164,9 @@ class TestOwnerOnlyControls:
         response = client.get(url)
         content = response.content.decode()
 
-        assert reverse("update-get-together", kwargs={"pk": gt.pk}) not in content
-        assert reverse("delete-get-together", kwargs={"pk": gt.pk}) not in content
-        assert reverse("create-get-together") not in content
+        assert reverse("update-whereabout", kwargs={"pk": gt.pk}) not in content
+        assert reverse("delete-whereabout", kwargs={"pk": gt.pk}) not in content
+        assert reverse("create-whereabout") not in content
 
 
 # ---------------------------------------------------------------------------

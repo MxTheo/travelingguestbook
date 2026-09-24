@@ -16,21 +16,21 @@ class TestWhereaboutCreateView:
     def test_get_together_create_view(self, auto_login_user):
         """Test the Whereabout create view to ensure it returns a 200 status code"""
         client, _ = auto_login_user()
-        response = client.get(reverse('create-get-together'))
+        response = client.get(reverse('create-whereabout'))
         assert response.status_code == 200
         assert response.template_name == ['whereabout/whereabout_form.html']
 
     def test_create_not_logged_in(self, client):
         """Test that a user who is not logged in
           is redirected to the login page when trying to access the Whereabout create view."""
-        response = client.get(reverse('create-get-together'))
+        response = client.get(reverse('create-whereabout'))
         assert response.status_code == 302  # Redirect to login page
         assert '/accounts/login/' in response.url
 
     def test_user_is_set_on_form_submission(self, auto_login_user):
         """Test that the user is set on the Whereabout instance upon form submission."""
         client, user = auto_login_user()
-        response = client.post(reverse('create-get-together'), {
+        response = client.post(reverse('create-whereabout'), {
             'location': 'Test Location',
             'date': '2024-01-01 12:00:00'
         })
@@ -45,7 +45,7 @@ class TestWhereaboutUpdateView:
         when it is from the same user"""
         client, user = auto_login_user()
         whereabout = WhereaboutFactory(user=user)
-        response = client.get(reverse('update-get-together', args=[whereabout.id]))
+        response = client.get(reverse('update-whereabout', args=[whereabout.id]))
         assert response.status_code == 200
         assert response.template_name == ['whereabout/whereabout_form.html']
 
@@ -54,7 +54,7 @@ class TestWhereaboutUpdateView:
         client, user = auto_login_user()
         whereabout = WhereaboutFactory(user=user)
         new_location = 'Updated Location'
-        response = client.post(reverse('update-get-together', args=[whereabout.id]), {
+        response = client.post(reverse('update-whereabout', args=[whereabout.id]), {
             'location': new_location,
             'date': whereabout.date
         })
@@ -67,14 +67,14 @@ class TestWhereaboutUpdateView:
         that user is not allowed to update that gettogehter"""
         client, _ = auto_login_user()
         whereabout = WhereaboutFactory()
-        response = client.get(reverse('update-get-together', args=[whereabout.id]))
+        response = client.get(reverse('update-whereabout', args=[whereabout.id]))
         assert response.status_code == 403  # Forbidden
 
     def test_not_logged_in(self, client):
         """Test that a user who is not logged in
         is redirected to the login page when trying to update a whereabout"""
         whereabout = WhereaboutFactory()
-        response = client.get(reverse('update-get-together', args=[whereabout.id]))
+        response = client.get(reverse('update-whereabout', args=[whereabout.id]))
         assert response.status_code == 302  # Redirect to login page
         assert '/accounts/login/' in response.url
 
@@ -85,7 +85,7 @@ class TestWhereaboutDeleteView:
         when it is from the same user"""
         client, user = auto_login_user()
         whereabout = WhereaboutFactory(user=user)
-        response = client.post(reverse('delete-get-together', args=[whereabout.id]))
+        response = client.post(reverse('delete-whereabout', args=[whereabout.id]))
         assert response.status_code == 302
         assert Whereabout.objects.filter(id=whereabout.id).count() == 0  # Ensure the instance is deleted
 
@@ -94,13 +94,13 @@ class TestWhereaboutDeleteView:
         is not allowed to delete that gettogehter"""
         client, _ = auto_login_user()
         whereabout = WhereaboutFactory()
-        response = client.post(reverse('delete-get-together', args=[whereabout.id]))
+        response = client.post(reverse('delete-whereabout', args=[whereabout.id]))
         assert response.status_code == 403  # Forbidden
 
     def test_not_logged_in(self, client):
         """Test a user, who is not logged in
         is redirected to the login page when trying to delete a whereabout"""
         whereabout = WhereaboutFactory()
-        response = client.post(reverse('delete-get-together', args=[whereabout.id]))
+        response = client.post(reverse('delete-whereabout', args=[whereabout.id]))
         assert response.status_code == 302  # Redirect to login page
         assert '/accounts/login/' in response.url

@@ -34,26 +34,25 @@
             {% endif %}
         </div>
 
-        {# ===== The next get-together: one invitation, one card ===== #}
+        {# ===== The next whereabout: one invitation, one card ===== #}
         {% if next_get_together %}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white py-3">
-                    <h2 class="h4 mb-0"><i class="bi bi-people me-2"></i> Kom je ook de volgende keer mee?</h2>
+                    <h2 class="h4 mb-0"><i class="bi bi-people me-2"></i> Ik ben bij:</h2>
                 </div>
                 <div class="card-body">
                     <p class="h3 mb-1">{{ next_get_together.location }}</p>
                     <p class="text-muted mb-4">
                         {{ next_get_together.date|date:"l j F Y, H:i" }}
                     </p>
-                    <p class="mb-0">Contact? Je hebt mijn kaartje.</p>
 
                     {% if request.user.is_authenticated and request.user == profile_user %}
                         <div class="d-flex gap-2 mt-4">
-                            <a href="{% url 'update-get-together' next_get_together.pk %}"
+                            <a href="{% url 'update-whereabout' next_get_together.pk %}"
                                class="btn btn-outline-primary btn-sm">
                                 <i class="bi bi-pencil me-1"></i>Bewerken
                             </a>
-                            <a href="{% url 'delete-get-together' next_get_together.pk %}"
+                            <a href="{% url 'delete-whereabout' next_get_together.pk %}"
                                class="btn btn-outline-danger btn-sm">
                                 <i class="bi bi-trash me-1"></i>Verwijderen
                             </a>
@@ -64,36 +63,36 @@
         {% else %}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="h5 mb-0"><i class="bi bi-people me-2"></i>Kom je ook de volgende keer mee?</h2>
+                    <h2 class="h5 mb-0"><i class="bi bi-people me-2"></i>Ik ben bij:</h2>
                 </div>
                 <div class="card-body text-center py-5">
-                    <p class="h5 mb-1">Nog geen samenkomst gepland</p>
+                    <p class="h5 mb-1">Nog geen gelegenheid gepland</p>
                     <p class="text-muted mb-0">
                         {% if request.user.is_authenticated and request.user == profile_user %}
-                            Plan een samenkomst en nodig de mensen uit die je op straat hebt ontmoet.
+                            Plan een gelegenheid en nodig de mensen uit die je op straat hebt ontmoet.
                         {% else %}
-                            {{ profile_user.username }} heeft nog geen nieuwe samenkomst gepland.
+                            {{ profile_user.username }} heeft nog geen nieuwe gelegenheid gepland.
                         {% endif %}
                     </p>
                     {% if request.user.is_authenticated and request.user == profile_user %}
-                        <a href="{% url 'create-get-together' %}" class="btn btn-primary mt-3">
-                            <i class="bi bi-plus-lg me-1"></i>Nieuwe samenkomst
+                        <a href="{% url 'create-whereabout' %}" class="btn btn-primary mt-3">
+                            <i class="bi bi-plus-lg me-1"></i>Nieuwe gelegenheid
                         </a>
                     {% endif %}
                 </div>
             </div>
         {% endif %}
 
-        {# ===== Owner-only: create new get-together ===== #}
+        {# ===== Owner-only: create new whereabout ===== #}
         {% if request.user.is_authenticated and request.user == profile_user and next_get_together %}
             <div class="d-flex justify-content-end mb-4">
-                <a href="{% url 'create-get-together' %}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg me-1"></i>Nieuwe samenkomst
+                <a href="{% url 'create-whereabout' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i>Nieuwe gelegenheid
                 </a>
             </div>
         {% endif %}
 
-        {# ===== Later get-togethers: small, secondary ===== #}
+        {# ===== Later whereabouts: small, secondary ===== #}
         {% if later_get_togethers %}
             <p class="text-muted text-uppercase small mb-2">Later</p>
             <ul class="list-group list-group-flush mb-4">
@@ -108,11 +107,11 @@
                             </div>
                             {% if request.user.is_authenticated and request.user == profile_user %}
                                 <div class="col-auto d-flex gap-2">
-                                    <a href="{% url 'update-get-together' get_together.pk %}"
+                                    <a href="{% url 'update-whereabout' get_together.pk %}"
                                        class="btn btn-sm btn-outline-secondary">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a href="{% url 'delete-get-together' get_together.pk %}"
+                                    <a href="{% url 'delete-whereabout' get_together.pk %}"
                                        class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-trash"></i>
                                     </a>
@@ -124,7 +123,7 @@
             </ul>
         {% endif %}
 
-        {# ===== Past get-togethers: smallest, most muted ===== #}
+        {# ===== Past whereabouts: smallest, most muted ===== #}
         {% if past_get_togethers %}
             <p class="text-muted text-uppercase small mb-2">Eerder</p>
             <ul class="list-group list-group-flush mb-4">
@@ -139,11 +138,11 @@
                             </div>
                             {% if request.user.is_authenticated and request.user == profile_user %}
                                 <div class="col-auto d-flex gap-2">
-                                    <a href="{% url 'update-get-together' get_together.pk %}"
+                                    <a href="{% url 'update-whereabout' get_together.pk %}"
                                        class="btn btn-sm btn-outline-secondary">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a href="{% url 'delete-get-together' get_together.pk %}"
+                                    <a href="{% url 'delete-whereabout' get_together.pk %}"
                                        class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-trash"></i>
                                     </a>

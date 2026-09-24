@@ -24,7 +24,7 @@ urlpatterns: list[URLPattern | URLResolver] = [
     path('', include('core.urls')),
     path('straatactiviteiten/', include('streetactivity.urls')),
     path('persona/', include('persona.urls')),
-    path('samenkomst/', include('weaktie.urls')),
+    path('gelegenheid/', include('weaktie.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('usermanagement.urls')),
     path('', include('usermanagement.profile_urls')),
