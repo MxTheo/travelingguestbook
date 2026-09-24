@@ -11,12 +11,34 @@ from .models import Profile
 
 class RegisterForm(UserCreationForm):
     """Form for registration, where the attributes are inherited from user and email is added"""
+    email = forms.EmailField(
+        required=True,
+        error_messages={
+            "invalid": "Vul een echt e‑mailadres in.",
+            "required": "E‑mail is verplicht.",
+        },
+        widget=forms.EmailInput(attrs={"placeholder": "jouw@voorbeeld.nl"}),
+    )
+    first_name = forms.CharField(
+        required=True,
+        label="Voornaam",
+        error_messages={"required": "Voornaam is verplicht."},
+        widget=forms.TextInput(attrs={"placeholder": "Voornaam"}),
+    )
+    last_name = forms.CharField(
+        required=True,
+        label="Achternaam",
+        error_messages={"required": "Achternaam is verplicht."},
+        widget=forms.TextInput(attrs={"placeholder": "Achternaam"}),
+    )
     class Meta:
         """Fields required for registering as a user"""
         model = User
         fields = [
             "username",
             "email",
+            "first_name",
+            "last_name",
             "password1",
             "password2",
         ]
@@ -40,11 +62,23 @@ class UserForm(forms.ModelForm):
         },
         widget=forms.EmailInput(attrs={"placeholder": "jouw@voorbeeld.nl"}),
     )
+    first_name = forms.CharField(
+        required=True,
+        label="Voornaam",
+        error_messages={"required": "Voornaam is verplicht."},
+        widget=forms.TextInput(attrs={"placeholder": "Voornaam"}),
+    )
+    last_name = forms.CharField(
+        required=True,
+        label="Achternaam",
+        error_messages={"required": "Achternaam is verplicht."},
+        widget=forms.TextInput(attrs={"placeholder": "Achternaam"}),
+    )
 
     class Meta:
         """E-mail is editable"""
         model = User
-        fields = ["email"]
+        fields = ["email", "first_name", "last_name"]
 
 
 class ProfileForm(forms.ModelForm):
