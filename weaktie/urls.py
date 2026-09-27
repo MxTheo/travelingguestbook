@@ -7,6 +7,5 @@ urlpatterns = [
     path('gelegenheid/bewerk/<int:pk>', views.WhereaboutUpdateView.as_view(), name='update-whereabout' ),
     path('gelegenheid/verwijder/<int:pk>', views.WhereaboutDeleteView.as_view(), name='delete-whereabout' ),
     path('link/nieuw/', views.LinkCreateView.as_view(), name='create-link'),
-    path('link/bewerk/<int:pk>', views.LinkUpdateView.as_view(), name='update-link' ),
     path('link/verwijder/<int:pk>', views.LinkDeleteView.as_view(), name='delete-link' ),
 ]

@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
@@ -22,13 +24,23 @@ class Whereabout(models.Model):
 class Link(models.Model):
     """Model representing a link to a social media profile or website. Relevant for asynchronous contact."""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="links")
-    url = models.URLField(max_length=300)
+    url = models.URLField(max_length=500)
 
     class Meta:
         """Set verbose names and ordering for the Link model."""
         verbose_name = "link"
         verbose_name_plural = "links"
         ordering = ["-id"]
+
+    @property
+    def domain(self):
+        """Return the domain without www."""
+        return urlparse(self.url).netloc.removeprefix("www.")
+
+    @property
+    def path(self):
+        """Return the path without trailing slash."""
+        return urlparse(self.url).path.rstrip("/")
 
     def __str__(self):
         return f"{self.user.username} link: {self.url}"

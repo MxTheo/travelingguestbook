@@ -2,8 +2,7 @@
 from django.urls import reverse
 from django.utils import timezone
 
-from travelingguestbook.factories import WhereaboutFactory, UserFactory
-
+from travelingguestbook.factories import UserFactory, WhereaboutFactory
 
 
 class TestBasicRendering:

@@ -28,14 +28,13 @@ class WhereaboutForm(forms.ModelForm):
 
 class LinkForm(forms.ModelForm):
     """Form for creating a Link instance."""
-    url = forms.URLField(max_length=300, assume_scheme="https")
+    url = forms.URLField(
+        max_length=500,
+        assume_scheme="https",
+        label="Waar ben je te vinden?",
+        help_text='Voeg een link toe naar je sociale media profiel of website, beginnend met https://'
+        )
 
     class Meta:
         model = Link
         fields = ['url']
-        labels = {
-            'url': 'Voeg een link toe',
-        }
-        help_texts = {
-            'url': 'Voeg een link toe naar je sociale media profiel of website',
-        }

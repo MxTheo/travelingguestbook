@@ -34,63 +34,107 @@
             {% endif %}
         </div>
 
-        {# ===== The next whereabout: one invitation, one card ===== #}
-        {% if next_whereabout %}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white py-3">
-                    <h2 class="h4 mb-0"><i class="bi bi-person-raised-hand me-2"></i> Ik ben bij:</h2>
-                </div>
-                <div class="card-body">
-                    <p class="h3 mb-1">{{ next_whereabout.location }}</p>
-                    <p class="text-muted mb-4">
-                        {{ next_whereabout.when|date:"l j F Y, H:i" }}
-                    </p>
+        {# ===== Two columns: findable (links) and reachable (whereabouts) ===== #}
+        <div class="row g-4 mb-5">
 
+            {# ----- Links: findable ----- #}
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h2 class="h5 mb-0">Ik ben te vinden op:</h2>
                     {% if request.user.is_authenticated and request.user == profile_user %}
-                        <div class="d-flex gap-2 mt-4">
-                            <a href="{% url 'update-whereabout' next_whereabout.pk %}"
-                               class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-pencil me-1"></i>Bewerken
-                            </a>
-                            <a href="{% url 'delete-whereabout' next_whereabout.pk %}"
-                               class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-trash me-1"></i>Verwijderen
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% else %}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="h5 mb-0"><i class="bi bi-people me-2"></i>Ik ben bij:</h2>
-                </div>
-                <div class="card-body text-center py-5">
-                    <p class="h5 mb-1">Waar ga je heen?</p>
-                    <p class="text-muted mb-0">
-                        {% if request.user.is_authenticated and request.user == profile_user %}
-                            Laat weten waar anderen je kunnen treffen.
-                        {% else %}
-                            {{ profile_user.username }} gaat nog nergens heen.
-                        {% endif %}
-                    </p>
-                    {% if request.user.is_authenticated and request.user == profile_user %}
-                        <a href="{% url 'create-whereabout' %}" class="btn btn-primary mt-3">
-                            <i class="bi bi-plus-lg me-1"></i>Nieuwe gelegenheid
+                        <a href="{% url 'create-link' %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-plus-lg"></i>
                         </a>
                     {% endif %}
                 </div>
-            </div>
-        {% endif %}
 
-        {# ===== Owner-only: create new whereabout ===== #}
-        {% if request.user.is_authenticated and request.user == profile_user and next_whereabout %}
-            <div class="d-flex justify-content-end mb-4">
-                <a href="{% url 'create-whereabout' %}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg me-1"></i>Nieuwe gelegenheid
-                </a>
+                {% if links %}
+                    <div class="d-flex flex-column gap-2">
+                        {% for link in links %}
+                            <div class="d-flex align-items-center">
+                                <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer"
+                                   class="link-card d-flex align-items-center text-decoration-none text-body flex-grow-1">
+                                    <i class="bi bi-link-45deg fs-4 me-3 text-muted"></i>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <div class="small text-muted">{{ link.domain }}</div>
+                                        <div class="text-truncate">{{ link.path }}</div>
+                                    </div>
+                                </a>
+                                {% if request.user.is_authenticated and request.user == profile_user %}
+                                    <a href="{% url 'delete-link' link.pk %}"
+                                       class="btn btn-sm btn-outline-danger ms-2">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small mb-0">
+                        {% if request.user.is_authenticated and request.user == profile_user %}
+                            Voeg een link toe waar mensen je kunnen vinden.
+                        {% else %}
+                            Nog geen links.
+                        {% endif %}
+                    </p>
+                {% endif %}
             </div>
-        {% endif %}
+
+            {# ----- Whereabouts: reachable ----- #}
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h2 class="h5 mb-0">Ik ben bij:</h2>
+                    {% if request.user.is_authenticated and request.user == profile_user %}
+                        <a href="{% url 'create-whereabout' %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-plus-lg"></i>
+                        </a>
+                    {% endif %}
+                </div>
+
+                {% if next_whereabout %}
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p class="h4 mb-1">{{ next_whereabout.location }}</p>
+                            <p class="text-muted mb-0">
+                                {{ next_whereabout.when|date:"l j F Y, H:i" }}
+                            </p>
+                            {% if request.user.is_authenticated and request.user == profile_user %}
+                                <div class="d-flex gap-2 mt-3">
+                                    <a href="{% url 'update-whereabout' next_whereabout.pk %}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil me-1"></i>Bewerken
+                                    </a>
+                                    <a href="{% url 'delete-whereabout' next_whereabout.pk %}"
+                                       class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash me-1"></i>Verwijderen
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center py-4">
+                            <p class="mb-1">
+                                {% if request.user.is_authenticated and request.user == profile_user %}
+                                    Waar ga je heen?
+                                {% else %}
+                                    {{ profile_user.username }} gaat nog nergens heen.
+                                {% endif %}
+                            </p>
+                            {% if request.user.is_authenticated and request.user == profile_user %}
+                                <p class="text-muted small mb-3">
+                                    Laat weten waar anderen je kunnen treffen.
+                                </p>
+                                <a href="{% url 'create-whereabout' %}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus-lg me-1"></i>Nieuwe gelegenheid
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
 
         {# ===== Later whereabouts: small, secondary ===== #}
         {% if later_whereabouts %}

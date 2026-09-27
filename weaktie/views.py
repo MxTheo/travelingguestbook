@@ -91,27 +91,6 @@ class LinkCreateView(LoginRequiredMixin, generic.CreateView):
         user = self.request.user
         return reverse('user', kwargs={'username': user.username})
 
-class LinkUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
-    """View for updating a Link instance."""
-    model = Link
-    form_class = LinkForm
-
-    def test_func(self):
-        """Check if the current user is the owner of the Link instance."""
-        return self.get_object().user == self.request.user
-
-    def handle_no_permission(self):
-        """Raise PermissionDenied if the user is authenticated
-        but not the owner of the Link instance."""
-        if self.request.user.is_authenticated:
-            raise PermissionDenied
-        return super().handle_no_permission()
-
-    def get_success_url(self):
-        """Redirect to the profile page after successful form submission."""
-        user = self.request.user
-        return reverse('user', kwargs={'username': user.username})
-
 class LinkDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     """View for deleting a Link instance."""
     model = Link

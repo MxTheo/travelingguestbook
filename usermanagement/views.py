@@ -37,6 +37,12 @@ class UserDetail(DetailView):
         """Update context for the user profile page"""
         context = super().get_context_data(**kwargs)
         context = self.add_whereabouts_to_context(context)
+        context = self.add_links_to_context(context)
+        return context
+
+    def add_links_to_context(self, context):
+        """Add links to the profile context."""
+        context["links"] = self.object.links.all()
         return context
 
     def add_whereabouts_to_context(self, context):
