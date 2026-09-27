@@ -179,3 +179,4 @@ MASTODON_SERVER = 'mastodon.social'
 
 LANGUAGE_CODE = 'nl-nl'
 USE_TZ = True
+TIME_ZONE = 'Europe/Amsterdam'

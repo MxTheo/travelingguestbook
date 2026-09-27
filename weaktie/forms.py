@@ -7,11 +7,13 @@ from weaktie.models import Whereabout
 class WhereaboutForm(forms.ModelForm):
     """Form for creating a Whereabout instance."""
     date = forms.DateTimeField(
-        initial=timezone.localtime,
+        initial=timezone.now,
         widget=forms.DateTimeInput(
             format='%Y-%m-%dT%H:%M',
             attrs={'type': 'datetime-local', 'class': 'form-control'},
         ),
+        label='Wanneer ga je?',
+        help_text='Voer de datum en tijd in van die activiteit',
     )
 
     class Meta:
@@ -19,9 +21,7 @@ class WhereaboutForm(forms.ModelForm):
         fields = ['location', 'date']
         labels = {
             'location': 'Waar ga je naartoe?',
-            'date': 'Wanneer ga je?',
         }
         help_texts = {
             'location': 'Voer de plek in van de activiteit waar je bij bent',
-            'date': 'Voer de datum en tijd in van die activiteit',
         }
