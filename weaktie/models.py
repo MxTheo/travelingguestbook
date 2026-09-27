@@ -38,9 +38,13 @@ class Link(models.Model):
         return urlparse(self.url).netloc.removeprefix("www.")
 
     @property
-    def path(self):
-        """Return the path without trailing slash."""
-        return urlparse(self.url).path.rstrip("/")
+    def handle(self):
+        """Return the last segment of the URL path, or the domain if no path."""
+        parsed = urlparse(self.url)
+        path = parsed.path.rstrip("/")
+        if path:
+            return path.split("/")[-1]
+        return parsed.netloc.removeprefix("www.")
 
     def __str__(self):
         return f"{self.user.username} link: {self.url}"
