@@ -1,11 +1,14 @@
 import io
 from unittest.mock import patch
-from PIL import Image
-from django.urls import reverse
+
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.urls import reverse
+from PIL import Image
+
 from travelingguestbook.factories import UserFactory
-from usermanagement.models import Profile
 from usermanagement.forms import ProfileForm
+from usermanagement.models import Profile
+
 
 class TestUserUpdateView:
     """Tests for user that updates its account"""
@@ -33,6 +36,8 @@ class TestUserUpdateView:
 
         data = {
             "email": new_email,
+            "first_name": "Test",
+            "last_name": "User",
         }
 
         resp = client.post(url, data)
@@ -48,6 +53,8 @@ class TestUserUpdateView:
 
         data = {
             "email": "invalid-email",
+            "first_name": "Test",
+            "last_name": "User",
         }
 
         resp = client.post(url, data)
@@ -64,7 +71,12 @@ class TestUserUpdateView:
         )
 
         url = reverse("update-account")
-        data = {"profile_image": valid_image, "email": "test@info.com"}
+        data = {
+            "profile_image": valid_image,
+            "email": "test@info.com",
+            "first_name": "Test",
+            "last_name": "User",
+        }
         response = client.post(url, data, follow=True)
 
         assert response.status_code == 200
@@ -90,6 +102,8 @@ class TestUserUpdateView:
         data = {
             "profile_image": invalid_image,
             "email": "test@info.com",
+            "first_name": "Test",
+            "last_name": "User",
         }
         response = client.post(url, data, follow=True)
 
@@ -111,7 +125,12 @@ class TestUserUpdateView:
         )
 
         url = reverse("update-account")
-        data = {"profile_image": mock_image, "email": "test@info.com"}
+        data = {
+            "profile_image": mock_image,
+            "email": "test@info.com",
+            "first_name": "Test",
+            "last_name": "User",
+        }
         response = client.post(url, data, follow=True)
 
         assert response.status_code == 200

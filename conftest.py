@@ -60,6 +60,8 @@ def create_user(django_user_model):
         if 'username' not in kwargs:
             kwargs['username'] = str(uuid.uuid4())
             kwargs['email'] = 'info@test.com'
+            kwargs['first_name'] = 'Test'
+            kwargs['last_name'] = 'User'
         return django_user_model.objects.create_user(**kwargs)
     return make_user
 

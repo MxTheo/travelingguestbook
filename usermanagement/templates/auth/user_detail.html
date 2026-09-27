@@ -35,24 +35,24 @@
         </div>
 
         {# ===== The next whereabout: one invitation, one card ===== #}
-        {% if next_get_together %}
+        {% if next_whereabout %}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white py-3">
                     <h2 class="h4 mb-0"><i class="bi bi-person-raised-hand me-2"></i> Ik ben bij:</h2>
                 </div>
                 <div class="card-body">
-                    <p class="h3 mb-1">{{ next_get_together.location }}</p>
+                    <p class="h3 mb-1">{{ next_whereabout.location }}</p>
                     <p class="text-muted mb-4">
-                        {{ next_get_together.date|date:"l j F Y, H:i" }}
+                        {{ next_whereabout.when|date:"l j F Y, H:i" }}
                     </p>
 
                     {% if request.user.is_authenticated and request.user == profile_user %}
                         <div class="d-flex gap-2 mt-4">
-                            <a href="{% url 'update-whereabout' next_get_together.pk %}"
+                            <a href="{% url 'update-whereabout' next_whereabout.pk %}"
                                class="btn btn-outline-primary btn-sm">
                                 <i class="bi bi-pencil me-1"></i>Bewerken
                             </a>
-                            <a href="{% url 'delete-whereabout' next_get_together.pk %}"
+                            <a href="{% url 'delete-whereabout' next_whereabout.pk %}"
                                class="btn btn-outline-danger btn-sm">
                                 <i class="bi bi-trash me-1"></i>Verwijderen
                             </a>
@@ -84,7 +84,7 @@
         {% endif %}
 
         {# ===== Owner-only: create new whereabout ===== #}
-        {% if request.user.is_authenticated and request.user == profile_user and next_get_together %}
+        {% if request.user.is_authenticated and request.user == profile_user and next_whereabout %}
             <div class="d-flex justify-content-end mb-4">
                 <a href="{% url 'create-whereabout' %}" class="btn btn-primary">
                     <i class="bi bi-plus-lg me-1"></i>Nieuwe gelegenheid
@@ -93,25 +93,25 @@
         {% endif %}
 
         {# ===== Later whereabouts: small, secondary ===== #}
-        {% if later_get_togethers %}
+        {% if later_whereabouts %}
             <p class="text-muted text-uppercase small mb-2">Ik zal zijn bij:</p>
             <ul class="list-group list-group-flush mb-4">
-                {% for get_together in later_get_togethers %}
+                {% for whereabout in later_whereabouts %}
                     <li class="list-group-item px-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <p class="mb-0">{{ get_together.location }}</p>
+                                <p class="mb-0">{{ whereabout.location }}</p>
                                 <p class="mb-0 small text-muted">
-                                    {{ get_together.date|date:"j F Y, H:i" }}
+                                    {{ whereabout.when|date:"j F Y, H:i" }}
                                 </p>
                             </div>
                             {% if request.user.is_authenticated and request.user == profile_user %}
                                 <div class="col-auto d-flex gap-2">
-                                    <a href="{% url 'update-whereabout' get_together.pk %}"
+                                    <a href="{% url 'update-whereabout' whereabout.pk %}"
                                        class="btn btn-sm btn-outline-secondary">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a href="{% url 'delete-whereabout' get_together.pk %}"
+                                    <a href="{% url 'delete-whereabout' whereabout.pk %}"
                                        class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-trash"></i>
                                     </a>
@@ -124,25 +124,25 @@
         {% endif %}
 
         {# ===== Past whereabouts: smallest, most muted ===== #}
-        {% if past_get_togethers %}
+        {% if past_whereabouts %}
             <p class="text-muted text-uppercase small mb-2">Ik was bij:</p>
             <ul class="list-group list-group-flush mb-4">
-                {% for get_together in past_get_togethers %}
+                {% for whereabout in past_whereabouts %}
                     <li class="list-group-item px-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <p class="mb-0 text-muted">{{ get_together.location }}</p>
+                                <p class="mb-0 text-muted">{{ whereabout.location }}</p>
                                 <p class="mb-0 small text-muted">
-                                    {{ get_together.date|date:"j F Y, H:i" }}
+                                    {{ whereabout.when|date:"j F Y, H:i" }}
                                 </p>
                             </div>
                             {% if request.user.is_authenticated and request.user == profile_user %}
                                 <div class="col-auto d-flex gap-2">
-                                    <a href="{% url 'update-whereabout' get_together.pk %}"
+                                    <a href="{% url 'update-whereabout' whereabout.pk %}"
                                        class="btn btn-sm btn-outline-secondary">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a href="{% url 'delete-whereabout' get_together.pk %}"
+                                    <a href="{% url 'delete-whereabout' whereabout.pk %}"
                                        class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-trash"></i>
                                     </a>

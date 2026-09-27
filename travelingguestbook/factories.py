@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from faker import Faker
 
-from weaktie.models import Whereabout
 from persona.models import Persona, Problem, Reaction
 from streetactivity.models import Reflection, StreetActivity
+from weaktie.models import Link, Whereabout
 
 fake = Faker()
 
@@ -25,7 +25,14 @@ class WhereaboutFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Whereabout
     location = factory.LazyFunction(fake.address)
-    date     = factory.LazyFunction(timezone.now)
+    when     = factory.LazyFunction(timezone.now)
+    user     = factory.SubFactory(UserFactory)
+
+class LinkFactory(factory.django.DjangoModelFactory):
+    """Mock for whereabout Link"""
+    class Meta:
+        model = Link
+    url      = factory.LazyFunction(fake.url)
     user     = factory.SubFactory(UserFactory)
 
 class StreetActivityFactory(factory.django.DjangoModelFactory):

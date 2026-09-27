@@ -44,78 +44,78 @@ class TestBasicRendering:
 # ---------------------------------------------------------------------------
 class TestWhereaboutGrouping:
     """Tests for how whereabouts are grouped into next, later, and past."""
-    def test_next_get_together_is_the_earliest_upcoming(self, client):
+    def test_next_whereabout_is_the_earliest_upcoming(self, client):
         """The next whereabout is the earliest upcoming one."""
         user = UserFactory()
 
-        later = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=10), location="Later")
-        sooner = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2), location="Eerder")
-        WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=-1), location="Verleden")
+        later = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=10), location="Later")
+        sooner = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=2), location="Eerder")
+        WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=-1), location="Verleden")
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
 
-        assert response.context["next_get_together"] == sooner
-        assert list(response.context["later_get_togethers"]) == [later]
+        assert response.context["next_whereabout"] == sooner
+        assert list(response.context["later_whereabouts"]) == [later]
 
 
-    def test_later_get_togethers_exclude_next(self, client):
+    def test_later_whereabouts_exclude_next(self, client):
         """Later whereabouts are all upcoming ones except the next."""
         user = UserFactory()
 
-        WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2), location="Eerste")
-        second = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=5), location="Tweede")
-        third = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=9), location="Derde")
+        WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=2), location="Eerste")
+        second = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=5), location="Tweede")
+        third = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=9), location="Derde")
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
 
-        assert list(response.context["later_get_togethers"]) == [second, third]
+        assert list(response.context["later_whereabouts"]) == [second, third]
 
 
-    def test_past_get_togethers_are_ordered_newest_first(self, client):
+    def test_past_whereabouts_are_ordered_newest_first(self, client):
         """Past whereabouts are ordered newest first."""
         user = UserFactory()
 
-        older = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=-10), location="Ouder")
-        newer = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=-2), location="Nieuwer")
+        older = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=-10), location="Ouder")
+        newer = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=-2), location="Nieuwer")
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
 
-        assert list(response.context["past_get_togethers"]) == [newer, older]
+        assert list(response.context["past_whereabouts"]) == [newer, older]
 
 
-    def test_no_get_togethers_returns_empty_context(self, client):
+    def test_no_whereabouts_returns_empty_context(self, client):
         """A user with no whereabouts has empty/None context values."""
         user = UserFactory()
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
 
-        assert response.context["next_get_together"] is None
-        assert list(response.context["later_get_togethers"]) == []
-        assert list(response.context["past_get_togethers"]) == []
+        assert response.context["next_whereabout"] is None
+        assert list(response.context["later_whereabouts"]) == []
+        assert list(response.context["past_whereabouts"]) == []
 
 
-    def test_get_togethers_are_scoped_to_profile_owner(self, client):
+    def test_whereabouts_are_scoped_to_profile_owner(self, client):
         """whereabouts of other users are not shown on this profile."""
         owner = UserFactory(username="owner")
 
-        WhereaboutFactory(user=owner, date=timezone.now() + timezone.timedelta(days=2), location="Van owner")
-        WhereaboutFactory(date=timezone.now() + timezone.timedelta(days=2), location="Van other")
+        WhereaboutFactory(user=owner, when=timezone.now() + timezone.timedelta(days=2), location="Van owner")
+        WhereaboutFactory(when=timezone.now() + timezone.timedelta(days=2), location="Van other")
 
         url = reverse("user", kwargs={"username": owner.username})
         response = client.get(url)
 
-        assert response.context["next_get_together"].location == "Van owner"
+        assert response.context["next_whereabout"].location == "Van owner"
         assert all(
             gt.location != "Van other"
-            for gt in response.context["later_get_togethers"]
+            for gt in response.context["later_whereabouts"]
         )
         assert all(
             gt.location != "Van other"
-            for gt in response.context["past_get_togethers"]
+            for gt in response.context["past_whereabouts"]
         )
 
 
@@ -127,7 +127,7 @@ class TestOwnerOnlyControls:
     def test_owner_sees_edit_and_delete_buttons(self, client, auto_login_user):
         """The owner sees edit and delete links for their whereabouts."""
         client, user = auto_login_user()
-        gt = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2))
+        gt = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=2))
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
@@ -142,7 +142,7 @@ class TestOwnerOnlyControls:
         """An anonymous visitor sees no edit, delete or create links."""
         user = UserFactory(username="owner")
         
-        gt = WhereaboutFactory(user=user, date=timezone.now() + timezone.timedelta(days=2))
+        gt = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=2))
 
         url = reverse("user", kwargs={"username": user.username})
         response = client.get(url)
@@ -157,7 +157,7 @@ class TestOwnerOnlyControls:
         """A logged-in user who is not the owner sees no controls."""
         owner = UserFactory(username="owner")
         client, _ = auto_login_user()
-        gt = WhereaboutFactory(user=owner, date=timezone.now() + timezone.timedelta(days=2))
+        gt = WhereaboutFactory(user=owner, when=timezone.now() + timezone.timedelta(days=2))
 
 
         url = reverse("user", kwargs={"username": owner.username})

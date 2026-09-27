@@ -1,12 +1,12 @@
 from django import forms
 from django.utils import timezone
 
-from weaktie.models import Whereabout
+from weaktie.models import Link, Whereabout
 
 
 class WhereaboutForm(forms.ModelForm):
     """Form for creating a Whereabout instance."""
-    date = forms.DateTimeField(
+    when = forms.DateTimeField(
         initial=timezone.now,
         widget=forms.DateTimeInput(
             format='%Y-%m-%dT%H:%M',
@@ -18,10 +18,24 @@ class WhereaboutForm(forms.ModelForm):
 
     class Meta:
         model = Whereabout
-        fields = ['location', 'date']
+        fields = ['location', 'when']
         labels = {
             'location': 'Waar ga je naartoe?',
         }
         help_texts = {
             'location': 'Voer de plek in van de activiteit waar je bij bent',
+        }
+
+class LinkForm(forms.ModelForm):
+    """Form for creating a Link instance."""
+    url = forms.URLField(max_length=300, assume_scheme="https")
+
+    class Meta:
+        model = Link
+        fields = ['url']
+        labels = {
+            'url': 'Voeg een link toe',
+        }
+        help_texts = {
+            'url': 'Voeg een link toe naar je sociale media profiel of website',
         }

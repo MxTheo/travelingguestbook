@@ -5,20 +5,20 @@ from weaktie.models import Whereabout
 from travelingguestbook.factories import WhereaboutFactory
 
 
-def test_get_together_str_method():
+def test_whereabout_str_method():
     """Test the __str__ method of the Whereabout model."""
-    get_together = WhereaboutFactory(location="Test Location", date=timezone.now())
-    expected_str = f"Whereabout at Test Location on {get_together.date} by {get_together.user.username}"
-    assert str(get_together) == expected_str
+    whereabout = WhereaboutFactory(location="Test Location", when=timezone.now())
+    expected_str = f"{whereabout.user.username} is at Test Location on {whereabout.when}"
+    assert str(whereabout) == expected_str
 
 class TestWhereaboutCreateView:
     """Test the Whereabout create view."""
-    def test_get_together_create_view(self, auto_login_user):
+    def test_whereabout_create_view(self, auto_login_user):
         """Test the Whereabout create view to ensure it returns a 200 status code"""
         client, _ = auto_login_user()
         response = client.get(reverse('create-whereabout'))
         assert response.status_code == 200
-        assert response.template_name == ['whereabout/whereabout_form.html']
+        assert response.template_name == ['weaktie/whereabout_form.html']
 
     def test_create_not_logged_in(self, client):
         """Test that a user who is not logged in
@@ -32,11 +32,11 @@ class TestWhereaboutCreateView:
         client, user = auto_login_user()
         response = client.post(reverse('create-whereabout'), {
             'location': 'Test Location',
-            'date': '2024-01-01 12:00:00'
+            'when': '2024-01-01T12:00'
         })
         assert response.status_code == 302
-        get_together = Whereabout.objects.first()
-        assert get_together.user == user
+        whereabout = Whereabout.objects.first()
+        assert whereabout.user == user
 
 class TestWhereaboutUpdateView:
     """Test the Whereabout update view."""
@@ -47,7 +47,7 @@ class TestWhereaboutUpdateView:
         whereabout = WhereaboutFactory(user=user)
         response = client.get(reverse('update-whereabout', args=[whereabout.id]))
         assert response.status_code == 200
-        assert response.template_name == ['whereabout/whereabout_form.html']
+        assert response.template_name == ['weaktie/whereabout_form.html']
 
     def test_update_and_change_location(self, auto_login_user):
         """Test that a user can update the location of their own Whereabout instance."""
@@ -56,7 +56,7 @@ class TestWhereaboutUpdateView:
         new_location = 'Updated Location'
         response = client.post(reverse('update-whereabout', args=[whereabout.id]), {
             'location': new_location,
-            'date': whereabout.date
+            'when': whereabout.when.strftime('%Y-%m-%dT%H:%M')
         })
         assert response.status_code == 302  # Redirect after successful update
         whereabout.refresh_from_db()

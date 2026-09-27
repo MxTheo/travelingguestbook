@@ -17,15 +17,17 @@ class TestRegister():
             'username': 'test',
             'email': 'test@test.nl',
             'password1': 'Pass123!',
-            'password2': 'Pass123!'}
+            'password2': 'Pass123!',
+            'first_name': 'Test',
+            'last_name': 'User'}
 
     def test_page_renderd(self, client):
         '''Test if register page is rendered'''
         helper_test_page_rendering(client, 'register')
 
-    def test_form_correct_without_first_and_last_name(self):
+    def test_form_correct_with_first_and_last_name(self):
         '''Test if is valid returns true, when registerform is entered with correct data,
-        without first and last name'''
+        with first and last name'''
         form = RegisterForm(self.data_correct)
         assert form.is_valid()
 

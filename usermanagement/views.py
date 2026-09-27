@@ -42,11 +42,11 @@ class UserDetail(DetailView):
     def add_whereabouts_to_context(self, context):
         """Add next, later and past whereabouts to the profile context."""
         now = timezone.now()
-        upcoming_whereabouts = self.object.whereabouts.filter(date__gte=now).order_by("date")
-        context["next_get_together"] = upcoming_whereabouts.first()
-        context["later_get_togethers"] = upcoming_whereabouts[1:]
-        context["past_get_togethers"] = (
-            self.object.whereabouts.filter(date__lt=now).order_by("-date")
+        upcoming_whereabouts = self.object.whereabouts.filter(when__gte=now).order_by("when")
+        context["next_whereabout"] = upcoming_whereabouts.first()
+        context["later_whereabouts"] = upcoming_whereabouts[1:]
+        context["past_whereabouts"] = (
+            self.object.whereabouts.filter(when__lt=now).order_by("-when")
         )
         return context
 
