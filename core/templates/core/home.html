@@ -111,13 +111,6 @@
                                     <div class="card-body p-4 d-flex flex-column">
                                         <!-- Spel en type -->
                                         <div class="d-flex flex-wrap gap-2 mb-3 align-items-center justify-content-between">
-                                            <span class="badge bg-primary bg-opacity-10 text-primary fs-7">
-                                                {% if reflection.activity %}
-                                                    {{ reflection.activity.name }}
-                                                {% else %}
-                                                    Algemeen
-                                                {% endif %}
-                                            </span>
                                             {% if reflection.platform %}
                                                 {% include "streetactivity/platformbadge_snippet.html" with reflection=reflection %}
                                             {% endif %}
@@ -144,7 +137,7 @@
                                                 {% endif %}
                                                 geleden
                                             </small>
-                                            <a href="{% if reflection.activity %}{% url 'reflection-list-activity' reflection.activity.pk %}{% else %}{% url "reflection-list-no-activity" %}{% endif %}"
+                                            <a href="{% url "reflection-list" %}"
                                                class="text-primary d-flex align-items-center">
                                                 Alle ervaringen <i class="bi bi-arrow-right ms-1"></i>
                                             </a>

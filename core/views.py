@@ -17,7 +17,7 @@ class HomeView(TemplateView):
         """Add recent reflections and random activities to the home page"""
         context = super().get_context_data(**kwargs)
         featured_activities = StreetActivity.objects.order_by('?')
-        context['recent_reflections'] = Reflection.objects.select_related('activity').all()[:3]
+        context['recent_reflections'] = Reflection.objects.all()[:3]
         context['featured_activities'] = featured_activities[:4]
         context['activities_remaining'] = max(0, featured_activities.count() - 4)
         context['photos'] = StreetActivityPhoto.objects.order_by('?')[:4]

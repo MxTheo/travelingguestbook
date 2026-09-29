@@ -37,22 +37,10 @@ class StreetActivityDetailView(DetailView):
     def get_context_data(self, **kwargs):
         """Extend context data with reflection and choose random photo"""
         context = super().get_context_data(**kwargs)
-        context = self.add_reflection_context_data(activity=self.object, context=context)
         photo = self.get_random_photo(activity=self.object)
         context["photo"] = photo
         context["photo_width"] = photo.image.width if photo else None
         context["photo_height"] = photo.image.height if photo else None
-        return context
-
-    def add_reflection_context_data(self, activity, context):
-        '''Extend context data with reflection statistics'''
-        reflections = activity.reflections.all()
-        reflections_count = reflections.count()
-
-        context["reflections_count"] = reflections_count
-        context["recent_reflections"] = reflections[:3]
-        context["reflections_remaining"] = max(0, reflections_count - 3)
-
         return context
 
     def get_random_photo(self, activity):
@@ -102,42 +90,14 @@ class ReflectionListView(ListView):
     context_object_name = "reflections"
     paginate_by = 10
 
-
-class ReflectionListViewStreetActivity(ReflectionListView):
-    """View to list reflections related to a specific street activity."""
-
-    def get_queryset(self):
-        """Filter reflections by street activity ID from URL."""
-        activity_id = self.kwargs["pk"]
-        return Reflection.objects.filter(activity_id=activity_id)
-
-    def get_context_data(self, **kwargs):
-        """Add street activity to context for header."""
-        context = super().get_context_data(**kwargs)
-        context["street_activity"] = get_object_or_404(
-            StreetActivity, pk=self.kwargs["pk"]
-        )
-        return context
-
-class ReflectionListViewLoose(ReflectionListView):
-    """View to list reflections not related to any street activity."""
-
-    def get_queryset(self):
-        """Filter reflections that are not linked to any street activity."""
-        return Reflection.objects.filter(activity__isnull=True)
-
 class ReflectionDetailView(DetailView):
     """View to display details of a single reflection."""
 
     model = Reflection
     context_object_name = "reflection"
 
-SUCCESS_MESSAGE_REFLECTION_CREATED = (
-    "Bedankt voor het delen van jouw reflectie! "
-    "Dit helpt anderen de activiteit te begrijpen."
-)
 
-class ReflectionCreateViewNoActivity(CreateView):
+class ReflectionCreateView(CreateView):
     """Create view for a single reflection"""
 
     model = Reflection
@@ -148,75 +108,14 @@ class ReflectionCreateViewNoActivity(CreateView):
         messages.add_message(
             self.request,
             messages.SUCCESS,
-            SUCCESS_MESSAGE_REFLECTION_CREATED,
+            """Bedankt voor het delen van jouw reflectie! 
+                Dit helpt anderen de activiteit te begrijpen.""",
         )
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy(
-            "reflection-list-no-activity"
-        )
-
-class ReflectionCreateViewActivity(CreateView):
-    """Create view for a single reflection"""
-    model = Reflection
-    form_class = ReflectionForm
-    activity: StreetActivity
-
-    def dispatch(self, request, *args, **kwargs):
-        """Determine activity ID from URL parameters."""
-        self.activity = get_object_or_404(StreetActivity, pk=self.kwargs["pk"])
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_initial(self):
-        """Set initial values"""
-        initial = super().get_initial()
-        initial["activity"] = self.activity
-        return initial
-
-    def get_context_data(self, **kwargs):
-        """Extend context data with activity"""
-        context = super().get_context_data(**kwargs)
-        context["activity"] = self.activity
-        return context
-
-    def form_valid(self, form):
-        """Set the activity for the word"""
-        form.instance.activity = self.activity
-
-        messages.add_message(
-            self.request,
-            messages.SUCCESS,
-            SUCCESS_MESSAGE_REFLECTION_CREATED,
-        )
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "reflection-list-activity",
-            kwargs={"pk": self.object.activity.pk},  # type: ignore[reportOptionalMemberAccess]
-        )
-
-class ReflectionUpdateView(UpdateView):
-    """View to update an reflection"""
-
-    model = Reflection
-    form_class = ReflectionForm
-
-    def get_context_data(self, **kwargs):
-        """Extend context data"""
-        context = super().get_context_data(**kwargs)
-        context["activity"] = self.object.activity
-        return context
-
-    def form_valid(self, form):
-        messages.add_message(self.request, messages.WARNING, "De reflectie is aangepast.")
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "reflection-list-activity", kwargs={"pk": self.object.activity.pk}
+            "reflection-list"
         )
 
 
@@ -233,13 +132,8 @@ class ReflectionDeleteView(DeleteView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        if self.object.activity:
-            return reverse_lazy(
-                "reflection-list-activity",
-                kwargs={"pk": self.object.activity.pk}
-            )
-        else:
-            return reverse_lazy("reflection-list-no-activity")
+        """Go to all reflections"""
+        return reverse_lazy("reflection-list")
 
 class ReflectionViewSet(viewsets.ModelViewSet):
     """API endpoint that provides full CRUD for Reflection"""

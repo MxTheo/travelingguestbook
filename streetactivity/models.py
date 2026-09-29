@@ -42,22 +42,13 @@ class StreetActivity(models.Model):
         return str(self.name)
 class Reflection(models.Model):
     """
-    A reflection is a user's thought or feeling about participating in a street activity.
+    A reflection is a user's thought or feeling about making contact in public space.
     Can be created locally or imported from external platforms (e.g., Mastodon, Bluesky).
     """
-
-    activity = models.ForeignKey(
-        "StreetActivity",
-        on_delete=models.CASCADE,
-        related_name="reflections",
-        verbose_name="Related activity",
-        null=True,
-        blank=True,
-    )
     reflection = models.TextField(
         max_length=1000,
-        verbose_name="Reflection about the activity",
-        help_text="Hoe heb je het doen van deze activiteit ervaren?",
+        verbose_name="Reflectie",
+        help_text="Hoe heb je het spontane contact ervaren?",
     )
 
     # Fields for external data (e.g., from social media platforms)
@@ -129,7 +120,7 @@ class Reflection(models.Model):
             ),
         ]
         indexes = [
-            models.Index(fields=["activity", "date_created"]),
+            models.Index(fields=["date_created"]),
             models.Index(fields=["platform", "timestamp"]),
         ]
 

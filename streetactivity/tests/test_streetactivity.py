@@ -179,32 +179,6 @@ class TestStreetActivityDetailView:
         assert "activity" in context
         assert context["activity"] == activity
 
-    def test_detail_view_reflection_statistics(self, client):
-        """Test that reflection statistics are correctly calculated and included in context"""
-        activity = StreetActivityFactory()
-
-        response = client.get(reverse("streetactivity-detail", args=[activity.id]))
-        context = response.context
-
-        assert "reflections_count" in context
-
-    def test_detail_view_no_reflections(self, client):
-        """Test that the detail view handles activities with no reflections gracefully"""
-        activity = StreetActivityFactory()
-
-        response = client.get(reverse("streetactivity-detail", args=[activity.id]))
-        context = response.context
-
-        assert context["reflections_count"] == 0
-
-    def test_negative_reflections_remaining(self, client):
-        """Test if that when there are no reflections,
-        then the reflections_remaining results in 0 and not -3"""
-        activity = StreetActivityFactory()
-        response = client.get(reverse("streetactivity-detail", args=[activity.id]))
-        context = response.context
-        assert context['reflections_remaining'] == 0
-
     def test_random_photo(self, temporary_media_root):
         """Given an activity with 2 photo's,
         test that it returns a photo
