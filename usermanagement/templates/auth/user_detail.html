@@ -133,39 +133,42 @@
                         </div>
                     </div>
                 {% endif %}
+                        {# ===== Later whereabouts: small, secondary ===== #}
+        {% if later_whereabouts %}
+            <div class="mt-4">
+                <p class="text-muted text-uppercase small mb-1">Ik zal zijn bij:</p>
+                <ul class="list-group list-group-flush mb-4">
+                    {% for whereabout in later_whereabouts %}
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <p class="mb-0">{{ whereabout.location }}</p>
+                                    <p class="mb-0 small text-muted">
+                                        {{ whereabout.when|date:"j F Y, H:i" }}
+                                    </p>
+                                </div>
+                                {% if request.user.is_authenticated and request.user == profile_user %}
+                                    <div class="col-auto d-flex gap-2">
+                                        <a href="{% url 'update-whereabout' whereabout.pk %}"
+                                        class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'delete-whereabout' whereabout.pk %}"
+                                        class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
             </div>
         </div>
 
-        {# ===== Later whereabouts: small, secondary ===== #}
-        {% if later_whereabouts %}
-            <p class="text-muted text-uppercase small mb-2">Ik zal zijn bij:</p>
-            <ul class="list-group list-group-flush mb-4">
-                {% for whereabout in later_whereabouts %}
-                    <li class="list-group-item px-0">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <p class="mb-0">{{ whereabout.location }}</p>
-                                <p class="mb-0 small text-muted">
-                                    {{ whereabout.when|date:"j F Y, H:i" }}
-                                </p>
-                            </div>
-                            {% if request.user.is_authenticated and request.user == profile_user %}
-                                <div class="col-auto d-flex gap-2">
-                                    <a href="{% url 'update-whereabout' whereabout.pk %}"
-                                       class="btn btn-sm btn-outline-secondary">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <a href="{% url 'delete-whereabout' whereabout.pk %}"
-                                       class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+
 
         {# ===== Past whereabouts: smallest, most muted ===== #}
         {% if past_whereabouts %}
