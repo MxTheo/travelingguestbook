@@ -13,9 +13,6 @@
                 <a class="nav-link px-3 fs-6" href="#de-activiteit">
                     <i class="bi bi-moisture me-1"></i>Wat?
                 </a>
-                <a class="nav-link px-3 fs-6" href="#samenbegrijpen">
-                    <i class="bi bi-pie-chart me-1"></i>Hoe?
-                </a>
                 <a class="nav-link px-3 fs-6" href="#missie">
                     <i class="bi bi-flower2 me-1"></i>Waarom?
                 </a>
@@ -34,16 +31,11 @@
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <a href="{% url 'streetactivity-list' %}"
                        class="btn btn-primary btn-lg px-4 me-md-2">
-                        <i class="bi bi-person-walking me-2"></i>Wat speelde je op straat?
+                        <i class="bi bi-person-walking me-2"></i>Wat deed je op straat?
                     </a>
                     <a href="#recentereflecties" class="btn btn-outline-primary btn-lg px-4">
                         <i class="bi bi-people-fill me-2"></i>Wat ervaarden anderen?
                     </a>
-                </div>
-                <div class="mt-3">
-                    <small class="text-muted">
-                        <i class="bi bi-people me-1"></i>Draag bij aan gemeenschappelijk begrip
-                    </small>
                 </div>
             </div>
             <div class="col-lg-6 text-center mt-4 mt-lg-0">
@@ -90,16 +82,15 @@
                     <!-- Header met betere mobile layout -->
                     <div class="row align-items-center mb-5 text-white">
                         <div class="col-lg-8 mb-4 mb-lg-0">
-                            <h2 class="fw-bold mb-3 text-center">Wat ervaarden anderen?</h2>
+                            <h2 class="fw-bold mb-3 text-center">Wat beleefden anderen?</h2>
                             <p class="opacity-75 mb-0 fs-5">
-                                Jouw reflectie draagt bij aan ons gedeelde begrip van contact op straat.
-                                <strong>Niet om te oordelen, maar om samen te begrijpen.</strong> <a href="#samenbegrijpen" class="font-monospace ms-2">Hoe?</a>
+                                Anderen deelden deze reflecties met <i>#bedanktvoorhetcontact</i> op <a href="https://mastodon.social/tags/bedanktvoorhetcontact" target="_blank" rel="noopener noreferrer">Mastodon</a> of <i>#bvhc</i> op <a href="https://bluesky.social/tag/bvhc" target="_blank" rel="noopener noreferrer">Bluesky</a>, over spontante ontmoetingen in de publieke ruimte.
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
                             <a href="{% url 'streetactivity-list' %}"
                                class="btn btn-light btn-lg w-100 w-lg-auto">
-                                <i class="bi bi-person-walking me-2"></i>Wat speelde je op straat?
+                                <i class="bi bi-person-walking me-2"></i>Wat deed je op straat?
                             </a>
                         </div>
                     </div>
@@ -164,12 +155,6 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <!-- Footer informatie -->
-                    <div class="text-center mt-4 pt-3 border-top border-white border-opacity-25">
-                        <p class="small text-white opacity-75 mb-0">
-                            <i class="bi bi-people me-1"></i>Draag bij aan gemeenschappelijk begrip
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -178,7 +163,7 @@
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-5">
                     <h2 class="fw-bold mb-3">Wat heb je gedaan?</h2>
-                    <p class="lead text-muted">Selecteer een straatactiviteit en voeg je reflectie toe</p>
+                    <p class="lead text-muted">Lees meer over een straatactiviteit en deel je reflectie op <a href="https://mastodon.social/tags/bedanktvoorhetcontact" target="_blank" rel="noopener noreferrer">Mastodon</a> of <a href="https://bluesky.social/tag/bvhc" target="_blank" rel="noopener noreferrer">Bluesky</a></p>
                 </div>
                 <div class="row g-4 mb-3">
                     {% for activity in featured_activities %}
@@ -261,89 +246,6 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Hoe Reflecties Samen Een Verhaal Vormen -->
-        <div id="samenbegrijpen"
-             class="row py-5 bg-light rounded-3 my-5 wathoewaarom">
-            <div class="col-lg-10 mx-auto">
-                <div class="text-center mb-4">
-                    <h2 class="fw-bold mb-3">Hoe?</h2>
-                    <p class="lead">
-                        Doordat jij je ervaringen toevoegt, bouw je samen met anderen aan gemeenschappelijk begrip. Niet om te analyseren, maar om te herkennen.
-                    </p>
-                </div>
-                <div class="row align-items-center mb-5">
-                    <div class="col-md-6">
-                        <p class="fs-5">
-                            Jouw reflectie van wat je ervaart - onzekerheid, verbinding, flirt -
-                            helpt anderen het karakter van deze beoefening te begrijpen.
-                        </p>
-                        <p>
-                            Zo ontstaat er langzaam een gedeeld beeld van wat deze activiteit teweeg kan brengen:
-                            is het vooral uitdagend of juist verbindend?
-                        </p>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <div class="p-4 border rounded bg-white">
-                            <i class="bi bi-collection display-4 text-success mb-3"></i>
-                            <p class="small text-muted mb-0">
-                                "Ik had intense gesprekken"
-                                <br>
-                                in plaats van
-                                <br>
-                                "Deze activiteit was intensief"
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0">
-                            <div class="card-body p-4">
-                                <i class="bi bi-chat-left-text display-6 text-info d-flex justify-content-center mb-3"></i>
-                                <h5 class="text-center">Reflecties toevoegen</h5>
-                                <p class="text-muted">
-                                    Jouw reflectie van wat je ervaart - ongemakkelijk, verbinding, flirt -
-                                    helpt anderen het doen van een straatactiviteit te begrijpen.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0">
-                            <div class="card-body p-4">
-                                <i class="bi bi-pie-chart display-6 text-success d-flex justify-content-center mb-3"></i>
-                                <h5 class="text-center">Patronen Herkennen</h5>
-                                <p class="text-muted">
-                                    Zo ontstaat er langzaam een gedeeld beeld van wat een straatactiviteit teweeg kan brengen: is het vooral uitdagend of juist verbindend?
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0">
-                            <div class="card-body p-4">
-                                <i class="bi bi-eye display-6 text-warning d-flex justify-content-center mb-3"></i>
-                                <h5 class="text-center">Helder Zicht</h5>
-                                <p class="text-muted">
-                                    Dit inzicht helpt nieuwe beoefenaars om te weten wat ze kunnen verwachten,
-                                    zonder oordelen over goed of fout.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center mt-5">
-                    <div class="p-3 bg-primary bg-opacity-10 rounded">
-                        <p class="mb-0 text-primary">
-                            <i class="bi bi-info-circle me-2"></i>
-                            <strong>Jouw bijdrage aan de gemeenschap:</strong> Door te delen wat jij meemaakt
-                            help je anderen een realistisch beeld te vormen. Je deelt niet voor een onderzoeker,
-                            maar voor <strong>medemensen</strong>.
-                        </p>
                     </div>
                 </div>
             </div>
