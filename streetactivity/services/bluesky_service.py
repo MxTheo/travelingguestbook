@@ -7,7 +7,7 @@ from streetactivity.models import Reflection
 
 logger = logging.getLogger(__name__)
 
-BLUESKY_SEARCH_URL = "https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts"
+BLUESKY_SEARCH_URL = "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts"
 
 
 def fetch_bluesky_posts(hashtag: str, limit: int = 100) -> list[dict]:
