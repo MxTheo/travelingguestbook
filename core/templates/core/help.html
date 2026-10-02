@@ -1,96 +1,75 @@
 <!-- help.html -->
 {% extends "admin/main.html" %}
 {% load static %}
-{% block title %}Help - Menscellium{% endblock title %}
-
+{% block title %}
+    Help - Menscellium
+{% endblock title %}
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="display-4 text-success-emphasis mb-3 text-center">Help</h1>
-            
-            <div class="alert alert-info mb-4">
-                <i class="bi bi-github me-2"></i>
-                <strong>Deze help pagina's worden samen beheerd</strong> via GitHub. 
-                Iedereen kan bijdragen, verbeteringen voorstellen of nieuwe onderwerpen toevoegen.
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="h4 text-success-emphasis mb-3">Bekijk de volledige documentatie</h2>
-                    <p class="mb-3">
-                        Alle handleidingen, tips en veelgestelde vragen staan in onze GitHub Wiki:
-                    </p>
-                    <a href="https://github.com/MxTheo/travelingguestbook/wiki" 
-                       target="_blank" 
-                       class="btn btn-success btn-lg">
-                        <i class="bi bi-book me-2"></i>
-                        Open GitHub Wiki
-                    </a>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="display-4 text-success-emphasis mb-3 text-center">Help</h1>
+                <div class="alert alert-info mb-4">
+                    <i class="bi bi-github me-2"></i>
+                    <strong>Deze help pagina's worden samen beheerd</strong> via GitHub.
+                    Iedereen kan bijdragen, verbeteringen voorstellen of nieuwe onderwerpen toevoegen.
                 </div>
-            </div>
-
-            <!-- Samenvatting van belangrijke onderwerpen -->
-            <div class="row mb-4">
-                <div class="col-md-6 mb-3">
-                    <div class="card h-100">
+                <div class="row">
+                    <div class="col-6 card mb-4">
                         <div class="card-body">
-                            <h3 class="h5 text-success-emphasis">
-                                <i class="bi bi-lightbulb me-2"></i>
-                                Wanneer werkt een straatactiviteit?
-                            </h3>
-                            <ul>
-                                <li class="mb-1">1 van 3 pogingen in 20 minuten contact met iemand</li>
-                                <li class="mb-1">Afgebakende, duidelijke verzoeken</li>
-                                <li class="mb-1">Gebaseerd op praktijkervaring</li>
-                            </ul>
+                            <h2 class="h4 text-success-emphasis mb-3">Bekijk de volledige documentatie</h2>
+                            <p class="mb-3">Alle handleidingen, tips en veelgestelde vragen staan in onze GitHub Wiki:</p>
+                            <a href="https://github.com/MxTheo/travelingguestbook/wiki"
+                               target="_blank"
+                               class="btn btn-success btn-lg">
+                                <i class="bi bi-book me-2"></i>
+                                Open GitHub Wiki
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-6 card mb-4">
+                        <div class="card-body">
+                            <h2 class="h4 text-success-emphasis mb-3">Forum</h2>
+                            <p class="mb-3">Ook op ons Github forum kun je vragen stellen en antwoorden vinden.</p>
+                            <a href="https://github.com/MxTheo/travelingguestbook/discussions"
+                               target="_blank"
+                               class="btn btn-success btn-lg">
+                                <i class="bi bi-chat-dots me-2"></i>
+                                Open Forum
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h3 class="h5 text-success-emphasis">
-                                <i class="bi bi-tools me-2"></i>
-                                Praktische tips
-                            </h3>
-                            <ul>
-                                <li class="mb-1">Waar vind je karton?</li>
-                                <li class="mb-1">Hoe pas je tekst op een bord?</li>
-                                <li class="mb-1">Binnen gemeentelijke regels blijven</li>
-                            </ul>
-                        </div>
+                <!-- Hoe bijdragen -->
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="h5 mb-0">
+                            <i class="bi bi-pencil-square me-2"></i>
+                            Help mee verbeteren
+                        </h3>
                     </div>
-                </div>
-            </div>
-
-            <!-- Hoe bijdragen -->
-            <div class="card border-success">
-                <div class="card-header bg-success text-white">
-                    <h3 class="h5 mb-0">
-                        <i class="bi bi-pencil-square me-2"></i>
-                        Help mee verbeteren
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <p>Iedereen kan bijdragen aan de documentatie:</p>
-                    <ol class="mb-3">
-                        <li class="mb-2">Ga naar de <a href="https://github.com/MxTheo/travelingguestbook/wiki" target="_blank">GitHub Wiki</a></li>
-                        <li class="mb-2">Klik op "Edit" bovenaan een pagina</li>
-                        <li class="mb-2">Maak je verbeteringen (je moet wel een GitHub account hebben)</li>
-                        <li>Of stuur een email met je suggesties</li>
-                    </ol>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <a href="https://github.com/MxTheo/travelingguestbook/wiki" 
-                           target="_blank" 
-                           class="btn btn-outline-success">
-                            <i class="bi bi-github me-2"></i>
-                            Wiki bewerken
-                        </a>
+                    <div class="card-body">
+                        <p>Iedereen kan bijdragen aan de documentatie:</p>
+                        <ol class="mb-3">
+                            <li class="mb-2">
+                                Ga naar de <a href="https://github.com/MxTheo/travelingguestbook/wiki"
+    target="_blank">GitHub Wiki</a>
+                            </li>
+                            <li class="mb-2">Klik op "Edit" bovenaan een pagina</li>
+                            <li class="mb-2">Maak je verbeteringen (je moet wel een GitHub account hebben)</li>
+                            <li>Of stuur een email met je suggesties</li>
+                        </ol>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="https://github.com/MxTheo/travelingguestbook/wiki"
+                               target="_blank"
+                               class="btn btn-outline-success">
+                                <i class="bi bi-github me-2"></i>
+                                Wiki bewerken
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock content %}
