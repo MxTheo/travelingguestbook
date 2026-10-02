@@ -84,13 +84,13 @@
                         <div class="col-lg-8 mb-4 mb-lg-0">
                             <h2 class="fw-bold mb-3 text-center">Wat beleefden anderen?</h2>
                             <p class="opacity-75 mb-0 fs-5">
-                                Anderen deelden deze reflecties met <i>#bedanktvoorhetcontact</i> op <a href="https://mastodon.social/tags/bedanktvoorhetcontact" target="_blank" rel="noopener noreferrer">Mastodon</a> of <i>#bvhc</i> op <a href="https://bluesky.social/tag/bvhc" target="_blank" rel="noopener noreferrer">Bluesky</a>, over spontante ontmoetingen in de publieke ruimte. <a href="{% url "reflection-list" %}"> Alle ervaringen <i class="bi bi-arrow-right ms-1"></i></a>
+                                Anderen deelden deze reflecties met <i>#bedanktvoorhetcontact</i> op <a href="https://mastodon.social/tags/bedanktvoorhetcontact" target="_blank" rel="noopener noreferrer">Mastodon</a> of <i>#bvhc</i> op <a href="https://bluesky.social/tag/bvhc" target="_blank" rel="noopener noreferrer">Bluesky</a>, over spontante ontmoetingen in de publieke ruimte.
                             </p>
                         </div>
-                        <div class="col-lg-4 text-lg-end">
-                            <a href="{% url 'streetactivity-list' %}"
-                               class="btn btn-light btn-lg w-100 w-lg-auto">
-                                <i class="bi bi-person-walking me-2"></i>Wat deed je op straat?
+                        <div class="col-lg-4 text-lg text-center">
+                            <a href="{% url 'reflection-list' %}"
+                               class="btn btn-light btn-lg w-lg-auto">
+                                <i class="bi bi-list-ul me-1"></i> Alle reflecties
                             </a>
                         </div>
                     </div>
@@ -128,10 +128,6 @@
                                                 {% endif %}
                                                 geleden
                                             </small>
-                                            <a href="{% url "reflection-list" %}"
-                                               class="text-primary d-flex align-items-center">
-                                                Alle ervaringen <i class="bi bi-arrow-right ms-1"></i>
-                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +159,8 @@
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-5">
                     <h2 class="fw-bold mb-3">Wat heb je gedaan?</h2>
-                    <p class="lead text-muted">Lees meer over een straatactiviteit en deel je reflectie op <a href="https://mastodon.social/tags/bedanktvoorhetcontact" target="_blank" rel="noopener noreferrer">Mastodon</a> of <a href="https://bluesky.social/tag/bvhc" target="_blank" rel="noopener noreferrer">Bluesky</a></p>
+                    <p class="lead text-muted">Contact maken kan op allerlei manieren, waar straatactiviteiten er een van zijn.
+                    </p>
                 </div>
                 <div class="row g-4 mb-3">
                     {% for activity in featured_activities %}
@@ -187,10 +184,10 @@
         <div class="row py-4">
             <div class="col-lg-10 mx-auto">
                 <div class="text-center mb-5">
-                    <h2 class="fw-bold mb-3">Ontmoet de Stad</h2>
-                    <p class="lead">Leer de verschillende soorten voorbijgangers kennen die je kunt tegenkomen</p>
+                    <h2 class="fw-bold mb-3">Wie kun je tegenkomen?</h2>
+                    <p class="lead">Leer verschillende soorten voorbijgangers kennen die je tegen kunt komen</p>
                     <p class="mb-4">
-                        Deze beschrijvingen zijn niet bedoeld om mensen in hokjes te stoppen, maar om de diversiteit aan reacties te begrijpen die je kunt tegenkomen.
+                        Deze beschrijvingen zijn niet bedoeld om mensen in hokjes te stoppen, maar om een indruk te krijgen van de diversiteit aan reacties die je kunt tegenkomen.
                     </p>
                     <a href="{% url 'persona-list' %}"
                        class="btn btn-outline-primary btn-lg">
