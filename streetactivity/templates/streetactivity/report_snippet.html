@@ -1,9 +1,14 @@
 {% load markdown_tags %}
 
 <div class="mb-3 card-text">
+    <p class="container-fluid">
     {% if reflection.platform %}
-        <p>{{ reflection.reflection |  markdown_to_html | safe }}</p>
+        {{ reflection.reflection |  markdown_to_html | safe }}
     {% else %}
-        <p>{{ reflection.reflection | linebreaks }}</p>
+        {{ reflection.reflection | linebreaks }}
+    {% endif %}
+    </p>
+    {% if reflection.media_url %}
+        <p class="container-fluid"><img src="{{ reflection.media_url }}" alt="Reflection" class="img-fluid img-thumbnail"></p>
     {% endif %}
 </div>

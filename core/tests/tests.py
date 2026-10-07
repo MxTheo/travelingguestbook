@@ -1,9 +1,6 @@
 from django.urls import reverse
 
-from travelingguestbook.factories import (
-    StreetActivityFactory,
-    StreetActivityPhotoFactory,
-)
+from travelingguestbook.factories import ReflectionFactory, StreetActivityFactory
 
 
 class TestHome:
@@ -25,9 +22,9 @@ class TestHome:
         response = client.get(reverse('home'))
         assert len(response.context['featured_activities']) == 4
 
-    def test_get_random_photos_returns_correct_number_of_photos(self, client, temporary_media_root):
+    def test_get_random_photos_returns_correct_number_of_photos(self, client):
         """Test that home shows 4 random photos when there are more than 4 photos in the database"""
         for _ in range(5):
-            StreetActivityPhotoFactory()
+            ReflectionFactory()
         response = client.get(reverse('home'))
-        assert len(response.context['photos']) == 4
+        assert len(response.context['reflections_photo']) == 4

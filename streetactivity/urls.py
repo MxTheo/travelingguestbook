@@ -42,16 +42,8 @@ urlpatterns = [
         name="delete-reflection",
     ),
     path(
-        "upload-foto/<int:activity_id>/",
-        views.StreetActivityPhotoCreateView.as_view(),
-        name="create-streetactivity-photo",
+        'gallerij/',
+        views.ReflectionPhotoListView.as_view(),
+        name='reflectionphoto-list'
     ),
-    path(
-        'verwijder-foto/<int:pk>',
-        views.StreetActivityPhotoDeleteView.as_view(),
-        name='delete-streetactivity-photo'),
-    path(
-        'gallerij/<int:activity_id>/',
-        views.StreetActivityPhotoListView.as_view(),
-        name='streetactivity-photo-list'),
 ]

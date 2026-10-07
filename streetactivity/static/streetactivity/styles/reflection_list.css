@@ -1,3 +1,8 @@
+.reflection-content {
+    width: 100%;
+    max-width: 42rem;
+}
+
 .card-text {
     line-height: 1.6;
 }

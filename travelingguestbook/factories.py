@@ -1,6 +1,9 @@
 """Module that has the factories configured for the different modules,
 to be able to mock the objects in tests"""
 
+from re import L
+
+from django.conf.global_settings import MEDIA_URL
 import factory
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -47,14 +50,6 @@ class StreetActivityFactory(factory.django.DjangoModelFactory):
     date_created  = factory.LazyFunction(timezone.now)
     date_modified = factory.LazyFunction(timezone.now)
 
-class StreetActivityPhotoFactory(factory.django.DjangoModelFactory):
-    '''Mock for streetactivities StreetActivityPhoto'''
-    class Meta:
-        model =  'streetactivity.StreetActivityPhoto'
-    activity      = factory.SubFactory(StreetActivityFactory)
-    image         = factory.django.ImageField(color='blue')
-    uploaded_at   = factory.LazyFunction(timezone.now)
-
 class ReflectionFactory(factory.django.DjangoModelFactory):
     '''Mock for streetactivities Reflection'''
     class Meta:
@@ -68,7 +63,9 @@ class ReflectionFactory(factory.django.DjangoModelFactory):
     platform        = "Bluesky"
     author_username = factory.LazyFunction(fake.user_name)
     post_url        = factory.LazyFunction(fake.url)
+    media_url       = factory.LazyFunction(fake.url)
     hashtags        = factory.LazyFunction(lambda: [fake.word()])
+
 
 class PersonaFactory(factory.django.DjangoModelFactory):
     """Mock for persona Persona"""

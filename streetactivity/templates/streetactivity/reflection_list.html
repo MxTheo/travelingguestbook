@@ -18,10 +18,10 @@
                             <h1 class="text-success-emphasis mb-3 text-center">Wat beleefden anderen?</h1>
                             <p>
                                 Anderen deelden deze reflecties met <i>#bedanktvoorhetcontact</i> op <a href="https://mastodon.social/tags/bedanktvoorhetcontact"
-    target="_blank"
-    rel="noopener noreferrer">Mastodon</a> of <i>#bvhc</i> op <a href="https://bluesky.social/tag/bvhc"
-    target="_blank"
-    rel="noopener noreferrer">Bluesky</a>, over spontante ontmoetingen in de publieke ruimte. De reflecties worden een keer per dag opgehaald en hier getoond.
+                                    target="_blank"
+                                    rel="noopener noreferrer">Mastodon</a> of <i>#bvhc</i> op <a href="https://bsky.app/hashtag/bvhc"
+                                    target="_blank"
+                                    rel="noopener noreferrer">Bluesky</a>, over spontante ontmoetingen in de publieke ruimte. De reflecties worden een keer per dag opgehaald en hier getoond.
                             </p>
                         </div>
                         <div class="col-md-4">
@@ -31,10 +31,10 @@
                                     <div class="d-grid gap-2">
                                         <p>
                                             Deel het met #bedanktvoorhetcontact op <a href="https://mastodon.social/tags/bedanktvoorhetcontact"
-    target="_blank"
-    rel="noopener noreferrer">Mastodon</a> of met #bvhc op <a href="https://bsky.app/tag/bvhc"
-    target="_blank"
-    rel="noopener noreferrer">Bluesky</a>.
+                                                target="_blank"
+                                                rel="noopener noreferrer">Mastodon</a> of met #bvhc op <a href="https://bsky.app/tag/bvhc"
+                                                target="_blank"
+                                                rel="noopener noreferrer">Bluesky</a>.
                                         </p>
                                     </div>
                                 </div>
@@ -78,7 +78,9 @@
                                 </div>
                                 <!-- Content -->
                                 <div class="d-flex justify-content-center">
-                                    {% include "streetactivity/report_snippet.html" with reflection=reflection %}
+                                    <div class="reflection-content">
+                                        {% include "streetactivity/report_snippet.html" with reflection=reflection %}
+                                    </div>
                                 </div>
                                 {% if reflection.platform %}
                                     <div class="d-flex justify-content-between align-items-center mt-3">

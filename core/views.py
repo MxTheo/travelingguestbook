@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
-from streetactivity.models import Reflection, StreetActivity, StreetActivityPhoto
+from streetactivity.models import Reflection, StreetActivity
 
 from .models import CookieConsentLog
 
@@ -20,7 +20,7 @@ class HomeView(TemplateView):
         context['recent_reflections'] = Reflection.objects.all()[:3]
         context['featured_activities'] = featured_activities[:4]
         context['activities_remaining'] = max(0, featured_activities.count() - 4)
-        context['photos'] = StreetActivityPhoto.objects.order_by('?')[:4]
+        context['reflections_photo'] = Reflection.objects.filter(media_url__isnull=False).exclude(media_url='').order_by('?')[:4]
         return context
 
 class HelpView(TemplateView):

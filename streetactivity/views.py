@@ -14,9 +14,8 @@ from rest_framework import viewsets
 from .forms import (
     ReflectionForm,
     StreetActivityForm,
-    StreetActivityPhotoForm,
 )
-from .models import Reflection, StreetActivity, StreetActivityPhoto
+from .models import Reflection, StreetActivity
 from .serializers import ReflectionSerializer, StreetActivitySerializer
 
 CONFIRM_DELETE_TEMPLATE = "admin/confirm_delete.html"
@@ -33,20 +32,6 @@ class StreetActivityDetailView(DetailView):
     """View to display details of a single street activity."""
     model = StreetActivity
     context_object_name = "activity"
-
-    def get_context_data(self, **kwargs):
-        """Extend context data with reflection and choose random photo"""
-        context = super().get_context_data(**kwargs)
-        photo = self.get_random_photo(activity=self.object)
-        context["photo"] = photo
-        context["photo_width"] = photo.image.width if photo else None
-        context["photo_height"] = photo.image.height if photo else None
-        return context
-
-    def get_random_photo(self, activity):
-        """Given an activity,
-        get a random photo associated with that activity"""
-        return activity.photos.annotate(random=Random()).order_by('random').first()
 
 class StreetActivityCreateView(CreateView):
     """View to create a new street activity."""
@@ -141,76 +126,14 @@ class ReflectionViewSet(viewsets.ModelViewSet):
     queryset = Reflection.objects.all()
     serializer_class = ReflectionSerializer
 
-class StreetActivityPhotoCreateView(CreateView):
-    """
-    View for uploading a photo for a StreetActivity.
-    Uses the StreetActivityPhotoForm for validation and saving.
-    """
-    model = StreetActivityPhoto
-    form_class = StreetActivityPhotoForm
 
-    def form_valid(self, form):
-        """
-        Process the form when it is valid.
-        Associates the uploaded photo with the current StreetActivity.
-        """
-        photo = form.save(commit=False)
-        activity_id = self.kwargs.get('activity_id')
-        photo.activity = get_object_or_404(StreetActivity, id=activity_id)
-        photo.save()
-        messages.success(self.request, "Je foto is succesvol geupload!")
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        """
-        Handle invalid form submissions.
-        Display an error message to the user.
-        """
-        messages.error(self.request, """Er was een fout bij het uploaden van je foto.
-        Controleer het bestand en probeer opnieuw.""")
-        return super().form_invalid(form)
-
-    def get_success_url(self):
-        """Use the activity id from the URL
-          to redirect to the gallery after a successful upload"""
-        activity_id = self.kwargs.get('activity_id')
-        return reverse_lazy(
-            "streetactivity-photo-list",
-            kwargs={"activity_id": activity_id}
-        )
-
-class StreetActivityPhotoDeleteView(DeleteView):
-    '''Delete view for streetactivity photo'''
-    model = StreetActivityPhoto
-    template_name = CONFIRM_DELETE_TEMPLATE
-
-    def form_valid(self, form):
-        messages.add_message(
-            self.request, messages.WARNING, "De foto is verwijderd."
-        )
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "streetactivity-photo-list",
-            kwargs={"activity_id": self.object.activity.pk}
-        )
-
-class StreetActivityPhotoListView(ListView):
-    """View to list photos related to a specific street activity."""
-    model = StreetActivityPhoto
-    context_object_name = "photos"
+class ReflectionPhotoListView(ListView):
+    """View to list photos from reflections."""
+    model = Reflection
+    context_object_name = "reflections_with_photo"
     paginate_by = 10
+    template_name = "streetactivity/reflectionphoto_list.html"
 
     def get_queryset(self):
-        """Filter photos by street activity ID from URL."""
-        activity_id = self.kwargs["activity_id"]
-        return StreetActivityPhoto.objects.filter(activity_id=activity_id)
-
-    def get_context_data(self, **kwargs):
-        """Add street activity to context for header."""
-        context = super().get_context_data(**kwargs)
-        context["activity"] = get_object_or_404(
-            StreetActivity, pk=self.kwargs["activity_id"]
-        )
-        return context
+        """Filter reflections with photos (media_url not null or empty)"""
+        return Reflection.objects.filter(media_url__isnull=False).exclude(media_url='')

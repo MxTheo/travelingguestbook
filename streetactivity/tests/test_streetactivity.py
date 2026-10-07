@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from streetactivity.models import StreetActivity
 from streetactivity.views import StreetActivityDetailView
-from travelingguestbook.factories import StreetActivityFactory, StreetActivityPhotoFactory
+from travelingguestbook.factories import StreetActivityFactory
 
 
 class TestStreetActivityModel:
@@ -178,24 +178,3 @@ class TestStreetActivityDetailView:
 
         assert "activity" in context
         assert context["activity"] == activity
-
-    def test_random_photo(self, temporary_media_root):
-        """Given an activity with 2 photo's,
-        test that it returns a photo
-        """
-        activity = StreetActivityFactory()
-        StreetActivityPhotoFactory(activity=activity)
-        StreetActivityPhotoFactory(activity=activity)
-
-        view = StreetActivityDetailView()
-        random_photo = view.get_random_photo(activity)
-        assert random_photo is not None
-
-    def test_no_photo(self):
-        """Given an activity with no photo's,
-        test that it returns no photo"""
-        activity = StreetActivityFactory()
-        
-        view = StreetActivityDetailView()
-        random_photo = view.get_random_photo(activity)
-        assert random_photo is None

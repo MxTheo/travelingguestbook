@@ -17,10 +17,6 @@
                 <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center p-3 bg-light rounded">
                     <a href="{% url "update-streetactivity" activity.pk %}"
                        class="btn btn-outline-warning btn-lg"><i class="bi bi-pencil-square me-1"></i>Bewerk</a>
-                    {% if photo %}<a href="{% url "streetactivity-photo-list" activity.pk %}"
-                       class="btn btn-outline-primary btn-lg"><i class="bi bi-images me-1"></i>Gallerij</a>{% endif %}
-                    <a href="{% url "create-streetactivity-photo" activity.pk %}"
-                       class="btn btn-outline-primary btn-lg"><i class="bi bi-cloud-arrow-up me-1"></i>Upload foto</a>
                     <a href="{% url 'streetactivity-list' %}"
                        class="btn btn-outline-secondary btn-lg">
                         <i class="bi bi-grid me-1"></i>Alle activiteiten
@@ -57,22 +53,6 @@
                 </div>
             </div>
         </section>
-        {% if photo %}
-            <div class=" justify-content-center m-3">
-                <img src="{{ photo.image.url }}"
-                     alt="{{ photo }}"
-                     class="detail-photo img-fluid"
-                     width="{{ photo_width }}"
-                     height="{{ photo_height }}">
-                <div class="d-flex justify-content-evenly align-items-center mt-2">
-                    <small class="text-muted">{{ photo.uploaded_at|date:"d-m-Y" }}</small>
-                    <a href="{% url "streetactivity-photo-list" activity.pk %}"
-                       class="btn btn-outline-primary btn-sm align-content-center">
-                        <i class="bi bi-images"></i>
-                    </a>
-                </div>
-            </div>
-        {% endif %}
         <!-- Secundaire CTA -->
         <div class="row mt-5">
             <div class="col-12">

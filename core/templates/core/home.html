@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="col-lg-6 text-center mt-4 mt-lg-0">
-                <div class="p-4 border-start border-4 border-primary bg-light bg-opacity-50">
+            <div class="p-4 border-start border-4 border-primary bg-light bg-opacity-50">
                     <p class="fst-italic fs-5 mb-0">
                         Contact ontstaat niet ondanks wie je bent, maar juist dóór wie je bent.
                         Je onzekerheid, je twijfel, je eigenheid - het zijn geen obstakels,
@@ -46,21 +46,27 @@
             </div>
         </div>
         <section class="my-5">
+            <div class="d-flex justify-content-evenly">
             <h2 class="text-center mb-4">Hoe zag het eruit?</h2>
+            <a href="{% url 'reflectionphoto-list' %}"
+               class="btn btn-outline-primary mb-4">
+                <i class="bi bi-image me-2"></i>Bekijk foto's
+            </a>
+            </div>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                {% for photo in photos %}
+                {% for reflection_photo in reflections_photo %}
                     <div class="col mb-4">
-                        <a href="{% url 'streetactivity-photo-list' photo.activity.id %}"
+                        <a href="{% url 'reflectionphoto-list' %}"
                            class="text-decoration-none">
                             <div class="card h-100 border-0 shadow-sm">
-                                <img src="{{ photo.image.url }}"
-                                     alt="Foto van straatcontact: {{ photo.activity.name }}"
+                                <img src="{{ reflection_photo.media_url}}"
+                                     alt="Willekeurige Reflectie"
                                      class="card-img-top img-fluid rounded"
                                      loading="lazy"
                                      height="200"
                                      width="auto">
                                 <div class="card-body p-2 text-center">
-                                    <small class="text-muted">{{ photo.activity.name }} • {{ photo.uploaded_at|date:"d M Y" }}</small>
+                                    <small class="text-muted">{{ reflection_photo.timestamp|date:"d M Y" }}</small>
                                 </div>
                             </div>
                         </a>
@@ -81,7 +87,7 @@
                         <div class="col-lg-8 mb-4 mb-lg-0">
                             <h2 class="fw-bold mb-3 text-center">Wat beleefden anderen?</h2>
                             <p class="opacity-75 mb-0 fs-5">
-                                Anderen deelden deze reflecties met <i>#bedanktvoorhetcontact</i> op <a href="https://mastodon.social/tags/bedanktvoorhetcontact" target="_blank" rel="noopener noreferrer">Mastodon</a> of <i>#bvhc</i> op <a href="https://bluesky.social/tag/bvhc" target="_blank" rel="noopener noreferrer">Bluesky</a>, over spontante ontmoetingen in de publieke ruimte.
+                                Anderen deelden deze reflecties met <i>#bedanktvoorhetcontact</i> op <a href="https://mastodon.social/tags/bedanktvoorhetcontact" target="_blank" rel="noopener noreferrer">Mastodon</a> of <i>#bvhc</i> op <a href="https://bsky.app/hashtag/bvhc" target="_blank" rel="noopener noreferrer">Bluesky</a>, over spontante ontmoetingen in de publieke ruimte.
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg text-center">
