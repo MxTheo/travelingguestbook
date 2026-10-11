@@ -15,10 +15,17 @@ class WhereaboutForm(forms.ModelForm):
         label='Wanneer ga je?',
         help_text='Voer de datum en tijd in van die activiteit',
     )
+    source = forms.URLField(
+        max_length=500,
+        assume_scheme="https",
+        required=False,
+        label='Waar heb je deze activiteit gevonden? (optioneel)',
+        help_text='Voer de URL in van de bron van de activiteit, beginnend met https://',
+    )
 
     class Meta:
         model = Whereabout
-        fields = ['location', 'when']
+        fields = ['location', 'when', 'source']
         labels = {
             'location': 'Waar ga je naartoe?',
         }

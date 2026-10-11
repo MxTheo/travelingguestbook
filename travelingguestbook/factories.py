@@ -30,6 +30,7 @@ class WhereaboutFactory(factory.django.DjangoModelFactory):
     location = factory.LazyFunction(fake.address)
     when     = factory.LazyFunction(timezone.now)
     user     = factory.SubFactory(UserFactory)
+    source   = factory.LazyFunction(fake.url)
 
 class LinkFactory(factory.django.DjangoModelFactory):
     """Mock for whereabout Link"""

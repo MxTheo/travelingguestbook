@@ -8,9 +8,10 @@ from django.utils import timezone
 class Whereabout(models.Model):
     """Model representing an occassion where the user is already going to.
     Here a visitor has the opportunity to meet the user."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="whereabouts")
+    user     = models.ForeignKey(User, on_delete=models.CASCADE, related_name="whereabouts")
     location = models.CharField(max_length=255)
-    when = models.DateTimeField(default=timezone.now)
+    when     = models.DateTimeField(default=timezone.now)
+    source   = models.URLField(max_length=500, blank=True, null=True, verbose_name="Bron (URL)")
 
     class Meta:
         """Set verbose names and ordering for the Whereabout model."""
