@@ -1,125 +1,118 @@
 {% extends "admin/main.html" %}
 {% load static %}
 
-{% block title %}Over Ons - Menscellium{% endblock title %}
+{% block title %}Over bvhc{% endblock title %}
 
 {% block content %}
 <div class="container py-5">
-    <!-- Hero Sectie -->
-    <header class="text-center mb-5">
-        <h1 class="display-4 text-success-emphasis mb-3">Over Ons</h1>
-        <p class="lead">
-            De community die bijdraagt aan meer verbinding in de publieke ruimte
-        </p>
-    </header>
-
-    <!-- Kernboodschap -->
+    {# Principles section #}
     <section class="row mb-5">
         <div class="col-lg-8 mx-auto">
-            <div class="card border-0 bg-light">
-                <div class="card-body p-4">
-                    <h2 class="h3 text-success-emphasis text-center mb-4">Wie is Bedankt voor het contact?</h2>
-                    <p class=" mb-3">
-                        <strong>Dat zijn wij. Wie zijn wij? Dat ben jij!</strong>
+            <h2 class="h3 mb-4">
+                <i class="bi bi-compass me-2" aria-hidden="true"></i>Principes
+            </h2>
+
+            {# Decentralisation #}
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="h5 card-title">
+                        <i class="bi bi-diagram-3 me-2" aria-hidden="true"></i>Decentralisatie
+                    </h3>
+                    <ul class="mb-0">
+                        <li class="mb-2">
+                            Je kunt zoveel mogelijk zelf doen. Voor een aantal functies heb je een account nodig.
+                            Echter, je hebt geen bepaalde status nodig om iets te kunnen aanpassen.
+                        </li>
+                        <li>
+                            Bedanktvoorhetcontact heeft niet de intentie om je te leren hoe je contact maakt
+                            op straat of je te helpen groeien. Ook dit heeft te maken met decentralisatie.
+                            Bedanktvoorhetcontact heeft niet het gezag om te bepalen hoe je dat het beste kan doen.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {# Open Source and Copyleft #}
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="h5 card-title">
+                        <i class="bi bi-code-slash me-2" aria-hidden="true"></i>Open Source en Copyleft
+                    </h3>
+                    <p class="mb-0">
+                        Het gedachtegoed en de code van bedanktvoorhetcontact zijn vrij beschikbaar om aan bij
+                        te dragen en om te kopiëren. De code is beschikbaar op <a href="https://github.com/MxTheo/travelingguestbook/" target="_blank" rel="noopener noreferrer">GitHub</a>. Als je het kopieert is het voor je gebruiker ook prettig
+                        om te weten waar je het vandaan hebt gekopieerd. Daarom valt het gedachtegoed en de
+                        code onder een <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC-BY 4.0 licentie</a>.
                     </p>
-                    <p>
-                        Ieder die bijdraagt aan de missie van een publieke ruimte waarbij de intentie van verbinden 
-                        wordt verondersteld, niet die van verkoop of overtuigen, is onderdeel van Bedankt voor het contact. 
-                    </p>
-                    <p class=" mb-0">
-                        Of je nu hallo zegt tegen een onbekende op straat of deelneemt aan een straatactiviteit: 
-                        <strong>iedereen is welkom</strong>, hoe sociaal vaardig of zelfverzekerd je ook bent.
+                </div>
+            </div>
+
+            {# Technology as support #}
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="h5 card-title">
+                        <i class="bi bi-lightbulb me-2" aria-hidden="true"></i>Technologie is ondersteunend, niet leidend
+                    </h3>
+                    <p class="mb-0">
+                        Het is van belang dat bedanktvoorhetcontact jou helpt in het contact maken in de
+                        publieke ruimte. Als bedanktvoorhetcontact jou niet helpt, dan kun je het beter niet
+                        gebruiken. We maken geen gebruik van gamification om je terug te krijgen naar de website.
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Community Contact -->
+    {# About the initiator section #}
     <section class="row mb-5">
-        <div class="col-12">
-            <h2 class="h3 text-success-emphasis text-center mb-4">Kom in contact met de community</h2>
-            <p class="text-center mb-4">
-                Ontmoet anderen, deel ervaringen en leer van de community
-            </p>
-        </div>
-        
-        <!-- Matrix Chat -->
-        <div class="col-lg-6 mx-auto mb-4">
-            <div class="card h-100">
-                <div class="card-body text-center p-4">
-                    <i class="bi bi-chat-dots display-1 text-success-emphasis mb-3"></i>
-                    <h3 class="h4 text-success-emphasis mb-3">Community Forum</h3>
-                    <p class=" mb-4">
-                        Op github. Deel ervaringen, stel vragen en ontmoet anderen 
-                        die ook geloven in verbinding in de publieke ruimte.
+        <div class="col-lg-8 mx-auto">
+            <h2 class="h3 mb-3">
+                <i class="bi bi-person-circle me-2" aria-hidden="true"></i>Over de initiatiefnemer
+            </h2>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    {# Profile photo #}
+                    <div class="mb-4">
+                        <img src="{% static 'images/profielbordjes.PNG' %}"
+                             alt="Profielfoto van Theo, initiatiefnemer van bedanktvoorhetcontact"
+                             class="img-fluid rounded-5"
+                             style="max-width: 200px;">
+                    </div>
+
+                    <p>
+                        Een product ontstaat niet uit zichzelf. Er is iemand die het initiatief heeft genomen.
+                        Mijn naam is Theo. Ik twijfelde of ik over mezelf zou vertellen in de over pagina.
+                        Bedanktvoorhetcontact is net zozeer van jou als van mij. Aan de ene kant wil ik mij dan
+                        niet in het centrum zetten van bedanktvoorhetcontact. Aan de andere kant is transparantie
+                        over de bedenker ook belangrijk. Daarom toch een over Theo sectie.
                     </p>
-                    <a href="https://github.com/MxTheo/travelingguestbook/discussions" 
-                       target="_blank" 
-                       class="btn btn-success btn-lg">
-                        <i class="bi bi-arrow-right-circle me-2"></i>
-                        Join de Forum
-                    </a>
+                    <p>
+                        In <a href="https://theoschutte.substack.com" target="_blank" rel="noopener noreferrer">
+                        mijn blog</a> kun je lezen over mijn verhalen van straatcontact.
+                    </p>
+                    <p>
+                        2 jaar geleden ben ik begonnen in deze zoektocht om contact in de publieke ruimte te
+                        ondersteunen. Eerst in de trein en daarna op straat. In deze zoektocht leer ik op de
+                        uitkijk staan voor feedback en ook telkens weer opnieuw beginnen.
+                    </p>
+                    <p>
+                        In mijn studentenleven heb ik mijzelf uitgedaagd om uit mijn comfortzone te blijven
+                        stappen. Ik ging eerst alleen naar mijn eigen studentenvereniging, en daarna ging ik zelf
+                        uit naar ander open feesten. In mijn studententijd begon ik ook praatjes te maken in de
+                        trein. Inmiddels ga ik makkelijk naar activiteiten toe in de buurt.
+                    </p>
+                    <p class="mb-0">
+                        Een belangrijk onderdeel van bedanktvoorhetcontact is gelijkmoedigheid. Dit is ook
+                        belangrijk voor mij. Meditatie is belangrijk voor mij. Het is niet alleen iets wat ik doe
+                        op een kussentje, maar het is vooral een levenshouding. Open kunnen waarnemen wat er ook
+                        ontstaat in het moment. Dit is ook belangrijk in contact met anderen: Open kunnen
+                        waarnemen wat er ook ontstaat in het contact.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Meer leren over de community -->
-    <section class="row mb-5">
-        <div class="col-12">
-            <h2 class="h3 text-success-emphasis text-center mb-4">Meer leren over de community</h2>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 border-0">
-                <div class="card-body text-center">
-                    <i class="bi bi-journal-text display-6 text-success-emphasis mb-3"></i>
-                    <h3 class="h5 text-success-emphasis mb-3">Lees ervaringen</h3>
-                    <p>
-                        Ontdek hoe anderen straatactiviteiten ervaren en wat ze leren over verbinding maken.
-                    </p>
-                    <a href="{% url 'streetactivity-list' %}" class="btn btn-outline-success">
-                        Bekijk activiteiten
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 border-0">
-                <div class="card-body text-center">
-                    <i class="bi bi-question-circle display-6 text-success-emphasis mb-3"></i>
-                    <h3 class="h5 text-success-emphasis mb-3">Stel vragen</h3>
-                    <p>
-                        Iedereen begint ergens. Stel je vragen in de chat of neem contact op via email.
-                    </p>
-                    <a href="{% url "contact" %}" class="btn btn-outline-primary">
-                        Email ons
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Open Uitnodiging -->
-    <section class="text-center py-5 bg-success bg-opacity-10 rounded">
-        <h2 class="h2 text-success-emphasis mb-3">Iedereen is welkom</h2>
-        <p class="lead mb-4">
-            Of je nu veel ervaring hebt met contact maken of net begint:<br>
-            <strong>je bijdrage aan meer verbinding in de publieke ruimte is waardevol.</strong>
-        </p>
-        <div class="d-flex flex-wrap gap-3 justify-content-center">
-            <a href="https://github.com/MxTheo/travelingguestbook/discussions" 
-               target="_blank" 
-               class="btn btn-success btn-lg">
-                <i class="bi bi-chat-dots me-2"></i>
-                Sluit je aan bij het forum
-            </a>
-            <a href="{% url "contact" %}" 
-               class="btn btn-outline-primary btn-lg">
-                <i class="bi bi-envelope me-2"></i>
-                Neem contact op
-            </a>
-        </div>
-    </section>
 </div>
 {% endblock content %}

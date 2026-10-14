@@ -34,7 +34,7 @@ def _view(request):
 urlpatterns = [
     path("admin/", _view),
     path("contact/", _view),
-    path("overons/", _view),
+    path("over/", _view),
     path("accounts/", include("usermanagement.profile_urls")),  # → URLResolver
     path("<username:username>/", _view),
 ]

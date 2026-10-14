@@ -41,7 +41,7 @@ class TestCollectReservedSegments:
 
     def test_includes_literal_segments(self, temp_urlconf):
         """Literal top-level segments are picked up."""
-        expected = {"admin", "contact", "overons", "accounts"}
+        expected = {"admin", "contact", "over", "accounts"}
         result = reserved_module.collect_reserved_segments()
         assert expected <= result
 
