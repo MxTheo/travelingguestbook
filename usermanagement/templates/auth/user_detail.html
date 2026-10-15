@@ -52,7 +52,75 @@
                                    target="_blank"
                                    rel="noopener noreferrer"
                                    class="link-card d-flex align-items-center text-decoration-none text-body flex-grow-1">
-                                    <i class="bi bi-link-45deg fs-4 me-3 text-muted"></i>
+                                    <i class="bi 
+                                    {% if 'bsky' in link.domain %}
+                                        bi-bluesky
+                                    {% elif 'masto' in link.domain or 'mstdn' in link.domain %}
+                                        bi-mastodon
+                                    {% elif 'linkedin' in link.domain %}
+                                        bi-linkedin
+                                    {% elif 'github' in link.domain %}
+                                        bi-github
+                                    {% elif 'twitter' in link.domain %}
+                                        bi-twitter
+                                    {% elif 'facebook' in link.domain %}
+                                        bi-facebook
+                                    {% elif 'instagram' in link.domain %}
+                                        bi-instagram
+                                    {% elif 'tiktok' in link.domain %}
+                                        bi-tiktok
+                                    {% elif 'youtube' in link.domain %}
+                                        bi-youtube
+                                    {% elif 'twitch' in link.domain %}
+                                        bi-twitch
+                                    {% elif 'discord' in link.domain %}
+                                        bi-discord
+                                    {% elif 'telegram' in link.domain %}
+                                        bi-telegram
+                                    {% elif 'signal' in link.domain %}
+                                        bi-signal
+                                    {% elif 'whatsapp' in link.domain %}
+                                        bi-whatsapp
+                                    {% elif 'snapchat' in link.domain %}
+                                        bi-snapchat
+                                    {% elif 'reddit' in link.domain %}
+                                        bi-reddit
+                                    {% elif 'pinterest' in link.domain %}
+                                        bi-pinterest
+                                    {% elif 'medium' in link.domain %}
+                                        bi-medium
+                                    {% elif 'tumblr' in link.domain %}
+                                        bi-tumblr
+                                    {% elif 'flickr' in link.domain %}
+                                        bi-flickr
+                                    {% elif 'vimeo' in link.domain %}
+                                        bi-vimeo
+                                    {% elif 'soundcloud' in link.domain %}
+                                        bi-soundcloud
+                                    {% elif 'bandcamp' in link.domain %}
+                                        bi-bandcamp
+                                    {% elif 'spotify' in link.domain %}
+                                        bi-spotify
+                                    {% elif 'substack' in link.domain %}
+                                        bi-substack
+                                    {% elif 'patreon' in link.domain %}
+                                        bi-patreon
+                                    {% elif 'buymeacoffee' in link.domain %}
+                                        bi-cup-straw
+                                    {% elif 'ko-fi' in link.domain %}
+                                        bi-coin
+                                    {% elif 'paypal' in link.domain %}
+                                        bi-paypal
+                                    {% elif 'venmo' in link.domain %}
+                                        bi-venmo
+                                    {% elif 'cashapp' in link.domain %}
+                                        bi-cash-stack
+                                    {% elif 'zelle' in link.domain %}
+                                        bi-credit-card-2-back
+                                    {% else %}
+                                        bi-link-45deg
+                                    {% endif %}
+                                    fs-4 me-3 text-muted" aria-hidden="true"></i>
                                     <div class="flex-grow-1 text-truncate">
                                         <div class="small text-muted">{{ link.domain }}</div>
                                         <div class="text-truncate">{{ link.handle }}</div>
