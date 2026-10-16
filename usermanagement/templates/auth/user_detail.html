@@ -1,7 +1,7 @@
 {% extends "admin/main.html" %}
 {% load static %}
 {% block title %}
-    {{ profile_user.username }} - Profiel
+    {{ profile_user.username }} - Contact
 {% endblock title %}
 {% block stylesheet %}
     <link href="{% static "usermanagement/styles/user_detail.css" %}" rel="stylesheet">
@@ -20,7 +20,7 @@
             </div>
             <div class="col">
                 <h1 class="h3 mb-0">{{ profile_user.get_full_name }}</h1>
-                <p class="text-muted mb-0">Voor als je het contact open wilt houden</p>
+                <p class="text-muted mb-0">Contact</p>
             </div>
             {% if request.user.is_authenticated and request.user == profile_user %}
                 <div class="col-auto">
@@ -148,7 +148,7 @@
             {# ----- Whereabouts: reachable ----- #}
             <div class="col-md-6">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h2 class="h5 mb-0">Je kunt mij treffen bij:</h2>
+                    <h2 class="h5 mb-0">Je kunt mij vinden bij:</h2>
                     {% if request.user.is_authenticated and request.user == profile_user %}
                         <a href="{% url 'create-whereabout' %}"
                            class="btn btn-sm btn-outline-secondary">
@@ -195,7 +195,7 @@
                                 {% endif %}
                             </p>
                             {% if request.user.is_authenticated and request.user == profile_user %}
-                                <p class="text-muted small mb-3">Laat weten waar anderen je kunnen treffen.</p>
+                                <p class="text-muted small mb-3">Laat weten waar anderen je kunnen vinden.</p>
                                 <a href="{% url 'create-whereabout' %}" class="btn btn-primary btn-sm">
                                     <i class="bi bi-plus-lg me-1"></i>Nieuwe gelegenheid
                                 </a>
@@ -206,7 +206,7 @@
                 {# ===== Later whereabouts: small, secondary ===== #}
                 {% if later_whereabouts %}
                     <div class="mt-4">
-                        <p class="text-muted text-uppercase small mb-1">Je zal mij kunnen treffen bij:</p>
+                        <p class="text-muted text-uppercase small mb-1">Je zal mij kunnen vinden bij:</p>
                         <ul class="list-group list-group-flush mb-4">
                             {% for whereabout in later_whereabouts %}
                                 <li class="list-group-item px-0">
@@ -246,7 +246,7 @@
         </div>
         {# ===== Past whereabouts: smallest, most muted ===== #}
         {% if past_whereabouts %}
-            <p class="text-muted text-uppercase small mb-2">Je kon mij treffen bij:</p>
+            <p class="text-muted text-uppercase small mb-2">Je kon mij vinden bij:</p>
             <ul class="list-group list-group-flush mb-4">
                 {% for whereabout in past_whereabouts %}
                     <li class="list-group-item px-0">
