@@ -148,7 +148,7 @@
             {# ----- Whereabouts: reachable ----- #}
             <div class="col-md-6">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h2 class="h5 mb-0">Je kunt mij vinden bij:</h2>
+                    <h2 class="h5 mb-0">Je kunt mij treffen bij:</h2>
                     {% if request.user.is_authenticated and request.user == profile_user %}
                         <a href="{% url 'create-whereabout' %}"
                            class="btn btn-sm btn-outline-secondary">
@@ -206,7 +206,7 @@
                 {# ===== Later whereabouts: small, secondary ===== #}
                 {% if later_whereabouts %}
                     <div class="mt-4">
-                        <p class="text-muted text-uppercase small mb-1">Je zal mij kunnen vinden bij:</p>
+                        <p class="text-muted text-uppercase small mb-1">Je zal mij kunnen treffen bij:</p>
                         <ul class="list-group list-group-flush mb-4">
                             {% for whereabout in later_whereabouts %}
                                 <li class="list-group-item px-0">
@@ -246,7 +246,7 @@
         </div>
         {# ===== Past whereabouts: smallest, most muted ===== #}
         {% if past_whereabouts %}
-            <p class="text-muted text-uppercase small mb-2">Je kon mij vinden bij:</p>
+            <p class="text-muted text-uppercase small mb-2">Je kon mij treffen bij:</p>
             <ul class="list-group list-group-flush mb-4">
                 {% for whereabout in past_whereabouts %}
                     <li class="list-group-item px-0">
