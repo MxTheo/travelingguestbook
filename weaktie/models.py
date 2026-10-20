@@ -76,7 +76,7 @@ class ContactChannel(models.Model):
         """Set verbose names and ordering for the ContactChannel model."""
         verbose_name = "contactkanaal"
         verbose_name_plural = "contactkanalen"
-        ordering = ["-id"]
+        ordering = ["id"]
 
     def __str__(self):
         return f"{self.display_app}: {self.url[:30]}…"
