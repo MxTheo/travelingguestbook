@@ -8,7 +8,7 @@ def test_display_domain_of_link(client):
     user = UserFactory()
     link = user.links.create(url="https://www.example.com/path/to/resource")
 
-    url = reverse("user", kwargs={"username": user.username})
+    url = reverse("user-profile", kwargs={"username": user.username})
     response = client.get(url)
 
     assert response.status_code == 200
@@ -19,7 +19,7 @@ def test_display_handle_of_link(client):
     user = UserFactory()
     link = user.links.create(url="https://www.example.com/path/to/resource")
 
-    url = reverse("user", kwargs={"username": user.username})
+    url = reverse("user-profile", kwargs={"username": user.username})
     response = client.get(url)
 
     assert response.status_code == 200
@@ -30,7 +30,7 @@ def test_display_handle_of_link_without_path(client):
     user = UserFactory()
     link = user.links.create(url="https://www.example.com")
 
-    url = reverse("user", kwargs={"username": user.username})
+    url = reverse("user-profile", kwargs={"username": user.username})
     response = client.get(url)
 
     assert response.status_code == 200
@@ -42,7 +42,7 @@ def test_links_in_context(client):
     link1 = user.links.create(url="https://www.example.com/path/to/resource")
     link2 = user.links.create(url="https://www.anotherexample.com/another/path")
 
-    url = reverse("user", kwargs={"username": user.username})
+    url = reverse("user-profile", kwargs={"username": user.username})
     response = client.get(url)
 
     assert response.status_code == 200

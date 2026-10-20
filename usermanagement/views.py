@@ -83,7 +83,7 @@ class ProfileUpdateView(LoginRequiredMixin, View):
             user_form.save()
             profile_form.save()
             messages.success(request, "Bewerken van je profiel is geslaagd!")
-            return redirect("user", username=request.user.username)
+            return redirect("user-profile", username=request.user.username)
 
         elif user_valid and not profile_valid:
             # User form valid, profile form invalid - save user but show profile errors

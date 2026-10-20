@@ -11,7 +11,7 @@ class TestBasicRendering:
         """The profile page renders for an anonymous visitor."""
         user = UserFactory()
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
 
         assert response.status_code == 200
@@ -22,7 +22,7 @@ class TestBasicRendering:
         """The template receives the profile owner via 'profile_user', not 'user'."""
         user = UserFactory(username="alice")
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
 
         assert response.context["profile_user"] == user
@@ -32,7 +32,7 @@ class TestBasicRendering:
         """The profile owner's username is rendered on the page."""
         user = UserFactory(username="alice")
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
 
         assert "alice" in response.content.decode()
@@ -51,7 +51,7 @@ class TestWhereaboutGrouping:
         sooner = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=2), location="Eerder")
         WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=-1), location="Verleden")
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
 
         assert response.context["next_whereabout"] == sooner
@@ -66,7 +66,7 @@ class TestWhereaboutGrouping:
         second = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=5), location="Tweede")
         third = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=9), location="Derde")
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
 
         assert list(response.context["later_whereabouts"]) == [second, third]
@@ -79,7 +79,7 @@ class TestWhereaboutGrouping:
         older = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=-10), location="Ouder")
         newer = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=-2), location="Nieuwer")
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
 
         assert list(response.context["past_whereabouts"]) == [newer, older]
@@ -89,7 +89,7 @@ class TestWhereaboutGrouping:
         """A user with no whereabouts has empty/None context values."""
         user = UserFactory()
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
 
         assert response.context["next_whereabout"] is None
@@ -104,7 +104,7 @@ class TestWhereaboutGrouping:
         WhereaboutFactory(user=owner, when=timezone.now() + timezone.timedelta(days=2), location="Van owner")
         WhereaboutFactory(when=timezone.now() + timezone.timedelta(days=2), location="Van other")
 
-        url = reverse("user", kwargs={"username": owner.username})
+        url = reverse("user-profile", kwargs={"username": owner.username})
         response = client.get(url)
 
         assert response.context["next_whereabout"].location == "Van owner"
@@ -128,7 +128,7 @@ class TestOwnerOnlyControls:
         client, user = auto_login_user()
         gt = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=2))
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
         content = response.content.decode()
 
@@ -143,7 +143,7 @@ class TestOwnerOnlyControls:
         
         gt = WhereaboutFactory(user=user, when=timezone.now() + timezone.timedelta(days=2))
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
         content = response.content.decode()
 
@@ -159,7 +159,7 @@ class TestOwnerOnlyControls:
         gt = WhereaboutFactory(user=owner, when=timezone.now() + timezone.timedelta(days=2))
 
 
-        url = reverse("user", kwargs={"username": owner.username})
+        url = reverse("user-profile", kwargs={"username": owner.username})
         response = client.get(url)
         content = response.content.decode()
 
@@ -177,7 +177,7 @@ class TestProfileImageFallback:
         """A user without a profile image falls back to the default image."""
         user = UserFactory()
 
-        url = reverse("user", kwargs={"username": user.username})
+        url = reverse("user-profile", kwargs={"username": user.username})
         response = client.get(url)
 
         assert "/static/persona/images/empty_portrait.jpg" in response.content.decode()

@@ -49,3 +49,39 @@ class Link(models.Model):
 
     def __str__(self):
         return f"{self.user.username} link: {self.url}"
+
+class ContactChannel(models.Model):
+    """Model representing a way to reach a user via a chat application."""
+
+    class App(models.TextChoices):
+        """Supported chat applications."""
+        SIGNAL = "Signal", "Signal"
+        SIMPLEX = "Simplex", "Simplex"
+        TELEGRAM = "Telegram", "Telegram"
+        WHATSAPP = "WhatsApp", "WhatsApp"
+        SLACK = "Slack", "Slack"
+        SNAPCHAT = "Snapchat", "Snapchat"
+        WECHAT = "WeChat", "WeChat"
+        MESSENGER = "Messenger", "Messenger"
+        OTHER = "Other", "Other"
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="contactchannels"
+    )
+    app = models.CharField(max_length=255, choices=App.choices)
+    app_other = models.CharField(max_length=255, blank=True)
+    url = models.URLField(max_length=500)
+
+    class Meta:
+        """Set verbose names and ordering for the ContactChannel model."""
+        verbose_name = "contactkanaal"
+        verbose_name_plural = "contactkanalen"
+        ordering = ["-id"]
+
+    def __str__(self):
+        return f"{self.display_app}: {self.url[:30]}…"
+
+    @property
+    def display_app(self):
+        """Return the app name to show to the receiver."""
+        return self.app_other if self.app == self.App.OTHER else self.app

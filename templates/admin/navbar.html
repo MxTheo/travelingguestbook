@@ -42,7 +42,10 @@
                   </form>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="{% url "user" user.username %}">Details</a>
+                  <a class="dropdown-item" href="{% url "user-profile" user.username %}">Details</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url "user-chatactivity" user.username %}">Chatactiviteit</a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="{% url "update-account" %}">Account</a>

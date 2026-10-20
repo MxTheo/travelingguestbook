@@ -1,6 +1,4 @@
 from django.contrib import messages
-from django.db.models.functions import Random
-from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,

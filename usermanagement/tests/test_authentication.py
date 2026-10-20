@@ -69,6 +69,6 @@ class TestProfile():
 def test_user_detail_view(auto_login_user):
     '''Test if the user detail view is rendered correctly'''
     client, user = auto_login_user()
-    detail_url = reverse('user', kwargs={'username': user.username})
+    detail_url = reverse('user-profile', kwargs={'username': user.username})
     response = client.get(detail_url)
     assert response.status_code == 200

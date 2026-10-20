@@ -1,0 +1,83 @@
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+    Chatactiviteit — {{ user.username }}
+{% endblock title %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock meta %}
+{% block stylesheet %}
+    <link href="{% static "usermanagement/styles/user_detail.css" %}" rel="stylesheet">
+{% endblock stylesheet %}
+{% block content %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                {# Norms: subtle, quiet, out of the way #}
+                <div class="mb-5">
+                    <p class="text-muted mb-1">
+                        <strong>Jij bepaalt.</strong> Jij stelt de vragen.
+                    </p>
+                    <p class="text-muted small mb-0">
+                        Je mag op elk moment stoppen met <em>"Bedankt voor het chatten"</em>. Ik verwacht niets van je.
+                    </p>
+                </div>
+                {# The invitation: heavy, clean, monochrome #}
+                <div class="card border-dark border-2 rounded-3 mb-5 shadow-sm">
+                    <div class="card-body p-4 p-md-5 text-center">
+                        <h1 class="display-5 fw-bold mb-4">Wil je mij de vraag van de week stellen?</h1>
+                        <div class="mb-3">
+                            <p class="text-uppercase text-muted small fw-bold mb-2">Vraag van de week</p>
+                            <p class="fs-4 mb-2 text-start">"{{ question.text }}"</p>
+                            <p class="text-muted small mb-0">
+                                Bron: <a href="{{ question.source_url }}"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="text-muted">{{ question.source_name }}</a>
+                            </p>
+                        </div>
+                        <p class="text-muted small mb-0">Of stel je eigen vraag.</p>
+                    </div>
+                </div>
+                {# Channels: quiet, monochrome, like the user-detail link cards #}
+                <div class="mt-5">
+                    <div class="d-flex justify-content-between align-items-center mb-2 px-3">
+                        <h2 class="h6 text-uppercase text-muted mb-0">Via:</h2>
+                        {% if request.user == user %}
+                            <a href="{% url 'create-contactchannel' %}"
+                               class="text-muted text-decoration-none"
+                               aria-label="Chatkanaal toevoegen">
+                                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% if contactchannels %}
+                        <div class="list-group list-group-flush d-flex flex-column gap-1">
+                            {% for channel in contactchannels %}
+                                <div class="list-group-item d-flex align-items-center bg-transparent border-0 p-0">
+                                    <a href="{{ channel.url }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="link-card d-flex align-items-center text-decoration-none text-body flex-grow-1 py-1">
+                                        {# Icon mapping: clean and easy to read #}
+                                        <i class="bi fs-5 me-2 text-muted {% if channel.app == 'Signal' %}bi-signal {% elif channel.app == 'Simplex' %}bi-hash {% elif channel.app == 'Telegram' %}bi-telegram {% elif channel.app == 'WhatsApp' %}bi-whatsapp {% elif channel.app == 'Slack' %}bi-slack {% elif channel.app == 'Snapchat' %}bi-snapchat {% elif channel.app == 'WeChat' %}bi-wechat {% elif channel.app == 'Messenger' %}bi-messenger {% else %}bi-chat{% endif %}"
+                                           aria-hidden="true">
+                                        </i>
+                                        <span class="text-truncate small">{{ channel.display_app }}</span>
+                                    </a>
+                                    {% if request.user == user %}
+                                        <a href="{% url 'delete-contactchannel' channel.pk %}"
+                                           class="text-muted text-decoration-none ms-3 small"
+                                           aria-label="Chatkanaal verwijderen">
+                                            <i class="bi bi-trash" aria-hidden="true"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted small px-3">Nog geen chatkanalen beschikbaar.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

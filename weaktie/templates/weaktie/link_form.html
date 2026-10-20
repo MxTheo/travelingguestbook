@@ -1,8 +1,8 @@
- {% extends "admin/main.html" %}
- {% load static %}
- {% block title %}
-    Link {% if form.instance.pk %}bewerken{% else %}aanmaken{% endif %}
- {% endblock title %}
+{% extends "admin/main.html" %}
+{% load static %}
+{% block title %}
+Link {% if form.instance.pk %}bewerken{% else %}aanmaken{% endif %}
+{% endblock title %}
 {% block stylesheet %}<link href="{% static "styles/form.css" %}" rel="stylesheet" >{% endblock stylesheet %}
  {% block content %}
     <div class="container mt-4">

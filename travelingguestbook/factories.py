@@ -11,7 +11,7 @@ from faker import Faker
 
 from persona.models import Persona, Problem, Reaction
 from streetactivity.models import Reflection, StreetActivity
-from weaktie.models import Link, Whereabout
+from weaktie.models import ContactChannel, Link, Whereabout
 
 fake = Faker()
 
@@ -24,7 +24,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = factory.LazyFunction(fake.unique.password)
 
 class WhereaboutFactory(factory.django.DjangoModelFactory):
-    """Mock for whereabout Whereabout"""
+    """Mock for weaktie Whereabout"""
     class Meta:
         model = Whereabout
     location = factory.LazyFunction(fake.address)
@@ -33,10 +33,18 @@ class WhereaboutFactory(factory.django.DjangoModelFactory):
     source   = factory.LazyFunction(fake.url)
 
 class LinkFactory(factory.django.DjangoModelFactory):
-    """Mock for whereabout Link"""
+    """Mock for weaktie Link"""
     class Meta:
         model = Link
     url      = factory.LazyFunction(fake.url)
+    user     = factory.SubFactory(UserFactory)
+
+class ContactChannelFactory(factory.django.DjangoModelFactory):
+    """Mock for weaktie ContactChannel"""
+    class Meta:
+        model = ContactChannel
+    url      = factory.LazyFunction(fake.url)
+    app      = factory.Iterator([choice[0] for choice in ContactChannel.App.choices])
     user     = factory.SubFactory(UserFactory)
 
 class StreetActivityFactory(factory.django.DjangoModelFactory):
